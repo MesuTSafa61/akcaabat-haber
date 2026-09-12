@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sorun Bildir | Akçaabat Haber</title>
+
+    <meta
+        name="description"
+        content="Akçaabat Haber içerik, teknik sorun, düzeltme ve geri bildirim bildirme sayfası."
+    >
+
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1f3a">
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <style>
+        :root {
+            --navy: #0b1f3a;
+            --navy-2: #102b4f;
+            --red: #d71920;
+            --red-dark: #b51218;
+            --text: #172033;
+            --muted: #667085;
+            --light: #f5f7fa;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --success: #15803d;
+            --warning: #b45309;
+            --shadow: 0 16px 45px rgba(11, 31, 58, 0.08);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+            background: #f6f8fb;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .topbar {
+            background: var(--navy);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 13px;
+        }
+
+        .topbar-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 38px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .topbar a:hover {
+            opacity: 0.7;
+        }
+
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 78px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .brand-title {
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav a {
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #344054;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--red);
+            background: #fff1f2;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--navy);
+            color: white;
+            font-size: 20px;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        .hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(11, 31, 58, 0.98),
+                    rgba(16, 43, 79, 0.96)
+                );
+            color: white;
+            padding: 62px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 330px;
+            height: 330px;
+            border-radius: 50%;
+            background: rgba(215, 25, 32, 0.15);
+            right: -100px;
+            top: -150px;
+        }
+
+        .hero-inner {
+            width: min(1000px, calc(100% - 20px));
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffb4b7;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 24px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 10px;
+        }
+
+        .hero h1 {
+            max-width: 760px;
+            font-size: clamp(34px, 5vw, 54px);
+            line-height: 1.08;
+            letter-spacing: -1.7px;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            max-width: 720px;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 16px;
+        }
+
+        .breadcrumb {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 18px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .breadcrumb a {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+            color: #98a2b3;
+        }
+
+        .content {
+            width: min(1000px, calc(100% - 32px));
+            margin: 28px auto 70px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 290px;
+            gap: 26px;
+            align-items: start;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: clamp(24px, 5vw, 42px);
+        }
+
+        .form-card h2 {
+            color: var(--navy);
+            font-size: 25px;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .form-intro {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .notice {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: #f7f9fc;
+            border: 1px solid #e5e9ef;
+            border-left: 4px solid var(--red);
+            border-radius: 12px;
+            padding: 15px 16px;
+            margin-bottom: 26px;
+        }
+
+        .notice-icon {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #fff0f1;
+            color: var(--red);
+            font-weight: 800;
+        }
+
+        .notice p {
+            color: #475467;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field label {
+            color: #344054;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .required {
+            color: var(--red);
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            border: 1px solid #d0d5dd;
+            border-radius: 11px;
+            background: white;
+            color: var(--text);
+            outline: none;
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .field input,
+        .field select {
+            min-height: 46px;
+            padding: 0 13px;
+        }
+
+        .field textarea {
+            min-height: 150px;
+            padding: 12px 13px;
+            resize: vertical;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(11, 31, 58, 0.08);
+        }
+
+        .field small {
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+        .counter {
+            display: flex;
+            justify-content: flex-end;
+            color: #98a2b3;
+            font-size: 11px;
+            margin-top: -2px;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .check-row input {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: var(--red);
+        }
+
+        .check-row label {
+            color: #667085;
+            font-size: 12px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .check-row a {
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 26px;
+        }
+
+        .btn {
+            min-height: 46px;
+            border: 0;
+            border-radius: 11px;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 800;
+            transition:
+                transform 0.15s ease,
+                background 0.2s ease;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--red-dark);
+        }
+
+        .btn-secondary {
+            background: #eef1f5;
+            color: #344054;
+        }
+
+        .btn-secondary:hover {
+            background: #e4e8ee;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: sticky;
+            top: 104px;
+        }
+
+        .side-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 26px rgba(11, 31, 58, 0.05);
+        }
+
+        .side-card h3 {
+            color: var(--navy);
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .side-card p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .side-card ul {
+            list-style: none;
+        }
+
+        .side-card li + li {
+            border-top: 1px solid #edf0f4;
+        }
+
+        .side-card a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 0;
+            color: #475467;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .side-card a:hover {
+            color: var(--red);
+        }
+
+        .side-card a::after {
+            content: "›";
+            color: #98a2b3;
+            font-size: 18px;
+        }
+
+        .email-box {
+            background: var(--navy);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .email-box h3 {
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .email-box p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .email-link {
+            display: block;
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .success-message {
+            display: none;
+            background: #ecfdf3;
+            border: 1px solid #abefc6;
+            border-left: 4px solid var(--success);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 22px;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message strong {
+            display: block;
+            color: #067647;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .success-message span {
+            color: #475467;
+            font-size: 13px;
+        }
+
+        .footer {
+            background: var(--navy);
+            color: white;
+            margin-top: 70px;
+        }
+
+        .footer-inner {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 44px 0 28px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 32px;
+        }
+
+        .footer-brand {
+            max-width: 360px;
+        }
+
+        .footer-brand h3 {
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+        }
+
+        .footer-column h4 {
+            font-size: 13px;
+            margin-bottom: 13px;
+        }
+
+        .footer-column a {
+            display: block;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 32px;
+            padding-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .nav {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .email-box {
+                grid-column: 1 / -1;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .topbar-left {
+                display: none;
+            }
+
+            .topbar-inner {
+                justify-content: center;
+            }
+
+            .header-inner {
+                min-height: 68px;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-title {
+                font-size: 19px;
+            }
+
+            .brand-subtitle {
+                font-size: 10px;
+            }
+
+            .hero {
+                padding: 50px 16px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .breadcrumb {
+                width: calc(100% - 24px);
+            }
+
+            .content {
+                width: calc(100% - 24px);
+                margin-top: 18px;
+            }
+
+            .form-card {
+                border-radius: 14px;
+                padding: 22px 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .submit-row {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+
+            .mobile-nav {
+                position: fixed;
+                inset: 68px 0 0;
+                background: rgba(11, 31, 58, 0.98);
+                z-index: 99;
+                padding: 22px 18px;
+                overflow-y: auto;
+            }
+
+            .mobile-nav.open {
+                display: block;
+            }
+
+            .mobile-nav a {
+                display: block;
+                color: white;
+                padding: 14px 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-weight: 700;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span>Akçaabat ve Trabzon'dan güncel haberler</span>
+
+            <div class="topbar-right">
+                <a href="kunye.html">Künye</a>
+                <a href="iletisim.html">İletişim</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-inner">
+
+            <a href="index.html" class="brand">
+                <img
+                    src="favicon.svg"
+                    alt="Akçaabat Haber"
+                    class="brand-logo"
+                >
+
+                <span class="brand-text">
+                    <span class="brand-title">Akçaabat Haber</span>
+                    <span class="brand-subtitle">
+                        Yerel Haber • Güvenilir Bilgi
+                    </span>
+                </span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Ana Sayfa</a>
+                <a href="haberler.html">Haberler</a>
+                <a href="hakkimizda.html">Hakkımızda</a>
+                <a href="kunye.html">Künye</a>
+                <a href="sorumlu-yayincilik.html">Yayın İlkeleri</a>
+                <a href="sorun-bildir.html" class="active">
+                    Sorun Bildir
+                </a>
+                <a href="iletisim.html">İletişim</a>
+            </nav>
+
+            <button
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                type="button"
+                aria-label="Menüyü aç"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+        </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="haberler.html">Haberler</a>
+        <a href="hakkimizda.html">Hakkımızda</a>
+        <a href="kunye.html">Künye</a>
+        <a href="sorumlu-yayincilik.html">Yayın İlkeleri</a>
+        <a href="sorun-bildir.html">Sorun Bildir</a>
+        <a href="iletisim.html">İletişim</a>
+        <a href="reklam.html">Reklam</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="eyebrow">Geri bildirim</div>
+
+            <h1>
+                Bir sorun mu fark ettiniz?
+            </h1>
+
+            <p>
+                Haberlerimizde gördüğünüz hata, eksiklik veya teknik
+                sorunları bize bildirin. Gönderdiğiniz bilgiler
+                değerlendirilerek gerekli kontroller yapılır.
+            </p>
+        </div>
+    </section>
+
+    <div class="breadcrumb">
+        <a href="index.html">Ana Sayfa</a>
+        <span>/</span>
+        <strong>Sorun Bildir</strong>
+    </div>
+
+    <main class="content">
+        <div class="layout">
+
+            <section class="form-card">
+
+                <h2>Bildirim formu</h2>
+
+                <p class="form-intro">
+                    Aşağıdaki formu kullanarak içerik veya teknik
+                    sorunları bize iletebilirsiniz.
+                </p>
+
+                <div
+                    class="success-message"
+                    id="successMessage"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <strong>Form hazırlandı.</strong>
+                    <span>
+                        E-posta uygulamanız açılacaktır. Mesajınızı
+                        göndermeden önce bilgileri kontrol edebilirsiniz.
+                    </span>
+                </div>
+
+                <div class="notice">
+                    <div class="notice-icon">!</div>
+
+                    <p>
+                        Eğer bir haberde hata olduğunu düşünüyorsanız,
+                        mümkünse haber bağlantısını ve hatalı olduğunu
+                        düşündüğünüz bölümü açıkça belirtin.
+                    </p>
+                </div>
+
+                <form id="reportForm">
+
+                    <div class="form-grid">
+
+                        <div class="field">
+                            <label for="name">
+                                Ad Soyad
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                maxlength="100"
+                                autocomplete="name"
+                                placeholder="Adınız ve soyadınız"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="email">
+                                E-posta
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                maxlength="150"
+                                autocomplete="email"
+                                placeholder="ornek@mail.com"
+                                required
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="type">
+                                Bildirim türü
+                                <span class="required">*</span>
+                            </label>
+
+                            <select
+                                id="type"
+                                name="type"
+                                required
+                            >
+                                <option value="">
+                                    Seçiniz
+                                </option>
+
+                                <option value="Haber hatası">
+                                    Haber hatası
+                                </option>
+
+                                <option value="Bilgi güncelleme">
+                                    Bilgi güncelleme
+                                </option>
+
+                                <option value="Görsel sorunu">
+                                    Görsel sorunu
+                                </option>
+
+                                <option value="Teknik sorun">
+                                    Teknik sorun
+                                </option>
+
+                                <option value="Kırık bağlantı">
+                                    Kırık bağlantı
+                                </option>
+
+                                <option value="Diğer">
+                                    Diğer
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="url">
+                                İlgili haber / sayfa bağlantısı
+                            </label>
+
+                            <input
+                                type="url"
+                                id="url"
+                                name="url"
+                                maxlength="500"
+                                placeholder="https://..."
+                            >
+                        </div>
+
+                        <div class="field full">
+                            <label for="subject">
+                                Konu
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                maxlength="150"
+                                placeholder="Bildirim konusunu kısaca yazın"
+                                required
+                            >
+                        </div>
+
+                        <div class="field full">
+                            <label for="message">
+                                Açıklama
+                                <span class="required">*</span>
+                            </label>
+
+                            <textarea
+                                id="message"
+                                name="message"
+                                maxlength="2000"
+                                placeholder="Sorunu veya düzeltme talebinizi ayrıntılı şekilde açıklayın..."
+                                required
+                            ></textarea>
+
+                            <div class="counter">
+                                <span id="messageCount">0</span>
+                                / 2000
+                            </div>
+                        </div>
+
+                        <div class="field full">
+
+                            <div class="check-row">
+                                <input
+                                    type="checkbox"
+                                    id="privacy"
+                                    required
+                                >
+
+                                <label for="privacy">
+                                    Gönderdiğim bilgilerin bildirimimi
+                                    değerlendirmek amacıyla kullanılmasını
+                                    kabul ediyorum.
+                                    <a href="gizlilik.html">
+                                        Gizlilik Politikası
+                                    </a>
+                                    hakkında bilgi edindim.
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="submit-row">
+
+                        <button
+                            type="reset"
+                            class="btn btn-secondary"
+                        >
+                            Temizle
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Bildirimi Gönder
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+            <aside class="sidebar">
+
+                <div class="side-card">
+                    <h3>Hangi konularda bildirim yapabilirsiniz?</h3>
+
+                    <ul>
+                        <li>
+                            <a href="#reportForm">
+                                Haberlerdeki hatalar
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#reportForm">
+                                Eksik veya güncel olmayan bilgiler
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#reportForm">
+                                Görsel problemleri
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#reportForm">
+                                Teknik sorunlar
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#reportForm">
+                                Çalışmayan bağlantılar
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="side-card">
+                    <h3>Kurumsal</h3>
+
+                    <p>
+                        Yayıncılık yaklaşımımız hakkında daha fazla
+                        bilgi almak için aşağıdaki sayfalara göz atabilirsiniz.
+                    </p>
+
+                    <ul>
+                        <li>
+                            <a href="sorumlu-yayincilik.html">
+                                Yayın İlkeleri
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="hakkimizda.html">
+                                Hakkımızda
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="kunye.html">
+                                Künye
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="iletisim.html">
+                                İletişim
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="email-box">
+                    <h3>E-posta ile ulaşın</h3>
+
+                    <p>
+                        Formu kullanmak istemiyorsanız doğrudan
+                        e-posta gönderebilirsiniz.
+                    </p>
+
+                    <a
+                        class="email-link"
+                        href="mailto:info@akcaabathaber.com.tr"
+                    >
+                        info@akcaabathaber.com.tr
+                    </a>
+                </div>
+
+            </aside>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+
+            <div class="footer-grid">
+
+                <div class="footer-brand">
+                    <h3>Akçaabat Haber</h3>
+
+                    <p>
+                        Akçaabat ve Trabzon'dan güncel gelişmeleri
+                        okuyucularına ulaştıran yerel haber platformu.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Kurumsal</h4>
+
+                    <a href="hakkimizda.html">Hakkımızda</a>
+                    <a href="kunye.html">Künye</a>
+                    <a href="sorumlu-yayincilik.html">
+                        Yayın İlkeleri
+                    </a>
+                    <a href="iletisim.html">İletişim</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Politikalar</h4>
+
+                    <a href="gizlilik.html">Gizlilik</a>
+                    <a href="kvkk.html">KVKK</a>
+                    <a href="cerez-politikasi.html">
+                        Çerez Politikası
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Diğer</h4>
+
+                    <a href="reklam.html">Reklam</a>
+                    <a href="haberler.html">Haberler</a>
+                    <a href="index.html">Ana Sayfa</a>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>
+                    © <span id="currentYear"></span> Akçaabat Haber
+                </span>
+
+                <span>
+                    Tüm hakları saklıdır.
+                </span>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const yearElement =
+                document.getElementById("currentYear");
+
+            if (yearElement) {
+                yearElement.textContent =
+                    new Date().getFullYear();
+            }
+
+            const menuButton =
+                document.getElementById("mobileMenuBtn");
+
+            const mobileNav =
+                document.getElementById("mobileNav");
+
+            if (menuButton && mobileNav) {
+                menuButton.addEventListener("click", function () {
+                    const isOpen =
+                        mobileNav.classList.toggle("open");
+
+                    menuButton.setAttribute(
+                        "aria-expanded",
+                        isOpen ? "true" : "false"
+                    );
+
+                    menuButton.textContent =
+                        isOpen ? "×" : "☰";
+                });
+
+                mobileNav
+                    .querySelectorAll("a")
+                    .forEach(function (link) {
+                        link.addEventListener(
+                            "click",
+                            function () {
+                                mobileNav.classList.remove("open");
+
+                                menuButton.setAttribute(
+                                    "aria-expanded",
+                                    "false"
+                                );
+
+                                menuButton.textContent = "☰";
+                            }
+                        );
+                    });
+            }
+
+            const message =
+                document.getElementById("message");
+
+            const messageCount =
+                document.getElementById("messageCount");
+
+            if (message && messageCount) {
+                message.addEventListener(
+                    "input",
+                    function () {
+                        messageCount.textContent =
+                            message.value.length;
+                    }
+                );
+            }
+
+            const form =
+                document.getElementById("reportForm");
+
+            const successMessage =
+                document.getElementById("successMessage");
+
+            if (!form) {
+                return;
+            }
+
+            form.addEventListener(
+                "submit",
+                function (event) {
+                    event.preventDefault();
+
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
+                    }
+
+                    const name =
+                        document.getElementById("name").value.trim();
+
+                    const email =
+                        document.getElementById("email").value.trim();
+
+                    const type =
+                        document.getElementById("type").value.trim();
+
+                    const url =
+                        document.getElementById("url").value.trim();
+
+                    const subject =
+                        document.getElementById("subject").value.trim();
+
+                    const messageText =
+                        document.getElementById("message").value.trim();
+
+                    const body =
+                        "Ad Soyad: " +
+                        (name || "Belirtilmedi") +
+                        "\n" +
+                        "E-posta: " +
+                        email +
+                        "\n" +
+                        "Bildirim Türü: " +
+                        type +
+                        "\n" +
+                        "İlgili Bağlantı: " +
+                        (url || "Belirtilmedi") +
+                        "\n\n" +
+                        "Açıklama:\n" +
+                        messageText;
+
+                    const mailto =
+                        "mailto:info@akcaabathaber.com.tr" +
+                        "?subject=" +
+                        encodeURIComponent(
+                            "[Site Bildirimi] " + subject
+                        ) +
+                        "&body=" +
+                        encodeURIComponent(body);
+
+                    if (successMessage) {
+                        successMessage.classList.add("show");
+                    }
+
+                    window.location.href = mailto;
+                }
+            );
+
+            form.addEventListener(
+                "reset",
+                function () {
+                    window.setTimeout(
+                        function () {
+                            if (messageCount) {
+                                messageCount.textContent = "0";
+                            }
+
+                            if (successMessage) {
+                                successMessage.classList.remove("show");
+                            }
+                        },
+                        0
+                    );
+                }
+            );
+        })();
+    </script>
+
+</body>
+</html>
