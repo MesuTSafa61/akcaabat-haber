@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akcaabathaber.com.tr/sitemap.xml
