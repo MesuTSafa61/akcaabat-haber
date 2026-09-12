@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Akçaabat Haber - Güncel ve son dakika haberleri">
+    <title>Haber Detayı | Akçaabat Haber</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .haber-detay-wrapper {
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
+        }
+
+        .haber-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .haber-breadcrumb a {
+            color: #b40018;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .haber-detay-card {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,.08);
+        }
+
+        .haber-detay-header {
+            padding: 30px 35px 20px;
+        }
+
+        .haber-kategori {
+            display: inline-flex;
+            align-items: center;
+            background: #b40018;
+            color: #fff;
+            padding: 7px 13px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .haber-son-dakika {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #111;
+            color: #fff;
+            padding: 7px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 7px;
+        }
+
+        .haber-detay-title {
+            margin: 0;
+            font-size: 42px;
+            line-height: 1.15;
+            color: #1d1d1d;
+        }
+
+        .haber-detay-ozet {
+            font-size: 19px;
+            line-height: 1.6;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        .haber-meta {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            border-top: 1px solid #eee;
+            padding-top: 16px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .haber-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .haber-kapak {
+            width: 100%;
+            max-height: 600px;
+            object-fit: cover;
+            display: block;
+            background: #eee;
+        }
+
+        .haber-detay-body {
+            padding: 35px;
+        }
+
+        .haber-detay-content {
+            font-size: 18px;
+            line-height: 1.85;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        .haber-detay-content p {
+            margin: 0 0 20px;
+        }
+
+        .haber-paylas {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-top: 1px solid #eee;
+            margin-top: 35px;
+            padding-top: 25px;
+        }
+
+        .haber-paylas strong {
+            margin-right: 5px;
+        }
+
+        .paylas-btn {
+            border: 0;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 7px;
+            background: #f1f1f1;
+            color: #222;
+            font-weight: 600;
+        }
+
+        .paylas-btn:hover {
+            background: #ddd;
+        }
+
+        .ilgili-haberler {
+            margin-top: 35px;
+        }
+
+        .ilgili-haberler h2 {
+            font-size: 25px;
+            margin-bottom: 18px;
+        }
+
+        .ilgili-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .ilgili-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,.07);
+            cursor: pointer;
+            transition: transform .2s ease;
+        }
+
+        .ilgili-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .ilgili-card img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .ilgili-card-content {
+            padding: 15px;
+        }
+
+        .ilgili-card-content small {
+            color: #b40018;
+            font-weight: 700;
+        }
+
+        .ilgili-card-content h3 {
+            margin: 7px 0 0;
+            font-size: 17px;
+            line-height: 1.35;
+        }
+
+        .haber-yok {
+            text-align: center;
+            background: #fff;
+            border-radius: 14px;
+            padding: 70px 25px;
+            box-shadow: 0 5px 25px rgba(0,0,0,.08);
+        }
+
+        .haber-yok h1 {
+            margin-bottom: 12px;
+        }
+
+        .haber-yok p {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .anasayfa-btn {
+            display: inline-block;
+            background: #b40018;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .haber-detay-wrapper {
+                margin-top: 20px;
+                padding: 0 12px;
+            }
+
+            .haber-detay-header {
+                padding: 22px 18px 16px;
+            }
+
+            .haber-detay-title {
+                font-size: 29px;
+            }
+
+            .haber-detay-ozet {
+                font-size: 17px;
+            }
+
+            .haber-detay-body {
+                padding: 22px 18px;
+            }
+
+            .haber-detay-content {
+                font-size: 17px;
+                line-height: 1.75;
+            }
+
+            .haber-kapak {
+                max-height: 380px;
+            }
+
+            .ilgili-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ilgili-card img {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ÜST BAR -->
+    <div class="topbar">
+        <div class="container">
+            <div class="topbar-left">
+                <span id="currentDate"></span>
+            </div>
+
+            <div class="topbar-right">
+                <span>Akçaabat Haber</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
+
+            <div class="logo-area">
+                <a href="index.html">
+                    <strong>AKÇAABAT</strong>
+                    <span>HABER</span>
+                </a>
+            </div>
+
+            <div class="header-search">
+                <form id="detailSearchForm">
+                    <input
+                        type="search"
+                        id="detailSearchInput"
+                        placeholder="Haber ara..."
+                        autocomplete="off"
+                    >
+                    <button type="submit">Ara</button>
+                </form>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button">
+                ☰
+            </button>
+
+        </div>
+    </header>
+
+    <!-- NAV -->
+    <nav class="main-nav" id="mainNav">
+        <div class="container">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="index.html?kategori=Akçaabat">Akçaabat</a>
+            <a href="index.html?kategori=Trabzon">Trabzon</a>
+            <a href="index.html?kategori=Gündem">Gündem</a>
+            <a href="index.html?kategori=Spor">Spor</a>
+            <a href="index.html?kategori=Ekonomi">Ekonomi</a>
+            <a href="index.html?kategori=Siyaset">Siyaset</a>
+            <a href="index.html?kategori=Magazin">Magazin</a>
+            <a href="index.html?kategori=Sağlık">Sağlık</a>
+            <a href="index.html?kategori=Eğitim">Eğitim</a>
+            <a href="index.html?kategori=Kültür Sanat">Kültür Sanat</a>
+            <a href="index.html?kategori=Yaşam">Yaşam</a>
+        </div>
+    </nav>
+
+    <!-- HABER -->
+    <main class="haber-detay-wrapper">
+
+        <div class="haber-breadcrumb">
+            <a href="index.html">Ana Sayfa</a>
+            <span>›</span>
+            <span>Haber</span>
+            <span id="breadcrumbCategory"></span>
+        </div>
+
+        <div id="haberContainer">
+            <!-- Haber JavaScript ile yüklenecek -->
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+
+            <div class="footer-content">
+
+                <div class="footer-column">
+                    <h3>Akçaabat Haber</h3>
+                    <p>
+                        Akçaabat ve Trabzon'dan güncel,
+                        doğru ve tarafsız haberler.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Kategoriler</h3>
+                    <a href="index.html?kategori=Akçaabat">Akçaabat</a>
+                    <a href="index.html?kategori=Trabzon">Trabzon</a>
+                    <a href="index.html?kategori=Gündem">Gündem</a>
+                    <a href="index.html?kategori=Spor">Spor</a>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Hızlı Menü</h3>
+                    <a href="index.html">Ana Sayfa</a>
+                    <a href="haber.html">Haberler</a>
+                    <a href="index.html">Son Dakika</a>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <p>
+                    © <span id="footerYear"></span> Akçaabat Haber.
+                    Tüm hakları saklıdır.
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const haberContainer =
+                document.getElementById("haberContainer");
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+            const haberId = params.get("id");
+
+            const haberler =
+                JSON.parse(
+                    localStorage.getItem("akcaabat_haberler") || "[]"
+                );
+
+            const fallbackImage =
+                "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1400&q=80";
+
+            function escapeHtml(value) {
+                if (value === null || value === undefined) {
+                    return "";
+                }
+
+                return String(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function formatDate(dateValue) {
+                if (!dateValue) {
+                    return "Tarih belirtilmedi";
+                }
+
+                const date = new Date(dateValue);
+
+                if (isNaN(date.getTime())) {
+                    return dateValue;
+                }
+
+                return date.toLocaleDateString("tr-TR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                });
+            }
+
+            function formatTime(dateValue) {
+                if (!dateValue) {
+                    return "";
+                }
+
+                const date = new Date(dateValue);
+
+                if (isNaN(date.getTime())) {
+                    return "";
+                }
+
+                return date.toLocaleTimeString("tr-TR", {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+            }
+
+            function getImage(haber) {
+                if (
+                    haber.image &&
+                    typeof haber.image === "string" &&
+                    haber.image.trim() !== ""
+                ) {
+                    return haber.image;
+                }
+
+                return fallbackImage;
+            }
+
+            function getDateValue(haber) {
+                return (
+                    haber.publishedAt ||
+                    haber.date ||
+                    haber.createdAt ||
+                    haber.tarih ||
+                    ""
+                );
+            }
+
+            function createRelatedCard(haber) {
+                const id = encodeURIComponent(haber.id);
+
+                return `
+                    <article
+                        class="ilgili-card"
+                        onclick="window.location.href='haber-detay.html?id=${id}'"
+                    >
+                        <img
+                            src="${escapeHtml(getImage(haber))}"
+                            alt="${escapeHtml(haber.title || "Haber")}"
+                            onerror="this.src='${fallbackImage}'"
+                        >
+
+                        <div class="ilgili-card-content">
+                            <small>
+                                ${escapeHtml(haber.category || "Haber")}
+                            </small>
+
+                            <h3>
+                                ${escapeHtml(haber.title || "Başlıksız Haber")}
+                            </h3>
+                        </div>
+                    </article>
+                `;
+            }
+
+            function showNotFound() {
+
+                document.title =
+                    "Haber Bulunamadı | Akçaabat Haber";
+
+                haberContainer.innerHTML = `
+                    <div class="haber-yok">
+
+                        <h1>Haber Bulunamadı</h1>
+
+                        <p>
+                            Aradığınız haber bulunamadı veya
+                            yayından kaldırılmış olabilir.
+                        </p>
+
+                        <a
+                            href="index.html"
+                            class="anasayfa-btn"
+                        >
+                            Ana Sayfaya Dön
+                        </a>
+
+                    </div>
+                `;
+            }
+
+            if (!haberId) {
+                showNotFound();
+                return;
+            }
+
+            const haber =
+                haberler.find(function (item) {
+                    return String(item.id) === String(haberId);
+                });
+
+            if (!haber) {
+                showNotFound();
+                return;
+            }
+
+            const category =
+                haber.category ||
+                haber.kategori ||
+                "Genel";
+
+            const title =
+                haber.title ||
+                haber.baslik ||
+                "Başlıksız Haber";
+
+            const summary =
+                haber.summary ||
+                haber.ozet ||
+                "";
+
+            const content =
+                haber.content ||
+                haber.icerik ||
+                "Bu haber için içerik bulunmamaktadır.";
+
+            const dateValue =
+                getDateValue(haber);
+
+            const image =
+                getImage(haber);
+
+            document.title =
+                title + " | Akçaabat Haber";
+
+            const breadcrumbCategory =
+                document.getElementById("breadcrumbCategory");
+
+            if (breadcrumbCategory) {
+                breadcrumbCategory.textContent =
+                    "› " + category;
+            }
+
+            const related =
+                haberler
+                    .filter(function (item) {
+                        return String(item.id) !== String(haber.id);
+                    })
+                    .filter(function (item) {
+                        return (
+                            !item.category ||
+                            item.category === category
+                        );
+                    })
+                    .slice(0, 3);
+
+            let relatedHtml = "";
+
+            if (related.length > 0) {
+
+                relatedHtml = `
+                    <section class="ilgili-haberler">
+
+                        <h2>İlgili Haberler</h2>
+
+                        <div class="ilgili-grid">
+                            ${related.map(createRelatedCard).join("")}
+                        </div>
+
+                    </section>
+                `;
+            }
+
+            haberContainer.innerHTML = `
+
+                <article class="haber-detay-card">
+
+                    <header class="haber-detay-header">
+
+                        <div>
+
+                            <span class="haber-kategori">
+                                ${escapeHtml(category)}
+                            </span>
+
+                            ${
+                                haber.breaking
+                                    ? `
+                                        <span class="haber-son-dakika">
+                                            ● SON DAKİKA
+                                        </span>
+                                      `
+                                    : ""
+                            }
+
+                        </div>
+
+                        <h1 class="haber-detay-title">
+                            ${escapeHtml(title)}
+                        </h1>
+
+                        ${
+                            summary
+                                ? `
+                                    <div class="haber-detay-ozet">
+                                        ${escapeHtml(summary)}
+                                    </div>
+                                  `
+                                : ""
+                        }
+
+                        <div class="haber-meta">
+
+                            <span>
+                                📅
+                                ${escapeHtml(formatDate(dateValue))}
+                            </span>
+
+                            ${
+                                formatTime(dateValue)
+                                    ? `
+                                        <span>
+                                            🕒
+                                            ${escapeHtml(
+                                                formatTime(dateValue)
+                                            )}
+                                        </span>
+                                      `
+                                    : ""
+                            }
+
+                            <span>
+                                👁️
+                                ${Number(haber.views || 0)} görüntülenme
+                            </span>
+
+                        </div>
+
+                    </header>
+
+                    <img
+                        class="haber-kapak"
+                        src="${escapeHtml(image)}"
+                        alt="${escapeHtml(title)}"
+                        onerror="this.src='${fallbackImage}'"
+                    >
+
+                    <div class="haber-detay-body">
+
+                        <div class="haber-detay-content">
+                            ${escapeHtml(content)}
+                        </div>
+
+                        <div class="haber-paylas">
+
+                            <strong>Haberi Paylaş:</strong>
+
+                            <button
+                                class="paylas-btn"
+                                id="shareButton"
+                                type="button"
+                            >
+                                Paylaş
+                            </button>
+
+                            <button
+                                class="paylas-btn"
+                                id="copyButton"
+                                type="button"
+                            >
+                                Linki Kopyala
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                ${relatedHtml}
+            `;
+
+            // Görüntülenme sayısını artır
+            const index =
+                haberler.findIndex(function (item) {
+                    return String(item.id) === String(haber.id);
+                });
+
+            if (index !== -1) {
+
+                haberler[index].views =
+                    Number(haberler[index].views || 0) + 1;
+
+                localStorage.setItem(
+                    "akcaabat_haberler",
+                    JSON.stringify(haberler)
+                );
+            }
+
+            // Paylaş
+            const shareButton =
+                document.getElementById("shareButton");
+
+            if (shareButton) {
+
+                shareButton.addEventListener(
+                    "click",
+                    async function () {
+
+                        const shareData = {
+                            title: title,
+                            text: summary || title,
+                            url: window.location.href
+                        };
+
+                        if (
+                            navigator.share
+                        ) {
+
+                            try {
+                                await navigator.share(
+                                    shareData
+                                );
+                            } catch (error) {
+                                // Kullanıcı paylaşımı iptal etti.
+                            }
+
+                        } else {
+
+                            try {
+
+                                await navigator.clipboard.writeText(
+                                    window.location.href
+                                );
+
+                                shareButton.textContent =
+                                    "Link Kopyalandı";
+
+                                setTimeout(function () {
+                                    shareButton.textContent =
+                                        "Paylaş";
+                                }, 2000);
+
+                            } catch (error) {
+
+                                alert(
+                                    "Paylaşım bağlantısı: " +
+                                    window.location.href
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+            }
+
+            // Link kopyalama
+            const copyButton =
+                document.getElementById("copyButton");
+
+            if (copyButton) {
+
+                copyButton.addEventListener(
+                    "click",
+                    async function () {
+
+                        try {
+
+                            await navigator.clipboard.writeText(
+                                window.location.href
+                            );
+
+                            copyButton.textContent =
+                                "Kopyalandı ✓";
+
+                            setTimeout(function () {
+
+                                copyButton.textContent =
+                                    "Linki Kopyala";
+
+                            }, 2000);
+
+                        } catch (error) {
+
+                            alert(
+                                "Linki kopyalayamadık. " +
+                                "Tarayıcı adres çubuğundan kopyalayabilirsiniz."
+                            );
+
+                        }
+
+                    }
+                );
+            }
+
+        });
+
+
+        // TARİH
+        const currentDate =
+            document.getElementById("currentDate");
+
+        if (currentDate) {
+
+            currentDate.textContent =
+                new Date().toLocaleDateString(
+                    "tr-TR",
+                    {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+        }
+
+
+        // FOOTER YILI
+        const footerYear =
+            document.getElementById("footerYear");
+
+        if (footerYear) {
+            footerYear.textContent =
+                new Date().getFullYear();
+        }
+
+
+        // MOBİL MENÜ
+        const mobileMenuBtn =
+            document.getElementById("mobileMenuBtn");
+
+        const mainNav =
+            document.getElementById("mainNav");
+
+        if (
+            mobileMenuBtn &&
+            mainNav
+        ) {
+
+            mobileMenuBtn.addEventListener(
+                "click",
+                function () {
+
+                    mainNav.classList.toggle(
+                        "mobile-open"
+                    );
+
+                }
+            );
+        }
+
+
+        // ARAMA
+        const detailSearchForm =
+            document.getElementById("detailSearchForm");
+
+        const detailSearchInput =
+            document.getElementById("detailSearchInput");
+
+        if (
+            detailSearchForm &&
+            detailSearchInput
+        ) {
+
+            detailSearchForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+                    const query =
+                        detailSearchInput.value.trim();
+
+                    if (!query) {
+                        return;
+                    }
+
+                    window.location.href =
+                        "haber.html?search=" +
+                        encodeURIComponent(query);
+
+                }
+            );
+        }
+    </script>
+
+</body>
+</html>
