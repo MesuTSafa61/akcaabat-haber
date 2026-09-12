@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111827">
+    <meta name="description" content="Akçaabat Haber yönetim paneli ayarlar sayfası">
+    <title>Ayarlar | Akçaabat Haber Yönetim</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #b91c1c;
+            --primary-dark: #991b1b;
+            --dark: #111827;
+            --dark-2: #1f2937;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --bg: #f5f7fa;
+            --white: #ffffff;
+            --success: #15803d;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --info: #2563eb;
+            --shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+            --radius: 14px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--dark);
+            color: #fff;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+            overflow-y: auto;
+            transition: transform 0.25s ease;
+        }
+
+        .sidebar-brand {
+            height: 76px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 15px;
+            line-height: 1.2;
+        }
+
+        .brand-text span {
+            display: block;
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .sidebar-nav {
+            padding: 18px 12px;
+        }
+
+        .nav-label {
+            color: #6b7280;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 12px 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            margin: 3px 0;
+            border-radius: 10px;
+            color: #d1d5db;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.07);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(185,28,28,0.25);
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-bottom {
+            padding: 14px 12px 22px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-top: 10px;
+        }
+
+        .site-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 13px;
+            color: #d1d5db;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+
+        .site-link:hover {
+            background: rgba(255,255,255,0.07);
+            color: #fff;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 76px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-button {
+            display: none;
+            border: 0;
+            background: #f3f4f6;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            font-size: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 23px;
+            color: var(--dark);
+            font-weight: 800;
+        }
+
+        .page-title p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fee2e2;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .admin-user-text strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .admin-user-text span {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .content {
+            padding: 30px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .settings-main {
+            min-width: 0;
+        }
+
+        .settings-sidebar {
+            min-width: 0;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 22px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 21px 23px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+        }
+
+        .card-title-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .card-title h2 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .card-title p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .card-body {
+            padding: 23px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 19px;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-label span {
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            border-radius: 9px;
+            min-height: 44px;
+            padding: 10px 13px;
+            outline: none;
+            color: #111827;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        textarea.form-control {
+            min-height: 105px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(185,28,28,0.08);
+        }
+
+        .form-help {
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 6px;
+            line-height: 1.45;
+        }
+
+        .switch-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .switch-row:first-child {
+            padding-top: 0;
+        }
+
+        .switch-row:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .switch-info strong {
+            display: block;
+            color: #374151;
+            font-size: 13px;
+        }
+
+        .switch-info span {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+            line-height: 1.45;
+        }
+
+        .switch {
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .switch input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .switch-track {
+            width: 48px;
+            height: 27px;
+            border-radius: 30px;
+            background: #d1d5db;
+            display: block;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .switch-track::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 21px;
+            height: 21px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+
+        .switch input:checked + .switch-track {
+            background: var(--primary);
+        }
+
+        .switch input:checked + .switch-track::after {
+            transform: translateX(21px);
+        }
+
+        .info-box {
+            padding: 15px 16px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #1e40af;
+            font-size: 12px;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        .warning-box {
+            padding: 15px 16px;
+            border-radius: 10px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            font-size: 12px;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        .danger-box {
+            padding: 15px 16px;
+            border-radius: 10px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+            line-height: 1.55;
+            margin-bottom: 18px;
+        }
+
+        .button-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-height: 42px;
+            padding: 9px 16px;
+            border: 0;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: #15803d;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-info {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .settings-menu {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 22px;
+        }
+
+        .settings-menu-title {
+            padding: 17px 18px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .settings-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 18px;
+            color: #4b5563;
+            font-size: 13px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .settings-menu-item:last-child {
+            border-bottom: 0;
+        }
+
+        .settings-menu-item:hover {
+            background: #f9fafb;
+            color: var(--primary);
+        }
+
+        .settings-menu-item span:first-child {
+            width: 22px;
+            text-align: center;
+        }
+
+        .system-card {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: #fff;
+            border: 0;
+        }
+
+        .system-card .card-header {
+            border-bottom-color: rgba(255,255,255,0.08);
+        }
+
+        .system-card .card-title h2 {
+            color: #fff;
+        }
+
+        .system-card .card-title p {
+            color: #9ca3af;
+        }
+
+        .system-card .card-title-icon {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .system-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 12px;
+        }
+
+        .system-row:last-child {
+            border-bottom: 0;
+        }
+
+        .system-row span:first-child {
+            color: #9ca3af;
+        }
+
+        .system-row strong {
+            text-align: right;
+            color: #fff;
+        }
+
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .save-bar {
+            position: sticky;
+            bottom: 15px;
+            z-index: 50;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(15,23,42,0.12);
+            border-radius: 13px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .save-status {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .save-status.saved {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .file-input {
+            width: 100%;
+            border: 1px dashed #cbd5e1;
+            border-radius: 9px;
+            padding: 14px;
+            background: #f8fafc;
+        }
+
+        .toast-container {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 270px;
+            max-width: 380px;
+            background: #111827;
+            color: #fff;
+            border-radius: 10px;
+            padding: 13px 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            font-size: 13px;
+            animation: toastIn 0.25s ease;
+        }
+
+        .toast.success {
+            border-left: 4px solid #22c55e;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 950;
+        }
+
+        @media (max-width: 1100px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            .settings-sidebar .settings-menu,
+            .settings-sidebar .system-card {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+
+            .settings-sidebar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .topbar {
+                height: 68px;
+            }
+
+            .page-title h1 {
+                font-size: 18px;
+            }
+
+            .page-title p {
+                display: none;
+            }
+
+            .admin-user-text {
+                display: none;
+            }
+
+            .admin-avatar {
+                width: 36px;
+                height: 36px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 17px;
+            }
+
+            .save-bar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .save-bar .button-row {
+                width: 100%;
+            }
+
+            .save-bar .btn {
+                flex: 1;
+            }
+
+            .toast-container {
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+            }
+
+            .toast {
+                min-width: 0;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo">AH</div>
+            <div class="brand-text">
+                <strong>Akçaabat Haber</strong>
+                <span>Yönetim Paneli</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-label">Yönetim</div>
+
+            <a href="admin.html" class="nav-link">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="yeni-haber.html" class="nav-link">
+                <span class="nav-icon">➕</span>
+                <span>Yeni Haber</span>
+            </a>
+
+            <a href="haberler.html" class="nav-link">
+                <span class="nav-icon">📰</span>
+                <span>Haberler</span>
+            </a>
+
+            <a href="taslaklar.html" class="nav-link">
+                <span class="nav-icon">📝</span>
+                <span>Taslaklar</span>
+            </a>
+
+            <a href="kategoriler.html" class="nav-link">
+                <span class="nav-icon">🗂️</span>
+                <span>Kategoriler</span>
+            </a>
+
+            <a href="yorumlar.html" class="nav-link">
+                <span class="nav-icon">💬</span>
+                <span>Yorumlar</span>
+            </a>
+
+            <a href="ayarlar.html" class="nav-link active">
+                <span class="nav-icon">⚙️</span>
+                <span>Ayarlar</span>
+            </a>
+
+            <div class="nav-label" style="margin-top:15px;">Site</div>
+
+            <a href="index.html" class="nav-link">
+                <span class="nav-icon">🏠</span>
+                <span>Siteyi Gör</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="index.html" class="site-link">
+                <span>🌐</span>
+                <span>Akçaabat Haber</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-button" id="menuButton" type="button">☰</button>
+
+                <div class="page-title">
+                    <h1>Site Ayarları</h1>
+                    <p>Akçaabat Haber sistem ayarlarını yönetin</p>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <div class="admin-user">
+                    <div class="admin-user-text">
+                        <strong>Yönetici</strong>
+                        <span>Administrator</span>
+                    </div>
+                    <div class="admin-avatar">A</div>
+                </div>
+            </div>
+        </header>
+
+        <section class="content">
+
+            <div class="settings-grid">
+
+                <div class="settings-main">
+
+                    <!-- SITE BİLGİLERİ -->
+                    <div class="card" id="site-bilgileri">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">🌐</div>
+                                <div>
+                                    <h2>Site Bilgileri</h2>
+                                    <p>Temel site bilgilerini düzenleyin</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="siteTitle">
+                                        Site Başlığı <span>*</span>
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="siteTitle"
+                                        type="text"
+                                        value="Akçaabat Haber"
+                                        maxlength="100"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="siteUrl">
+                                        Site Adresi
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="siteUrl"
+                                        type="url"
+                                        value="https://akcaabathaber.com.tr"
+                                    >
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label" for="siteDescription">
+                                        Site Açıklaması
+                                    </label>
+                                    <textarea
+                                        class="form-control"
+                                        id="siteDescription"
+                                        maxlength="300"
+                                    >Akçaabat ve Trabzon'dan güncel haberler, son dakika gelişmeleri ve yerel gündem.</textarea>
+                                    <div class="form-help">
+                                        Arama motorlarında ve sosyal medya paylaşımlarında kullanılabilecek kısa açıklama.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="siteEmail">
+                                        İletişim E-postası
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="siteEmail"
+                                        type="email"
+                                        placeholder="info@akcaabathaber.com.tr"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="sitePhone">
+                                        İletişim Telefonu
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="sitePhone"
+                                        type="text"
+                                        placeholder="0462 000 00 00"
+                                    >
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label" for="siteAddress">
+                                        Adres
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="siteAddress"
+                                        type="text"
+                                        placeholder="Akçaabat / Trabzon"
+                                    >
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GÖRÜNÜM -->
+                    <div class="card" id="gorunum">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">🎨</div>
+                                <div>
+                                    <h2>Görünüm Ayarları</h2>
+                                    <p>Site görünümüyle ilgili tercihleri yönetin</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="logoText">
+                                        Logo / Kısa İsim
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="logoText"
+                                        type="text"
+                                        value="AH"
+                                        maxlength="10"
+                                    >
+                                    <div class="form-help">
+                                        Yönetim panelindeki kısa logo alanında kullanılabilir.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="themeMode">
+                                        Tema Tercihi
+                                    </label>
+                                    <select class="form-control" id="themeMode">
+                                        <option value="light">Açık Tema</option>
+                                        <option value="dark">Koyu Tema</option>
+                                        <option value="system">Sistem Tercihi</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div style="margin-top:22px;">
+                                <div class="switch-row">
+                                    <div class="switch-info">
+                                        <strong>Son Dakika Barını Göster</strong>
+                                        <span>Anasayfadaki son dakika/breaking news alanını aktif tutar.</span>
+                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" id="showBreakingBar" checked>
+                                        <span class="switch-track"></span>
+                                    </label>
+                                </div>
+
+                                <div class="switch-row">
+                                    <div class="switch-info">
+                                        <strong>Mobil Menü</strong>
+                                        <span>Mobil cihazlarda yönetim menüsünü kullanıma açık tutar.</span>
+                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" id="mobileMenuEnabled" checked>
+                                        <span class="switch-track"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- HABER AYARLARI -->
+                    <div class="card" id="haber-ayarlari">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">📰</div>
+                                <div>
+                                    <h2>Haber Ayarları</h2>
+                                    <p>Haber yayınlama ve listeleme tercihleri</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-grid">
+
+                                <div class="form-group">
+                                    <label class="form-label" for="defaultCategory">
+                                        Varsayılan Kategori
+                                    </label>
+                                    <select class="form-control" id="defaultCategory">
+                                        <option value="Gündem">Gündem</option>
+                                        <option value="Akçaabat">Akçaabat</option>
+                                        <option value="Trabzon">Trabzon</option>
+                                        <option value="Spor">Spor</option>
+                                        <option value="Ekonomi">Ekonomi</option>
+                                        <option value="Siyaset">Siyaset</option>
+                                        <option value="Kültür Sanat">Kültür Sanat</option>
+                                        <option value="Yaşam">Yaşam</option>
+                                        <option value="Asayiş">Asayiş</option>
+                                        <option value="Dünya">Dünya</option>
+                                        <option value="Teknoloji">Teknoloji</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="postsPerPage">
+                                        Sayfa Başına Haber
+                                    </label>
+                                    <select class="form-control" id="postsPerPage">
+                                        <option value="6">6</option>
+                                        <option value="9">9</option>
+                                        <option value="12">12</option>
+                                        <option value="15">15</option>
+                                        <option value="18">18</option>
+                                        <option value="24">24</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div style="margin-top:22px;">
+
+                                <div class="switch-row">
+                                    <div class="switch-info">
+                                        <strong>Otomatik Taslak Kaydı</strong>
+                                        <span>Haber yazarken geçici taslakların tarayıcıya kaydedilmesini sağlar.</span>
+                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" id="autoDraft" checked>
+                                        <span class="switch-track"></span>
+                                    </label>
+                                </div>
+
+                                <div class="switch-row">
+                                    <div class="switch-info">
+                                        <strong>Haber Görüntülenme Sayısını Tut</strong>
+                                        <span>Haberlerin görüntülenme sayaçlarının saklanmasını sağlar.</span>
+                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" id="trackViews" checked>
+                                        <span class="switch-track"></span>
+                                    </label>
+                                </div>
+
+                                <div class="switch-row">
+                                    <div class="switch-info">
+                                        <strong>Yeni Haberlerde Otomatik Tarih</strong>
+                                        <span>Yeni içeriklerde oluşturulma tarihinin otomatik eklenmesini sağlar.</span>
+                                    </div>
+
+                                    <label class="switch">
+                                        <input type="checkbox" id="autoDate" checked>
+                                        <span class="switch-track"></span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- YORUM AYARLARI -->
+                    <div class="card" id="yorum-ayarlari">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">💬</div>
+                                <div>
+                                    <h2>Yorum Ayarları</h2>
+                                    <p>Okuyucu yorumları için temel ayarlar</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="info-box">
+                                Yorum sistemi şu an tarayıcı tabanlı olarak çalışacak şekilde hazırlanmıştır.
+                                Gerçek ziyaretçiler arasında ortak yorum verisi için ileride bir veritabanı/backend bağlantısı gerekir.
+                            </div>
+
+                            <div class="switch-row">
+                                <div class="switch-info">
+                                    <strong>Yorumları Aktif Et</strong>
+                                    <span>Haber sayfalarında yorum alanının kullanılmasına izin verir.</span>
+                                </div>
+
+                                <label class="switch">
+                                    <input type="checkbox" id="commentsEnabled" checked>
+                                    <span class="switch-track"></span>
+                                </label>
+                            </div>
+
+                            <div class="switch-row">
+                                <div class="switch-info">
+                                    <strong>Yorumları Otomatik Onayla</strong>
+                                    <span>Yeni yorumların yönetici onayı beklemeden yayınlanmasını sağlar.</span>
+                                </div>
+
+                                <label class="switch">
+                                    <input type="checkbox" id="autoApproveComments">
+                                    <span class="switch-track"></span>
+                                </label>
+                            </div>
+
+                            <div class="switch-row">
+                                <div class="switch-info">
+                                    <strong>Bekleyen Yorum Bildirimi</strong>
+                                    <span>Yönetim panelinde bekleyen yorumların gösterilmesini sağlar.</span>
+                                </div>
+
+                                <label class="switch">
+                                    <input type="checkbox" id="pendingCommentBadge" checked>
+                                    <span class="switch-track"></span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- SEO -->
+                    <div class="card" id="seo">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">🔎</div>
+                                <div>
+                                    <h2>SEO Ayarları</h2>
+                                    <p>Arama motorları ve sosyal paylaşım bilgileri</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="form-grid">
+
+                                <div class="form-group full">
+                                    <label class="form-label" for="metaTitle">
+                                        Ana Sayfa Meta Başlığı
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="metaTitle"
+                                        type="text"
+                                        maxlength="160"
+                                        value="Akçaabat Haber | Akçaabat ve Trabzon Haberleri"
+                                    >
+                                    <div class="form-help">
+                                        Önerilen uzunluk yaklaşık 50-60 karakterdir.
+                                    </div>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label" for="metaDescription">
+                                        Ana Sayfa Meta Açıklaması
+                                    </label>
+                                    <textarea
+                                        class="form-control"
+                                        id="metaDescription"
+                                        maxlength="300"
+                                    >Akçaabat Haber ile Akçaabat ve Trabzon'dan son dakika haberleri, yerel gelişmeler, spor, ekonomi ve gündemi takip edin.</textarea>
+                                </div>
+
+                                <div class="form-group full">
+                                    <label class="form-label" for="metaKeywords">
+                                        Anahtar Kelimeler
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="metaKeywords"
+                                        type="text"
+                                        placeholder="Akçaabat, Trabzon, haber, son dakika, yerel haber"
+                                    >
+                                    <div class="form-help">
+                                        Kelimeleri virgülle ayırabilirsiniz.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="socialTitle">
+                                        Sosyal Paylaşım Başlığı
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="socialTitle"
+                                        type="text"
+                                        maxlength="160"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="socialDescription">
+                                        Sosyal Paylaşım Açıklaması
+                                    </label>
+                                    <input
+                                        class="form-control"
+                                        id="socialDescription"
+                                        type="text"
+                                        maxlength="300"
+                                    >
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- VERİ YÖNETİMİ -->
+                    <div class="card" id="veri">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">💾</div>
+                                <div>
+                                    <h2>Veri Yönetimi</h2>
+                                    <p>Ayarlarınızı dışa aktarın veya geri yükleyin</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="warning-box">
+                                Bu proje GitHub Pages üzerinde statik olarak çalıştığı için ayarlar tarayıcının
+                                localStorage alanında tutulur. Başka cihazlarda otomatik olarak görünmez.
+                            </div>
+
+                            <div class="button-row">
+                                <button class="btn btn-info" id="exportSettings" type="button">
+                                    ⬇️ Ayarları Dışa Aktar
+                                </button>
+
+                                <label class="btn btn-secondary" style="cursor:pointer;">
+                                    ⬆️ Ayarları İçe Aktar
+                                    <input
+                                        type="file"
+                                        id="importSettings"
+                                        accept=".json,application/json"
+                                        hidden
+                                    >
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- SIFIRLAMA -->
+                    <div class="card" id="sifirlama">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">⚠️</div>
+                                <div>
+                                    <h2>Tehlikeli Alan</h2>
+                                    <p>Ayarları varsayılan değerlere döndürün</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="danger-box">
+                                Ayarları sıfırladığınızda bu sayfadaki tüm site tercihleri varsayılan değerlere döner.
+                                Haberler, taslaklar ve yorumlar silinmez.
+                            </div>
+
+                            <button class="btn btn-danger" id="resetSettings" type="button">
+                                🗑️ Ayarları Varsayılana Döndür
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <!-- KAYDET -->
+                    <div class="save-bar">
+                        <div class="save-status" id="saveStatus">
+                            Değişikliklerinizi kaydetmeyi unutmayın.
+                        </div>
+
+                        <div class="button-row">
+                            <button class="btn btn-secondary" id="reloadSettings" type="button">
+                                ↻ Yenile
+                            </button>
+
+                            <button class="btn btn-primary" id="saveSettings" type="button">
+                                💾 Ayarları Kaydet
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <aside class="settings-sidebar">
+
+                    <div class="settings-menu">
+                        <div class="settings-menu-title">
+                            Ayar Menüsü
+                        </div>
+
+                        <a href="#site-bilgileri" class="settings-menu-item">
+                            <span>🌐</span>
+                            <span>Site Bilgileri</span>
+                        </a>
+
+                        <a href="#gorunum" class="settings-menu-item">
+                            <span>🎨</span>
+                            <span>Görünüm</span>
+                        </a>
+
+                        <a href="#haber-ayarlari" class="settings-menu-item">
+                            <span>📰</span>
+                            <span>Haber Ayarları</span>
+                        </a>
+
+                        <a href="#yorum-ayarlari" class="settings-menu-item">
+                            <span>💬</span>
+                            <span>Yorum Ayarları</span>
+                        </a>
+
+                        <a href="#seo" class="settings-menu-item">
+                            <span>🔎</span>
+                            <span>SEO</span>
+                        </a>
+
+                        <a href="#veri" class="settings-menu-item">
+                            <span>💾</span>
+                            <span>Veri Yönetimi</span>
+                        </a>
+
+                        <a href="#sifirlama" class="settings-menu-item">
+                            <span>⚠️</span>
+                            <span>Sıfırlama</span>
+                        </a>
+                    </div>
+
+                    <div class="card system-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-title-icon">⚙️</div>
+                                <div>
+                                    <h2>Sistem</h2>
+                                    <p>Mevcut çalışma bilgileri</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="system-row">
+                                <span>Platform</span>
+                                <strong>GitHub Pages</strong>
+                            </div>
+
+                            <div class="system-row">
+                                <span>Depolama</span>
+                                <strong>localStorage</strong>
+                            </div>
+
+                            <div class="system-row">
+                                <span>Haber Verisi</span>
+                                <strong id="newsCount">0</strong>
+                            </div>
+
+                            <div class="system-row">
+                                <span>Taslak</span>
+                                <strong id="draftCount">0</strong>
+                            </div>
+
+                            <div class="system-row">
+                                <span>Yorum</span>
+                                <strong id="commentCount">0</strong>
+                            </div>
+
+                            <div class="system-row">
+                                <span>Durum</span>
+                                <strong class="status-dot">Aktif</strong>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="script.js"></script>
+
+<script>
+(function () {
+    "use strict";
+
+    const STORAGE_KEY = "akcaabat_ayarlar";
+
+    const DEFAULT_SETTINGS = {
+        siteTitle: "Akçaabat Haber",
+        siteUrl: "https://akcaabathaber.com.tr",
+        siteDescription: "Akçaabat ve Trabzon'dan güncel haberler, son dakika gelişmeleri ve yerel gündem.",
+        siteEmail: "",
+        sitePhone: "",
+        siteAddress: "",
+        logoText: "AH",
+        themeMode: "light",
+        showBreakingBar: true,
+        mobileMenuEnabled: true,
+        defaultCategory: "Gündem",
+        postsPerPage: "12",
+        autoDraft: true,
+        trackViews: true,
+        autoDate: true,
+        commentsEnabled: true,
+        autoApproveComments: false,
+        pendingCommentBadge: true,
+        metaTitle: "Akçaabat Haber | Akçaabat ve Trabzon Haberleri",
+        metaDescription: "Akçaabat Haber ile Akçaabat ve Trabzon'dan son dakika haberleri, yerel gelişmeler, spor, ekonomi ve gündemi takip edin.",
+        metaKeywords: "",
+        socialTitle: "",
+        socialDescription: ""
+    };
+
+    const $ = function (selector) {
+        return document.querySelector(selector);
+    };
+
+    function showToast(message, type) {
+        const container = $("#toastContainer");
+
+        if (!container) {
+            return;
+        }
+
+        const toast = document.createElement("div");
+        toast.className = "toast " + (type || "");
+        toast.textContent = message;
+
+        container.appendChild(toast);
+
+        setTimeout(function () {
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(8px)";
+
+            setTimeout(function () {
+                toast.remove();
+            }, 250);
+        }, 3000);
+    }
+
+    function readJson(key, fallback) {
+        try {
+            const raw = localStorage.getItem(key);
+
+            if (!raw) {
+                return fallback;
+            }
+
+            const parsed = JSON.parse(raw);
+
+            return parsed === null ? fallback : parsed;
+        } catch (error) {
+            return fallback;
+        }
+    }
+
+    function getSettings() {
+        const stored = readJson(STORAGE_KEY, {});
+
+        return Object.assign({}, DEFAULT_SETTINGS, stored);
+    }
+
+    function saveSettings(settings) {
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(settings)
+        );
+    }
+
+    function setValue(id, value) {
+        const element = document.getElementById(id);
+
+        if (!element) {
+            return;
+        }
+
+        if (element.type === "checkbox") {
+            element.checked = Boolean(value);
+        } else {
+            element.value = value === undefined || value === null
+                ? ""
+                : value;
+        }
+    }
+
+    function getValue(id) {
+        const element = document.getElementById(id);
+
+        if (!element) {
+            return "";
+        }
+
+        if (element.type === "checkbox") {
+            return element.checked;
+        }
+
+        return element.value;
+    }
+
+    function loadSettings() {
+        const settings = getSettings();
+
+        Object.keys(DEFAULT_SETTINGS).forEach(function (key) {
+            setValue(key, settings[key]);
+        });
+
+        updateSaveStatus("Ayarlar yüklendi.", true);
+        updateSystemStats();
+    }
+
+    function collectSettings() {
+        const settings = {};
+
+        Object.keys(DEFAULT_SETTINGS).forEach(function (key) {
+            settings[key] = getValue(key);
+        });
+
+        return settings;
+    }
+
+    function updateSaveStatus(message, saved) {
+        const element = $("#saveStatus");
+
+        if (!element) {
+            return;
+        }
+
+        element.textContent = message;
+
+        if (saved) {
+            element.classList.add("saved");
+        } else {
+            element.classList.remove("saved");
+        }
+    }
+
+    function saveAllSettings() {
+        const settings = collectSettings();
+
+        if (!settings.siteTitle.trim()) {
+            showToast("Site başlığı boş bırakılamaz.", "error");
+            return;
+        }
+
+        saveSettings(settings);
+
+        updateSaveStatus(
+            "Ayarlar başarıyla kaydedildi.",
+            true
+        );
+
+        showToast(
+            "Ayarlar başarıyla kaydedildi.",
+            "success"
+        );
+    }
+
+    function resetSettings() {
+        const confirmed = confirm(
+            "Tüm site ayarları varsayılan değerlere döndürülsün mü?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        saveSettings(DEFAULT_SETTINGS);
+        loadSettings();
+
+        showToast(
+            "Ayarlar varsayılan değerlere döndürüldü.",
+            "success"
+        );
+    }
+
+    function exportSettings() {
+        const settings = collectSettings();
+
+        const data = JSON.stringify(
+            settings,
+            null,
+            2
+        );
+
+        const blob = new Blob(
+            [data],
+            { type: "application/json;charset=utf-8" }
+        );
+
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "akcaabat-haber-ayarlari.json";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        URL.revokeObjectURL(url);
+
+        showToast(
+            "Ayarlar dışa aktarıldı.",
+            "success"
+        );
+    }
+
+    function importSettings(file) {
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            try {
+                const imported = JSON.parse(
+                    event.target.result
+                );
+
+                if (
+                    !imported ||
+                    typeof imported !== "object" ||
+                    Array.isArray(imported)
+                ) {
+                    throw new Error("Geçersiz ayar dosyası.");
+                }
+
+                const merged = Object.assign(
+                    {},
+                    DEFAULT_SETTINGS,
+                    imported
+                );
+
+                saveSettings(merged);
+                loadSettings();
+
+                showToast(
+                    "Ayarlar başarıyla içe aktarıldı.",
+                    "success"
+                );
+
+            } catch (error) {
+                showToast(
+                    "Ayar dosyası okunamadı.",
+                    "error"
+                );
+            }
+        };
+
+        reader.onerror = function () {
+            showToast(
+                "Dosya okunurken hata oluştu.",
+                "error"
+            );
+        };
+
+        reader.readAsText(file);
+    }
+
+    function updateSystemStats() {
+        const news = readJson(
+            "akcaabat_haberler",
+            []
+        );
+
+        const drafts = readJson(
+            "akcaabat_taslaklar",
+            []
+        );
+
+        const comments = readJson(
+            "akcaabat_yorumlar",
+            []
+        );
+
+        const newsCount = $("#newsCount");
+        const draftCount = $("#draftCount");
+        const commentCount = $("#commentCount");
+
+        if (newsCount) {
+            newsCount.textContent = Array.isArray(news)
+                ? news.length
+                : 0;
+        }
+
+        if (draftCount) {
+            draftCount.textContent = Array.isArray(drafts)
+                ? drafts.length
+                : 0;
+        }
+
+        if (commentCount) {
+            commentCount.textContent = Array.isArray(comments)
+                ? comments.length
+                : 0;
+        }
+    }
+
+    function setupSidebar() {
+        const sidebar = $("#sidebar");
+        const overlay = $("#overlay");
+        const button = $("#menuButton");
+
+        if (!sidebar || !overlay || !button) {
+            return;
+        }
+
+        function openMenu() {
+            sidebar.classList.add("open");
+            overlay.classList.add("active");
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        }
+
+        button.addEventListener("click", function () {
+            if (sidebar.classList.contains("open")) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        overlay.addEventListener("click", closeMenu);
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+            link.addEventListener("click", function () {
+                if (window.innerWidth <= 850) {
+                    closeMenu();
+                }
+            });
+        });
+    }
+
+    function setupChangeTracking() {
+        document.querySelectorAll(
+            ".form-control, .switch input"
+        ).forEach(function (element) {
+
+            element.addEventListener("input", function () {
+                updateSaveStatus(
+                    "Kaydedilmemiş değişiklikler var.",
+                    false
+                );
+            });
+
+            element.addEventListener("change", function () {
+                updateSaveStatus(
+                    "Kaydedilmemiş değişiklikler var.",
+                    false
+                );
+            });
+        });
+    }
+
+    function setupEvents() {
+        const saveButton = $("#saveSettings");
+        const resetButton = $("#resetSettings");
+        const exportButton = $("#exportSettings");
+        const importInput = $("#importSettings");
+        const reloadButton = $("#reloadSettings");
+
+        if (saveButton) {
+            saveButton.addEventListener(
+                "click",
+                saveAllSettings
+            );
+        }
+
+        if (resetButton) {
+            resetButton.addEventListener(
+                "click",
+                resetSettings
+            );
+        }
+
+        if (exportButton) {
+            exportButton.addEventListener(
+                "click",
+                exportSettings
+            );
+        }
+
+        if (importInput) {
+            importInput.addEventListener(
+                "change",
+                function () {
+                    importSettings(this.files[0]);
+                    this.value = "";
+                }
+            );
+        }
+
+        if (reloadButton) {
+            reloadButton.addEventListener(
+                "click",
+                function () {
+                    loadSettings();
+
+                    showToast(
+                        "Ayarlar yeniden yüklendi.",
+                        "success"
+                    );
+                }
+            );
+        }
+    }
+
+    function setupSmoothLinks() {
+        document.querySelectorAll(
+            '.settings-menu-item[href^="#"]'
+        ).forEach(function (link) {
+
+            link.addEventListener("click", function (event) {
+                const targetId = this.getAttribute("href");
+
+                if (!targetId || targetId === "#") {
+                    return;
+                }
+
+                const target = document.querySelector(
+                    targetId
+                );
+
+                if (!target) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            });
+        });
+    }
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+            loadSettings();
+            setupSidebar();
+            setupEvents();
+            setupChangeTracking();
+            setupSmoothLinks();
+            updateSystemStats();
+        }
+    );
+
+})();
+</script>
+
+</body>
+</html>
