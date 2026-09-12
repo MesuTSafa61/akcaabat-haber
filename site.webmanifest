@@ -1,0 +1,32 @@
+{
+  "name": "Akçaabat Haber",
+  "short_name": "Akçaabat Haber",
+  "description": "Akçaabat ve Trabzon'dan güncel haberler.",
+  "lang": "tr-TR",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#0b1f3a",
+  "categories": [
+    "news",
+    "lifestyle",
+    "social"
+  ],
+  "icons": [
+    {
+      "src": "/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
