@@ -6,8 +6,15 @@
 
     <title>Yönetim Paneli | Akçaabat Haber</title>
 
-    <meta name="description" content="Akçaabat Haber yönetim paneli">
-    <meta name="theme-color" content="#0b1727">
+    <meta
+        name="description"
+        content="Akçaabat Haber yönetim paneli"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1727"
+    >
 
     <link rel="stylesheet" href="style.css">
 
@@ -81,7 +88,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .brand-logo {
@@ -95,6 +102,7 @@
             font-size: 20px;
             font-weight: 800;
             color: #fff;
+            flex-shrink: 0;
         }
 
         .brand-info strong {
@@ -139,20 +147,21 @@
         }
 
         .sidebar-link:hover {
-            background: rgba(255,255,255,0.07);
+            background: rgba(255, 255, 255, 0.07);
             color: #fff;
         }
 
         .sidebar-link.active {
             background: var(--admin-blue);
             color: #fff;
-            box-shadow: 0 7px 18px rgba(20,100,210,0.25);
+            box-shadow: 0 7px 18px rgba(20, 100, 210, 0.25);
         }
 
         .sidebar-icon {
             width: 24px;
             text-align: center;
             font-size: 17px;
+            flex-shrink: 0;
         }
 
         .sidebar-bottom {
@@ -166,12 +175,12 @@
             padding: 13px;
             border-radius: 10px;
             color: #c7d1df;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.04);
             font-size: 13px;
         }
 
         .site-link:hover {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
         }
 
@@ -196,6 +205,10 @@
             z-index: 900;
         }
 
+        .topbar-left {
+            min-width: 0;
+        }
+
         .topbar-left h1 {
             margin: 0;
             font-size: 22px;
@@ -217,6 +230,7 @@
         .topbar-date {
             color: var(--admin-muted);
             font-size: 13px;
+            text-transform: capitalize;
         }
 
         .admin-user {
@@ -240,6 +254,8 @@
             border-radius: 9px;
             cursor: pointer;
             font-size: 20px;
+            align-items: center;
+            justify-content: center;
         }
 
         .admin-content {
@@ -272,7 +288,7 @@
             border-radius: 50%;
             right: -80px;
             top: -110px;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .welcome-text {
@@ -289,6 +305,7 @@
             margin: 0;
             color: #c5d2e2;
             font-size: 14px;
+            line-height: 1.6;
         }
 
         .welcome-actions {
@@ -309,12 +326,18 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
+            transition: 0.2s ease;
+        }
+
+        .welcome-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.12);
         }
 
         .welcome-btn.secondary {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
-            border: 1px solid rgba(255,255,255,0.18);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         /* STATS */
@@ -344,7 +367,7 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: rgba(20,100,210,0.04);
+            background: rgba(20, 100, 210, 0.04);
         }
 
         .stat-top {
@@ -368,6 +391,7 @@
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            flex-shrink: 0;
         }
 
         .stat-blue .stat-icon {
@@ -447,6 +471,11 @@
             color: var(--admin-blue);
             font-size: 12px;
             font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .panel-link:hover {
+            color: var(--admin-blue-dark);
         }
 
         .panel-body {
@@ -473,6 +502,7 @@
             font-size: 11px;
             font-weight: 700;
             border-bottom: 1px solid var(--admin-border);
+            white-space: nowrap;
         }
 
         .news-table td {
@@ -530,11 +560,13 @@
         .view-count {
             color: #5e6b7e;
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .table-actions {
             display: flex;
             gap: 6px;
+            flex-wrap: wrap;
         }
 
         .table-btn {
@@ -545,6 +577,7 @@
             font-size: 10px;
             font-weight: 700;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .table-btn:hover {
@@ -553,6 +586,10 @@
 
         .table-btn.primary {
             color: var(--admin-blue);
+        }
+
+        .table-btn.edit {
+            color: #4b5563;
         }
 
         /* DRAFTS */
@@ -621,6 +658,11 @@
             color: var(--admin-blue);
             font-size: 10px;
             font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .draft-action:hover {
+            background: #e2edff;
         }
 
         /* LOWER GRID */
@@ -650,6 +692,9 @@
             color: #4c596c;
             font-size: 12px;
             font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .category-bar {
@@ -663,6 +708,7 @@
             height: 100%;
             background: var(--admin-blue);
             border-radius: inherit;
+            transition: width 0.4s ease;
         }
 
         .category-count {
@@ -694,7 +740,7 @@
         .quick-action:hover {
             border-color: #cdd9e8;
             transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(15,23,42,0.05);
+            box-shadow: 0 5px 15px rgba(15, 23, 42, 0.05);
         }
 
         .quick-icon {
@@ -752,6 +798,7 @@
 
         .empty-state span {
             font-size: 11px;
+            line-height: 1.5;
         }
 
         /* FOOTER */
@@ -761,6 +808,20 @@
             color: #8994a4;
             font-size: 11px;
             text-align: center;
+        }
+
+        /* MOBILE OVERLAY */
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 23, 39, 0.45);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.visible {
+            display: block;
         }
 
         /* RESPONSIVE */
@@ -783,7 +844,7 @@
             .admin-sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.25s ease;
-                box-shadow: 10px 0 30px rgba(0,0,0,0.15);
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
             }
 
             .admin-sidebar.mobile-visible {
@@ -796,8 +857,6 @@
 
             .mobile-sidebar-button {
                 display: inline-flex;
-                align-items: center;
-                justify-content: center;
             }
 
             .topbar-left {
@@ -900,6 +959,15 @@
                 width: 35px;
                 height: 35px;
             }
+
+            .welcome-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .welcome-btn {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -909,44 +977,71 @@
 <div class="admin-layout">
 
     <!-- SIDEBAR -->
-    <aside class="admin-sidebar" id="adminSidebar">
+    <aside
+        class="admin-sidebar"
+        id="adminSidebar"
+        aria-label="Yönetim menüsü"
+    >
 
         <div class="sidebar-brand">
-            <div class="brand-logo">AH</div>
+
+            <div class="brand-logo">
+                AH
+            </div>
 
             <div class="brand-info">
                 <strong>Akçaabat Haber</strong>
                 <span>Yönetim Paneli</span>
             </div>
+
         </div>
 
         <nav class="sidebar-menu">
 
-            <div class="menu-title">Yönetim</div>
+            <div class="menu-title">
+                Yönetim
+            </div>
 
-            <a href="admin.html" class="sidebar-link active">
+            <a
+                href="admin.html"
+                class="sidebar-link active"
+            >
                 <span class="sidebar-icon">▦</span>
                 <span>Dashboard</span>
             </a>
 
-            <a href="haber.html" class="sidebar-link">
+            <a
+                href="haberler.html"
+                class="sidebar-link"
+            >
                 <span class="sidebar-icon">📰</span>
                 <span>Haberler</span>
             </a>
 
-            <a href="yeni-haber.html" class="sidebar-link">
+            <a
+                href="yeni-haber.html"
+                class="sidebar-link"
+            >
                 <span class="sidebar-icon">＋</span>
                 <span>Yeni Haber</span>
             </a>
 
-            <a href="taslaklar.html" class="sidebar-link">
+            <a
+                href="taslaklar.html"
+                class="sidebar-link"
+            >
                 <span class="sidebar-icon">▤</span>
                 <span>Taslaklar</span>
             </a>
 
-            <div class="menu-title">Site</div>
+            <div class="menu-title">
+                Site
+            </div>
 
-            <a href="index.html" class="sidebar-link">
+            <a
+                href="index.html"
+                class="sidebar-link"
+            >
                 <span class="sidebar-icon">⌂</span>
                 <span>Siteye Git</span>
             </a>
@@ -955,7 +1050,10 @@
 
         <div class="sidebar-bottom">
 
-            <a href="index.html" class="site-link">
+            <a
+                href="index.html"
+                class="site-link"
+            >
                 <span>↗</span>
                 <span>Akçaabat Haber'i Görüntüle</span>
             </a>
@@ -963,6 +1061,13 @@
         </div>
 
     </aside>
+
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        aria-hidden="true"
+    ></div>
 
 
     <!-- MAIN -->
@@ -978,24 +1083,38 @@
                     id="sidebarToggle"
                     type="button"
                     aria-label="Menüyü aç"
+                    aria-expanded="false"
                 >
                     ☰
                 </button>
 
                 <div>
-                    <h1>Dashboard</h1>
-                    <p>Akçaabat Haber yönetim merkezi</p>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                    <p>
+                        Akçaabat Haber yönetim merkezi
+                    </p>
+
                 </div>
 
             </div>
 
             <div class="topbar-right">
 
-                <div class="topbar-date" id="currentDate">
+                <div
+                    class="topbar-date"
+                    id="currentDate"
+                >
                     --
                 </div>
 
-                <div class="admin-user">
+                <div
+                    class="admin-user"
+                    aria-label="Yönetici"
+                >
                     AH
                 </div>
 
@@ -1012,7 +1131,9 @@
 
                 <div class="welcome-text">
 
-                    <h2>Hoş geldin 👋</h2>
+                    <h2>
+                        Hoş geldin 👋
+                    </h2>
 
                     <p>
                         Akçaabat Haber içerik yönetim merkezine hoş geldin.
@@ -1023,11 +1144,17 @@
 
                 <div class="welcome-actions">
 
-                    <a href="yeni-haber.html" class="welcome-btn">
+                    <a
+                        href="yeni-haber.html"
+                        class="welcome-btn"
+                    >
                         ＋ Yeni Haber
                     </a>
 
-                    <a href="index.html" class="welcome-btn secondary">
+                    <a
+                        href="index.html"
+                        class="welcome-btn secondary"
+                    >
                         ↗ Siteyi Gör
                     </a>
 
@@ -1053,7 +1180,10 @@
 
                     </div>
 
-                    <div class="stat-value" id="totalNews">
+                    <div
+                        class="stat-value"
+                        id="totalNews"
+                    >
                         0
                     </div>
 
@@ -1078,7 +1208,10 @@
 
                     </div>
 
-                    <div class="stat-value" id="totalDrafts">
+                    <div
+                        class="stat-value"
+                        id="totalDrafts"
+                    >
                         0
                     </div>
 
@@ -1103,7 +1236,10 @@
 
                     </div>
 
-                    <div class="stat-value" id="totalBreaking">
+                    <div
+                        class="stat-value"
+                        id="totalBreaking"
+                    >
                         0
                     </div>
 
@@ -1128,7 +1264,10 @@
 
                     </div>
 
-                    <div class="stat-value" id="totalViews">
+                    <div
+                        class="stat-value"
+                        id="totalViews"
+                    >
                         0
                     </div>
 
@@ -1150,6 +1289,7 @@
                     <div class="panel-header">
 
                         <div>
+
                             <h3 class="panel-title">
                                 Son Haberler
                             </h3>
@@ -1157,9 +1297,13 @@
                             <p class="panel-subtitle">
                                 Sisteme eklenen son yayınlar
                             </p>
+
                         </div>
 
-                        <a href="haber.html" class="panel-link">
+                        <a
+                            href="haberler.html"
+                            class="panel-link"
+                        >
                             Tümünü Gör →
                         </a>
 
@@ -1183,8 +1327,7 @@
 
                                 </thead>
 
-                                <tbody id="latestNewsTable">
-                                </tbody>
+                                <tbody id="latestNewsTable"></tbody>
 
                             </table>
 
@@ -1201,6 +1344,7 @@
                     <div class="panel-header">
 
                         <div>
+
                             <h3 class="panel-title">
                                 Son Taslaklar
                             </h3>
@@ -1208,9 +1352,13 @@
                             <p class="panel-subtitle">
                                 Düzenlemeye hazır içerikler
                             </p>
+
                         </div>
 
-                        <a href="taslaklar.html" class="panel-link">
+                        <a
+                            href="taslaklar.html"
+                            class="panel-link"
+                        >
                             Tümünü Gör →
                         </a>
 
@@ -1218,8 +1366,10 @@
 
                     <div class="panel-body">
 
-                        <div class="draft-list" id="draftList">
-                        </div>
+                        <div
+                            class="draft-list"
+                            id="draftList"
+                        ></div>
 
                     </div>
 
@@ -1237,6 +1387,7 @@
                     <div class="panel-header">
 
                         <div>
+
                             <h3 class="panel-title">
                                 Haber Kategorileri
                             </h3>
@@ -1244,14 +1395,17 @@
                             <p class="panel-subtitle">
                                 Yayındaki haberlerin kategori dağılımı
                             </p>
+
                         </div>
 
                     </div>
 
                     <div class="panel-body">
 
-                        <div class="category-list" id="categoryList">
-                        </div>
+                        <div
+                            class="category-list"
+                            id="categoryList"
+                        ></div>
 
                     </div>
 
@@ -1264,6 +1418,7 @@
                     <div class="panel-header">
 
                         <div>
+
                             <h3 class="panel-title">
                                 Hızlı İşlemler
                             </h3>
@@ -1271,6 +1426,7 @@
                             <p class="panel-subtitle">
                                 Sık kullandığın işlemlere hızlı erişim
                             </p>
+
                         </div>
 
                     </div>
@@ -1279,57 +1435,97 @@
 
                         <div class="quick-actions">
 
-                            <a href="yeni-haber.html" class="quick-action">
+                            <a
+                                href="yeni-haber.html"
+                                class="quick-action"
+                            >
 
                                 <div class="quick-icon">
                                     ＋
                                 </div>
 
                                 <div>
-                                    <strong>Yeni Haber Ekle</strong>
-                                    <span>Yeni içerik oluştur</span>
+
+                                    <strong>
+                                        Yeni Haber Ekle
+                                    </strong>
+
+                                    <span>
+                                        Yeni içerik oluştur
+                                    </span>
+
                                 </div>
 
                             </a>
 
 
-                            <a href="haber.html" class="quick-action">
+                            <a
+                                href="haberler.html"
+                                class="quick-action"
+                            >
 
                                 <div class="quick-icon">
                                     📰
                                 </div>
 
                                 <div>
-                                    <strong>Haberleri Yönet</strong>
-                                    <span>Yayınları düzenle</span>
+
+                                    <strong>
+                                        Haberleri Yönet
+                                    </strong>
+
+                                    <span>
+                                        Yayınları düzenle
+                                    </span>
+
                                 </div>
 
                             </a>
 
 
-                            <a href="taslaklar.html" class="quick-action">
+                            <a
+                                href="taslaklar.html"
+                                class="quick-action"
+                            >
 
                                 <div class="quick-icon">
                                     📝
                                 </div>
 
                                 <div>
-                                    <strong>Taslakları Aç</strong>
-                                    <span>Bekleyen içerikleri düzenle</span>
+
+                                    <strong>
+                                        Taslakları Aç
+                                    </strong>
+
+                                    <span>
+                                        Bekleyen içerikleri düzenle
+                                    </span>
+
                                 </div>
 
                             </a>
 
 
-                            <a href="index.html" class="quick-action">
+                            <a
+                                href="index.html"
+                                class="quick-action"
+                            >
 
                                 <div class="quick-icon">
                                     ↗
                                 </div>
 
                                 <div>
-                                    <strong>Siteyi Görüntüle</strong>
-                                    <span>Canlı ana sayfayı aç</span>
+
+                                    <strong>
+                                        Siteyi Görüntüle
+                                    </strong>
+
+                                    <span>
+                                        Canlı ana sayfayı aç
+                                    </span>
+
                                 </div>
 
                             </a>
@@ -1346,13 +1542,20 @@
 
 
         <footer class="admin-footer">
-            © <span id="footerYear"></span> Akçaabat Haber — Yönetim Paneli
+
+            ©
+            <span id="footerYear"></span>
+            Akçaabat Haber — Yönetim Paneli
+
         </footer>
 
     </main>
 
 </div>
 
+
+<!-- SCRIPT -->
+<script src="script.js"></script>
 
 <script>
 (function () {
@@ -1362,40 +1565,38 @@
     const NEWS_KEY = "akcaabat_haberler";
     const DRAFT_KEY = "akcaabat_taslaklar";
 
-    const fallbackImage =
-        "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80";
 
-
-    /* ------------------------------
-       HELPERS
-    ------------------------------ */
-
-    function safeArray(value) {
-
-        if (!Array.isArray(value)) {
-            return [];
-        }
-
-        return value;
-
-    }
-
+    /* --------------------------------
+       STORAGE
+    -------------------------------- */
 
     function readStorage(key) {
 
         try {
 
-            const data = localStorage.getItem(key);
+            const raw =
+                localStorage.getItem(key);
 
-            if (!data) {
+            if (!raw) {
                 return [];
             }
 
-            return safeArray(JSON.parse(data));
+            const parsed =
+                JSON.parse(raw);
+
+            return Array.isArray(parsed)
+                ? parsed.filter(function (item) {
+                    return item &&
+                        typeof item === "object";
+                })
+                : [];
 
         } catch (error) {
 
-            console.error("LocalStorage okunamadı:", error);
+            console.error(
+                "LocalStorage okunamadı:",
+                error
+            );
 
             return [];
 
@@ -1404,9 +1605,35 @@
     }
 
 
+    let news = [];
+    let drafts = [];
+
+
+    function refreshData() {
+
+        news =
+            readStorage(NEWS_KEY);
+
+        drafts =
+            readStorage(DRAFT_KEY);
+
+
+        sortNews();
+        sortDrafts();
+
+    }
+
+
+    /* --------------------------------
+       HELPERS
+    -------------------------------- */
+
     function escapeHtml(value) {
 
-        if (value === null || value === undefined) {
+        if (
+            value === null ||
+            value === undefined
+        ) {
             return "";
         }
 
@@ -1422,18 +1649,23 @@
 
     function getTitle(item) {
 
-        return item.title ||
+        return (
+            item.title ||
             item.baslik ||
-            "Başlıksız Haber";
+            item.name ||
+            "Başlıksız Haber"
+        );
 
     }
 
 
     function getCategory(item) {
 
-        return item.category ||
+        return (
+            item.category ||
             item.kategori ||
-            "Genel";
+            "Genel"
+        );
 
     }
 
@@ -1445,19 +1677,69 @@
                 ? item.views
                 : item.goruntulenme;
 
-        const number = Number(value);
+        const number =
+            Number(value);
 
-        return Number.isFinite(number) ? number : 0;
+        return Number.isFinite(number)
+            ? number
+            : 0;
+
+    }
+
+
+    function getId(item) {
+
+        return (
+            item.id ||
+            item.newsId ||
+            item.haberId ||
+            ""
+        );
 
     }
 
 
     function getDate(item) {
 
-        return item.publishedAt ||
+        return (
+            item.publishedAt ||
             item.createdAt ||
             item.updatedAt ||
-            new Date().toISOString();
+            item.date ||
+            0
+        );
+
+    }
+
+
+    function getDraftDate(item) {
+
+        return (
+            item.updatedAt ||
+            item.createdAt ||
+            item.date ||
+            0
+        );
+
+    }
+
+
+    function isBreaking(item) {
+
+        return (
+            item.breaking === true ||
+            item.breaking === "true" ||
+            item.sonDakika === true ||
+            item.sonDakika === "true"
+        );
+
+    }
+
+
+    function formatNumber(value) {
+
+        return Number(value || 0)
+            .toLocaleString("tr-TR");
 
     }
 
@@ -1468,17 +1750,25 @@
             return "-";
         }
 
-        const date = new Date(value);
+        const date =
+            new Date(value);
 
-        if (Number.isNaN(date.getTime())) {
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
             return "-";
         }
 
-        return date.toLocaleDateString("tr-TR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        });
+        return date.toLocaleDateString(
+            "tr-TR",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }
+        );
 
     }
 
@@ -1489,155 +1779,237 @@
             return "-";
         }
 
-        const date = new Date(value);
+        const date =
+            new Date(value);
 
-        if (Number.isNaN(date.getTime())) {
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
             return "-";
         }
 
-        return date.toLocaleDateString("tr-TR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        }) + " " + date.toLocaleTimeString("tr-TR", {
-            hour: "2-digit",
-            minute: "2-digit"
+        return (
+            date.toLocaleDateString(
+                "tr-TR",
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                }
+            ) +
+            " " +
+            date.toLocaleTimeString(
+                "tr-TR",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            )
+        );
+
+    }
+
+
+    /* --------------------------------
+       SORT
+    -------------------------------- */
+
+    function getTime(value) {
+
+        const time =
+            new Date(value).getTime();
+
+        return Number.isFinite(time)
+            ? time
+            : 0;
+
+    }
+
+
+    function sortNews() {
+
+        news.sort(function (a, b) {
+
+            return (
+                getTime(getDate(b)) -
+                getTime(getDate(a))
+            );
+
         });
 
     }
 
 
-    function formatNumber(value) {
+    function sortDrafts() {
 
-        return Number(value || 0).toLocaleString("tr-TR");
+        drafts.sort(function (a, b) {
+
+            return (
+                getTime(getDraftDate(b)) -
+                getTime(getDraftDate(a))
+            );
+
+        });
 
     }
 
 
-    function getNewsId(item) {
+    /* --------------------------------
+       NEWS URL
+    -------------------------------- */
 
-        return item.id ||
-            item.newsId ||
-            item.haberId ||
+    function getNewsUrl(item) {
+
+        if (
+            window.AkcaabatHaber &&
+            typeof window.AkcaabatHaber
+                .getNewsUrl === "function"
+        ) {
+
+            return window.AkcaabatHaber
+                .getNewsUrl(item);
+
+        }
+
+
+        const slug =
+            item.slug ||
+            item.seoSlug ||
             "";
 
+
+        if (slug) {
+
+            return (
+                "haber-detay.html?slug=" +
+                encodeURIComponent(slug)
+            );
+
+        }
+
+
+        const id =
+            getId(item);
+
+        if (id) {
+
+            return (
+                "haber-detay.html?id=" +
+                encodeURIComponent(id)
+            );
+
+        }
+
+
+        return "haberler.html";
+
     }
 
 
-    /* ------------------------------
-       DATA
-    ------------------------------ */
-
-    let news = readStorage(NEWS_KEY);
-    let drafts = readStorage(DRAFT_KEY);
-
-
-    news = news.filter(function (item) {
-
-        return item && typeof item === "object";
-
-    });
-
-
-    drafts = drafts.filter(function (item) {
-
-        return item && typeof item === "object";
-
-    });
-
-
-    /* ------------------------------
-       SORTING
-    ------------------------------ */
-
-    news.sort(function (a, b) {
-
-        const dateA = new Date(getDate(a)).getTime();
-        const dateB = new Date(getDate(b)).getTime();
-
-        return dateB - dateA;
-
-    });
-
-
-    drafts.sort(function (a, b) {
-
-        const dateA = new Date(
-            a.updatedAt ||
-            a.createdAt ||
-            0
-        ).getTime();
-
-        const dateB = new Date(
-            b.updatedAt ||
-            b.createdAt ||
-            0
-        ).getTime();
-
-        return dateB - dateA;
-
-    });
-
-
-    /* ------------------------------
+    /* --------------------------------
        STATS
-    ------------------------------ */
+    -------------------------------- */
 
     function renderStats() {
 
         const totalNews =
-            document.getElementById("totalNews");
+            document.getElementById(
+                "totalNews"
+            );
 
         const totalDrafts =
-            document.getElementById("totalDrafts");
+            document.getElementById(
+                "totalDrafts"
+            );
 
         const totalBreaking =
-            document.getElementById("totalBreaking");
+            document.getElementById(
+                "totalBreaking"
+            );
 
         const totalViews =
-            document.getElementById("totalViews");
+            document.getElementById(
+                "totalViews"
+            );
 
 
         const breakingCount =
             news.filter(function (item) {
 
-                return item.breaking === true ||
-                    item.breaking === "true";
+                return isBreaking(item);
 
             }).length;
 
 
         const views =
-            news.reduce(function (total, item) {
+            news.reduce(
+                function (total, item) {
 
-                return total + getViews(item);
+                    return (
+                        total +
+                        getViews(item)
+                    );
 
-            }, 0);
+                },
+                0
+            );
 
 
-        totalNews.textContent =
-            formatNumber(news.length);
+        if (totalNews) {
 
-        totalDrafts.textContent =
-            formatNumber(drafts.length);
+            totalNews.textContent =
+                formatNumber(
+                    news.length
+                );
 
-        totalBreaking.textContent =
-            formatNumber(breakingCount);
+        }
 
-        totalViews.textContent =
-            formatNumber(views);
+
+        if (totalDrafts) {
+
+            totalDrafts.textContent =
+                formatNumber(
+                    drafts.length
+                );
+
+        }
+
+
+        if (totalBreaking) {
+
+            totalBreaking.textContent =
+                formatNumber(
+                    breakingCount
+                );
+
+        }
+
+
+        if (totalViews) {
+
+            totalViews.textContent =
+                formatNumber(
+                    views
+                );
+
+        }
 
     }
 
 
-    /* ------------------------------
+    /* --------------------------------
        LATEST NEWS
-    ------------------------------ */
+    -------------------------------- */
 
     function renderLatestNews() {
 
         const container =
-            document.getElementById("latestNewsTable");
+            document.getElementById(
+                "latestNewsTable"
+            );
+
 
         if (!container) {
             return;
@@ -1656,7 +2028,10 @@
                         <div class="empty-state">
                             <div class="empty-icon">📰</div>
                             <strong>Henüz haber bulunmuyor</strong>
-                            <span>İlk haberini eklemek için Yeni Haber bölümünü kullan.</span>
+                            <span>
+                                İlk haberini eklemek için
+                                Yeni Haber bölümünü kullan.
+                            </span>
                         </div>
                     </td>
                 </tr>
@@ -1671,23 +2046,43 @@
             latest.map(function (item) {
 
                 const id =
-                    getNewsId(item);
+                    getId(item);
 
                 const title =
-                    escapeHtml(getTitle(item));
+                    escapeHtml(
+                        getTitle(item)
+                    );
 
                 const category =
-                    escapeHtml(getCategory(item));
+                    escapeHtml(
+                        getCategory(item)
+                    );
 
                 const date =
-                    formatDateTime(getDate(item));
+                    formatDateTime(
+                        getDate(item)
+                    );
 
                 const views =
-                    formatNumber(getViews(item));
+                    formatNumber(
+                        getViews(item)
+                    );
 
                 const breaking =
-                    item.breaking === true ||
-                    item.breaking === "true";
+                    isBreaking(item);
+
+
+                const detailUrl =
+                    getNewsUrl(item);
+
+
+                const editUrl =
+                    id
+                        ? (
+                            "yeni-haber.html?edit=" +
+                            encodeURIComponent(id)
+                        )
+                        : "yeni-haber.html";
 
 
                 return `
@@ -1700,7 +2095,11 @@
                             </strong>
 
                             <span>
-                                ${breaking ? "Son dakika haberi" : "Yayınlandı"}
+                                ${
+                                    breaking
+                                        ? "⚡ Son dakika haberi"
+                                        : "✓ Yayında"
+                                }
                             </span>
 
                         </td>
@@ -1729,31 +2128,19 @@
 
                             <div class="table-actions">
 
-                                ${
-                                    id
-                                        ? `
-                                            <a
-                                                href="haber-detay.html?id=${encodeURIComponent(id)}"
-                                                class="table-btn primary"
-                                            >
-                                                Gör
-                                            </a>
-                                        `
-                                        : ""
-                                }
+                                <a
+                                    href="${detailUrl}"
+                                    class="table-btn primary"
+                                >
+                                    Gör
+                                </a>
 
-                                ${
-                                    id
-                                        ? `
-                                            <a
-                                                href="yeni-haber.html?edit=${encodeURIComponent(id)}"
-                                                class="table-btn"
-                                            >
-                                                Düzenle
-                                            </a>
-                                        `
-                                        : ""
-                                }
+                                <a
+                                    href="${editUrl}"
+                                    class="table-btn edit"
+                                >
+                                    Düzenle
+                                </a>
 
                             </div>
 
@@ -1767,14 +2154,17 @@
     }
 
 
-    /* ------------------------------
+    /* --------------------------------
        DRAFTS
-    ------------------------------ */
+    -------------------------------- */
 
     function renderDrafts() {
 
         const container =
-            document.getElementById("draftList");
+            document.getElementById(
+                "draftList"
+            );
+
 
         if (!container) {
             return;
@@ -1791,7 +2181,9 @@
                 <div class="empty-state">
                     <div class="empty-icon">📝</div>
                     <strong>Taslak bulunmuyor</strong>
-                    <span>Henüz kaydedilmiş bir taslak yok.</span>
+                    <span>
+                        Henüz kaydedilmiş bir taslak yok.
+                    </span>
                 </div>
             `;
 
@@ -1801,19 +2193,41 @@
 
 
         container.innerHTML =
-            latest.map(function (item, index) {
+            latest.map(function (
+                item,
+                index
+            ) {
 
                 const id =
                     item.id ||
                     item.draftId ||
+                    item.haberId ||
                     "";
 
+
                 const title =
-                    escapeHtml(getTitle(item));
+                    escapeHtml(
+                        getTitle(item)
+                    );
+
+
+                const category =
+                    escapeHtml(
+                        getCategory(item)
+                    );
+
 
                 const date =
-                    item.updatedAt ||
-                    item.createdAt;
+                    getDraftDate(item);
+
+
+                const editUrl =
+                    id
+                        ? (
+                            "yeni-haber.html?draft=" +
+                            encodeURIComponent(id)
+                        )
+                        : "yeni-haber.html";
 
 
                 return `
@@ -1830,25 +2244,19 @@
                             </strong>
 
                             <span>
-                                ${escapeHtml(getCategory(item))}
+                                ${category}
                                 •
                                 ${formatDateTime(date)}
                             </span>
 
                         </div>
 
-                        ${
-                            id
-                                ? `
-                                    <a
-                                        class="draft-action"
-                                        href="yeni-haber.html?draft=${encodeURIComponent(id)}"
-                                    >
-                                        Düzenle
-                                    </a>
-                                `
-                                : ""
-                        }
+                        <a
+                            class="draft-action"
+                            href="${editUrl}"
+                        >
+                            Düzenle
+                        </a>
 
                     </div>
                 `;
@@ -1858,14 +2266,17 @@
     }
 
 
-    /* ------------------------------
+    /* --------------------------------
        CATEGORIES
-    ------------------------------ */
+    -------------------------------- */
 
     function renderCategories() {
 
         const container =
-            document.getElementById("categoryList");
+            document.getElementById(
+                "categoryList"
+            );
+
 
         if (!container) {
             return;
@@ -1878,7 +2289,10 @@
                 <div class="empty-state">
                     <div class="empty-icon">📊</div>
                     <strong>Veri bulunmuyor</strong>
-                    <span>Haber ekledikçe kategori dağılımı burada görünecek.</span>
+                    <span>
+                        Haber ekledikçe kategori dağılımı
+                        burada görünecek.
+                    </span>
                 </div>
             `;
 
@@ -1896,7 +2310,10 @@
                 getCategory(item);
 
             categories[category] =
-                (categories[category] || 0) + 1;
+                (
+                    categories[category] ||
+                    0
+                ) + 1;
 
         });
 
@@ -1907,7 +2324,8 @@
 
                     return {
                         name: category,
-                        count: categories[category]
+                        count:
+                            categories[category]
                     };
 
                 })
@@ -1931,14 +2349,22 @@
                 const width =
                     Math.max(
                         8,
-                        Math.round((item.count / max) * 100)
+                        Math.round(
+                            (
+                                item.count /
+                                max
+                            ) * 100
+                        )
                     );
 
 
                 return `
                     <div class="category-row">
 
-                        <div class="category-name">
+                        <div
+                            class="category-name"
+                            title="${escapeHtml(item.name)}"
+                        >
                             ${escapeHtml(item.name)}
                         </div>
 
@@ -1963,17 +2389,22 @@
     }
 
 
-    /* ------------------------------
+    /* --------------------------------
        DATE
-    ------------------------------ */
+    -------------------------------- */
 
     function renderDate() {
 
         const element =
-            document.getElementById("currentDate");
+            document.getElementById(
+                "currentDate"
+            );
+
 
         const footerYear =
-            document.getElementById("footerYear");
+            document.getElementById(
+                "footerYear"
+            );
 
 
         const now =
@@ -1983,12 +2414,15 @@
         if (element) {
 
             element.textContent =
-                now.toLocaleDateString("tr-TR", {
-                    weekday: "long",
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                });
+                now.toLocaleDateString(
+                    "tr-TR",
+                    {
+                        weekday: "long",
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
 
         }
 
@@ -2003,123 +2437,229 @@
     }
 
 
-    /* ------------------------------
+    /* --------------------------------
        MOBILE SIDEBAR
-    ------------------------------ */
+    -------------------------------- */
 
     function setupSidebar() {
 
         const button =
-            document.getElementById("sidebarToggle");
+            document.getElementById(
+                "sidebarToggle"
+            );
+
 
         const sidebar =
-            document.getElementById("adminSidebar");
+            document.getElementById(
+                "adminSidebar"
+            );
 
 
-        if (!button || !sidebar) {
+        const overlay =
+            document.getElementById(
+                "sidebarOverlay"
+            );
+
+
+        if (
+            !button ||
+            !sidebar
+        ) {
             return;
         }
 
 
-        button.addEventListener("click", function () {
+        function openSidebar() {
 
-            sidebar.classList.toggle(
+            sidebar.classList.add(
                 "mobile-visible"
             );
 
-        });
 
+            if (overlay) {
 
-        document.addEventListener("click", function (event) {
-
-            if (window.innerWidth > 900) {
-                return;
-            }
-
-
-            const clickedInside =
-                sidebar.contains(event.target) ||
-                button.contains(event.target);
-
-
-            if (!clickedInside) {
-
-                sidebar.classList.remove(
-                    "mobile-visible"
+                overlay.classList.add(
+                    "visible"
                 );
 
             }
 
-        });
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+        }
+
+
+        function closeSidebar() {
+
+            sidebar.classList.remove(
+                "mobile-visible"
+            );
+
+
+            if (overlay) {
+
+                overlay.classList.remove(
+                    "visible"
+                );
+
+            }
+
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    sidebar.classList.contains(
+                        "mobile-visible"
+                    )
+                ) {
+
+                    closeSidebar();
+
+                } else {
+
+                    openSidebar();
+
+                }
+
+            }
+        );
+
+
+        if (overlay) {
+
+            overlay.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
 
 
         sidebar
             .querySelectorAll("a")
             .forEach(function (link) {
 
-                link.addEventListener("click", function () {
+                link.addEventListener(
+                    "click",
+                    function () {
 
-                    sidebar.classList.remove(
-                        "mobile-visible"
-                    );
+                        closeSidebar();
 
-                });
+                    }
+                );
 
             });
+
+
+        window.addEventListener(
+            "resize",
+            function () {
+
+                if (
+                    window.innerWidth > 900
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
 
     }
 
 
-    /* ------------------------------
-       STORAGE UPDATE
-    ------------------------------ */
+    /* --------------------------------
+       STORAGE CHANGES
+    -------------------------------- */
 
-    window.addEventListener("storage", function () {
+    window.addEventListener(
+        "storage",
+        function (event) {
 
-        news =
-            readStorage(NEWS_KEY);
-
-        drafts =
-            readStorage(DRAFT_KEY);
-
-
-        news.sort(function (a, b) {
-
-            return new Date(getDate(b)).getTime() -
-                new Date(getDate(a)).getTime();
-
-        });
+            if (
+                event.key !== NEWS_KEY &&
+                event.key !== DRAFT_KEY &&
+                event.key !== null
+            ) {
+                return;
+            }
 
 
-        drafts.sort(function (a, b) {
+            refreshData();
 
-            return new Date(
-                b.updatedAt ||
-                b.createdAt ||
-                0
-            ).getTime() -
-                new Date(
-                    a.updatedAt ||
-                    a.createdAt ||
-                    0
-                ).getTime();
+            renderStats();
+            renderLatestNews();
+            renderDrafts();
+            renderCategories();
 
-        });
+        }
+    );
 
 
-        renderStats();
-        renderLatestNews();
-        renderDrafts();
-        renderCategories();
+    /* --------------------------------
+       TAB VISIBILITY
+    -------------------------------- */
 
-    });
+    document.addEventListener(
+        "visibilitychange",
+        function () {
+
+            if (
+                document.visibilityState ===
+                "visible"
+            ) {
+
+                refreshData();
+
+                renderStats();
+                renderLatestNews();
+                renderDrafts();
+                renderCategories();
+
+            }
+
+        }
+    );
 
 
-    /* ------------------------------
+    /* --------------------------------
        INIT
-    ------------------------------ */
+    -------------------------------- */
 
     function init() {
+
+        refreshData();
 
         renderStats();
 
