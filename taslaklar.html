@@ -6,6 +6,11 @@
 
     <title>Taslaklar | Akçaabat Haber</title>
 
+    <meta
+        name="description"
+        content="Akçaabat Haber yönetim paneli taslak haber yönetimi."
+    >
+
     <link rel="stylesheet" href="style.css">
 
     <style>
@@ -24,7 +29,7 @@
             padding: 20px;
             border-radius: 12px;
             background: #fff;
-            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
         }
 
         .taslak-istatistik-label {
@@ -48,7 +53,7 @@
             margin-bottom: 20px;
             border-radius: 12px;
             background: #fff;
-            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
         }
 
         .taslak-toolbar input,
@@ -78,13 +83,13 @@
 
         .taslak-card {
             display: grid;
-            grid-template-columns: 180px 1fr auto;
+            grid-template-columns: 180px minmax(0, 1fr) auto;
             gap: 20px;
             align-items: center;
             padding: 15px;
             border-radius: 12px;
             background: #fff;
-            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
         }
 
         .taslak-gorsel {
@@ -134,6 +139,7 @@
             color: #222;
             font-size: 19px;
             line-height: 1.35;
+            overflow-wrap: anywhere;
         }
 
         .taslak-ozet {
@@ -167,6 +173,11 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .taslak-btn:hover {
+            transform: translateY(-1px);
         }
 
         .taslak-duzenle {
@@ -174,14 +185,26 @@
             color: #222;
         }
 
+        .taslak-duzenle:hover {
+            background: #ddd;
+        }
+
         .taslak-yayinla {
             background: #b40018;
             color: #fff;
         }
 
+        .taslak-yayinla:hover {
+            background: #930014;
+        }
+
         .taslak-sil {
             background: #222;
             color: #fff;
+        }
+
+        .taslak-sil:hover {
+            background: #000;
         }
 
         .taslak-bos {
@@ -190,12 +213,29 @@
             background: #fff;
             text-align: center;
             color: #777;
-            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
+        }
+
+        .taslak-bos-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
         }
 
         .taslak-bos h2 {
             margin: 0 0 10px;
             color: #222;
+        }
+
+        .taslak-bos p {
+            margin: 0;
+            line-height: 1.6;
         }
 
         .taslak-modal {
@@ -206,7 +246,7 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(0,0,0,.55);
+            background: rgba(0, 0, 0, .55);
         }
 
         .taslak-modal.active {
@@ -220,10 +260,12 @@
             border-radius: 14px;
             background: #fff;
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
         }
 
         .taslak-modal-box h2 {
             margin: 0 0 10px;
+            color: #222;
         }
 
         .taslak-modal-box p {
@@ -257,13 +299,38 @@
             color: #fff;
         }
 
+        .taslak-toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 10000;
+            max-width: 360px;
+            padding: 13px 17px;
+            border-radius: 9px;
+            background: #222;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: .25s ease;
+        }
+
+        .taslak-toast.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
         @media (max-width: 1000px) {
             .taslak-istatistik-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
 
             .taslak-card {
-                grid-template-columns: 140px 1fr;
+                grid-template-columns: 140px minmax(0, 1fr);
             }
 
             .taslak-gorsel {
@@ -319,6 +386,10 @@
             .taslak-btn {
                 flex: 1;
             }
+
+            .taslak-modal-box {
+                padding: 22px;
+            }
         }
     </style>
 </head>
@@ -337,6 +408,8 @@
                 type="button"
                 class="admin-menu-btn"
                 id="adminMenuBtn"
+                aria-label="Menüyü aç"
+                aria-expanded="false"
             >
                 ☰
             </button>
@@ -355,6 +428,7 @@
             <a
                 href="index.html"
                 target="_blank"
+                rel="noopener"
             >
                 Siteyi Gör
             </a>
@@ -369,7 +443,6 @@
          ===================================================== -->
 
     <div class="admin-layout">
-
 
         <!-- SIDEBAR -->
 
@@ -389,7 +462,7 @@
                     Dashboard
                 </a>
 
-                <a href="haber.html">
+                <a href="haberler.html">
                     <span>📰</span>
                     Haberler
                 </a>
@@ -422,7 +495,6 @@
              ================================================= -->
 
         <main class="admin-main taslak-sayfa">
-
 
             <!-- PAGE HEADER -->
 
@@ -516,6 +588,7 @@
                     type="search"
                     id="taslakArama"
                     placeholder="Taslak ara..."
+                    autocomplete="off"
                 >
 
                 <select id="taslakKategori">
@@ -594,6 +667,9 @@
     <div
         class="taslak-modal"
         id="taslakModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
     >
 
         <div class="taslak-modal-box">
@@ -629,8 +705,23 @@
     </div>
 
 
+    <!-- TOAST -->
+
+    <div
+        class="taslak-toast"
+        id="taslakToast"
+    ></div>
+
+
     <!-- =====================================================
-         JAVASCRIPT
+         ORTAK SİSTEM
+         ===================================================== -->
+
+    <script src="script.js"></script>
+
+
+    <!-- =====================================================
+         SAYFA JAVASCRIPT
          ===================================================== -->
 
     <script>
@@ -638,7 +729,6 @@
         document.addEventListener(
             "DOMContentLoaded",
             function () {
-
 
                 /* =================================================
                    ELEMENTLER
@@ -684,9 +774,52 @@
                         "taslakOnayla"
                     );
 
+                const toast =
+                    document.getElementById(
+                        "taslakToast"
+                    );
+
+                const adminMenuBtn =
+                    document.getElementById(
+                        "adminMenuBtn"
+                    );
+
+                const adminSidebar =
+                    document.getElementById(
+                        "adminSidebar"
+                    );
+
 
                 let actionId = null;
                 let actionType = null;
+                let toastTimer = null;
+
+
+                /* =================================================
+                   GÜVENLİ JSON
+                   ================================================= */
+
+                function safeParse(
+                    value,
+                    fallback
+                ) {
+
+                    try {
+
+                        const parsed =
+                            JSON.parse(
+                                value
+                            );
+
+                        return parsed;
+
+                    } catch (error) {
+
+                        return fallback;
+
+                    }
+
+                }
 
 
                 /* =================================================
@@ -695,11 +828,22 @@
 
                 function getDrafts() {
 
-                    return JSON.parse(
+                    const raw =
                         localStorage.getItem(
                             "akcaabat_taslaklar"
-                        ) || "[]"
-                    );
+                        );
+
+                    const data =
+                        safeParse(
+                            raw,
+                            []
+                        );
+
+                    return Array.isArray(
+                        data
+                    )
+                        ? data
+                        : [];
 
                 }
 
@@ -720,11 +864,22 @@
 
                 function getNews() {
 
-                    return JSON.parse(
+                    const raw =
                         localStorage.getItem(
                             "akcaabat_haberler"
-                        ) || "[]"
-                    );
+                        );
+
+                    const data =
+                        safeParse(
+                            raw,
+                            []
+                        );
+
+                    return Array.isArray(
+                        data
+                    )
+                        ? data
+                        : [];
 
                 }
 
@@ -744,7 +899,7 @@
 
 
                 /* =================================================
-                   ESCAPE
+                   HTML ESCAPE
                    ================================================= */
 
                 function escapeHtml(
@@ -784,7 +939,143 @@
 
 
                 /* =================================================
-                   FALLBACK
+                   SLUG
+                   ================================================= */
+
+                function slugify(
+                    text
+                ) {
+
+                    if (
+                        window.AkcaabatHaber &&
+                        typeof window.AkcaabatHaber.slugify ===
+                            "function"
+                    ) {
+
+                        return window.AkcaabatHaber.slugify(
+                            text
+                        );
+
+                    }
+
+
+                    return String(
+                        text || ""
+                    )
+                        .toLocaleLowerCase(
+                            "tr-TR"
+                        )
+                        .replace(
+                            /ğ/g,
+                            "g"
+                        )
+                        .replace(
+                            /ü/g,
+                            "u"
+                        )
+                        .replace(
+                            /ş/g,
+                            "s"
+                        )
+                        .replace(
+                            /ı/g,
+                            "i"
+                        )
+                        .replace(
+                            /ö/g,
+                            "o"
+                        )
+                        .replace(
+                            /ç/g,
+                            "c"
+                        )
+                        .replace(
+                            /[^a-z0-9]+/g,
+                            "-"
+                        )
+                        .replace(
+                            /^-+|-+$/g,
+                            "");
+
+                }
+
+
+                function createUniqueSlug(
+                    title,
+                    news,
+                    currentId
+                ) {
+
+                    if (
+                        window.AkcaabatHaber &&
+                        typeof window.AkcaabatHaber.createUniqueSlug ===
+                            "function"
+                    ) {
+
+                        return window.AkcaabatHaber.createUniqueSlug(
+                            title,
+                            news,
+                            currentId
+                        );
+
+                    }
+
+
+                    const base =
+                        slugify(
+                            title
+                        ) ||
+                        "haber";
+
+
+                    let slug =
+                        base;
+
+                    let counter =
+                        2;
+
+
+                    while (
+                        news.some(
+                            function (
+                                item
+                            ) {
+
+                                return (
+                                    String(
+                                        item.id
+                                    ) !==
+                                    String(
+                                        currentId
+                                    ) &&
+                                    (
+                                        item.slug ||
+                                        item.seoSlug
+                                    ) ===
+                                    slug
+                                );
+
+                            }
+                        )
+                    ) {
+
+                        slug =
+                            base +
+                            "-" +
+                            counter;
+
+                        counter++;
+
+                    }
+
+
+                    return slug;
+
+                }
+
+
+                /* =================================================
+                   GÖRSEL
                    ================================================= */
 
                 const fallbackImage =
@@ -795,18 +1086,77 @@
                     draft
                 ) {
 
+                    const image =
+                        draft.image ||
+                        draft.gorsel ||
+                        draft.imageUrl ||
+                        draft.gorselUrl ||
+                        "";
+
+
                     if (
-                        draft.image &&
-                        typeof draft.image ===
+                        typeof image ===
                             "string" &&
-                        draft.image.trim() !== ""
+                        image.trim() !== ""
                     ) {
 
-                        return draft.image;
+                        return image;
 
                     }
 
+
                     return fallbackImage;
+
+                }
+
+
+                /* =================================================
+                   BAŞLIK
+                   ================================================= */
+
+                function getTitle(
+                    item
+                ) {
+
+                    return (
+                        item.title ||
+                        item.baslik ||
+                        "Başlıksız Taslak"
+                    );
+
+                }
+
+
+                /* =================================================
+                   ÖZET
+                   ================================================= */
+
+                function getSummary(
+                    item
+                ) {
+
+                    return (
+                        item.summary ||
+                        item.ozet ||
+                        ""
+                    );
+
+                }
+
+
+                /* =================================================
+                   KATEGORİ
+                   ================================================= */
+
+                function getCategory(
+                    item
+                ) {
+
+                    return (
+                        item.category ||
+                        item.kategori ||
+                        "Kategori yok"
+                    );
 
                 }
 
@@ -816,12 +1166,14 @@
                    ================================================= */
 
                 function getDate(
-                    draft
+                    item
                 ) {
 
                     return (
-                        draft.updatedAt ||
-                        draft.createdAt ||
+                        item.updatedAt ||
+                        item.updated_at ||
+                        item.createdAt ||
+                        item.created_at ||
                         ""
                     );
 
@@ -833,11 +1185,17 @@
                 ) {
 
                     if (!value) {
+
                         return "Tarih yok";
+
                     }
 
+
                     const date =
-                        new Date(value);
+                        new Date(
+                            value
+                        );
+
 
                     if (
                         isNaN(
@@ -845,9 +1203,12 @@
                         )
                     ) {
 
-                        return value;
+                        return String(
+                            value
+                        );
 
                     }
+
 
                     return date.toLocaleString(
                         "tr-TR",
@@ -859,6 +1220,48 @@
                             minute: "2-digit"
                         }
                     );
+
+                }
+
+
+                /* =================================================
+                   TOAST
+                   ================================================= */
+
+                function showToast(
+                    message
+                ) {
+
+                    if (!toast) {
+                        return;
+                    }
+
+
+                    clearTimeout(
+                        toastTimer
+                    );
+
+
+                    toast.textContent =
+                        message;
+
+
+                    toast.classList.add(
+                        "active"
+                    );
+
+
+                    toastTimer =
+                        setTimeout(
+                            function () {
+
+                                toast.classList.remove(
+                                    "active"
+                                );
+
+                            },
+                            2800
+                        );
 
                 }
 
@@ -883,7 +1286,13 @@
 
                                 return (
                                     item.breaking ===
-                                    true
+                                        true ||
+                                    item.breaking ===
+                                        "true" ||
+                                    item.sonDakika ===
+                                        true ||
+                                    item.sonDakika ===
+                                        "true"
                                 );
 
                             }
@@ -896,9 +1305,16 @@
                                 item
                             ) {
 
+                                const category =
+                                    getCategory(
+                                        item
+                                    );
+
+
                                 return (
-                                    item.category &&
-                                    item.category.trim()
+                                    category &&
+                                    category !==
+                                        "Kategori yok"
                                 );
 
                             }
@@ -926,7 +1342,7 @@
 
 
                 /* =================================================
-                   TASLAK KARTI
+                   KART
                    ================================================= */
 
                 function createCard(
@@ -934,25 +1350,36 @@
                 ) {
 
                     const title =
-                        draft.title ||
-                        draft.baslik ||
-                        "Başlıksız Taslak";
+                        getTitle(
+                            draft
+                        );
 
 
                     const summary =
-                        draft.summary ||
-                        draft.ozet ||
-                        "";
+                        getSummary(
+                            draft
+                        );
 
 
                     const category =
-                        draft.category ||
-                        draft.kategori ||
-                        "Kategori yok";
+                        getCategory(
+                            draft
+                        );
 
 
                     const id =
                         draft.id;
+
+
+                    const isBreaking =
+                        draft.breaking ===
+                            true ||
+                        draft.breaking ===
+                            "true" ||
+                        draft.sonDakika ===
+                            true ||
+                        draft.sonDakika ===
+                            "true";
 
 
                     return `
@@ -974,8 +1401,10 @@
                                     alt="${escapeHtml(
                                         title
                                     )}"
+                                    loading="lazy"
                                     onerror="
-                                        this.src='${fallbackImage}'
+                                        this.onerror=null;
+                                        this.src='${fallbackImage}';
                                     "
                                 >
 
@@ -1000,7 +1429,7 @@
 
 
                                     ${
-                                        draft.breaking
+                                        isBreaking
                                             ? `
                                                 <span
                                                     class="
@@ -1064,11 +1493,9 @@
                             >
 
                                 <a
-                                    href="
-                                        yeni-haber.html?draft=${encodeURIComponent(
-                                            id
-                                        )}
-                                    "
+                                    href="yeni-haber.html?draft=${encodeURIComponent(
+                                        id
+                                    )}"
                                     class="
                                         taslak-btn
                                         taslak-duzenle
@@ -1115,7 +1542,7 @@
 
 
                 /* =================================================
-                   LİSTELE
+                   RENDER
                    ================================================= */
 
                 function renderDrafts() {
@@ -1148,10 +1575,8 @@
                             ) {
 
                                 const title =
-                                    (
-                                        item.title ||
-                                        item.baslik ||
-                                        ""
+                                    getTitle(
+                                        item
                                     )
                                     .toLocaleLowerCase(
                                         "tr-TR"
@@ -1159,10 +1584,8 @@
 
 
                                 const summary =
-                                    (
-                                        item.summary ||
-                                        item.ozet ||
-                                        ""
+                                    getSummary(
+                                        item
                                     )
                                     .toLocaleLowerCase(
                                         "tr-TR"
@@ -1170,9 +1593,9 @@
 
 
                                 const itemCategory =
-                                    item.category ||
-                                    item.kategori ||
-                                    "";
+                                    getCategory(
+                                        item
+                                    );
 
 
                                 const matchesSearch =
@@ -1206,15 +1629,23 @@
                             b
                         ) {
 
-                            return (
-                                new Date(
-                                    getDate(b) ||
-                                    0
-                                ) -
+                            const dateA =
                                 new Date(
                                     getDate(a) ||
                                     0
-                                )
+                                ).getTime();
+
+
+                            const dateB =
+                                new Date(
+                                    getDate(b) ||
+                                    0
+                                ).getTime();
+
+
+                            return (
+                                dateB -
+                                dateA
                             );
 
                         }
@@ -1231,6 +1662,12 @@
                             <div
                                 class="taslak-bos"
                             >
+
+                                <div
+                                    class="taslak-bos-icon"
+                                >
+                                    📝
+                                </div>
 
                                 <h2>
                                     Taslak bulunamadı
@@ -1266,11 +1703,10 @@
 
 
                 /* =================================================
-                   BUTONLARI BAĞLA
+                   AKSİYONLAR
                    ================================================= */
 
                 function bindActions() {
-
 
                     document
                         .querySelectorAll(
@@ -1296,6 +1732,9 @@
 
                                         modalText.textContent =
                                             "Bu taslak kalıcı olarak silinecek. Bu işlem geri alınamaz.";
+
+                                        confirmButton.textContent =
+                                            "Taslağı Sil";
 
                                         modal.classList.add(
                                             "active"
@@ -1331,7 +1770,10 @@
                                             "Taslağı Yayınla";
 
                                         modalText.textContent =
-                                            "Bu taslak haber olarak yayınlanacak.";
+                                            "Bu taslak haber olarak yayınlanacak. Devam etmek istiyor musunuz?";
+
+                                        confirmButton.textContent =
+                                            "Yayınla";
 
                                         modal.classList.add(
                                             "active"
@@ -1347,18 +1789,8 @@
 
 
                 /* =================================================
-                   MODAL İPTAL
+                   MODAL
                    ================================================= */
-
-                cancelButton.addEventListener(
-                    "click",
-                    function () {
-
-                        closeModal();
-
-                    }
-                );
-
 
                 function closeModal() {
 
@@ -1375,9 +1807,11 @@
                 }
 
 
-                /* =================================================
-                   MODAL ONAY
-                   ================================================= */
+                cancelButton.addEventListener(
+                    "click",
+                    closeModal
+                );
+
 
                 confirmButton.addEventListener(
                     "click",
@@ -1414,8 +1848,43 @@
 
                         }
 
+                    }
+                );
 
-                        closeModal();
+
+                modal.addEventListener(
+                    "click",
+                    function (
+                        event
+                    ) {
+
+                        if (
+                            event.target ===
+                            modal
+                        ) {
+
+                            closeModal();
+
+                        }
+
+                    }
+                );
+
+
+                document.addEventListener(
+                    "keydown",
+                    function (
+                        event
+                    ) {
+
+                        if (
+                            event.key ===
+                            "Escape"
+                        ) {
+
+                            closeModal();
+
+                        }
 
                     }
                 );
@@ -1429,6 +1898,10 @@
 
                     const drafts =
                         getDrafts();
+
+
+                    const oldLength =
+                        drafts.length;
 
 
                     const updated =
@@ -1448,12 +1921,36 @@
                         );
 
 
+                    if (
+                        updated.length ===
+                        oldLength
+                    ) {
+
+                        closeModal();
+
+                        showToast(
+                            "Taslak bulunamadı."
+                        );
+
+                        return;
+
+                    }
+
+
                     saveDrafts(
                         updated
                     );
 
 
+                    closeModal();
+
+
                     renderDrafts();
+
+
+                    showToast(
+                        "Taslak başarıyla silindi."
+                    );
 
                 }
 
@@ -1487,7 +1984,9 @@
 
                     if (!draft) {
 
-                        alert(
+                        closeModal();
+
+                        showToast(
                             "Taslak bulunamadı."
                         );
 
@@ -1499,11 +1998,6 @@
                     const news =
                         getNews();
 
-
-                    /*
-                     * Aynı ID ile haber varsa
-                     * güncelle.
-                     */
 
                     const existingIndex =
                         news.findIndex(
@@ -1522,25 +2016,72 @@
                         );
 
 
+                    const title =
+                        getTitle(
+                            draft
+                        );
+
+
+                    /*
+                     * Taslak yayınlanırken
+                     * benzersiz slug oluştur.
+                     */
+
+                    const slug =
+                        draft.slug ||
+                        draft.seoSlug ||
+                        createUniqueSlug(
+                            title,
+                            news,
+                            existingIndex !==
+                                -1
+                                ? news[
+                                    existingIndex
+                                ].id
+                                : draft.id
+                        );
+
+
+                    const now =
+                        new Date().toISOString();
+
+
+                    const existingViews =
+                        existingIndex !==
+                        -1
+                            ? Number(
+                                news[
+                                    existingIndex
+                                ].views ||
+                                news[
+                                    existingIndex
+                                ].goruntulenme ||
+                                0
+                            )
+                            : 0;
+
+
                     const publishedNews = {
 
                         id:
                             draft.id,
 
                         title:
-                            draft.title ||
-                            "",
+                            title,
 
                         summary:
-                            draft.summary ||
-                            "",
+                            getSummary(
+                                draft
+                            ),
 
                         content:
                             draft.content ||
+                            draft.icerik ||
                             "",
 
                         category:
                             draft.category ||
+                            draft.kategori ||
                             "",
 
                         status:
@@ -1548,30 +2089,46 @@
 
                         breaking:
                             draft.breaking ===
-                            true,
+                                true ||
+                            draft.breaking ===
+                                "true" ||
+                            draft.sonDakika ===
+                                true ||
+                            draft.sonDakika ===
+                                "true",
 
                         image:
-                            draft.image ||
-                            "",
+                            getImage(
+                                draft
+                            ) ===
+                            fallbackImage
+                                ? ""
+                                : getImage(
+                                    draft
+                                ),
+
+                        slug:
+                            slug,
+
+                        seoSlug:
+                            slug,
 
                         views:
-                            existingIndex !== -1
-                                ? Number(
-                                    news[
-                                        existingIndex
-                                    ].views || 0
-                                )
-                                : 0,
+                            existingViews,
 
-                        publishedAt:
-                            new Date().toISOString(),
+                        goruntulenme:
+                            existingViews,
 
                         createdAt:
                             draft.createdAt ||
-                            new Date().toISOString(),
+                            draft.created_at ||
+                            now,
+
+                        publishedAt:
+                            now,
 
                         updatedAt:
-                            new Date().toISOString()
+                            now
 
                     };
 
@@ -1583,13 +2140,12 @@
 
                         news[
                             existingIndex
-                        ] =
-                            {
-                                ...news[
-                                    existingIndex
-                                ],
-                                ...publishedNews
-                            };
+                        ] = {
+                            ...news[
+                                existingIndex
+                            ],
+                            ...publishedNews
+                        };
 
                     } else {
 
@@ -1606,7 +2162,8 @@
 
 
                     /*
-                     * Taslağı kaldır
+                     * Yayınlanan taslağı
+                     * taslak listesinden kaldır.
                      */
 
                     const remaining =
@@ -1631,18 +2188,29 @@
                     );
 
 
-                    /*
-                     * Haber yönetimine git
-                     */
+                    closeModal();
 
-                    window.location.href =
-                        "haber.html";
+
+                    showToast(
+                        "Haber yayınlandı. Haberler sayfasına yönlendiriliyorsunuz..."
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            window.location.href =
+                                "haberler.html";
+
+                        },
+                        700
+                    );
 
                 }
 
 
                 /* =================================================
-                   ARAMA / FİLTRE
+                   ARAMA
                    ================================================= */
 
                 searchInput.addEventListener(
@@ -1651,6 +2219,10 @@
                 );
 
 
+                /* =================================================
+                   KATEGORİ
+                   ================================================= */
+
                 categoryFilter.addEventListener(
                     "change",
                     renderDrafts
@@ -1658,65 +2230,8 @@
 
 
                 /* =================================================
-                   MODAL DIŞINA TIKLAMA
+                   MOBİL MENÜ
                    ================================================= */
-
-                modal.addEventListener(
-                    "click",
-                    function (
-                        event
-                    ) {
-
-                        if (
-                            event.target ===
-                            modal
-                        ) {
-
-                            closeModal();
-
-                        }
-
-                    }
-                );
-
-
-                /* =================================================
-                   ESC
-                   ================================================= */
-
-                document.addEventListener(
-                    "keydown",
-                    function (
-                        event
-                    ) {
-
-                        if (
-                            event.key ===
-                            "Escape"
-                        ) {
-
-                            closeModal();
-
-                        }
-
-                    }
-                );
-
-
-                /* =================================================
-                   MOBİL ADMIN MENÜ
-                   ================================================= */
-
-                const adminMenuBtn =
-                    document.getElementById(
-                        "adminMenuBtn"
-                    );
-
-                const adminSidebar =
-                    document.getElementById(
-                        "adminSidebar"
-                    );
-
 
                 if (
                     adminMenuBtn &&
@@ -1727,9 +2242,56 @@
                         "click",
                         function () {
 
-                            adminSidebar.classList.toggle(
-                                "open"
+                            const isOpen =
+                                adminSidebar.classList.toggle(
+                                    "open"
+                                );
+
+
+                            adminMenuBtn.setAttribute(
+                                "aria-expanded",
+                                String(
+                                    isOpen
+                                )
                             );
+
+                        }
+                    );
+
+
+                    document.addEventListener(
+                        "click",
+                        function (
+                            event
+                        ) {
+
+                            if (
+                                window.innerWidth >
+                                900
+                            ) {
+                                return;
+                            }
+
+
+                            if (
+                                !adminSidebar.contains(
+                                    event.target
+                                ) &&
+                                !adminMenuBtn.contains(
+                                    event.target
+                                )
+                            ) {
+
+                                adminSidebar.classList.remove(
+                                    "open"
+                                );
+
+                                adminMenuBtn.setAttribute(
+                                    "aria-expanded",
+                                    "false"
+                                );
+
+                            }
 
                         }
                     );
