@@ -2057,3 +2057,462 @@ button,input{font:inherit}
 }
 
 
+/* =========================================================
+   HABER DETAY SAYFASI
+   ========================================================= */
+
+.haber-detay-wrapper {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+}
+
+.haber-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: #777;
+    font-size: 14px;
+}
+
+.haber-breadcrumb a {
+    color: #b40018;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.haber-detay-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
+}
+
+.haber-detay-header {
+    padding: 32px 38px 25px;
+}
+
+.haber-kategori {
+    display: inline-flex;
+    align-items: center;
+    background: #b40018;
+    color: #fff;
+    padding: 7px 13px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.haber-son-dakika {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 7px;
+    padding: 7px 12px;
+    border-radius: 5px;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.haber-detay-title {
+    margin: 18px 0 15px;
+    color: #171717;
+    font-size: 42px;
+    line-height: 1.14;
+    font-weight: 800;
+}
+
+.haber-detay-ozet {
+    max-width: 950px;
+    color: #666;
+    font-size: 19px;
+    line-height: 1.65;
+    margin-bottom: 20px;
+}
+
+.haber-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+    color: #777;
+    font-size: 14px;
+}
+
+.haber-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.haber-kapak {
+    display: block;
+    width: 100%;
+    max-height: 620px;
+    object-fit: cover;
+    background: #eee;
+}
+
+.haber-detay-body {
+    padding: 35px 38px 40px;
+}
+
+.haber-detay-content {
+    max-width: 900px;
+    color: #292929;
+    font-size: 18px;
+    line-height: 1.9;
+    white-space: pre-line;
+}
+
+.haber-detay-content p {
+    margin: 0 0 20px;
+}
+
+.haber-paylas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #eee;
+}
+
+.haber-paylas strong {
+    margin-right: 5px;
+    color: #222;
+}
+
+.paylas-btn {
+    border: 0;
+    border-radius: 7px;
+    padding: 10px 16px;
+    background: #f0f0f0;
+    color: #222;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.paylas-btn:hover {
+    background: #ddd;
+    transform: translateY(-1px);
+}
+
+.ilgili-haberler {
+    margin-top: 35px;
+}
+
+.ilgili-haberler h2 {
+    margin: 0 0 18px;
+    color: #222;
+    font-size: 25px;
+}
+
+.ilgili-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.ilgili-card {
+    overflow: hidden;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .07);
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.ilgili-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .11);
+}
+
+.ilgili-card img {
+    display: block;
+    width: 100%;
+    height: 175px;
+    object-fit: cover;
+}
+
+.ilgili-card-content {
+    padding: 15px;
+}
+
+.ilgili-card-content small {
+    color: #b40018;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.ilgili-card-content h3 {
+    margin: 7px 0 0;
+    color: #222;
+    font-size: 17px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   HABER BULUNAMADI
+   ========================================================= */
+
+.haber-yok {
+    padding: 80px 25px;
+    border-radius: 14px;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .07);
+}
+
+.haber-yok h1 {
+    margin: 0 0 10px;
+    color: #222;
+    font-size: 32px;
+}
+
+.haber-yok p {
+    margin: 0 0 25px;
+    color: #777;
+}
+
+.anasayfa-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 7px;
+    background: #b40018;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: .2s ease;
+}
+
+.anasayfa-btn:hover {
+    background: #900014;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ORTAK HABER KARTLARI
+   ========================================================= */
+
+.news-card,
+.haber-card,
+.side-news-card,
+.category-news-card {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.news-card:hover,
+.haber-card:hover,
+.side-news-card:hover,
+.category-news-card:hover {
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   ARAMA ALANI
+   ========================================================= */
+
+.header-search form {
+    display: flex;
+    align-items: center;
+}
+
+.header-search input {
+    min-width: 220px;
+    height: 40px;
+    padding: 0 13px;
+    border: 1px solid #ddd;
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+    outline: none;
+    background: #fff;
+}
+
+.header-search input:focus {
+    border-color: #b40018;
+}
+
+.header-search button {
+    height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 0 6px 6px 0;
+    background: #b40018;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MOBİL MENÜ
+   ========================================================= */
+
+.mobile-menu-btn {
+    display: none;
+    border: 0;
+    background: transparent;
+    color: #222;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.main-nav.mobile-open {
+    display: block;
+}
+
+.main-nav.mobile-open .container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.main-nav.mobile-open a {
+    width: 100%;
+}
+
+
+/* =========================================================
+   GENEL MOBİL DÜZEN
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .haber-detay-title {
+        font-size: 36px;
+    }
+
+    .ilgili-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header-search input {
+        min-width: 170px;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .haber-detay-wrapper {
+        padding: 20px 12px 45px;
+    }
+
+    .haber-breadcrumb {
+        margin-bottom: 15px;
+        font-size: 13px;
+    }
+
+    .haber-detay-header {
+        padding: 23px 18px 18px;
+    }
+
+    .haber-detay-title {
+        margin-top: 15px;
+        font-size: 29px;
+        line-height: 1.2;
+    }
+
+    .haber-detay-ozet {
+        font-size: 17px;
+        line-height: 1.55;
+    }
+
+    .haber-detay-body {
+        padding: 25px 18px 30px;
+    }
+
+    .haber-detay-content {
+        font-size: 17px;
+        line-height: 1.75;
+    }
+
+    .haber-kapak {
+        max-height: 420px;
+    }
+
+    .haber-meta {
+        gap: 10px 15px;
+        font-size: 13px;
+    }
+
+    .ilgili-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ilgili-card img {
+        height: 210px;
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .main-nav {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .haber-detay-title {
+        font-size: 25px;
+    }
+
+    .haber-detay-ozet {
+        font-size: 16px;
+    }
+
+    .haber-detay-content {
+        font-size: 16px;
+    }
+
+    .haber-son-dakika {
+        display: block;
+        width: max-content;
+        margin: 8px 0 0;
+    }
+
+    .haber-paylas {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .paylas-btn {
+        width: 100%;
+    }
+
+    .haber-yok {
+        padding: 60px 18px;
+    }
+
+    .haber-yok h1 {
+        font-size: 26px;
+    }
+
+}
+
+
