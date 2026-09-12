@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10233f">
+  <title>Yeni Haber | Akçaabat Haber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-page">
+
+  <aside class="admin-sidebar">
+
+    <div class="admin-sidebar-brand">
+      <span class="logo-mark">A</span>
+      <div>
+        <strong>AKÇAABAT <b>HABER</b></strong>
+        <small>Yönetim Paneli</small>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+
+      <span class="admin-nav-title">YÖNETİM</span>
+
+      <a href="admin-panel.html">
+        <span>▦</span> Dashboard
+      </a>
+
+      <a href="#">
+        <span>📰</span> Haberler
+      </a>
+
+      <a class="active" href="yeni-haber.html">
+        <span>＋</span> Yeni Haber
+      </a>
+
+      <a href="#">
+        <span>▤</span> Kategoriler
+      </a>
+
+      <span class="admin-nav-title">İÇERİK</span>
+
+      <a href="#">
+        <span>▧</span> Foto Galeri
+      </a>
+
+      <a href="#">
+        <span>▶</span> Videolar
+      </a>
+
+      <a href="#">
+        <span>⚡</span> Son Dakika
+      </a>
+
+      <span class="admin-nav-title">SİSTEM</span>
+
+      <a href="#">
+        <span>♙</span> Kullanıcılar
+      </a>
+
+      <a href="#">
+        <span>⚙</span> Site Ayarları
+      </a>
+
+    </nav>
+
+    <a class="admin-sidebar-bottom" href="index.html">
+      ← Siteye Dön
+    </a>
+
+  </aside>
+
+  <main class="dashboard-main">
+
+    <header class="dashboard-header">
+
+      <button class="dashboard-menu" type="button">
+        ☰
+      </button>
+
+      <div>
+        <span>Yönetim Paneli</span>
+        <h1>Yeni Haber</h1>
+      </div>
+
+      <div class="admin-user">
+        <span class="admin-avatar">A</span>
+        <div>
+          <strong>Yönetici</strong>
+          <small>Admin</small>
+        </div>
+      </div>
+
+    </header>
+
+    <section class="dashboard-content news-editor-page">
+
+      <div class="editor-top">
+
+        <div>
+          <span>İÇERİK YÖNETİMİ</span>
+          <h2>Yeni Haber Oluştur</h2>
+          <p>Web sitenizde yayınlanacak yeni haberi hazırlayın.</p>
+        </div>
+
+        <a href="admin-panel.html" class="editor-back">
+          ← Dashboard
+        </a>
+
+      </div>
+
+      <form class="news-editor-form" id="newsEditorForm">
+
+        <div class="editor-layout">
+
+          <div class="editor-main">
+
+            <section class="editor-card">
+
+              <div class="editor-card-head">
+                <div>
+                  <span>HABER BİLGİLERİ</span>
+                  <h3>Temel İçerik</h3>
+                </div>
+              </div>
+
+              <div class="editor-fields">
+
+                <label>
+                  Haber Başlığı
+                  <input
+                    type="text"
+                    id="newsTitle"
+                    placeholder="Haber başlığını yazın..."
+                  >
+                </label>
+
+                <label>
+                  Spot / Kısa Açıklama
+                  <textarea
+                    id="newsSpot"
+                    rows="4"
+                    placeholder="Haberin kısa özetini yazın..."
+                  ></textarea>
+                </label>
+
+                <label>
+                  Haber İçeriği
+                  <textarea
+                    id="newsContent"
+                    rows="14"
+                    placeholder="Haber metnini buraya yazın..."
+                  ></textarea>
+                </label>
+
+              </div>
+
+            </section>
+
+            <section class="editor-card">
+
+              <div class="editor-card-head">
+                <div>
+                  <span>GÖRSEL</span>
+                  <h3>Haber Görseli</h3>
+                </div>
+              </div>
+
+              <div class="image-upload">
+
+                <div class="upload-icon">▧</div>
+
+                <strong>Haber görseli ekleyin</strong>
+
+                <p>
+                  JPG, PNG veya WebP formatında bir görsel seçebilirsiniz.
+                </p>
+
+                <label class="upload-button">
+                  Görsel Seç
+                  <input type="file" id="newsImage" accept="image/*">
+                </label>
+
+                <div class="image-preview" id="imagePreview"></div>
+
+              </div>
+
+            </section>
+
+          </div>
+
+          <aside class="editor-sidebar">
+
+            <section class="editor-card">
+
+              <div class="editor-card-head">
+                <div>
+                  <span>YAYIN</span>
+                  <h3>Yayın Ayarları</h3>
+                </div>
+              </div>
+
+              <div class="editor-side-fields">
+
+                <label>
+                  Kategori
+                  <select id="newsCategory">
+                    <option value="">Kategori seçin</option>
+                    <option>Akçaabat</option>
+                    <option>Trabzon</option>
+                    <option>Spor</option>
+                    <option>Türkiye</option>
+                    <option>Dünya</option>
+                    <option>Ekonomi</option>
+                    <option>Gündem</option>
+                  </select>
+                </label>
+
+                <label>
+                  Yayın Durumu
+                  <select id="newsStatus">
+                    <option value="published">Yayında</option>
+                    <option value="draft">Taslak</option>
+                  </select>
+                </label>
+
+                <label>
+                  Yazar
+                  <select>
+                    <option>Yönetici</option>
+                    <option>Editör</option>
+                    <option>Haber Merkezi</option>
+                  </select>
+                </label>
+
+                <label class="check-row">
+                  <input type="checkbox" id="breakingNews">
+                  <span>
+                    <strong>Son Dakika</strong>
+                    <small>Haberi son dakika alanında göster</small>
+                  </span>
+                </label>
+
+              </div>
+
+            </section>
+
+            <section class="editor-card">
+
+              <div class="editor-card-head">
+                <div>
+                  <span>SEO</span>
+                  <h3>Arama Motoru</h3>
+                </div>
+              </div>
+
+              <div class="editor-side-fields">
+
+                <label>
+                  SEO Başlığı
+                  <input
+                    type="text"
+                    placeholder="SEO başlığı..."
+                  >
+                </label>
+
+                <label>
+                  SEO Açıklaması
+                  <textarea
+                    rows="5"
+                    placeholder="Arama sonuçlarında görünecek açıklama..."
+                  ></textarea>
+                </label>
+
+              </div>
+
+            </section>
+
+          </aside>
+
+        </div>
+
+        <div class="editor-actions">
+
+          <a href="admin-panel.html" class="editor-cancel">
+            Vazgeç
+          </a>
+
+          <button type="button" class="editor-draft">
+            Taslak Kaydet
+          </button>
+
+          <button type="submit" class="editor-publish">
+            Haberi Yayınla
+          </button>
+
+        </div>
+
+        <div class="editor-message" id="editorMessage"></div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
