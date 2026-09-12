@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reklam ve İş Birliği | Akçaabat Haber</title>
+
+    <meta
+        name="description"
+        content="Akçaabat Haber reklam, sponsorluk ve iş birliği seçenekleri hakkında bilgi alın."
+    >
+
+    <meta name="robots" content="index, follow">
+
+    <link
+        rel="canonical"
+        href="https://akcaabathaber.com.tr/reklam.html"
+    >
+
+    <link
+        rel="icon"
+        href="/favicon.svg"
+        type="image/svg+xml"
+    >
+
+    <link
+        rel="manifest"
+        href="/site.webmanifest"
+    >
+
+    <style>
+        :root {
+            --navy: #0b1f3a;
+            --navy-2: #17385f;
+            --red: #d71920;
+            --red-dark: #b51218;
+            --text: #172033;
+            --muted: #687386;
+            --bg: #f5f7fa;
+            --white: #ffffff;
+            --border: #e4e9f0;
+            --soft: #f8fafc;
+            --green: #15803d;
+            --shadow: 0 16px 45px rgba(11, 31, 58, .08);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            background: var(--navy);
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .topbar-inner {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .top-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .top-links a {
+            opacity: .88;
+        }
+
+        .top-links a:hover {
+            opacity: 1;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            min-height: 82px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 5px 16px rgba(11, 31, 58, .16);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .brand-title {
+            color: var(--navy);
+            font-size: 23px;
+            font-weight: 900;
+            letter-spacing: -.8px;
+        }
+
+        .brand-title span {
+            color: var(--red);
+        }
+
+        .brand-subtitle {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav a {
+            padding: 10px 12px;
+            border-radius: 9px;
+            color: #3f4858;
+            font-size: 14px;
+            font-weight: 750;
+            transition: .2s ease;
+        }
+
+        .nav a:hover {
+            color: var(--navy);
+            background: #f0f3f7;
+        }
+
+        .nav a.active {
+            color: var(--red);
+            background: #fff3f3;
+        }
+
+        .mobile-menu {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 10px;
+            background: #eef2f7;
+            color: var(--navy);
+            font-size: 21px;
+            cursor: pointer;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 70px 0;
+            color: #fff;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(11, 31, 58, .99),
+                    rgba(23, 56, 95, .96)
+                );
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 440px;
+            height: 440px;
+            right: -190px;
+            top: -220px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            right: 100px;
+            bottom: -190px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.06);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            margin-bottom: 18px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.12);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 850;
+            letter-spacing: .5px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--red);
+            box-shadow: 0 0 0 4px rgba(215,25,32,.14);
+        }
+
+        .hero h1 {
+            font-size: clamp(35px, 5vw, 55px);
+            line-height: 1.08;
+            letter-spacing: -1.8px;
+            margin-bottom: 17px;
+        }
+
+        .hero p {
+            max-width: 730px;
+            color: rgba(255,255,255,.76);
+            font-size: 17px;
+        }
+
+        .main {
+            padding: 45px 0 75px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .content-card {
+            padding: 35px;
+        }
+
+        .section {
+            padding-bottom: 32px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .section h2 {
+            color: var(--navy);
+            font-size: 24px;
+            line-height: 1.25;
+            letter-spacing: -.5px;
+            margin-bottom: 15px;
+        }
+
+        .section h2::before {
+            content: "";
+            display: inline-block;
+            width: 5px;
+            height: 23px;
+            margin-right: 10px;
+            vertical-align: -3px;
+            border-radius: 5px;
+            background: var(--red);
+        }
+
+        .section p {
+            color: #4e596b;
+            font-size: 15px;
+            margin-bottom: 13px;
+        }
+
+        .section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .packages {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-top: 22px;
+        }
+
+        .package {
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: var(--soft);
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .package:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(11,31,58,.07);
+        }
+
+        .package-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 13px;
+            border-radius: 11px;
+            background: rgba(215,25,32,.09);
+            color: var(--red);
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .package h3 {
+            color: var(--navy);
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .package p {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .steps {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #fff;
+        }
+
+        .step-number {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: var(--navy);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .step strong {
+            display: block;
+            color: var(--navy);
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .step span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .contact-panel {
+            margin-top: 20px;
+            padding: 22px;
+            border-radius: 15px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #fff
+                );
+            border: 1px solid var(--border);
+        }
+
+        .contact-panel h3 {
+            color: var(--navy);
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .contact-panel p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .email-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 17px;
+            border-radius: 10px;
+            background: var(--red);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 900;
+            transition:
+                background .2s ease,
+                transform .2s ease;
+        }
+
+        .email-link:hover {
+            background: var(--red-dark);
+            transform: translateY(-1px);
+        }
+
+        .notice {
+            margin-top: 20px;
+            padding: 15px 17px;
+            border-radius: 12px;
+            background: #fff8f8;
+            border: 1px solid #f1d7d9;
+            color: #7c4448;
+            font-size: 13px;
+        }
+
+        .side {
+            display: grid;
+            gap: 18px;
+        }
+
+        .side-card {
+            padding: 24px;
+        }
+
+        .side-title {
+            color: var(--navy);
+            font-size: 17px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .side-links {
+            display: grid;
+            gap: 7px;
+        }
+
+        .side-links a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 12px;
+            border-radius: 10px;
+            color: #4d5768;
+            font-size: 14px;
+            font-weight: 750;
+            transition: .2s ease;
+        }
+
+        .side-links a::after {
+            content: "›";
+            color: #a0a9b6;
+            font-size: 18px;
+        }
+
+        .side-links a:hover {
+            color: var(--red);
+            background: #f3f5f8;
+        }
+
+        .side-links a.active {
+            color: var(--red);
+            background: #fff3f3;
+        }
+
+        .side-contact {
+            padding: 25px;
+            border-radius: var(--radius);
+            color: #fff;
+            background:
+                linear-gradient(
+                    145deg,
+                    var(--navy),
+                    var(--navy-2)
+                );
+            box-shadow: var(--shadow);
+        }
+
+        .side-contact h3 {
+            font-size: 19px;
+            margin-bottom: 7px;
+        }
+
+        .side-contact p {
+            color: rgba(255,255,255,.7);
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .side-contact a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .footer {
+            background: #08172b;
+            color: rgba(255,255,255,.68);
+            padding: 45px 0 25px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 35px;
+            padding-bottom: 35px;
+        }
+
+        .footer-brand {
+            color: #fff;
+            font-size: 21px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-brand span {
+            color: var(--red);
+        }
+
+        .footer p {
+            max-width: 430px;
+            font-size: 13px;
+        }
+
+        .footer h4 {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .footer-links {
+            display: grid;
+            gap: 7px;
+        }
+
+        .footer-links a {
+            font-size: 13px;
+            transition: color .2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,.1);
+            font-size: 12px;
+        }
+
+        .back-top {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--red);
+            color: #fff;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 900;
+            box-shadow: 0 8px 24px rgba(215,25,32,.25);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all .25s ease;
+            z-index: 150;
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            .nav {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .side-contact {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .container {
+                width: min(100% - 22px, 1180px);
+            }
+
+            .topbar-inner {
+                justify-content: center;
+            }
+
+            .top-links {
+                font-size: 12px;
+            }
+
+            .header-inner {
+                min-height: 70px;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-title {
+                font-size: 19px;
+            }
+
+            .brand-subtitle {
+                font-size: 9px;
+            }
+
+            .hero {
+                padding: 50px 0;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .main {
+                padding: 25px 0 50px;
+            }
+
+            .content-card {
+                padding: 22px;
+            }
+
+            .section h2 {
+                font-size: 21px;
+            }
+
+            .section p {
+                font-size: 14px;
+            }
+
+            .packages {
+                grid-template-columns: 1fr;
+            }
+
+            .side {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .copyright {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="container topbar-inner">
+
+            <div>
+                Akçaabat ve Trabzon'dan güncel haberler
+            </div>
+
+            <div class="top-links">
+                <a href="iletisim.html">
+                    İletişim
+                </a>
+
+                <a href="kunye.html">
+                    Künye
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <header class="header">
+
+        <div class="container header-inner">
+
+            <a
+                href="index.html"
+                class="brand"
+                aria-label="Akçaabat Haber ana sayfa"
+            >
+                <img
+                    src="favicon.svg"
+                    class="brand-logo"
+                    alt="Akçaabat Haber"
+                >
+
+                <span class="brand-text">
+
+                    <span class="brand-title">
+                        Akçaabat <span>Haber</span>
+                    </span>
+
+                    <span class="brand-subtitle">
+                        AKÇAABAT • TRABZON • TÜRKİYE
+                    </span>
+
+                </span>
+            </a>
+
+            <nav
+                class="nav"
+                aria-label="Ana menü"
+            >
+                <a href="index.html">
+                    Ana Sayfa
+                </a>
+
+                <a href="haberler.html">
+                    Haberler
+                </a>
+
+                <a href="kategoriler.html">
+                    Kategoriler
+                </a>
+
+                <a href="hakkimizda.html">
+                    Hakkımızda
+                </a>
+
+                <a href="reklam.html" class="active">
+                    Reklam
+                </a>
+
+                <a href="iletisim.html">
+                    İletişim
+                </a>
+            </nav>
+
+            <button
+                type="button"
+                class="mobile-menu"
+                id="mobileMenu"
+                aria-label="Menüyü aç"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+    <section class="hero">
+
+        <div class="container hero-content">
+
+            <div class="eyebrow">
+                REKLAM & İŞ BİRLİĞİ
+            </div>
+
+            <h1>
+                Markanızı Akçaabat Haber'de Büyütün
+            </h1>
+
+            <p>
+                Akçaabat ve Trabzon bölgesine ulaşmak isteyen
+                işletmeler, markalar ve kurumlar için reklam ve
+                iş birliği fırsatları sunuyoruz.
+            </p>
+
+        </div>
+
+    </section>
+
+    <main class="main">
+
+        <div class="container layout">
+
+            <article class="card content-card">
+
+                <section class="section">
+
+                    <h2>
+                        Reklam ve İş Birliği
+                    </h2>
+
+                    <p>
+                        Akçaabat Haber, yerel ve bölgesel ölçekte
+                        okuyuculara ulaşmak isteyen işletmeler,
+                        markalar, kurumlar ve organizasyonlar için
+                        dijital reklam ve iş birliği seçenekleri
+                        geliştirmeyi amaçlamaktadır.
+                    </p>
+
+                    <p>
+                        Reklam çalışmaları; sitenin yayın yapısı,
+                        içerik türleri ve hedef kitleye uygun olarak
+                        planlanabilir.
+                    </p>
+
+                    <div class="notice">
+                        Reklam alanları, fiyatlandırma ve kampanya
+                        seçenekleri dönemsel olarak değişebilir.
+                        Güncel bilgi almak için bizimle iletişime
+                        geçebilirsiniz.
+                    </div>
+
+                </section>
+
+                <section class="section">
+
+                    <h2>
+                        İş Birliği Seçenekleri
+                    </h2>
+
+                    <div class="packages">
+
+                        <div class="package">
+
+                            <div class="package-icon">
+                                01
+                            </div>
+
+                            <h3>
+                                Banner Reklam
+                            </h3>
+
+                            <p>
+                                Web sitesinin uygun alanlarında
+                                görsel banner reklam çalışmaları.
+                            </p>
+
+                        </div>
+
+                        <div class="package">
+
+                            <div class="package-icon">
+                                02
+                            </div>
+
+                            <h3>
+                                Marka Tanıtımı
+                            </h3>
+
+                            <p>
+                                Markaların ve işletmelerin
+                                dijital ortamda tanıtılmasına
+                                yönelik çalışmalar.
+                            </p>
+
+                        </div>
+
+                        <div class="package">
+
+                            <div class="package-icon">
+                                03
+                            </div>
+
+                            <h3>
+                                Sponsorluk
+                            </h3>
+
+                            <p>
+                                Özel içerikler, etkinlikler veya
+                                belirli yayın projeleri için
+                                sponsorluk seçenekleri.
+                            </p>
+
+                        </div>
+
+                        <div class="package">
+
+                            <div class="package-icon">
+                                04
+                            </div>
+
+                            <h3>
+                                Özel Projeler
+                            </h3>
+
+                            <p>
+                                Marka ve kurumların ihtiyaçlarına
+                                göre özel dijital yayın projeleri.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="section">
+
+                    <h2>
+                        Nasıl İlerliyoruz?
+                    </h2>
+
+                    <div class="steps">
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                1
+                            </div>
+
+                            <div>
+                                <strong>
+                                    İletişime Geçin
+                                </strong>
+
+                                <span>
+                                    Reklam veya iş birliği
+                                    talebinizi bize iletin.
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                2
+                            </div>
+
+                            <div>
+                                <strong>
+                                    İhtiyacınızı Belirleyelim
+                                </strong>
+
+                                <span>
+                                    Hedefiniz ve reklam türünüz
+                                    hakkında bilgi alalım.
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                3
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Uygun Çözümü Planlayalım
+                                </strong>
+
+                                <span>
+                                    İhtiyaca uygun reklam veya
+                                    iş birliği modeli oluşturalım.
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                4
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Yayına Alalım
+                                </strong>
+
+                                <span>
+                                    Mutabakat sağlandıktan sonra
+                                    çalışma planlanan tarihte
+                                    yayına alınır.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="section">
+
+                    <h2>
+                        Kimler İçin?
+                    </h2>
+
+                    <div class="packages">
+
+                        <div class="package">
+                            <div class="package-icon">
+                                İ
+                            </div>
+
+                            <h3>
+                                Yerel İşletmeler
+                            </h3>
+
+                            <p>
+                                Akçaabat ve Trabzon'da faaliyet
+                                gösteren işletmeler.
+                            </p>
+                        </div>
+
+                        <div class="package">
+                            <div class="package-icon">
+                                M
+                            </div>
+
+                            <h3>
+                                Markalar
+                            </h3>
+
+                            <p>
+                                Bölgedeki potansiyel müşterilere
+                                ulaşmak isteyen markalar.
+                            </p>
+                        </div>
+
+                        <div class="package">
+                            <div class="package-icon">
+                                K
+                            </div>
+
+                            <h3>
+                                Kurumlar
+                            </h3>
+
+                            <p>
+                                Bölgesel duyuru ve iletişim
+                                çalışmaları yapmak isteyen kurumlar.
+                            </p>
+                        </div>
+
+                        <div class="package">
+                            <div class="package-icon">
+                                E
+                            </div>
+
+                            <h3>
+                                Etkinlikler
+                            </h3>
+
+                            <p>
+                                Organizasyon, etkinlik ve
+                                projelerini duyurmak isteyen
+                                oluşumlar.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section class="section">
+
+                    <h2>
+                        Reklam Politikamız
+                    </h2>
+
+                    <p>
+                        Reklam ve sponsorlu içerik çalışmalarında
+                        kullanıcı deneyimini, yayın bütünlüğünü ve
+                        yürürlükteki mevzuata uygunluğu gözetiyoruz.
+                    </p>
+
+                    <p>
+                        Reklam içerikleri ile editoryal haber
+                        içerikleri arasındaki ayrımın okuyucu
+                        tarafından anlaşılabilir olmasına önem
+                        veriyoruz.
+                    </p>
+
+                    <div class="contact-panel">
+
+                        <h3>
+                            Reklam Talebiniz mi Var?
+                        </h3>
+
+                        <p>
+                            Marka, işletme veya kurumunuz için
+                            reklam ve iş birliği seçeneklerini
+                            görüşmek üzere bize ulaşabilirsiniz.
+                        </p>
+
+                        <a
+                            href="mailto:info@akcaabathaber.com.tr?subject=Reklam%20ve%20%C4%B0%C5%9F%20Birli%C4%9Fi"
+                            class="email-link"
+                        >
+                            Reklam Talebi Gönder
+                        </a>
+
+                    </div>
+
+                </section>
+
+            </article>
+
+            <aside class="side">
+
+                <div class="card side-card">
+
+                    <div class="side-title">
+                        Hızlı Menü
+                    </div>
+
+                    <div class="side-links">
+
+                        <a href="index.html">
+                            Ana Sayfa
+                        </a>
+
+                        <a href="haberler.html">
+                            Haberler
+                        </a>
+
+                        <a href="kategoriler.html">
+                            Kategoriler
+                        </a>
+
+                        <a href="hakkimizda.html">
+                            Hakkımızda
+                        </a>
+
+                        <a
+                            href="reklam.html"
+                            class="active"
+                        >
+                            Reklam
+                        </a>
+
+                        <a href="iletisim.html">
+                            İletişim
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="card side-card">
+
+                    <div class="side-title">
+                        Kurumsal
+                    </div>
+
+                    <div class="side-links">
+
+                        <a href="kunye.html">
+                            Künye
+                        </a>
+
+                        <a href="gizlilik.html">
+                            Gizlilik Politikası
+                        </a>
+
+                        <a href="kvkk.html">
+                            KVKK
+                        </a>
+
+                        <a href="cerez-politikasi.html">
+                            Çerez Politikası
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="side-contact">
+
+                    <h3>
+                        İletişime Geçin
+                    </h3>
+
+                    <p>
+                        Reklam, sponsorluk ve iş birliği
+                        talepleriniz için bize ulaşabilirsiniz.
+                    </p>
+
+                    <a
+                        href="mailto:info@akcaabathaber.com.tr"
+                    >
+                        E-posta Gönder
+                    </a>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div>
+
+                    <div class="footer-brand">
+                        Akçaabat <span>Haber</span>
+                    </div>
+
+                    <p>
+                        Akçaabat ve Trabzon'dan güncel haberleri,
+                        gelişmeleri ve yerel gündemi okuyucularımıza
+                        ulaştırıyoruz.
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        Kurumsal
+                    </h4>
+
+                    <div class="footer-links">
+
+                        <a href="hakkimizda.html">
+                            Hakkımızda
+                        </a>
+
+                        <a href="kunye.html">
+                            Künye
+                        </a>
+
+                        <a href="reklam.html">
+                            Reklam
+                        </a>
+
+                        <a href="iletisim.html">
+                            İletişim
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <h4>
+                        Yasal
+                    </h4>
+
+                    <div class="footer-links">
+
+                        <a href="gizlilik.html">
+                            Gizlilik Politikası
+                        </a>
+
+                        <a href="kvkk.html">
+                            KVKK
+                        </a>
+
+                        <a href="cerez-politikasi.html">
+                            Çerez Politikası
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="copyright">
+
+                <span>
+                    © <span id="year"></span>
+                    Akçaabat Haber.
+                    Tüm hakları saklıdır.
+                </span>
+
+                <span>
+                    akcaabathaber.com.tr
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <button
+        type="button"
+        class="back-top"
+        id="backTop"
+        aria-label="Yukarı çık"
+    >
+        ↑
+    </button>
+
+    <script>
+        const yearElement =
+            document.getElementById("year");
+
+        if (yearElement) {
+            yearElement.textContent =
+                new Date().getFullYear();
+        }
+
+        const mobileMenuButton =
+            document.getElementById("mobileMenu");
+
+        if (mobileMenuButton) {
+
+            mobileMenuButton.addEventListener(
+                "click",
+                function () {
+
+                    const existingMenu =
+                        document.getElementById(
+                            "mobileNav"
+                        );
+
+                    if (existingMenu) {
+                        existingMenu.remove();
+                        return;
+                    }
+
+                    const menu =
+                        document.createElement("div");
+
+                    menu.id = "mobileNav";
+
+                    menu.style.position = "fixed";
+                    menu.style.top = "70px";
+                    menu.style.left = "0";
+                    menu.style.right = "0";
+                    menu.style.background = "#ffffff";
+                    menu.style.borderBottom =
+                        "1px solid #e4e9f0";
+                    menu.style.boxShadow =
+                        "0 12px 30px rgba(11,31,58,.12)";
+                    menu.style.padding = "12px";
+                    menu.style.zIndex = "9999";
+
+                    menu.innerHTML = `
+                        <a
+                            href="index.html"
+                            style="
+                                display:block;
+                                padding:13px 14px;
+                                border-radius:10px;
+                                font-weight:800;
+                                color:#0b1f3a;
+                            "
+                        >
+                            Ana Sayfa
+                        </a>
+
+                        <a
+                            href="haberler.html"
+                            style="
+                                display:block;
+                                padding:13px 14px;
+                                border-radius:10px;
+                                font-weight:800;
+                                color:#0b1f3a;
+                            "
+                        >
+                            Haberler
+                        </a>
+
+                        <a
+                            href="kategoriler.html"
+                            style="
+                                display:block;
+                                padding:13px 14px;
+                                border-radius:10px;
+                                font-weight:800;
+                                color:#0b1f3a;
+                            "
+                        >
+                            Kategoriler
+                        </a>
+
+                        <a
+                            href="hakkimizda.html"
+                            style="
+                                display:block;
+                                padding:13px 14px;
+                                border-radius:10px;
+                                font-weight:800;
+                                color:#0b1f3a;
+                            "
+                        >
+                            Hakkımızda
+                        </a>
+
+                        <a
+                            href="reklam.html"
+                            style="
+                                display:block;
+                                padding:13px 14px;
+                                border-radius:10px;
+                                font-weight:800;
+                                color:#d71920;
+                            "
+                        >
+                            Reklam
+                        </a>
+
+                        <a
+                            href="iletisim.html"
+                            style="
+                                display:block;
+                                padding:13px 14px;
+                                border-radius:10px;
+                                font-weight:800;
+                                color:#0b1f3a;
+                            "
+                        >
+                            İletişim
+                        </a>
+                    `;
+
+                    document.body.appendChild(menu);
+                }
+            );
+        }
+
+        const backTop =
+            document.getElementById("backTop");
+
+        window.addEventListener(
+            "scroll",
+            function () {
+
+                if (!backTop) {
+                    return;
+                }
+
+                if (window.scrollY > 450) {
+                    backTop.classList.add("show");
+                } else {
+                    backTop.classList.remove("show");
+                }
+            }
+        );
+
+        if (backTop) {
+
+            backTop.addEventListener(
+                "click",
+                function () {
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
+
+        }
+
+        document.addEventListener(
+            "click",
+            function (event) {
+
+                const menu =
+                    document.getElementById(
+                        "mobileNav"
+                    );
+
+                const button =
+                    document.getElementById(
+                        "mobileMenu"
+                    );
+
+                if (
+                    menu &&
+                    button &&
+                    !menu.contains(event.target) &&
+                    !button.contains(event.target)
+                ) {
+                    menu.remove();
+                }
+
+            }
+        );
+    </script>
+
+</body>
+</html>
