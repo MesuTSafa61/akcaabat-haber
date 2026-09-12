@@ -1,256 +1,1583 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Akçaabat Haber - Güncel Akçaabat haberleri.">
-  <meta name="theme-color" content="#ffffff">
-  <title>Akçaabat Haberleri | Akçaabat Haber</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1f3a">
+    <meta name="description" content="Akçaabat Haber kategori haberleri. Akçaabat ve Trabzon'dan güncel gelişmeler.">
+    <meta name="robots" content="index, follow">
+    <title>Kategori Haberleri | Akçaabat Haber</title>
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="site.webmanifest">
+
+    <style>
+        :root {
+            --navy: #0b1f3a;
+            --navy-2: #102b4f;
+            --red: #c8102e;
+            --red-dark: #a80d25;
+            --white: #ffffff;
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --text: #182230;
+            --muted: #687386;
+            --border: #e4e8ee;
+            --shadow: 0 10px 30px rgba(11, 31, 58, .08);
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .topbar {
+            background: var(--navy);
+            color: #dce5f1;
+            font-size: 13px;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .topbar-inner {
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .topbar-left,
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar a {
+            color: #dce5f1;
+            transition: color .2s ease;
+        }
+
+        .topbar a:hover {
+            color: #fff;
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 220px;
+        }
+
+        .brand-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .brand-title {
+            color: var(--navy);
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav a {
+            padding: 10px 12px;
+            border-radius: 9px;
+            color: #344054;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all .2s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--red);
+            background: #fff3f5;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn,
+        .menu-btn {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+            color: var(--navy);
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 19px;
+        }
+
+        .menu-btn {
+            display: none;
+        }
+
+        .breaking {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .breaking-inner {
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            overflow: hidden;
+        }
+
+        .breaking-label {
+            background: rgba(0,0,0,.16);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            white-space: nowrap;
+            letter-spacing: .5px;
+        }
+
+        .breaking-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .page-head {
+            padding: 42px 0 30px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--red);
+        }
+
+        .page-title-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .eyebrow {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+
+        .page-title {
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.08;
+            color: var(--navy);
+            letter-spacing: -1.2px;
+        }
+
+        .page-description {
+            color: var(--muted);
+            max-width: 680px;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .result-info {
+            color: var(--muted);
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .toolbar {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .category-list {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            padding-bottom: 2px;
+        }
+
+        .category-list::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .category-list a {
+            flex: 0 0 auto;
+            padding: 8px 13px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: #465266;
+            font-size: 12px;
+            font-weight: 800;
+            background: #fff;
+            transition: all .2s ease;
+        }
+
+        .category-list a:hover,
+        .category-list a.active {
+            color: #fff;
+            border-color: var(--navy);
+            background: var(--navy);
+        }
+
+        .sort-select {
+            min-width: 145px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 9px 11px;
+            background: #fff;
+            color: #344054;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .news-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 300px;
+            gap: 26px;
+            padding-bottom: 55px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .news-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(11, 31, 58, .05);
+            transition: transform .22s ease, box-shadow .22s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(11, 31, 58, .11);
+        }
+
+        .news-image {
+            position: relative;
+            aspect-ratio: 16 / 9;
+            background: #e9edf2;
+            overflow: hidden;
+        }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .35s ease;
+        }
+
+        .news-card:hover .news-image img {
+            transform: scale(1.035);
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            color: #98a2b3;
+            font-size: 38px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #edf1f5, #dfe5ec);
+        }
+
+        .news-badge {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            background: var(--red);
+            color: #fff;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .news-body {
+            padding: 17px;
+        }
+
+        .news-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 9px;
+        }
+
+        .news-category {
+            color: var(--red);
+            font-weight: 900;
+        }
+
+        .news-title {
+            color: var(--navy);
+            font-size: 18px;
+            line-height: 1.3;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .news-summary {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .read-more {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .views {
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .side-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: 0 5px 20px rgba(11, 31, 58, .05);
+        }
+
+        .side-title {
+            color: var(--navy);
+            font-size: 16px;
+            font-weight: 900;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            border-bottom: 2px solid var(--red);
+        }
+
+        .popular-item {
+            display: grid;
+            grid-template-columns: 38px minmax(0, 1fr);
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .popular-item:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .popular-number {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            background: #f0f3f7;
+            color: var(--navy);
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 12px;
+        }
+
+        .popular-title {
+            color: #263548;
+            font-size: 13px;
+            line-height: 1.4;
+            font-weight: 800;
+        }
+
+        .popular-meta {
+            color: #98a2b3;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .quick-link {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            text-align: center;
+            color: #475467;
+            font-size: 11px;
+            font-weight: 800;
+            transition: all .2s ease;
+        }
+
+        .quick-link:hover {
+            background: var(--navy);
+            color: #fff;
+            border-color: var(--navy);
+        }
+
+        .empty-state {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 55px 25px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        .empty-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            background: #f0f3f7;
+            color: var(--navy);
+            display: grid;
+            place-items: center;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .empty-state h2 {
+            color: var(--navy);
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            max-width: 500px;
+            margin: 0 auto 18px;
+            font-size: 14px;
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 17px;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .footer {
+            background: var(--navy);
+            color: #c9d3df;
+            padding: 45px 0 25px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 30px;
+        }
+
+        .footer-brand {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .footer-text {
+            color: #aebaca;
+            font-size: 13px;
+            max-width: 340px;
+        }
+
+        .footer-title {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-links a {
+            color: #aebaca;
+            font-size: 12px;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            margin-top: 35px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,.12);
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            color: #8998aa;
+            font-size: 11px;
+        }
+
+        .mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(11,31,58,.5);
+            z-index: 190;
+            display: none;
+        }
+
+        .mobile-overlay.show {
+            display: block;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -310px;
+            width: min(310px, 88vw);
+            height: 100vh;
+            background: #fff;
+            z-index: 200;
+            padding: 22px;
+            box-shadow: -15px 0 40px rgba(0,0,0,.15);
+            transition: right .25s ease;
+        }
+
+        .mobile-menu.open {
+            right: 0;
+        }
+
+        .mobile-menu-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+        }
+
+        .mobile-menu-title {
+            color: var(--navy);
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .mobile-close {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            background: #f1f3f6;
+            border-radius: 9px;
+            cursor: pointer;
+            color: var(--navy);
+            font-size: 20px;
+        }
+
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .mobile-nav a {
+            padding: 12px;
+            border-radius: 9px;
+            color: #344054;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav a.active {
+            color: var(--red);
+            background: #fff3f5;
+        }
+
+        .loading {
+            grid-column: 1 / -1;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        @media (max-width: 1000px) {
+            .nav {
+                display: none;
+            }
+
+            .menu-btn {
+                display: grid;
+            }
+
+            .news-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: min(100% - 22px, 1180px);
+            }
+
+            .topbar-left {
+                display: none;
+            }
+
+            .topbar-inner {
+                justify-content: center;
+            }
+
+            .header-inner {
+                min-height: 68px;
+            }
+
+            .brand {
+                min-width: auto;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-title {
+                font-size: 18px;
+            }
+
+            .brand-subtitle {
+                display: none;
+            }
+
+            .page-head {
+                padding: 30px 0 22px;
+            }
+
+            .page-title-row {
+                display: block;
+            }
+
+            .result-info {
+                margin-top: 12px;
+            }
+
+            .toolbar {
+                display: block;
+            }
+
+            .sort-select {
+                width: 100%;
+                margin-top: 12px;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                display: block;
+            }
+
+            .footer-bottom span {
+                display: block;
+                margin-top: 5px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .breaking-text {
+                font-size: 11px;
+            }
+
+            .news-title {
+                font-size: 17px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <span>12 Eylül 2026, Cumartesi</span>
-      <span>☀️ 22°C Akçaabat</span>
-      <div class="top-links">
-        <a href="#">Bize Ulaşın</a>
-        <a href="#">Reklam</a>
-        <a href="#">Instagram</a>
-        <a href="#">YouTube</a>
-      </div>
-    </div>
-  </div>
-
-  <header class="header">
-    <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <span class="logo-mark">A</span>
-        <span>
-          <strong>AKÇAABAT <b>HABER</b></strong>
-          <small>Akçaabat'ın Güncel Haber Kaynağı</small>
-        </span>
-      </a>
-
-      <div class="search">
-        <input type="search" placeholder="Haber, kategori veya kelime ara...">
-        <button aria-label="Ara">⌕</button>
-      </div>
-
-      <button class="menu-button" aria-label="Menüyü aç">☰</button>
-    </div>
-  </header>
-
-  <nav class="navigation">
-    <div class="container nav-inner">
-      <a href="index.html">Ana Sayfa</a>
-      <a class="active" href="#">Akçaabat</a>
-      <a href="#">Trabzon</a>
-      <a href="#">Siyaset</a>
-      <a href="#">Spor</a>
-      <a href="#">Ekonomi</a>
-      <a href="#">Yaşam</a>
-      <a href="#">Eğitim</a>
-      <a href="#">Kültür-Sanat</a>
-      <a href="#">Asayiş</a>
-      <a href="#">Galeri</a>
-      <a href="#">Video</a>
-    </div>
-  </nav>
-
-  <div class="breaking">
-    <div class="container breaking-inner">
-      <strong>⚡ SON DAKİKA</strong>
-      <div class="breaking-text">
-        Akçaabat'tan son dakika gelişmeleri burada...
-      </div>
-      <span class="breaking-time">12:42</span>
-    </div>
-  </div>
-
-  <main class="container category-page">
-
-    <div class="category-head">
-      <div>
-        <div class="article-breadcrumb">
-          <a href="index.html">Ana Sayfa</a>
-          <span>›</span>
-          <span>Akçaabat</span>
-        </div>
-
-        <span class="category">AKÇAABAT</span>
-        <h1>Akçaabat Haberleri</h1>
-        <p>
-          Akçaabat'tan son dakika haberleri, gündem, yaşam,
-          asayiş ve ilçeden güncel gelişmeler.
-        </p>
-      </div>
-    </div>
-
-    <div class="category-layout">
-
-      <section>
-
-        <div class="category-toolbar">
-          <strong>Son Haberler</strong>
-
-          <select>
-            <option>En Yeni</option>
-            <option>En Çok Okunan</option>
-            <option>Eskiden Yeniye</option>
-          </select>
-        </div>
-
-        <div class="category-news">
-
-          <article class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1565011523534-747a8601f10a?auto=format&fit=crop&w=900&q=80"
-              alt="Akçaabat"
-            >
-            <div>
-              <span class="category">AKÇAABAT</span>
-              <h2>Akçaabat'tan günün öne çıkan gelişmeleri</h2>
-              <p>
-                İlçede yaşanan son gelişmeler ve gündemdeki
-                önemli konular.
-              </p>
-              <small>12 Eylül 2026 · 12:42 · 2.4K okunma</small>
+    <div class="topbar">
+        <div class="container topbar-inner">
+            <div class="topbar-left">
+                <span>Akçaabat'ın haber merkezi</span>
+                <span>•</span>
+                <span id="currentDate">Yükleniyor...</span>
             </div>
-          </article>
 
-          <article class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
-              alt="Akçaabat"
-            >
-            <div>
-              <span class="category">YAŞAM</span>
-              <h2>Akçaabat'ta hafta sonu hareketliliği</h2>
-              <p>
-                İlçede hafta sonu nedeniyle yaşanan hareketlilik
-                dikkat çekiyor.
-              </p>
-              <small>12 Eylül 2026 · 10:48 · 1.9K okunma</small>
+            <div class="topbar-right">
+                <a href="iletisim.html">İletişim</a>
+                <a href="reklam.html">Reklam</a>
             </div>
-          </article>
-
-          <article class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80"
-              alt="Trabzon"
-            >
-            <div>
-              <span class="category">GÜNDEM</span>
-              <h2>Akçaabat'ta gündemden önemli gelişmeler</h2>
-              <p>
-                İlçenin farklı noktalarından son gelişmeler
-                vatandaşların gündeminde.
-              </p>
-              <small>12 Eylül 2026 · 10:25 · 1.7K okunma</small>
-            </div>
-          </article>
-
-          <article class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=900&q=80"
-              alt="Haber"
-            >
-            <div>
-              <span class="category">ASAYİŞ</span>
-              <h2>Akçaabat'ta önemli gelişme</h2>
-              <p>
-                İlçeden gelen son bilgiler ve gelişmeler
-                yakından takip ediliyor.
-              </p>
-              <small>12 Eylül 2026 · 09:55 · 1.5K okunma</small>
-            </div>
-          </article>
-
-          <article class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80"
-              alt="Akçaabat"
-            >
-            <div>
-              <span class="category">AKÇAABAT</span>
-              <h2>İlçeden yeni haberler geliyor</h2>
-              <p>
-                Akçaabat'ta gün içerisinde yaşanan gelişmeler.
-              </p>
-              <small>12 Eylül 2026 · 09:30 · 1.2K okunma</small>
-            </div>
-          </article>
-
         </div>
-
-        <div class="pagination">
-          <a class="current" href="#">1</a>
-          <a href="#">2</a>
-          <a href="#">3</a>
-          <a href="#">4</a>
-          <a href="#">›</a>
-        </div>
-
-      </section>
-
-      <aside class="category-sidebar">
-
-        <div class="widget">
-          <h3>En Çok Okunanlar</h3>
-
-          <ol class="popular-list">
-            <li>Akçaabat'tan günün gelişmeleri</li>
-            <li>Trabzonspor'da son gelişmeler</li>
-            <li>Trabzon'da gündem</li>
-            <li>Akçaabat'ta hafta sonu</li>
-            <li>Yeni gelişmeler yaşanıyor</li>
-          </ol>
-        </div>
-
-        <div class="widget">
-          <h3>Akçaabat Hava Durumu</h3>
-
-          <div class="weather-main">
-            <span>☀️</span>
-            <strong>22°C</strong>
-          </div>
-
-          <p>Parçalı bulutlu</p>
-
-          <div class="weather-days">
-            <span>Bugün<br><b>22°</b></span>
-            <span>Paz<br><b>23°</b></span>
-            <span>Pzt<br><b>21°</b></span>
-          </div>
-        </div>
-
-      </aside>
-
     </div>
 
-  </main>
+    <header class="header">
+        <div class="container header-inner">
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div>
-        <strong>AKÇAABAT <b>HABER</b></strong>
-        <p>Akçaabat'ın güncel haber kaynağı.</p>
-      </div>
+            <a class="brand" href="index.html">
+                <img class="brand-logo" src="favicon.svg" alt="Akçaabat Haber">
+                <span class="brand-text">
+                    <span class="brand-title">Akçaabat Haber</span>
+                    <span class="brand-subtitle">Akçaabat ve Trabzon'dan gündem</span>
+                </span>
+            </a>
 
-      <div class="footer-links">
-        <a href="#">Hakkımızda</a>
-        <a href="#">Gizlilik Politikası</a>
-        <a href="#">Kullanım Koşulları</a>
-        <a href="#">İletişim</a>
-      </div>
+            <nav class="nav">
+                <a href="index.html">Ana Sayfa</a>
+                <a href="haberler.html">Haberler</a>
+                <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
+                <a href="kategori.html?kategori=Trabzon">Trabzon</a>
+                <a href="kategori.html?kategori=Spor">Spor</a>
+                <a href="kategori.html?kategori=Gündem">Gündem</a>
+            </nav>
 
-      <span>© 2026 Akçaabat Haber</span>
+            <div class="header-actions">
+                <button class="search-btn" id="searchBtn" aria-label="Arama">⌕</button>
+                <button class="menu-btn" id="menuBtn" aria-label="Menüyü aç">☰</button>
+            </div>
+
+        </div>
+    </header>
+
+    <div class="breaking">
+        <div class="container breaking-inner">
+            <span class="breaking-label">SON DAKİKA</span>
+            <span class="breaking-text" id="breakingText">
+                Akçaabat ve Trabzon'dan son gelişmeler Akçaabat Haber'de.
+            </span>
+        </div>
     </div>
-  </footer>
 
-  <script src="script.js"></script>
+    <main>
+
+        <section class="page-head">
+            <div class="container">
+
+                <div class="breadcrumb">
+                    <a href="index.html">Ana Sayfa</a>
+                    <span>›</span>
+                    <span id="breadcrumbCategory">Kategori</span>
+                </div>
+
+                <div class="page-title-row">
+                    <div>
+                        <div class="eyebrow">HABERLER</div>
+                        <h1 class="page-title" id="pageTitle">Kategori Haberleri</h1>
+                        <p class="page-description" id="pageDescription">
+                            Akçaabat ve Trabzon'dan güncel haberler, son dakika gelişmeleri ve yerel gündem.
+                        </p>
+                    </div>
+
+                    <div class="result-info" id="resultInfo">
+                        Haberler yükleniyor...
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="container">
+
+            <div class="toolbar">
+
+                <div class="category-list">
+                    <a href="kategori.html?kategori=Akçaabat" data-category="Akçaabat">Akçaabat</a>
+                    <a href="kategori.html?kategori=Trabzon" data-category="Trabzon">Trabzon</a>
+                    <a href="kategori.html?kategori=Gündem" data-category="Gündem">Gündem</a>
+                    <a href="kategori.html?kategori=Spor" data-category="Spor">Spor</a>
+                    <a href="kategori.html?kategori=Ekonomi" data-category="Ekonomi">Ekonomi</a>
+                    <a href="kategori.html?kategori=Siyaset" data-category="Siyaset">Siyaset</a>
+                    <a href="kategori.html?kategori=Asayiş" data-category="Asayiş">Asayiş</a>
+                    <a href="kategori.html?kategori=Yaşam" data-category="Yaşam">Yaşam</a>
+                    <a href="kategori.html?kategori=Kültür Sanat" data-category="Kültür Sanat">Kültür Sanat</a>
+                </div>
+
+                <select class="sort-select" id="sortSelect">
+                    <option value="newest">En Yeni</option>
+                    <option value="oldest">En Eski</option>
+                    <option value="popular">En Çok Okunan</option>
+                </select>
+
+            </div>
+
+        </section>
+
+        <section class="container news-layout">
+
+            <div class="news-grid" id="newsGrid">
+                <div class="loading">Haberler yükleniyor...</div>
+            </div>
+
+            <aside class="sidebar">
+
+                <div class="side-card">
+                    <h2 class="side-title">Çok Okunanlar</h2>
+                    <div id="popularNews">
+                        <div class="loading">Yükleniyor...</div>
+                    </div>
+                </div>
+
+                <div class="side-card">
+                    <h2 class="side-title">Hızlı Menü</h2>
+
+                    <div class="quick-links">
+                        <a class="quick-link" href="index.html">Ana Sayfa</a>
+                        <a class="quick-link" href="haberler.html">Tüm Haberler</a>
+                        <a class="quick-link" href="arama.html">Haber Ara</a>
+                        <a class="quick-link" href="iletisim.html">İletişim</a>
+                        <a class="quick-link" href="hakkimizda.html">Hakkımızda</a>
+                        <a class="quick-link" href="reklam.html">Reklam</a>
+                    </div>
+                </div>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div>
+                    <div class="footer-brand">Akçaabat Haber</div>
+                    <p class="footer-text">
+                        Akçaabat ve Trabzon'dan güncel haberler, yerel gelişmeler,
+                        gündem, spor ve yaşam haberleri.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="footer-title">Haber</div>
+                    <div class="footer-links">
+                        <a href="haberler.html">Tüm Haberler</a>
+                        <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
+                        <a href="kategori.html?kategori=Trabzon">Trabzon</a>
+                        <a href="kategori.html?kategori=Spor">Spor</a>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-title">Kurumsal</div>
+                    <div class="footer-links">
+                        <a href="hakkimizda.html">Hakkımızda</a>
+                        <a href="kunye.html">Künye</a>
+                        <a href="iletisim.html">İletişim</a>
+                        <a href="reklam.html">Reklam</a>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-title">Yasal</div>
+                    <div class="footer-links">
+                        <a href="gizlilik.html">Gizlilik</a>
+                        <a href="kvkk.html">KVKK</a>
+                        <a href="cerez-politikasi.html">Çerez Politikası</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>© <span id="footerYear"></span> Akçaabat Haber. Tüm hakları saklıdır.</span>
+                <span>Yerel haberin güvenilir adresi.</span>
+            </div>
+
+        </div>
+    </footer>
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <aside class="mobile-menu" id="mobileMenu">
+
+        <div class="mobile-menu-head">
+            <div class="mobile-menu-title">Menü</div>
+            <button class="mobile-close" id="mobileClose" aria-label="Menüyü kapat">×</button>
+        </div>
+
+        <nav class="mobile-nav">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="haberler.html">Haberler</a>
+            <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
+            <a href="kategori.html?kategori=Trabzon">Trabzon</a>
+            <a href="kategori.html?kategori=Spor">Spor</a>
+            <a href="kategori.html?kategori=Gündem">Gündem</a>
+            <a href="kategori.html?kategori=Ekonomi">Ekonomi</a>
+            <a href="kategori.html?kategori=Siyaset">Siyaset</a>
+            <a href="arama.html">Haber Ara</a>
+            <a href="iletisim.html">İletişim</a>
+        </nav>
+
+    </aside>
+
+    <script>
+        (function () {
+            "use strict";
+
+            const STORAGE_KEY = "akcaabat_haberler";
+
+            const newsGrid = document.getElementById("newsGrid");
+            const popularNews = document.getElementById("popularNews");
+            const resultInfo = document.getElementById("resultInfo");
+            const pageTitle = document.getElementById("pageTitle");
+            const pageDescription = document.getElementById("pageDescription");
+            const breadcrumbCategory = document.getElementById("breadcrumbCategory");
+            const sortSelect = document.getElementById("sortSelect");
+            const breakingText = document.getElementById("breakingText");
+
+            const params = new URLSearchParams(window.location.search);
+            const requestedCategory = (params.get("kategori") || "").trim();
+
+            let currentCategory = requestedCategory;
+            let allNews = [];
+            let visibleNews = [];
+
+            function safeParse(value, fallback) {
+                try {
+                    const parsed = JSON.parse(value);
+                    return parsed ?? fallback;
+                } catch (error) {
+                    return fallback;
+                }
+            }
+
+            function getNews() {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                const data = safeParse(raw, []);
+
+                if (!Array.isArray(data)) {
+                    return [];
+                }
+
+                return data;
+            }
+
+            function isPublished(item) {
+                const status = String(
+                    item.status ||
+                    item.durum ||
+                    item.yayinDurumu ||
+                    ""
+                ).toLowerCase();
+
+                if (
+                    status === "taslak" ||
+                    status === "draft" ||
+                    status === "pasif" ||
+                    status === "pending"
+                ) {
+                    return false;
+                }
+
+                if (
+                    item.published === false ||
+                    item.yayinlandi === false ||
+                    item.isPublished === false
+                ) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            function normalizeCategory(value) {
+                return String(value || "")
+                    .trim()
+                    .toLocaleLowerCase("tr-TR");
+            }
+
+            function getCategory(item) {
+                return String(
+                    item.category ||
+                    item.kategori ||
+                    item.categoryName ||
+                    "Genel"
+                ).trim();
+            }
+
+            function getTitle(item) {
+                return String(
+                    item.title ||
+                    item.baslik ||
+                    item.name ||
+                    "Başlıksız Haber"
+                ).trim();
+            }
+
+            function getSummary(item) {
+                return String(
+                    item.summary ||
+                    item.ozet ||
+                    item.description ||
+                    item.aciklama ||
+                    ""
+                ).trim();
+            }
+
+            function getContent(item) {
+                return String(
+                    item.content ||
+                    item.icerik ||
+                    item.body ||
+                    ""
+                ).trim();
+            }
+
+            function getImage(item) {
+                return String(
+                    item.image ||
+                    item.imageUrl ||
+                    item.gorsel ||
+                    item.resim ||
+                    item.thumbnail ||
+                    ""
+                ).trim();
+            }
+
+            function getViews(item) {
+                const value = Number(
+                    item.views ??
+                    item.goruntulenme ??
+                    item.viewCount ??
+                    item.okunma ??
+                    0
+                );
+
+                return Number.isFinite(value) ? value : 0;
+            }
+
+            function getDate(item) {
+                const raw =
+                    item.publishedAt ||
+                    item.publishedDate ||
+                    item.createdAt ||
+                    item.updatedAt ||
+                    item.tarih ||
+                    item.date ||
+                    "";
+
+                const date = new Date(raw);
+
+                if (Number.isNaN(date.getTime())) {
+                    return new Date(0);
+                }
+
+                return date;
+            }
+
+            function formatDate(item) {
+                const date = getDate(item);
+
+                if (date.getTime() === 0) {
+                    return "Tarih belirtilmemiş";
+                }
+
+                return new Intl.DateTimeFormat("tr-TR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                }).format(date);
+            }
+
+            function escapeHtml(value) {
+                return String(value || "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function slugify(text) {
+                return String(text || "")
+                    .toLocaleLowerCase("tr-TR")
+                    .replace(/ğ/g, "g")
+                    .replace(/ü/g, "u")
+                    .replace(/ş/g, "s")
+                    .replace(/ı/g, "i")
+                    .replace(/ö/g, "o")
+                    .replace(/ç/g, "c")
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, "");
+            }
+
+            function getNewsUrl(item) {
+                const slug = String(
+                    item.slug ||
+                    item.seoSlug ||
+                    item.urlSlug ||
+                    ""
+                ).trim();
+
+                if (slug) {
+                    return "haber-detay.html?slug=" +
+                        encodeURIComponent(slug);
+                }
+
+                if (item.id !== undefined && item.id !== null) {
+                    return "haber-detay.html?id=" +
+                        encodeURIComponent(String(item.id));
+                }
+
+                return "haber-detay.html?slug=" +
+                    encodeURIComponent(slugify(getTitle(item)));
+            }
+
+            function getDescription(category) {
+                const descriptions = {
+                    "akçaabat": "Akçaabat'tan güncel haberler, yerel gelişmeler ve son dakika bilgileri.",
+                    "trabzon": "Trabzon genelinden güncel haberler, gelişmeler ve son dakika bilgileri.",
+                    "gündem": "Akçaabat ve Trabzon gündeminden öne çıkan gelişmeler.",
+                    "spor": "Trabzon ve bölge sporundan son gelişmeler, maçlar ve spor haberleri.",
+                    "ekonomi": "Ekonomi gündeminden güncel gelişmeler ve yerel ekonomik haberler.",
+                    "siyaset": "Yerel ve ulusal siyaset gündeminden güncel haberler.",
+                    "asayiş": "Akçaabat ve Trabzon'dan asayiş ve güvenlik haberleri.",
+                    "yaşam": "Yaşam, eğitim, sağlık, etkinlik ve günlük hayattan haberler.",
+                    "kültür sanat": "Akçaabat ve Trabzon'un kültür, sanat ve etkinlik haberleri."
+                };
+
+                return descriptions[normalizeCategory(category)] ||
+                    "Akçaabat ve Trabzon'dan güncel haberler, son dakika gelişmeleri ve yerel gündem.";
+            }
+
+            function setPageInfo() {
+                const category = currentCategory || "Tüm Haberler";
+
+                if (currentCategory) {
+                    pageTitle.textContent = category + " Haberleri";
+                    breadcrumbCategory.textContent = category;
+                    pageDescription.textContent = getDescription(category);
+                    document.title = category + " Haberleri | Akçaabat Haber";
+                } else {
+                    pageTitle.textContent = "Tüm Haberler";
+                    breadcrumbCategory.textContent = "Haberler";
+                    pageDescription.textContent =
+                        "Akçaabat ve Trabzon'dan güncel haberler, son dakika gelişmeleri ve yerel gündem.";
+                    document.title = "Tüm Haberler | Akçaabat Haber";
+                }
+
+                document
+                    .querySelectorAll("[data-category]")
+                    .forEach(link => {
+                        const value = link.getAttribute("data-category") || "";
+
+                        if (
+                            currentCategory &&
+                            normalizeCategory(value) === normalizeCategory(currentCategory)
+                        ) {
+                            link.classList.add("active");
+                        } else {
+                            link.classList.remove("active");
+                        }
+                    });
+            }
+
+            function sortNews(list) {
+                const sorted = [...list];
+                const mode = sortSelect.value;
+
+                if (mode === "oldest") {
+                    sorted.sort((a, b) =>
+                        getDate(a).getTime() - getDate(b).getTime()
+                    );
+                } else if (mode === "popular") {
+                    sorted.sort((a, b) =>
+                        getViews(b) - getViews(a)
+                    );
+                } else {
+                    sorted.sort((a, b) =>
+                        getDate(b).getTime() - getDate(a).getTime()
+                    );
+                }
+
+                return sorted;
+            }
+
+            function renderNews() {
+                visibleNews = sortNews(allNews);
+
+                resultInfo.textContent =
+                    visibleNews.length +
+                    " haber bulundu";
+
+                if (!visibleNews.length) {
+                    newsGrid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">!</div>
+                            <h2>Bu kategoride haber bulunamadı</h2>
+                            <p>
+                                Aradığınız kategori için henüz yayınlanmış
+                                bir haber bulunmuyor.
+                            </p>
+                            <a class="home-button" href="haberler.html">
+                                Tüm Haberleri Gör
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                newsGrid.innerHTML = visibleNews.map((item) => {
+                    const title = escapeHtml(getTitle(item));
+                    const summary = escapeHtml(getSummary(item));
+                    const category = escapeHtml(getCategory(item));
+                    const image = getImage(item);
+                    const date = escapeHtml(formatDate(item));
+                    const views = getViews(item);
+                    const url = getNewsUrl(item);
+
+                    const imageHtml = image
+                        ? `
+                            <img
+                                src="${escapeHtml(image)}"
+                                alt="${title}"
+                                loading="lazy"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
+                            >
+                            <div class="image-placeholder" style="display:none;">AH</div>
+                        `
+                        : `
+                            <div class="image-placeholder">AH</div>
+                        `;
+
+                    return `
+                        <article class="news-card">
+                            <a href="${url}" aria-label="${title}">
+                                <div class="news-image">
+                                    ${imageHtml}
+                                    <span class="news-badge">${category}</span>
+                                </div>
+                            </a>
+
+                            <div class="news-body">
+                                <div class="news-meta">
+                                    <span class="news-category">${category}</span>
+                                    <span>•</span>
+                                    <span>${date}</span>
+                                </div>
+
+                                <a href="${url}">
+                                    <h2 class="news-title">${title}</h2>
+                                </a>
+
+                                ${
+                                    summary
+                                        ? `<p class="news-summary">${summary}</p>`
+                                        : ""
+                                }
+
+                                <div class="news-footer">
+                                    <a class="read-more" href="${url}">
+                                        Haberi Oku →
+                                    </a>
+
+                                    <span class="views">
+                                        ${views.toLocaleString("tr-TR")} okunma
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                }).join("");
+            }
+
+            function renderPopular() {
+                const popular = [...allNews]
+                    .sort((a, b) => getViews(b) - getViews(a))
+                    .slice(0, 5);
+
+                if (!popular.length) {
+                    popularNews.innerHTML = `
+                        <div style="color:#687386;font-size:13px;">
+                            Henüz yeterli haber bulunmuyor.
+                        </div>
+                    `;
+                    return;
+                }
+
+                popularNews.innerHTML = popular.map((item, index) => {
+                    const title = escapeHtml(getTitle(item));
+                    const url = getNewsUrl(item);
+                    const views = getViews(item);
+
+                    return `
+                        <a class="popular-item" href="${url}">
+                            <span class="popular-number">
+                                ${index + 1}
+                            </span>
+
+                            <span>
+                                <span class="popular-title">
+                                    ${title}
+                                </span>
+
+                                <span class="popular-meta">
+                                    ${views.toLocaleString("tr-TR")} okunma
+                                </span>
+                            </span>
+                        </a>
+                    `;
+                }).join("");
+            }
+
+            function renderBreaking() {
+                const breaking = allNews.find(item =>
+                    item.breaking === true ||
+                    item.sondakika === true ||
+                    item.isBreaking === true
+                );
+
+                if (!breaking) {
+                    const newest = [...allNews]
+                        .sort((a, b) =>
+                            getDate(b).getTime() - getDate(a).getTime()
+                        )[0];
+
+                    if (newest) {
+                        breakingText.textContent = getTitle(newest);
+                    }
+
+                    return;
+                }
+
+                breakingText.textContent = getTitle(breaking);
+            }
+
+            function loadData() {
+                const stored = getNews();
+
+                const published = stored.filter(isPublished);
+
+                if (currentCategory) {
+                    allNews = published.filter(item =>
+                        normalizeCategory(getCategory(item)) ===
+                        normalizeCategory(currentCategory)
+                    );
+                } else {
+                    allNews = published;
+                }
+
+                renderNews();
+                renderPopular();
+                renderBreaking();
+            }
+
+            function openSearch() {
+                window.location.href = "arama.html";
+            }
+
+            const searchBtn = document.getElementById("searchBtn");
+
+            if (searchBtn) {
+                searchBtn.addEventListener("click", openSearch);
+            }
+
+            sortSelect.addEventListener("change", renderNews);
+
+            const menuBtn = document.getElementById("menuBtn");
+            const mobileMenu = document.getElementById("mobileMenu");
+            const mobileClose = document.getElementById("mobileClose");
+            const mobileOverlay = document.getElementById("mobileOverlay");
+
+            function openMobileMenu() {
+                mobileMenu.classList.add("open");
+                mobileOverlay.classList.add("show");
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove("open");
+                mobileOverlay.classList.remove("show");
+                document.body.style.overflow = "";
+            }
+
+            if (menuBtn) {
+                menuBtn.addEventListener("click", openMobileMenu);
+            }
+
+            if (mobileClose) {
+                mobileClose.addEventListener("click", closeMobileMenu);
+            }
+
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener("click", closeMobileMenu);
+            }
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closeMobileMenu();
+                }
+            });
+
+            document.getElementById("currentDate").textContent =
+                new Intl.DateTimeFormat("tr-TR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                }).format(new Date());
+
+            document.getElementById("footerYear").textContent =
+                new Date().getFullYear();
+
+            setPageInfo();
+            loadData();
+
+        })();
+    </script>
+
 </body>
 </html>
