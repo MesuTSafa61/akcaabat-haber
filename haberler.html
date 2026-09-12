@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <meta
+        name="description"
+        content="Akçaabat Haber admin haber yönetim paneli"
+    >
+    <title>Haberler | Akçaabat Haber</title>
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+<body class="admin-page">
+    <!-- =====================================================
+         ADMIN HEADER
+         ===================================================== -->
+    <header class="admin-header">
+        <div class="admin-header-left">
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                aria-label="Menüyü aç"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+            <a
+                href="index.html"
+                class="admin-logo"
+            >
+                <strong>AKÇAABAT</strong>
+                <span>HABER</span>
+            </a>
+        </div>
+        <div class="admin-header-right">
+            <a
+                href="index.html"
+                class="view-site-btn"
+            >
+                Siteyi Gör
+            </a>
+            <button
+                type="button"
+                class="admin-user-btn"
+            >
+                <span class="admin-avatar">
+                    A
+                </span>
+                <span class="admin-user-name">
+                    Admin
+                </span>
+            </button>
+        </div>
+    </header>
+    <!-- =====================================================
+         ADMIN LAYOUT
+         ===================================================== -->
+    <div class="admin-layout">
+        <!-- =================================================
+             SIDEBAR
+             ================================================= -->
+        <aside
+            class="admin-sidebar"
+            id="mobileMenu"
+        >
+            <div class="sidebar-title">
+                YÖNETİM PANELİ
+            </div>
+            <nav class="admin-nav">
+                <a
+                    href="admin.html"
+                    class="admin-nav-item"
+                >
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a
+                    href="yeni-haber.html"
+                    class="admin-nav-item"
+                >
+                    <span>➕</span>
+                    <span>Yeni Haber</span>
+                </a>
+                <a
+                    href="haberler.html"
+                    class="admin-nav-item active"
+                >
+                    <span>📰</span>
+                    <span>Haberler</span>
+                </a>
+                <a
+                    href="taslaklar.html"
+                    class="admin-nav-item"
+                >
+                    <span>📝</span>
+                    <span>Taslaklar</span>
+                </a>
+                <a
+                    href="kategoriler.html"
+                    class="admin-nav-item"
+                >
+                    <span>📂</span>
+                    <span>Kategoriler</span>
+                </a>
+                <a
+                    href="yorumlar.html"
+                    class="admin-nav-item"
+                >
+                    <span>💬</span>
+                    <span>Yorumlar</span>
+                </a>
+                <div class="admin-nav-divider"></div>
+                <a
+                    href="ayarlar.html"
+                    class="admin-nav-item"
+                >
+                    <span>⚙️</span>
+                    <span>Ayarlar</span>
+                </a>
+                <a
+                    href="index.html"
+                    class="admin-nav-item"
+                >
+                    <span>🌐</span>
+                    <span>Siteye Git</span>
+                </a>
+            </nav>
+        </aside>
+        <!-- =================================================
+             ANA İÇERİK
+             ================================================= -->
+        <main class="admin-main">
+            <!-- SAYFA BAŞLIĞI -->
+            <section class="admin-page-heading">
+                <div>
+                    <div class="breadcrumb">
+                        Admin / Haberler
+                    </div>
+                    <h1>
+                        Haberler
+                    </h1>
+                    <p>
+                        Sitedeki haberleri buradan yönetebilirsiniz.
+                    </p>
+                </div>
+                <a
+                    href="yeni-haber.html"
+                    class="admin-primary-btn"
+                >
+                    + Yeni Haber
+                </a>
+            </section>
+            <!-- =================================================
+                 İSTATİSTİKLER
+                 ================================================= -->
+            <section class="news-stat-grid">
+                <div class="news-stat-card">
+                    <div class="news-stat-icon">
+                        📰
+                    </div>
+                    <div>
+                        <span>
+                            Toplam Haber
+                        </span>
+                        <strong id="totalNews">
+                            0
+                        </strong>
+                    </div>
+                </div>
+                <div class="news-stat-card">
+                    <div class="news-stat-icon">
+                        🟢
+                    </div>
+                    <div>
+                        <span>
+                            Yayında
+                        </span>
+                        <strong id="publishedNews">
+                            0
+                        </strong>
+                    </div>
+                </div>
+                <div class="news-stat-card">
+                    <div class="news-stat-icon">
+                        📝
+                    </div>
+                    <div>
+                        <span>
+                            Taslak
+                        </span>
+                        <strong id="draftNews">
+                            0
+                        </strong>
+                    </div>
+                </div>
+                <div class="news-stat-card">
+                    <div class="news-stat-icon">
+                        ⚡
+                    </div>
+                    <div>
+                        <span>
+                            Son Dakika
+                        </span>
+                        <strong id="breakingNewsCount">
+                            0
+                        </strong>
+                    </div>
+                </div>
+            </section>
+            <!-- =================================================
+                 FİLTRELER
+                 ================================================= -->
+            <section class="news-toolbar">
+                <div class="news-search">
+                    <span>
+                        🔎
+                    </span>
+                    <input
+                        type="search"
+                        id="newsSearch"
+                        placeholder="Haberlerde ara..."
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="news-filters">
+                    <select id="statusFilter">
+                        <option value="all">
+                            Tüm Durumlar
+                        </option>
+                        <option value="published">
+                            Yayında
+                        </option>
+                        <option value="draft">
+                            Taslak
+                        </option>
+                    </select>
+                    <select id="categoryFilter">
+                        <option value="all">
+                            Tüm Kategoriler
+                        </option>
+                    </select>
+                </div>
+            </section>
+            <!-- =================================================
+                 HABER LİSTESİ
+                 ================================================= -->
+            <section class="news-list-card">
+                <div class="news-list-header">
+                    <div>
+                        <h2>
+                            Haber Listesi
+                        </h2>
+                        <span id="resultCount">
+                            0 haber
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        id="refreshNews"
+                        class="admin-secondary-btn"
+                    >
+                        ↻ Yenile
+                    </button>
+                </div>
+                <div
+                    class="news-table-wrapper"
+                >
+                    <table
+                        class="news-table"
+                    >
+                        <thead>
+                            <tr>
+                                <th>
+                                    Haber
+                                </th>
+                                <th>
+                                    Kategori
+                                </th>
+                                <th>
+                                    Durum
+                                </th>
+                                <th>
+                                    Tarih
+                                </th>
+                                <th>
+                                    İşlem
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="newsTableBody">
+                            <!-- JavaScript tarafından doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- BOŞ DURUM -->
+                <div
+                    id="emptyNews"
+                    class="empty-news"
+                    style="display:none;"
+                >
+                    <div class="empty-news-icon">
+                        📰
+                    </div>
+                    <h3>
+                        Henüz haber bulunmuyor
+                    </h3>
+                    <p>
+                        İlk haberinizi oluşturmak için
+                        yeni haber butonunu kullanabilirsiniz.
+                    </p>
+                    <a
+                        href="yeni-haber.html"
+                        class="admin-primary-btn"
+                    >
+                        + İlk Haberi Oluştur
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- =====================================================
+         SİLME MODALI
+         ===================================================== -->
+    <div
+        class="admin-modal"
+        id="deleteModal"
+        aria-hidden="true"
+    >
+        <div class="admin-modal-overlay"></div>
+        <div class="admin-modal-box">
+            <button
+                type="button"
+                class="admin-modal-close"
+                id="closeDeleteModal"
+                aria-label="Kapat"
+            >
+                ×
+            </button>
+            <div class="admin-modal-icon">
+                🗑️
+            </div>
+            <h2>
+                Haberi Sil
+            </h2>
+            <p>
+                Bu haberi silmek istediğinizden emin misiniz?
+                Bu işlem geri alınamaz.
+            </p>
+            <div class="admin-modal-actions">
+                <button
+                    type="button"
+                    id="cancelDelete"
+                    class="admin-secondary-btn"
+                >
+                    Vazgeç
+                </button>
+                <button
+                    type="button"
+                    id="confirmDelete"
+                    class="admin-danger-btn"
+                >
+                    Haberi Sil
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                const tableBody =
+                    document.getElementById(
+                        "newsTableBody"
+                    );
+                const emptyNews =
+                    document.getElementById(
+                        "emptyNews"
+                    );
+                const searchInput =
+                    document.getElementById(
+                        "newsSearch"
+                    );
+                const statusFilter =
+                    document.getElementById(
+                        "statusFilter"
+                    );
+                const categoryFilter =
+                    document.getElementById(
+                        "categoryFilter"
+                    );
+                const resultCount =
+                    document.getElementById(
+                        "resultCount"
+                    );
+                const totalNews =
+                    document.getElementById(
+                        "totalNews"
+                    );
+                const publishedNews =
+                    document.getElementById(
+                        "publishedNews"
+                    );
+                const draftNews =
+                    document.getElementById(
+                        "draftNews"
+                    );
+                const breakingNewsCount =
+                    document.getElementById(
+                        "breakingNewsCount"
+                    );
+                const refreshButton =
+                    document.getElementById(
+                        "refreshNews"
+                    );
+                const deleteModal =
+                    document.getElementById(
+                        "deleteModal"
+                    );
+                const closeDeleteModal =
+                    document.getElementById(
+                        "closeDeleteModal"
+                    );
+                const cancelDelete =
+                    document.getElementById(
+                        "cancelDelete"
+                    );
+                const confirmDelete =
+                    document.getElementById(
+                        "confirmDelete"
+                    );
+                let selectedNewsId = null;
+                /* ---------------------------------------------
+                   VERİLERİ GETİR
+                   --------------------------------------------- */
+                function getNews() {
+                    try {
+                        return JSON.parse(
+                            localStorage.getItem(
+                                "akcaabat_haberler"
+                            )
+                        ) || [];
+                    } catch (error) {
+                        console.error(
+                            "Haberler okunamadı:",
+                            error
+                        );
+                        return [];
+                    }
+                }
+                /* ---------------------------------------------
+                   TARİH FORMATLA
+                   --------------------------------------------- */
+                function formatDate(date) {
+                    if (!date) {
+                        return "-";
+                    }
+                    const parsed =
+                        new Date(date);
+                    if (
+                        Number.isNaN(
+                            parsed.getTime()
+                        )
+                    ) {
+                        return "-";
+                    }
+                    return parsed.toLocaleDateString(
+                        "tr-TR",
+                        {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric"
+                        }
+                    );
+                }
+                /* ---------------------------------------------
+                   HTML GÜVENLİK
+                   --------------------------------------------- */
+                function escapeHTML(value) {
+                    return String(value || "")
+                        .replace(
+                            /&/g,
+                            "&amp;"
+                        )
+                        .replace(
+                            /</g,
+                            "&lt;"
+                        )
+                        .replace(
+                            />/g,
+                            "&gt;"
+                        )
+                        .replace(
+                            /"/g,
+                            "&quot;"
+                        )
+                        .replace(
+                            /'/g,
+                            "&#039;"
+                        );
+                }
+                /* ---------------------------------------------
+                   KATEGORİLERİ OLUŞTUR
+                   --------------------------------------------- */
+                function updateCategories(news) {
+                    const categories =
+                        [];
+                    news.forEach(function (item) {
+                        const category =
+                            String(
+                                item.category || ""
+                            ).trim();
+                        if (
+                            category &&
+                            !categories.includes(
+                                category
+                            )
+                        ) {
+                            categories.push(
+                                category
+                            );
+                        }
+                    });
+                    categories.sort();
+                    categoryFilter.innerHTML =
+                        '<option value="all">' +
+                        'Tüm Kategoriler' +
+                        '</option>';
+                    categories.forEach(
+                        function (category) {
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+                            option.value =
+                                category;
+                            option.textContent =
+                                category;
+                            categoryFilter.appendChild(
+                                option
+                            );
+                        }
+                    );
+                }
+                /* ---------------------------------------------
+                   İSTATİSTİKLER
+                   --------------------------------------------- */
+                function updateStats(news) {
+                    const published =
+                        news.filter(
+                            function (item) {
+                                return item.status ===
+                                    "published";
+                            }
+                        ).length;
+                    const drafts =
+                        news.filter(
+                            function (item) {
+                                return item.status ===
+                                    "draft";
+                            }
+                        ).length;
+                    const breaking =
+                        news.filter(
+                            function (item) {
+                                return item.breaking ===
+                                    true;
+                            }
+                        ).length;
+                    totalNews.textContent =
+                        news.length;
+                    publishedNews.textContent =
+                        published;
+                    draftNews.textContent =
+                        drafts;
+                    breakingNewsCount.textContent =
+                        breaking;
+                }
+                /* ---------------------------------------------
+                   HABERLERİ RENDER ET
+                   --------------------------------------------- */
+                function renderNews() {
+                    const allNews =
+                        getNews();
+                    updateStats(allNews);
+                    updateCategories(allNews);
+                    const search =
+                        searchInput.value
+                            .trim()
+                            .toLocaleLowerCase(
+                                "tr-TR"
+                            );
+                    const status =
+                        statusFilter.value;
+                    const category =
+                        categoryFilter.value;
+                    const filtered =
+                        allNews.filter(
+                            function (item) {
+                                const title =
+                                    String(
+                                        item.title ||
+                                        ""
+                                    )
+                                    .toLocaleLowerCase(
+                                        "tr-TR"
+                                    );
+                                const content =
+                                    String(
+                                        item.content ||
+                                        ""
+                                    )
+                                    .toLocaleLowerCase(
+                                        "tr-TR"
+                                    );
+                                const itemCategory =
+                                    String(
+                                        item.category ||
+                                        ""
+                                    );
+                                const matchesSearch =
+                                    !search ||
+                                    title.includes(
+                                        search
+                                    ) ||
+                                    content.includes(
+                                        search
+                                    );
+                                const matchesStatus =
+                                    status === "all" ||
+                                    item.status ===
+                                    status;
+                                const matchesCategory =
+                                    category === "all" ||
+                                    itemCategory ===
+                                    category;
+                                return (
+                                    matchesSearch &&
+                                    matchesStatus &&
+                                    matchesCategory
+                                );
+                            }
+                        );
+                    tableBody.innerHTML = "";
+                    resultCount.textContent =
+                        filtered.length +
+                        " haber";
+                    if (filtered.length === 0) {
+                        emptyNews.style.display =
+                            "block";
+                        document
+                            .querySelector(
+                                ".news-table-wrapper"
+                            )
+                            .style.display =
+                            "none";
+                        return;
+                    }
+                    emptyNews.style.display =
+                        "none";
+                    document
+                        .querySelector(
+                            ".news-table-wrapper"
+                        )
+                        .style.display =
+                        "block";
+                    filtered.forEach(
+                        function (item) {
+                            const row =
+                                document.createElement(
+                                    "tr"
+                                );
+                            const title =
+                                escapeHTML(
+                                    item.title ||
+                                    "Başlıksız Haber"
+                                );
+                            const category =
+                                escapeHTML(
+                                    item.category ||
+                                    "Genel"
+                                );
+                            const statusText =
+                                item.status ===
+                                "draft"
+                                    ? "Taslak"
+                                    : "Yayında";
+                            const statusClass =
+                                item.status ===
+                                "draft"
+                                    ? "draft"
+                                    : "published";
+                            const breakingBadge =
+                                item.breaking
+                                    ? '<span class="breaking-badge">⚡ SON DAKİKA</span>'
+                                    : "";
+                            row.innerHTML =
+                                '<td>' +
+                                    '<div class="news-title-cell">' +
+                                        '<div class="news-thumb">' +
+                                            '📰' +
+                                        '</div>' +
+                                        '<div>' +
+                                            '<strong>' +
+                                                title +
+                                            '</strong>' +
+                                            breakingBadge +
+                                        '</div>' +
+                                    '</div>' +
+                                '</td>' +
+                                '<td>' +
+                                    '<span class="category-badge">' +
+                                        category +
+                                    '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                    '<span class="status-badge ' +
+                                        statusClass +
+                                    '">' +
+                                        statusText +
+                                    '</span>' +
+                                '</td>' +
+                                '<td>' +
+                                    formatDate(
+                                        item.createdAt
+                                    ) +
+                                '</td>' +
+                                '<td>' +
+                                    '<div class="news-actions">' +
+                                        '<button ' +
+                                            'type="button" ' +
+                                            'class="news-action-btn edit" ' +
+                                            'data-id="' +
+                                            escapeHTML(
+                                                item.id
+                                            ) +
+                                        '">' +
+                                            '✏️' +
+                                        '</button>' +
+                                        '<button ' +
+                                            'type="button" ' +
+                                            'class="news-action-btn delete" ' +
+                                            'data-id="' +
+                                            escapeHTML(
+                                                item.id
+                                            ) +
+                                        '">' +
+                                            '🗑️' +
+                                        '</button>' +
+                                    '</div>' +
+                                '</td>';
+                            tableBody.appendChild(
+                                row
+                            );
+                        }
+                    );
+                }
+                /* ---------------------------------------------
+                   SİLME MODALI
+                   --------------------------------------------- */
+                function openDeleteModal(id) {
+                    selectedNewsId = id;
+                    deleteModal.setAttribute(
+                        "aria-hidden",
+                        "false"
+                    );
+                    deleteModal.classList.add(
+                        "active"
+                    );
+                }
+                function closeModal() {
+                    selectedNewsId = null;
+                    deleteModal.setAttribute(
+                        "aria-hidden",
+                        "true"
+                    );
+                    deleteModal.classList.remove(
+                        "active"
+                    );
+                }
+                /* ---------------------------------------------
+                   TABLO BUTONLARI
+                   --------------------------------------------- */
+                tableBody.addEventListener(
+                    "click",
+                    function (event) {
+                        const button =
+                            event.target.closest(
+                                "button"
+                            );
+                        if (!button) {
+                            return;
+                        }
+                        const id =
+                            button.dataset.id;
+                        if (
+                            button.classList.contains(
+                                "delete"
+                            )
+                        ) {
+                            openDeleteModal(id);
+                        }
+                        if (
+                            button.classList.contains(
+                                "edit"
+                            )
+                        ) {
+                            window.location.href =
+                                "yeni-haber.html?edit=" +
+                                encodeURIComponent(
+                                    id
+                                );
+                        }
+                    }
+                );
+                /* ---------------------------------------------
+                   HABER SİL
+                   --------------------------------------------- */
+                confirmDelete.addEventListener(
+                    "click",
+                    function () {
+                        if (!selectedNewsId) {
+                            return;
+                        }
+                        const news =
+                            getNews();
+                        const updated =
+                            news.filter(
+                                function (item) {
+                                    return item.id !==
+                                        selectedNewsId;
+                                }
+                            );
+                        localStorage.setItem(
+                            "akcaabat_haberler",
+                            JSON.stringify(
+                                updated
+                            )
+                        );
+                        closeModal();
+                        renderNews();
+                        if (
+                            typeof showMessage ===
+                            "function"
+                        ) {
+                            showMessage(
+                                "Haber başarıyla silindi.",
+                                "success"
+                            );
+                        } else {
+                            alert(
+                                "Haber başarıyla silindi."
+                            );
+                        }
+                    }
+                );
+                closeDeleteModal.addEventListener(
+                    "click",
+                    closeModal
+                );
+                cancelDelete.addEventListener(
+                    "click",
+                    closeModal
+                );
+                /* ---------------------------------------------
+                   MODAL DIŞINA TIKLAMA
+                   --------------------------------------------- */
+                deleteModal.addEventListener(
+                    "click",
+                    function (event) {
+                        if (
+                            event.target.classList
+                                .contains(
+                                    "admin-modal-overlay"
+                                )
+                        ) {
+                            closeModal();
+                        }
+                    }
+                );
+                /* ---------------------------------------------
+                   FİLTRELER
+                   --------------------------------------------- */
+                searchInput.addEventListener(
+                    "input",
+                    renderNews
+                );
+                statusFilter.addEventListener(
+                    "change",
+                    renderNews
+                );
+                categoryFilter.addEventListener(
+                    "change",
+                    renderNews
+                );
+                refreshButton.addEventListener(
+                    "click",
+                    function () {
+                        renderNews();
+                    }
+                );
+                /* ---------------------------------------------
+                   ESC TUŞU
+                   --------------------------------------------- */
+                document.addEventListener(
+                    "keydown",
+                    function (event) {
+                        if (
+                            event.key === "Escape"
+                        ) {
+                            closeModal();
+                        }
+                    }
+                );
+                /* ---------------------------------------------
+                   BAŞLANGIÇ
+                   --------------------------------------------- */
+                renderNews();
+            }
+        );
+    </script>
+</body>
+</html>
