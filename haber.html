@@ -4,20 +4,349 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Haberler | Akçaabat Haber</title>
-
-    <meta
-        name="description"
-        content="Akçaabat Haber yönetim paneli haber yönetimi">
+    <title>Haber Yönetimi | Akçaabat Haber</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .haber-yonetim {
+            width: 100%;
+        }
+
+        .haber-istatistik-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .haber-istatistik {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .haber-istatistik-label {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .haber-istatistik-value {
+            color: #222;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .haber-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: #fff;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .haber-toolbar input,
+        .haber-toolbar select {
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            outline: none;
+            background: #fff;
+        }
+
+        .haber-toolbar input {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .haber-toolbar input:focus,
+        .haber-toolbar select:focus {
+            border-color: #b40018;
+        }
+
+        .haber-yeni-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0 16px;
+            border-radius: 7px;
+            background: #b40018;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .haber-yeni-btn:hover {
+            background: #900014;
+        }
+
+        .haber-liste {
+            display: grid;
+            gap: 15px;
+        }
+
+        .haber-yonetim-card {
+            display: grid;
+            grid-template-columns: 180px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .haber-yonetim-gorsel {
+            width: 180px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .haber-yonetim-gorsel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .haber-yonetim-bilgi {
+            min-width: 0;
+        }
+
+        .haber-yonetim-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 7px;
+        }
+
+        .haber-etiket {
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 5px;
+            background: #f0f0f0;
+            color: #555;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .haber-etiket.son-dakika {
+            background: #111;
+            color: #fff;
+        }
+
+        .haber-yonetim-baslik {
+            margin: 0 0 8px;
+            color: #222;
+            font-size: 19px;
+            line-height: 1.35;
+        }
+
+        .haber-yonetim-ozet {
+            margin: 0 0 9px;
+            color: #777;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .haber-yonetim-tarih {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .haber-yonetim-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 95px;
+        }
+
+        .haber-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            padding: 0 12px;
+            border: 0;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .haber-action-edit {
+            background: #eee;
+            color: #222;
+        }
+
+        .haber-action-view {
+            background: #222;
+            color: #fff;
+        }
+
+        .haber-action-delete {
+            background: #b40018;
+            color: #fff;
+        }
+
+        .haber-bos {
+            padding: 60px 20px;
+            background: #fff;
+            border-radius: 12px;
+            text-align: center;
+            color: #777;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .haber-bos h2 {
+            margin: 0 0 10px;
+            color: #222;
+        }
+
+        .silme-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,.55);
+        }
+
+        .silme-modal.active {
+            display: flex;
+        }
+
+        .silme-modal-box {
+            width: 100%;
+            max-width: 430px;
+            padding: 28px;
+            border-radius: 14px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .silme-modal-box h2 {
+            margin: 0 0 10px;
+        }
+
+        .silme-modal-box p {
+            margin: 0 0 22px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .silme-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .silme-modal-actions button {
+            min-height: 40px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        #iptalSil {
+            background: #eee;
+            color: #222;
+        }
+
+        #onaylaSil {
+            background: #b40018;
+            color: #fff;
+        }
+
+        @media (max-width: 1000px) {
+            .haber-istatistik-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .haber-yonetim-card {
+                grid-template-columns: 140px 1fr;
+            }
+
+            .haber-yonetim-gorsel {
+                width: 140px;
+                height: 100px;
+            }
+
+            .haber-yonetim-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .haber-istatistik-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .haber-istatistik {
+                padding: 15px;
+            }
+
+            .haber-istatistik-value {
+                font-size: 23px;
+            }
+
+            .haber-yonetim-card {
+                grid-template-columns: 1fr;
+            }
+
+            .haber-yonetim-gorsel {
+                width: 100%;
+                height: 190px;
+            }
+
+            .haber-yonetim-actions {
+                grid-column: auto;
+                flex-direction: row;
+                justify-content: stretch;
+            }
+
+            .haber-action-btn {
+                flex: 1;
+            }
+
+            .haber-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .haber-toolbar input,
+            .haber-toolbar select,
+            .haber-yeni-btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- =========================================
+    <!-- =====================================================
          ADMIN HEADER
-    ========================================== -->
+         ===================================================== -->
 
     <header class="admin-header">
 
@@ -25,15 +354,16 @@
 
             <button
                 type="button"
-                class="mobile-menu-btn"
-                id="mobileMenuBtn"
-                aria-label="Menüyü aç">
+                class="admin-menu-btn"
+                id="adminMenuBtn"
+            >
                 ☰
             </button>
 
             <a
                 href="index.html"
-                class="admin-logo">
+                class="admin-logo"
+            >
                 AKÇAABAT <span>HABER</span>
             </a>
 
@@ -43,7 +373,8 @@
 
             <a
                 href="index.html"
-                class="view-site-btn">
+                target="_blank"
+            >
                 Siteyi Gör
             </a>
 
@@ -52,560 +383,295 @@
     </header>
 
 
-    <!-- =========================================
-         SIDEBAR
-    ========================================== -->
+    <!-- =====================================================
+         ADMIN LAYOUT
+         ===================================================== -->
 
-    <aside
-        class="admin-sidebar"
-        id="adminSidebar">
-
-        <div class="admin-sidebar-title">
-            YÖNETİM PANELİ
-        </div>
-
-        <nav class="admin-nav">
-
-            <a
-                href="admin.html"
-                class="admin-nav-item">
-
-                <span>📊</span>
-                Dashboard
-
-            </a>
+    <div class="admin-layout">
 
 
-            <a
-                href="yeni-haber.html"
-                class="admin-nav-item">
+        <!-- SIDEBAR -->
 
-                <span>✍️</span>
-                Yeni Haber
+        <aside
+            class="admin-sidebar"
+            id="adminSidebar"
+        >
 
-            </a>
-
-
-            <a
-                href="haber.html"
-                class="admin-nav-item active">
-
-                <span>📰</span>
-                Haberler
-
-            </a>
-
-
-            <a
-                href="taslaklar.html"
-                class="admin-nav-item">
-
-                <span>📝</span>
-                Taslaklar
-
-            </a>
-
-
-            <a
-                href="kategoriler.html"
-                class="admin-nav-item">
-
-                <span>📁</span>
-                Kategoriler
-
-            </a>
-
-
-            <a
-                href="yorumlar.html"
-                class="admin-nav-item">
-
-                <span>💬</span>
-                Yorumlar
-
-            </a>
-
-
-            <a
-                href="ayarlar.html"
-                class="admin-nav-item">
-
-                <span>⚙️</span>
-                Ayarlar
-
-            </a>
-
-        </nav>
-
-
-        <div class="admin-sidebar-bottom">
-
-            <a
-                href="index.html"
-                class="admin-nav-item">
-
-                <span>🌐</span>
-                Siteye Git
-
-            </a>
-
-        </div>
-
-    </aside>
-
-
-    <!-- =========================================
-         ANA İÇERİK
-    ========================================== -->
-
-    <main class="admin-main">
-
-        <!-- SAYFA BAŞLIĞI -->
-
-        <div class="admin-page-header">
-
-            <div>
-
-                <div class="admin-breadcrumb">
-                    Yönetim Paneli / Haberler
-                </div>
-
-                <h1>
-                    Haberler
-                </h1>
-
-                <p>
-                    Yayındaki haberlerinizi yönetin.
-                </p>
-
+            <div class="admin-sidebar-title">
+                Yönetim Paneli
             </div>
 
+            <nav class="admin-nav">
 
-            <div class="admin-page-actions">
-
-                <a
-                    href="yeni-haber.html"
-                    class="admin-primary-btn">
-
-                    + Yeni Haber
-
+                <a href="admin.html">
+                    <span>📊</span>
+                    Dashboard
                 </a>
 
-            </div>
+                <a
+                    href="haber.html"
+                    class="active"
+                >
+                    <span>📰</span>
+                    Haberler
+                </a>
 
-        </div>
+                <a href="yeni-haber.html">
+                    <span>✏️</span>
+                    Yeni Haber
+                </a>
 
+                <a href="taslaklar.html">
+                    <span>📝</span>
+                    Taslaklar
+                </a>
 
-        <!-- =====================================
-             İSTATİSTİKLER
-        ====================================== -->
+                <a href="index.html">
+                    <span>🌐</span>
+                    Siteye Git
+                </a>
 
-        <div class="admin-stats-grid">
+            </nav>
 
-            <div class="admin-stat-card">
-
-                <div class="admin-stat-icon">
-                    📰
-                </div>
-
-                <div>
-
-                    <span>
-                        Toplam Haber
-                    </span>
-
-                    <strong id="totalNews">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
+        </aside>
 
 
-            <div class="admin-stat-card">
+        <!-- =================================================
+             MAIN
+             ================================================= -->
 
-                <div class="admin-stat-icon">
-                    🚨
-                </div>
+        <main class="admin-main haber-yonetim">
 
-                <div>
+            <!-- PAGE HEADER -->
 
-                    <span>
-                        Son Dakika
-                    </span>
-
-                    <strong id="breakingNews">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="admin-stat-card">
-
-                <div class="admin-stat-icon">
-                    📅
-                </div>
+            <div class="admin-page-header">
 
                 <div>
 
-                    <span>
-                        Bugün Eklenen
-                    </span>
+                    <h1>
+                        Haber Yönetimi
+                    </h1>
 
-                    <strong id="todayNews">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="admin-stat-card">
-
-                <div class="admin-stat-icon">
-                    📂
-                </div>
-
-                <div>
-
-                    <span>
-                        Kategori
-                    </span>
-
-                    <strong id="categoryCount">
-                        0
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================
-             FİLTRE ALANI
-        ====================================== -->
-
-        <section class="editor-card news-management-card">
-
-            <div class="news-filter-area">
-
-                <div class="news-search-box">
-
-                    <label for="newsSearch">
-                        Haber Ara
-                    </label>
-
-                    <input
-                        type="search"
-                        id="newsSearch"
-                        class="form-control"
-                        placeholder="Başlık veya içerik ara...">
-
-                </div>
-
-
-                <div class="news-filter-box">
-
-                    <label for="categoryFilter">
-                        Kategori
-                    </label>
-
-                    <select
-                        id="categoryFilter"
-                        class="form-control">
-
-                        <option value="">
-                            Tüm Kategoriler
-                        </option>
-
-                        <option value="Akçaabat">
-                            Akçaabat
-                        </option>
-
-                        <option value="Trabzon">
-                            Trabzon
-                        </option>
-
-                        <option value="Gündem">
-                            Gündem
-                        </option>
-
-                        <option value="Spor">
-                            Spor
-                        </option>
-
-                        <option value="Ekonomi">
-                            Ekonomi
-                        </option>
-
-                        <option value="Siyaset">
-                            Siyaset
-                        </option>
-
-                        <option value="Magazin">
-                            Magazin
-                        </option>
-
-                        <option value="Sağlık">
-                            Sağlık
-                        </option>
-
-                        <option value="Eğitim">
-                            Eğitim
-                        </option>
-
-                        <option value="Kültür Sanat">
-                            Kültür Sanat
-                        </option>
-
-                        <option value="Yaşam">
-                            Yaşam
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="news-filter-box">
-
-                    <label for="statusFilter">
-                        Durum
-                    </label>
-
-                    <select
-                        id="statusFilter"
-                        class="form-control">
-
-                        <option value="">
-                            Tümü
-                        </option>
-
-                        <option value="breaking">
-                            Son Dakika
-                        </option>
-
-                        <option value="normal">
-                            Normal Haber
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <button
-                    type="button"
-                    id="resetFilters"
-                    class="admin-secondary-btn">
-
-                    Filtreleri Temizle
-
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================
-             HABER LİSTESİ
-        ====================================== -->
-
-        <section class="editor-card">
-
-            <div class="editor-card-header">
-
-                <div>
-
-                    <h2>
-                        Yayındaki Haberler
-                    </h2>
-
-                    <p id="listDescription">
-                        Tüm yayınlanan haberler burada görünür.
+                    <p>
+                        Yayındaki haberleri yönetin.
                     </p>
 
                 </div>
 
-
-                <div>
-
-                    <button
-                        type="button"
-                        id="refreshNews"
-                        class="admin-secondary-btn">
-
-                        ↻ Yenile
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- TABLO -->
-
-            <div
-                class="news-table-wrapper"
-                id="newsTableWrapper">
-
-                <table class="news-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>
-                                Haber
-                            </th>
-
-                            <th>
-                                Kategori
-                            </th>
-
-                            <th>
-                                Durum
-                            </th>
-
-                            <th>
-                                Tarih
-                            </th>
-
-                            <th>
-                                İşlem
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="newsTableBody">
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- BOŞ EKRAN -->
-
-            <div
-                id="emptyNews"
-                class="admin-empty-state"
-                style="display:none;">
-
-                <div class="empty-icon">
-                    📰
-                </div>
-
-                <h3>
-                    Henüz haber bulunmuyor
-                </h3>
-
-                <p>
-                    Yayına alınmış bir haberiniz bulunmuyor.
-                </p>
-
                 <a
                     href="yeni-haber.html"
-                    class="admin-primary-btn">
-
-                    İlk Haberi Oluştur
-
+                    class="admin-primary-btn"
+                >
+                    + Yeni Haber
                 </a>
 
             </div>
 
 
-            <!-- FİLTRE SONUCU YOK -->
+            <!-- =================================================
+                 İSTATİSTİKLER
+                 ================================================= -->
 
-            <div
-                id="noResults"
-                class="admin-empty-state"
-                style="display:none;">
+            <div class="haber-istatistik-grid">
 
-                <div class="empty-icon">
-                    🔎
+                <div class="haber-istatistik">
+
+                    <div class="haber-istatistik-label">
+                        Toplam Haber
+                    </div>
+
+                    <div
+                        class="haber-istatistik-value"
+                        id="toplamHaber"
+                    >
+                        0
+                    </div>
+
                 </div>
 
-                <h3>
-                    Sonuç bulunamadı
-                </h3>
 
-                <p>
-                    Arama veya filtre kriterlerinize uygun haber yok.
-                </p>
+                <div class="haber-istatistik">
+
+                    <div class="haber-istatistik-label">
+                        Son Dakika
+                    </div>
+
+                    <div
+                        class="haber-istatistik-value"
+                        id="sonDakikaHaber"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="haber-istatistik">
+
+                    <div class="haber-istatistik-label">
+                        Bugünkü Haber
+                    </div>
+
+                    <div
+                        class="haber-istatistik-value"
+                        id="bugunkuHaber"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="haber-istatistik">
+
+                    <div class="haber-istatistik-label">
+                        Toplam Görüntülenme
+                    </div>
+
+                    <div
+                        class="haber-istatistik-value"
+                        id="toplamGoruntulenme"
+                    >
+                        0
+                    </div>
+
+                </div>
 
             </div>
 
-        </section>
 
-    </main>
+            <!-- =================================================
+                 FİLTRELER
+                 ================================================= -->
+
+            <div class="haber-toolbar">
+
+                <input
+                    type="search"
+                    id="haberArama"
+                    placeholder="Haber başlığı ara..."
+                >
+
+                <select id="kategoriFiltre">
+
+                    <option value="">
+                        Tüm Kategoriler
+                    </option>
+
+                    <option value="Akçaabat">
+                        Akçaabat
+                    </option>
+
+                    <option value="Trabzon">
+                        Trabzon
+                    </option>
+
+                    <option value="Gündem">
+                        Gündem
+                    </option>
+
+                    <option value="Spor">
+                        Spor
+                    </option>
+
+                    <option value="Ekonomi">
+                        Ekonomi
+                    </option>
+
+                    <option value="Siyaset">
+                        Siyaset
+                    </option>
+
+                    <option value="Magazin">
+                        Magazin
+                    </option>
+
+                    <option value="Sağlık">
+                        Sağlık
+                    </option>
+
+                    <option value="Eğitim">
+                        Eğitim
+                    </option>
+
+                    <option value="Kültür Sanat">
+                        Kültür Sanat
+                    </option>
+
+                    <option value="Yaşam">
+                        Yaşam
+                    </option>
+
+                </select>
 
 
-    <!-- =========================================
+                <select id="durumFiltre">
+
+                    <option value="">
+                        Tüm Durumlar
+                    </option>
+
+                    <option value="breaking">
+                        Son Dakika
+                    </option>
+
+                    <option value="normal">
+                        Normal Haber
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 HABER LİSTESİ
+                 ================================================= -->
+
+            <div
+                class="haber-liste"
+                id="haberListesi"
+            ></div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
          SİLME MODALI
-    ========================================== -->
+         ===================================================== -->
 
     <div
-        id="deleteModal"
-        class="admin-modal"
-        style="display:none;">
+        class="silme-modal"
+        id="silmeModal"
+    >
 
-        <div class="admin-modal-overlay"></div>
-
-        <div class="admin-modal-box">
-
-            <button
-                type="button"
-                class="admin-modal-close"
-                id="closeDeleteModal"
-                aria-label="Kapat">
-
-                ×
-
-            </button>
-
-            <div class="admin-modal-icon">
-                🗑️
-            </div>
+        <div class="silme-modal-box">
 
             <h2>
                 Haberi Sil
             </h2>
 
             <p>
-                Bu haberi silmek istediğinizden emin misiniz?
+                Bu haber kalıcı olarak silinecek.
                 Bu işlem geri alınamaz.
             </p>
 
-            <div class="admin-modal-actions">
+            <div class="silme-modal-actions">
 
                 <button
                     type="button"
-                    class="admin-secondary-btn"
-                    id="cancelDelete">
-
+                    id="iptalSil"
+                >
                     Vazgeç
-
                 </button>
 
                 <button
                     type="button"
-                    class="admin-danger-btn"
-                    id="confirmDelete">
-
-                    Haberi Sil
-
+                    id="onaylaSil"
+                >
+                    Evet, Sil
                 </button>
 
             </div>
@@ -615,11 +681,9 @@
     </div>
 
 
-    <!-- =========================================
+    <!-- =====================================================
          JAVASCRIPT
-    ========================================== -->
-
-    <script src="script.js"></script>
+         ===================================================== -->
 
     <script>
 
@@ -627,255 +691,80 @@
             "DOMContentLoaded",
             function () {
 
-                const tableBody =
+                const list =
                     document.getElementById(
-                        "newsTableBody"
-                    );
-
-                const emptyNews =
-                    document.getElementById(
-                        "emptyNews"
-                    );
-
-                const noResults =
-                    document.getElementById(
-                        "noResults"
-                    );
-
-                const tableWrapper =
-                    document.getElementById(
-                        "newsTableWrapper"
+                        "haberListesi"
                     );
 
                 const searchInput =
                     document.getElementById(
-                        "newsSearch"
+                        "haberArama"
                     );
 
                 const categoryFilter =
                     document.getElementById(
-                        "categoryFilter"
+                        "kategoriFiltre"
                     );
 
                 const statusFilter =
                     document.getElementById(
-                        "statusFilter"
+                        "durumFiltre"
                     );
 
-                const resetFilters =
+                const modal =
                     document.getElementById(
-                        "resetFilters"
-                    );
-
-                const refreshNews =
-                    document.getElementById(
-                        "refreshNews"
-                    );
-
-                const totalNews =
-                    document.getElementById(
-                        "totalNews"
-                    );
-
-                const breakingNews =
-                    document.getElementById(
-                        "breakingNews"
-                    );
-
-                const todayNews =
-                    document.getElementById(
-                        "todayNews"
-                    );
-
-                const categoryCount =
-                    document.getElementById(
-                        "categoryCount"
-                    );
-
-                const deleteModal =
-                    document.getElementById(
-                        "deleteModal"
-                    );
-
-                const closeDeleteModal =
-                    document.getElementById(
-                        "closeDeleteModal"
+                        "silmeModal"
                     );
 
                 const cancelDelete =
                     document.getElementById(
-                        "cancelDelete"
+                        "iptalSil"
                     );
 
                 const confirmDelete =
                     document.getElementById(
-                        "confirmDelete"
+                        "onaylaSil"
                     );
-
-
-                let newsList = [];
 
                 let deleteId = null;
 
 
-                /*
-                 * ==================================
-                 * HABERLERİ OKU
-                 * ==================================
-                 */
+                /* =================================================
+                   LOCAL STORAGE
+                   ================================================= */
 
                 function getNews() {
 
-                    try {
-
-                        const saved =
-                            localStorage.getItem(
-                                "akcaabat_haberler"
-                            );
-
-                        if (!saved) {
-
-                            return [];
-
-                        }
-
-                        const parsed =
-                            JSON.parse(saved);
-
-                        if (
-                            !Array.isArray(parsed)
-                        ) {
-
-                            return [];
-
-                        }
-
-                        return parsed;
-
-                    } catch (error) {
-
-                        console.error(
-                            "Haberler okunamadı:",
-                            error
-                        );
-
-                        return [];
-
-                    }
+                    return JSON.parse(
+                        localStorage.getItem(
+                            "akcaabat_haberler"
+                        ) || "[]"
+                    );
 
                 }
 
 
-                /*
-                 * ==================================
-                 * HABERLERİ KAYDET
-                 * ==================================
-                 */
-
-                function saveNews() {
+                function saveNews(news) {
 
                     localStorage.setItem(
                         "akcaabat_haberler",
-                        JSON.stringify(
-                            newsList
-                        )
+                        JSON.stringify(news)
                     );
 
                 }
 
 
-                /*
-                 * ==================================
-                 * TARİH FORMATLA
-                 * ==================================
-                 */
+                /* =================================================
+                   ESCAPE
+                   ================================================= */
 
-                function formatDate(value) {
-
-                    if (!value) {
-
-                        return "-";
-
-                    }
-
-                    const date =
-                        new Date(value);
-
-                    if (
-                        Number.isNaN(
-                            date.getTime()
-                        )
-                    ) {
-
-                        return "-";
-
-                    }
-
-                    return date.toLocaleDateString(
-                        "tr-TR",
-                        {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric"
-                        }
-                    );
-
-                }
-
-
-                /*
-                 * ==================================
-                 * SAAT
-                 * ==================================
-                 */
-
-                function formatTime(value) {
-
-                    if (!value) {
-
-                        return "";
-
-                    }
-
-                    const date =
-                        new Date(value);
-
-                    if (
-                        Number.isNaN(
-                            date.getTime()
-                        )
-                    ) {
-
-                        return "";
-
-                    }
-
-                    return date.toLocaleTimeString(
-                        "tr-TR",
-                        {
-                            hour: "2-digit",
-                            minute: "2-digit"
-                        }
-                    );
-
-                }
-
-
-                /*
-                 * ==================================
-                 * HTML GÜVENLİK
-                 * ==================================
-                 */
-
-                function escapeHTML(value) {
+                function escapeHtml(value) {
 
                     if (
                         value === null ||
                         value === undefined
                     ) {
-
                         return "";
-
                     }
 
                     return String(value)
@@ -903,109 +792,406 @@
                 }
 
 
-                /*
-                 * ==================================
-                 * BUGÜN MÜ?
-                 * ==================================
-                 */
+                /* =================================================
+                   GÖRSEL
+                   ================================================= */
 
-                function isToday(value) {
+                const fallbackImage =
+                    "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80";
 
-                    if (!value) {
 
-                        return false;
+                function getImage(news) {
+
+                    if (
+                        news.image &&
+                        typeof news.image ===
+                            "string" &&
+                        news.image.trim() !== ""
+                    ) {
+
+                        return news.image;
 
                     }
 
-                    const date =
-                        new Date(value);
+                    return fallbackImage;
 
-                    const today =
-                        new Date();
+                }
+
+
+                /* =================================================
+                   TARİH
+                   ================================================= */
+
+                function getDate(news) {
 
                     return (
-                        date.getDate() ===
-                            today.getDate() &&
-
-                        date.getMonth() ===
-                            today.getMonth() &&
-
-                        date.getFullYear() ===
-                            today.getFullYear()
+                        news.publishedAt ||
+                        news.createdAt ||
+                        news.date ||
+                        ""
                     );
 
                 }
 
 
-                /*
-                 * ==================================
-                 * İSTATİSTİKLER
-                 * ==================================
-                 */
+                function formatDate(value) {
 
-                function updateStats() {
+                    if (!value) {
+                        return "Tarih yok";
+                    }
 
-                    const breaking =
-                        newsList.filter(
-                            function (news) {
+                    const date =
+                        new Date(value);
 
-                                return (
-                                    news.breaking === true ||
-                                    news.breaking === "true"
-                                );
+                    if (
+                        isNaN(
+                            date.getTime()
+                        )
+                    ) {
+                        return value;
+                    }
 
-                            }
-                        ).length;
-
-
-                    const today =
-                        newsList.filter(
-                            function (news) {
-
-                                return isToday(
-                                    news.createdAt
-                                );
-
-                            }
-                        ).length;
-
-
-                    const categories =
-                        new Set(
-                            newsList
-                                .map(
-                                    function (news) {
-
-                                        return news.category;
-
-                                    }
-                                )
-                                .filter(Boolean)
-                        );
-
-
-                    totalNews.textContent =
-                        newsList.length;
-
-                    breakingNews.textContent =
-                        breaking;
-
-                    todayNews.textContent =
-                        today;
-
-                    categoryCount.textContent =
-                        categories.size;
+                    return date.toLocaleDateString(
+                        "tr-TR",
+                        {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric"
+                        }
+                    );
 
                 }
 
 
-                /*
-                 * ==================================
-                 * FİLTRELE
-                 * ==================================
-                 */
+                function formatDateTime(value) {
 
-                function getFilteredNews() {
+                    if (!value) {
+                        return "Tarih yok";
+                    }
+
+                    const date =
+                        new Date(value);
+
+                    if (
+                        isNaN(
+                            date.getTime()
+                        )
+                    ) {
+                        return value;
+                    }
+
+                    return date.toLocaleString(
+                        "tr-TR",
+                        {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   İSTATİSTİKLER
+                   ================================================= */
+
+                function updateStats(news) {
+
+                    const total =
+                        news.length;
+
+                    const breaking =
+                        news.filter(
+                            function (item) {
+                                return item.breaking === true;
+                            }
+                        ).length;
+
+                    const today =
+                        new Date();
+
+                    const todayCount =
+                        news.filter(
+                            function (item) {
+
+                                const value =
+                                    getDate(item);
+
+                                if (!value) {
+                                    return false;
+                                }
+
+                                const date =
+                                    new Date(value);
+
+                                return (
+                                    date.getDate() ===
+                                        today.getDate() &&
+                                    date.getMonth() ===
+                                        today.getMonth() &&
+                                    date.getFullYear() ===
+                                        today.getFullYear()
+                                );
+
+                            }
+                        ).length;
+
+
+                    const views =
+                        news.reduce(
+                            function (
+                                totalViews,
+                                item
+                            ) {
+
+                                return (
+                                    totalViews +
+                                    Number(
+                                        item.views || 0
+                                    )
+                                );
+
+                            },
+                            0
+                        );
+
+
+                    document.getElementById(
+                        "toplamHaber"
+                    ).textContent =
+                        total;
+
+
+                    document.getElementById(
+                        "sonDakikaHaber"
+                    ).textContent =
+                        breaking;
+
+
+                    document.getElementById(
+                        "bugunkuHaber"
+                    ).textContent =
+                        todayCount;
+
+
+                    document.getElementById(
+                        "toplamGoruntulenme"
+                    ).textContent =
+                        views.toLocaleString(
+                            "tr-TR"
+                        );
+
+                }
+
+
+                /* =================================================
+                   HABER KARTI
+                   ================================================= */
+
+                function createCard(news) {
+
+                    const title =
+                        news.title ||
+                        news.baslik ||
+                        "Başlıksız Haber";
+
+                    const summary =
+                        news.summary ||
+                        news.ozet ||
+                        "";
+
+                    const category =
+                        news.category ||
+                        news.kategori ||
+                        "Genel";
+
+                    const date =
+                        getDate(news);
+
+
+                    return `
+
+                        <article
+                            class="haber-yonetim-card"
+                        >
+
+                            <div
+                                class="haber-yonetim-gorsel"
+                            >
+
+                                <img
+                                    src="${escapeHtml(
+                                        getImage(news)
+                                    )}"
+                                    alt="${escapeHtml(
+                                        title
+                                    )}"
+                                    onerror="
+                                        this.src='${fallbackImage}'
+                                    "
+                                >
+
+                            </div>
+
+
+                            <div
+                                class="haber-yonetim-bilgi"
+                            >
+
+                                <div
+                                    class="haber-yonetim-meta"
+                                >
+
+                                    <span
+                                        class="haber-etiket"
+                                    >
+                                        ${escapeHtml(
+                                            category
+                                        )}
+                                    </span>
+
+                                    ${
+                                        news.breaking
+                                            ? `
+                                                <span
+                                                    class="
+                                                        haber-etiket
+                                                        son-dakika
+                                                    "
+                                                >
+                                                    ● SON DAKİKA
+                                                </span>
+                                              `
+                                            : ""
+                                    }
+
+                                </div>
+
+
+                                <h2
+                                    class="
+                                        haber-yonetim-baslik
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        title
+                                    )}
+                                </h2>
+
+
+                                ${
+                                    summary
+                                        ? `
+                                            <p
+                                                class="
+                                                    haber-yonetim-ozet
+                                                "
+                                            >
+                                                ${escapeHtml(
+                                                    summary
+                                                )}
+                                            </p>
+                                          `
+                                        : ""
+                                }
+
+
+                                <div
+                                    class="
+                                        haber-yonetim-tarih
+                                    "
+                                >
+                                    📅 ${escapeHtml(
+                                        formatDateTime(
+                                            date
+                                        )
+                                    )}
+                                    &nbsp; • &nbsp;
+                                    👁️ ${Number(
+                                        news.views || 0
+                                    ).toLocaleString(
+                                        "tr-TR"
+                                    )}
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    haber-yonetim-actions
+                                "
+                            >
+
+                                <a
+                                    class="
+                                        haber-action-btn
+                                        haber-action-view
+                                    "
+                                    href="
+                                        haber-detay.html?id=${encodeURIComponent(
+                                            news.id
+                                        )}
+                                    "
+                                    target="_blank"
+                                >
+                                    Görüntüle
+                                </a>
+
+
+                                <a
+                                    class="
+                                        haber-action-btn
+                                        haber-action-edit
+                                    "
+                                    href="
+                                        yeni-haber.html?edit=${encodeURIComponent(
+                                            news.id
+                                        )}
+                                    "
+                                >
+                                    Düzenle
+                                </a>
+
+
+                                <button
+                                    type="button"
+                                    class="
+                                        haber-action-btn
+                                        haber-action-delete
+                                    "
+                                    data-delete-id="${escapeHtml(
+                                        news.id
+                                    )}"
+                                >
+                                    Sil
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    `;
+
+                }
+
+
+                /* =================================================
+                   LİSTELE
+                   ================================================= */
+
+                function renderNews() {
+
+                    const news =
+                        getNews();
+
+                    updateStats(
+                        news
+                    );
+
 
                     const search =
                         searchInput.value
@@ -1014,584 +1200,302 @@
                                 "tr-TR"
                             );
 
+
                     const category =
                         categoryFilter.value;
+
 
                     const status =
                         statusFilter.value;
 
 
-                    return newsList.filter(
-                        function (news) {
+                    let filtered =
+                        news.filter(
+                            function (item) {
 
-                            const title =
-                                String(
-                                    news.title || ""
-                                )
-                                .toLocaleLowerCase(
-                                    "tr-TR"
+                                const title =
+                                    (
+                                        item.title ||
+                                        item.baslik ||
+                                        ""
+                                    )
+                                    .toLocaleLowerCase(
+                                        "tr-TR"
+                                    );
+
+
+                                const summary =
+                                    (
+                                        item.summary ||
+                                        item.ozet ||
+                                        ""
+                                    )
+                                    .toLocaleLowerCase(
+                                        "tr-TR"
+                                    );
+
+
+                                const itemCategory =
+                                    item.category ||
+                                    item.kategori ||
+                                    "";
+
+
+                                const matchesSearch =
+                                    !search ||
+                                    title.includes(
+                                        search
+                                    ) ||
+                                    summary.includes(
+                                        search
+                                    );
+
+
+                                const matchesCategory =
+                                    !category ||
+                                    itemCategory ===
+                                        category;
+
+
+                                let matchesStatus =
+                                    true;
+
+
+                                if (
+                                    status ===
+                                    "breaking"
+                                ) {
+
+                                    matchesStatus =
+                                        item.breaking ===
+                                        true;
+
+                                }
+
+
+                                if (
+                                    status ===
+                                    "normal"
+                                ) {
+
+                                    matchesStatus =
+                                        item.breaking !==
+                                        true;
+
+                                }
+
+
+                                return (
+                                    matchesSearch &&
+                                    matchesCategory &&
+                                    matchesStatus
                                 );
 
-                            const content =
-                                String(
-                                    news.content || ""
-                                )
-                                .toLocaleLowerCase(
-                                    "tr-TR"
+                            }
+                        );
+
+
+                    /*
+                     * En yeni haber üstte
+                     */
+
+                    filtered.sort(
+                        function (a, b) {
+
+                            const dateA =
+                                new Date(
+                                    getDate(a) ||
+                                    0
                                 );
 
-                            const summary =
-                                String(
-                                    news.summary || ""
-                                )
-                                .toLocaleLowerCase(
-                                    "tr-TR"
+                            const dateB =
+                                new Date(
+                                    getDate(b) ||
+                                    0
                                 );
-
-
-                            const matchesSearch =
-                                !search ||
-                                title.includes(
-                                    search
-                                ) ||
-                                content.includes(
-                                    search
-                                ) ||
-                                summary.includes(
-                                    search
-                                );
-
-
-                            const matchesCategory =
-                                !category ||
-                                news.category ===
-                                    category;
-
-
-                            const isBreaking =
-                                news.breaking === true ||
-                                news.breaking === "true";
-
-
-                            const matchesStatus =
-                                !status ||
-
-                                (
-                                    status === "breaking" &&
-                                    isBreaking
-                                ) ||
-
-                                (
-                                    status === "normal" &&
-                                    !isBreaking
-                                );
-
 
                             return (
-                                matchesSearch &&
-                                matchesCategory &&
-                                matchesStatus
+                                dateB - dateA
                             );
 
                         }
                     );
 
-                }
-
-
-                /*
-                 * ==================================
-                 * HABERLERİ RENDER ET
-                 * ==================================
-                 */
-
-                function renderNews() {
-
-                    const filtered =
-                        getFilteredNews();
-
-
-                    tableBody.innerHTML = "";
-
-
-                    /*
-                     * Hiç haber yok
-                     */
-
-                    if (
-                        newsList.length === 0
-                    ) {
-
-                        tableWrapper.style.display =
-                            "none";
-
-                        emptyNews.style.display =
-                            "flex";
-
-                        noResults.style.display =
-                            "none";
-
-                        return;
-
-                    }
-
-
-                    emptyNews.style.display =
-                        "none";
-
-
-                    /*
-                     * Filtre sonucu yok
-                     */
 
                     if (
                         filtered.length === 0
                     ) {
 
-                        tableWrapper.style.display =
-                            "none";
+                        list.innerHTML = `
 
-                        noResults.style.display =
-                            "flex";
+                            <div class="haber-bos">
+
+                                <h2>
+                                    Haber bulunamadı
+                                </h2>
+
+                                <p>
+                                    Arama veya filtre
+                                    kriterlerinize uygun
+                                    yayınlanmış haber yok.
+                                </p>
+
+                            </div>
+
+                        `;
 
                         return;
 
                     }
 
 
-                    noResults.style.display =
-                        "none";
-
-                    tableWrapper.style.display =
-                        "block";
-
-
-                    filtered.forEach(
-                        function (news) {
-
-                            const row =
-                                document.createElement(
-                                    "tr"
-                                );
-
-
-                            const breaking =
-                                news.breaking === true ||
-                                news.breaking === "true";
-
-
-                            const title =
-                                escapeHTML(
-                                    news.title ||
-                                    "Başlıksız Haber"
-                                );
-
-
-                            const category =
-                                escapeHTML(
-                                    news.category ||
-                                    "Genel"
-                                );
-
-
-                            const date =
-                                formatDate(
-                                    news.createdAt
-                                );
-
-
-                            const time =
-                                formatTime(
-                                    news.createdAt
-                                );
-
-
-                            row.innerHTML = `
-
-                                <td>
-
-                                    <div class="news-table-title">
-
-                                        <div class="news-table-icon">
-                                            📰
-                                        </div>
-
-                                        <div>
-
-                                            <strong>
-                                                ${title}
-                                            </strong>
-
-                                            ${
-                                                breaking
-                                                    ? `
-                                                        <span class="breaking-mini">
-                                                            SON DAKİKA
-                                                        </span>
-                                                      `
-                                                    : ""
-                                            }
-
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-
-                                <td>
-
-                                    <span class="news-category-badge">
-                                        ${category}
-                                    </span>
-
-                                </td>
-
-
-                                <td>
-
-                                    <span class="news-status-badge published">
-                                        Yayında
-                                    </span>
-
-                                </td>
-
-
-                                <td>
-
-                                    <div class="news-date">
-
-                                        <strong>
-                                            ${date}
-                                        </strong>
-
-                                        <small>
-                                            ${time}
-                                        </small>
-
-                                    </div>
-
-                                </td>
-
-
-                                <td>
-
-                                    <div class="news-actions">
-
-                                        <a
-                                            href="yeni-haber.html?edit=${encodeURIComponent(
-                                                news.id || ""
-                                            )}"
-                                            class="news-action edit"
-                                            title="Düzenle">
-
-                                            ✏️
-
-                                        </a>
-
-
-                                        <button
-                                            type="button"
-                                            class="news-action delete"
-                                            data-delete-id="${escapeHTML(
-                                                news.id || ""
-                                            )}"
-                                            title="Sil">
-
-                                            🗑️
-
-                                        </button>
-
-                                    </div>
-
-                                </td>
-
-                            `;
-
-
-                            tableBody.appendChild(
-                                row
-                            );
-
-                        }
-                    );
+                    list.innerHTML =
+                        filtered
+                            .map(
+                                createCard
+                            )
+                            .join("");
 
 
                     /*
                      * Sil butonları
                      */
 
-                    const deleteButtons =
-                        document.querySelectorAll(
+                    document
+                        .querySelectorAll(
                             "[data-delete-id]"
-                        );
+                        )
+                        .forEach(
+                            function (button) {
 
+                                button.addEventListener(
+                                    "click",
+                                    function () {
 
-                    deleteButtons.forEach(
-                        function (button) {
+                                        deleteId =
+                                            this.dataset.deleteId;
 
-                            button.addEventListener(
-                                "click",
-                                function () {
-
-                                    deleteId =
-                                        button.getAttribute(
-                                            "data-delete-id"
+                                        modal.classList.add(
+                                            "active"
                                         );
 
-                                    openDeleteModal();
-
-                                }
-                            );
-
-                        }
-                    );
-
-                }
-
-
-                /*
-                 * ==================================
-                 * MODAL AÇ
-                 * ==================================
-                 */
-
-                function openDeleteModal() {
-
-                    deleteModal.style.display =
-                        "flex";
-
-                }
-
-
-                /*
-                 * ==================================
-                 * MODAL KAPAT
-                 * ==================================
-                 */
-
-                function closeModal() {
-
-                    deleteModal.style.display =
-                        "none";
-
-                    deleteId = null;
-
-                }
-
-
-                /*
-                 * ==================================
-                 * HABER SİL
-                 * ==================================
-                 */
-
-                function deleteNews() {
-
-                    if (!deleteId) {
-
-                        return;
-
-                    }
-
-
-                    newsList =
-                        newsList.filter(
-                            function (news) {
-
-                                return String(
-                                    news.id
-                                ) !==
-                                    String(
-                                        deleteId
-                                    );
+                                    }
+                                );
 
                             }
                         );
 
-
-                    saveNews();
-
-                    closeModal();
-
-                    updateStats();
-
-                    renderNews();
-
                 }
 
 
-                /*
-                 * ==================================
-                 * ARAMA
-                 * ==================================
-                 */
+                /* =================================================
+                   ARAMA
+                   ================================================= */
 
-                if (searchInput) {
-
-                    searchInput.addEventListener(
-                        "input",
-                        renderNews
-                    );
-
-                }
+                searchInput.addEventListener(
+                    "input",
+                    renderNews
+                );
 
 
-                /*
-                 * ==================================
-                 * KATEGORİ
-                 * ==================================
-                 */
-
-                if (categoryFilter) {
-
-                    categoryFilter.addEventListener(
-                        "change",
-                        renderNews
-                    );
-
-                }
+                categoryFilter.addEventListener(
+                    "change",
+                    renderNews
+                );
 
 
-                /*
-                 * ==================================
-                 * DURUM
-                 * ==================================
-                 */
-
-                if (statusFilter) {
-
-                    statusFilter.addEventListener(
-                        "change",
-                        renderNews
-                    );
-
-                }
+                statusFilter.addEventListener(
+                    "change",
+                    renderNews
+                );
 
 
-                /*
-                 * ==================================
-                 * FİLTRE SIFIRLA
-                 * ==================================
-                 */
+                /* =================================================
+                   SİLME MODALI
+                   ================================================= */
 
-                if (resetFilters) {
+                cancelDelete.addEventListener(
+                    "click",
+                    function () {
 
-                    resetFilters.addEventListener(
-                        "click",
-                        function () {
+                        deleteId =
+                            null;
 
-                            searchInput.value =
-                                "";
+                        modal.classList.remove(
+                            "active"
+                        );
 
-                            categoryFilter.value =
-                                "";
+                    }
+                );
 
-                            statusFilter.value =
-                                "";
 
-                            renderNews();
+                confirmDelete.addEventListener(
+                    "click",
+                    function () {
 
+                        if (!deleteId) {
+                            return;
                         }
-                    );
-
-                }
 
 
-                /*
-                 * ==================================
-                 * YENİLE
-                 * ==================================
-                 */
-
-                if (refreshNews) {
-
-                    refreshNews.addEventListener(
-                        "click",
-                        function () {
-
-                            newsList =
-                                getNews();
-
-                            updateStats();
-
-                            renderNews();
-
-                        }
-                    );
-
-                }
+                        const news =
+                            getNews();
 
 
-                /*
-                 * ==================================
-                 * MODAL BUTONLARI
-                 * ==================================
-                 */
+                        const updated =
+                            news.filter(
+                                function (item) {
 
-                if (closeDeleteModal) {
+                                    return String(
+                                        item.id
+                                    ) !==
+                                    String(
+                                        deleteId
+                                    );
 
-                    closeDeleteModal.addEventListener(
-                        "click",
-                        closeModal
-                    );
-
-                }
-
-
-                if (cancelDelete) {
-
-                    cancelDelete.addEventListener(
-                        "click",
-                        closeModal
-                    );
-
-                }
+                                }
+                            );
 
 
-                if (confirmDelete) {
+                        saveNews(
+                            updated
+                        );
 
-                    confirmDelete.addEventListener(
-                        "click",
-                        deleteNews
-                    );
 
-                }
+                        deleteId =
+                            null;
+
+
+                        modal.classList.remove(
+                            "active"
+                        );
+
+
+                        renderNews();
+
+                    }
+                );
 
 
                 /*
-                 * Overlay tıklama
+                 * Modal dışına tıklama
                  */
 
-                const overlay =
-                    document.querySelector(
-                        ".admin-modal-overlay"
-                    );
-
-
-                if (overlay) {
-
-                    overlay.addEventListener(
-                        "click",
-                        closeModal
-                    );
-
-                }
-
-
-                /*
-                 * ESC
-                 */
-
-                document.addEventListener(
-                    "keydown",
+                modal.addEventListener(
+                    "click",
                     function (event) {
 
                         if (
-                            event.key === "Escape"
+                            event.target ===
+                            modal
                         ) {
 
-                            closeModal();
+                            modal.classList.remove(
+                                "active"
+                            );
+
+                            deleteId =
+                                null;
 
                         }
 
@@ -1599,21 +1503,94 @@
                 );
 
 
-                /*
-                 * ==================================
-                 * BAŞLAT
-                 * ==================================
-                 */
+                /* =================================================
+                   ESC İLE MODAL KAPAT
+                   ================================================= */
 
-                newsList =
-                    getNews();
+                document.addEventListener(
+                    "keydown",
+                    function (event) {
 
-                updateStats();
+                        if (
+                            event.key ===
+                            "Escape"
+                        ) {
+
+                            modal.classList.remove(
+                                "active"
+                            );
+
+                            deleteId =
+                                null;
+
+                        }
+
+                    }
+                );
+
+
+                /* =================================================
+                   ADMIN MOBİL MENÜ
+                   ================================================= */
+
+                const adminMenuBtn =
+                    document.getElementById(
+                        "adminMenuBtn"
+                    );
+
+                const adminSidebar =
+                    document.getElementById(
+                        "adminSidebar"
+                    );
+
+
+                if (
+                    adminMenuBtn &&
+                    adminSidebar
+                ) {
+
+                    adminMenuBtn.addEventListener(
+                        "click",
+                        function () {
+
+                            adminSidebar.classList.toggle(
+                                "open"
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
+                   URL'DEN ARAMA
+                   ================================================= */
+
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+                const urlSearch =
+                    params.get("search");
+
+
+                if (urlSearch) {
+
+                    searchInput.value =
+                        urlSearch;
+
+                }
+
+
+                /* =================================================
+                   BAŞLAT
+                   ================================================= */
 
                 renderNews();
 
-            }
-        );
+            });
 
     </script>
 
