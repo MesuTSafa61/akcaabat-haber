@@ -1,312 +1,1561 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#10233f">
-  <title>Yeni Haber | Akçaabat Haber</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yeni Haber | Akçaabat Haber</title>
+
+    <meta name="description" content="Akçaabat Haber yönetim paneli yeni haber oluşturma sayfası">
+
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="dashboard-page">
+<body>
 
-  <aside class="admin-sidebar">
+    <!-- =========================================
+         ADMİN HEADER
+    ========================================== -->
 
-    <div class="admin-sidebar-brand">
-      <span class="logo-mark">A</span>
-      <div>
-        <strong>AKÇAABAT <b>HABER</b></strong>
-        <small>Yönetim Paneli</small>
-      </div>
-    </div>
+    <header class="admin-header">
 
-    <nav class="admin-nav">
+        <div class="admin-header-left">
 
-      <span class="admin-nav-title">YÖNETİM</span>
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                aria-label="Menüyü aç">
+                ☰
+            </button>
 
-      <a href="admin-panel.html">
-        <span>▦</span> Dashboard
-      </a>
+            <a href="index.html" class="admin-logo">
+                AKÇAABAT <span>HABER</span>
+            </a>
 
-      <a href="#">
-        <span>📰</span> Haberler
-      </a>
-
-      <a class="active" href="yeni-haber.html">
-        <span>＋</span> Yeni Haber
-      </a>
-
-      <a href="#">
-        <span>▤</span> Kategoriler
-      </a>
-
-      <span class="admin-nav-title">İÇERİK</span>
-
-      <a href="#">
-        <span>▧</span> Foto Galeri
-      </a>
-
-      <a href="#">
-        <span>▶</span> Videolar
-      </a>
-
-      <a href="#">
-        <span>⚡</span> Son Dakika
-      </a>
-
-      <span class="admin-nav-title">SİSTEM</span>
-
-      <a href="#">
-        <span>♙</span> Kullanıcılar
-      </a>
-
-      <a href="#">
-        <span>⚙</span> Site Ayarları
-      </a>
-
-    </nav>
-
-    <a class="admin-sidebar-bottom" href="index.html">
-      ← Siteye Dön
-    </a>
-
-  </aside>
-
-  <main class="dashboard-main">
-
-    <header class="dashboard-header">
-
-      <button class="dashboard-menu" type="button">
-        ☰
-      </button>
-
-      <div>
-        <span>Yönetim Paneli</span>
-        <h1>Yeni Haber</h1>
-      </div>
-
-      <div class="admin-user">
-        <span class="admin-avatar">A</span>
-        <div>
-          <strong>Yönetici</strong>
-          <small>Admin</small>
         </div>
-      </div>
+
+        <div class="admin-header-right">
+
+            <a href="index.html" class="view-site-btn">
+                Siteyi Gör
+            </a>
+
+        </div>
 
     </header>
 
-    <section class="dashboard-content news-editor-page">
 
-      <div class="editor-top">
+    <!-- =========================================
+         ADMİN SIDEBAR
+    ========================================== -->
 
-        <div>
-          <span>İÇERİK YÖNETİMİ</span>
-          <h2>Yeni Haber Oluştur</h2>
-          <p>Web sitenizde yayınlanacak yeni haberi hazırlayın.</p>
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="admin-sidebar-title">
+            YÖNETİM PANELİ
         </div>
 
-        <a href="admin-panel.html" class="editor-back">
-          ← Dashboard
-        </a>
+        <nav class="admin-nav">
 
-      </div>
+            <a href="admin.html" class="admin-nav-item">
+                <span>📊</span>
+                Dashboard
+            </a>
 
-      <form class="news-editor-form" id="newsEditorForm">
+            <a href="yeni-haber.html" class="admin-nav-item active">
+                <span>✍️</span>
+                Yeni Haber
+            </a>
 
-        <div class="editor-layout">
+            <a href="haber.html" class="admin-nav-item">
+                <span>📰</span>
+                Haberler
+            </a>
 
-          <div class="editor-main">
+            <a href="taslaklar.html" class="admin-nav-item">
+                <span>📝</span>
+                Taslaklar
+            </a>
 
-            <section class="editor-card">
+            <a href="kategoriler.html" class="admin-nav-item">
+                <span>📁</span>
+                Kategoriler
+            </a>
 
-              <div class="editor-card-head">
-                <div>
-                  <span>HABER BİLGİLERİ</span>
-                  <h3>Temel İçerik</h3>
+            <a href="yorumlar.html" class="admin-nav-item">
+                <span>💬</span>
+                Yorumlar
+            </a>
+
+            <a href="ayarlar.html" class="admin-nav-item">
+                <span>⚙️</span>
+                Ayarlar
+            </a>
+
+        </nav>
+
+        <div class="admin-sidebar-bottom">
+
+            <a href="index.html" class="admin-nav-item">
+                <span>🌐</span>
+                Siteye Git
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================================
+         ANA İÇERİK
+    ========================================== -->
+
+    <main class="admin-main">
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <div class="admin-breadcrumb">
+                    Yönetim Paneli / Haber
                 </div>
-              </div>
 
-              <div class="editor-fields">
+                <h1 id="pageTitle">
+                    Yeni Haber Oluştur
+                </h1>
 
-                <label>
-                  Haber Başlığı
-                  <input
-                    type="text"
-                    id="newsTitle"
-                    placeholder="Haber başlığını yazın..."
-                  >
-                </label>
-
-                <label>
-                  Spot / Kısa Açıklama
-                  <textarea
-                    id="newsSpot"
-                    rows="4"
-                    placeholder="Haberin kısa özetini yazın..."
-                  ></textarea>
-                </label>
-
-                <label>
-                  Haber İçeriği
-                  <textarea
-                    id="newsContent"
-                    rows="14"
-                    placeholder="Haber metnini buraya yazın..."
-                  ></textarea>
-                </label>
-
-              </div>
-
-            </section>
-
-            <section class="editor-card">
-
-              <div class="editor-card-head">
-                <div>
-                  <span>GÖRSEL</span>
-                  <h3>Haber Görseli</h3>
-                </div>
-              </div>
-
-              <div class="image-upload">
-
-                <div class="upload-icon">▧</div>
-
-                <strong>Haber görseli ekleyin</strong>
-
-                <p>
-                  JPG, PNG veya WebP formatında bir görsel seçebilirsiniz.
+                <p id="pageDescription">
+                    Siteniz için yeni bir haber hazırlayın.
                 </p>
 
-                <label class="upload-button">
-                  Görsel Seç
-                  <input type="file" id="newsImage" accept="image/*">
-                </label>
+            </div>
 
-                <div class="image-preview" id="imagePreview"></div>
+            <div class="admin-page-actions">
 
-              </div>
+                <a href="taslaklar.html" class="admin-secondary-btn">
+                    Taslaklar
+                </a>
 
-            </section>
+                <button
+                    type="button"
+                    class="admin-secondary-btn"
+                    id="clearFormBtn">
+                    Temizle
+                </button>
 
-          </div>
-
-          <aside class="editor-sidebar">
-
-            <section class="editor-card">
-
-              <div class="editor-card-head">
-                <div>
-                  <span>YAYIN</span>
-                  <h3>Yayın Ayarları</h3>
-                </div>
-              </div>
-
-              <div class="editor-side-fields">
-
-                <label>
-                  Kategori
-                  <select id="newsCategory">
-                    <option value="">Kategori seçin</option>
-                    <option>Akçaabat</option>
-                    <option>Trabzon</option>
-                    <option>Spor</option>
-                    <option>Türkiye</option>
-                    <option>Dünya</option>
-                    <option>Ekonomi</option>
-                    <option>Gündem</option>
-                  </select>
-                </label>
-
-                <label>
-                  Yayın Durumu
-                  <select id="newsStatus">
-                    <option value="published">Yayında</option>
-                    <option value="draft">Taslak</option>
-                  </select>
-                </label>
-
-                <label>
-                  Yazar
-                  <select>
-                    <option>Yönetici</option>
-                    <option>Editör</option>
-                    <option>Haber Merkezi</option>
-                  </select>
-                </label>
-
-                <label class="check-row">
-                  <input type="checkbox" id="breakingNews">
-                  <span>
-                    <strong>Son Dakika</strong>
-                    <small>Haberi son dakika alanında göster</small>
-                  </span>
-                </label>
-
-              </div>
-
-            </section>
-
-            <section class="editor-card">
-
-              <div class="editor-card-head">
-                <div>
-                  <span>SEO</span>
-                  <h3>Arama Motoru</h3>
-                </div>
-              </div>
-
-              <div class="editor-side-fields">
-
-                <label>
-                  SEO Başlığı
-                  <input
-                    type="text"
-                    placeholder="SEO başlığı..."
-                  >
-                </label>
-
-                <label>
-                  SEO Açıklaması
-                  <textarea
-                    rows="5"
-                    placeholder="Arama sonuçlarında görünecek açıklama..."
-                  ></textarea>
-                </label>
-
-              </div>
-
-            </section>
-
-          </aside>
+            </div>
 
         </div>
 
-        <div class="editor-actions">
 
-          <a href="admin-panel.html" class="editor-cancel">
-            Vazgeç
-          </a>
+        <!-- =====================================
+             MESAJ ALANI
+        ====================================== -->
 
-          <button type="button" class="editor-draft">
-            Taslak Kaydet
-          </button>
-
-          <button type="submit" class="editor-publish">
-            Haberi Yayınla
-          </button>
-
+        <div
+            id="formMessage"
+            class="form-message"
+            style="display:none;">
         </div>
 
-        <div class="editor-message" id="editorMessage"></div>
 
-      </form>
+        <!-- =====================================
+             HABER FORMU
+        ====================================== -->
 
-    </section>
+        <form id="newsForm" class="news-editor-form">
 
-  </main>
+            <div class="news-editor-grid">
 
-  <script src="script.js"></script>
+
+                <!-- =================================
+                     SOL KOLON
+                ================================== -->
+
+                <div class="news-editor-main">
+
+
+                    <!-- BAŞLIK -->
+
+                    <section class="editor-card">
+
+                        <div class="editor-card-header">
+
+                            <div>
+                                <h2>Haber Bilgileri</h2>
+                                <p>Haberinizin temel bilgilerini girin.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="newsTitle">
+                                Haber Başlığı
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="newsTitle"
+                                name="title"
+                                class="form-control"
+                                placeholder="Haber başlığını yazın..."
+                                maxlength="150"
+                                autocomplete="off">
+
+                            <div class="input-meta">
+
+                                <span>
+                                    Dikkat çekici ve anlaşılır bir başlık kullanın.
+                                </span>
+
+                                <span id="titleCounter">
+                                    0 / 150
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ÖZET -->
+
+                        <div class="form-group">
+
+                            <label for="newsSummary">
+                                Haber Özeti
+                                <span class="required">*</span>
+                            </label>
+
+                            <textarea
+                                id="newsSummary"
+                                name="summary"
+                                class="form-control"
+                                rows="4"
+                                maxlength="300"
+                                placeholder="Haberin kısa özetini yazın..."></textarea>
+
+                            <div class="input-meta">
+
+                                <span>
+                                    Ana sayfada ve haber listelerinde gösterilebilir.
+                                </span>
+
+                                <span id="summaryCounter">
+                                    0 / 300
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- İÇERİK -->
+
+                        <div class="form-group">
+
+                            <label for="newsContent">
+                                Haber İçeriği
+                                <span class="required">*</span>
+                            </label>
+
+                            <textarea
+                                id="newsContent"
+                                name="content"
+                                class="form-control editor-textarea"
+                                rows="18"
+                                placeholder="Haber içeriğini buraya yazın..."></textarea>
+
+                            <div class="input-meta">
+
+                                <span>
+                                    Haber metnini mümkün olduğunca detaylı hazırlayın.
+                                </span>
+
+                                <span id="contentCounter">
+                                    0 karakter
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================
+                         GÖRSEL
+                    ================================== -->
+
+                    <section class="editor-card">
+
+                        <div class="editor-card-header">
+
+                            <div>
+                                <h2>Haber Görseli</h2>
+                                <p>Haberiniz için kapak görseli seçin.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="image-upload-area">
+
+                            <label
+                                for="newsImage"
+                                class="image-upload-box">
+
+                                <div
+                                    class="image-upload-placeholder"
+                                    id="imagePlaceholder">
+
+                                    <div class="upload-icon">
+                                        📷
+                                    </div>
+
+                                    <strong>
+                                        Görsel Seç
+                                    </strong>
+
+                                    <span>
+                                        JPG, PNG veya WEBP
+                                    </span>
+
+                                </div>
+
+                                <img
+                                    id="imagePreview"
+                                    class="image-preview"
+                                    alt="Haber görseli önizleme"
+                                    style="display:none;">
+
+                            </label>
+
+                            <input
+                                type="file"
+                                id="newsImage"
+                                name="image"
+                                accept="image/jpeg,image/png,image/webp"
+                                hidden>
+
+                            <div
+                                class="image-upload-note">
+                                Önerilen görsel oranı 16:9'dur.
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================
+                         YAYIN AYARLARI
+                    ================================== -->
+
+                    <section class="editor-card">
+
+                        <div class="editor-card-header">
+
+                            <div>
+                                <h2>Yayın Ayarları</h2>
+                                <p>Haberin yayın durumunu belirleyin.</p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="publish-options">
+
+                            <label class="publish-option">
+
+                                <input
+                                    type="radio"
+                                    name="publishStatus"
+                                    value="publish"
+                                    checked>
+
+                                <span class="publish-option-content">
+
+                                    <strong>
+                                        Hemen Yayınla
+                                    </strong>
+
+                                    <small>
+                                        Haber kaydedilir ve yayınlanır.
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+
+                            <label class="publish-option">
+
+                                <input
+                                    type="radio"
+                                    name="publishStatus"
+                                    value="draft">
+
+                                <span class="publish-option-content">
+
+                                    <strong>
+                                        Taslak Olarak Kaydet
+                                    </strong>
+
+                                    <small>
+                                        Haber daha sonra düzenlenmek üzere saklanır.
+                                    </small>
+
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <label class="checkbox-row">
+
+                            <input
+                                type="checkbox"
+                                id="isBreaking"
+                                name="breaking">
+
+                            <span class="checkbox-custom"></span>
+
+                            <span class="checkbox-text">
+
+                                <strong>
+                                    Son Dakika / Flaş Haber
+                                </strong>
+
+                                <small>
+                                    Haber son dakika alanında gösterilsin.
+                                </small>
+
+                            </span>
+
+                        </label>
+
+                    </section>
+
+                </div>
+
+
+                <!-- =================================
+                     SAĞ KOLON
+                ================================== -->
+
+                <aside class="news-editor-sidebar">
+
+
+                    <!-- KATEGORİ -->
+
+                    <section class="editor-card">
+
+                        <div class="editor-card-header">
+
+                            <div>
+                                <h2>Kategori</h2>
+                                <p>Haberi bir kategoriye bağlayın.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="newsCategory">
+                                Kategori
+                                <span class="required">*</span>
+                            </label>
+
+                            <select
+                                id="newsCategory"
+                                name="category"
+                                class="form-control">
+
+                                <option value="">
+                                    Kategori seçin
+                                </option>
+
+                                <option value="Akçaabat">
+                                    Akçaabat
+                                </option>
+
+                                <option value="Trabzon">
+                                    Trabzon
+                                </option>
+
+                                <option value="Gündem">
+                                    Gündem
+                                </option>
+
+                                <option value="Spor">
+                                    Spor
+                                </option>
+
+                                <option value="Ekonomi">
+                                    Ekonomi
+                                </option>
+
+                                <option value="Siyaset">
+                                    Siyaset
+                                </option>
+
+                                <option value="Magazin">
+                                    Magazin
+                                </option>
+
+                                <option value="Sağlık">
+                                    Sağlık
+                                </option>
+
+                                <option value="Eğitim">
+                                    Eğitim
+                                </option>
+
+                                <option value="Kültür Sanat">
+                                    Kültür Sanat
+                                </option>
+
+                                <option value="Yaşam">
+                                    Yaşam
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ÖNİZLEME -->
+
+                    <section class="editor-card">
+
+                        <div class="editor-card-header">
+
+                            <div>
+                                <h2>Hızlı Bilgi</h2>
+                            </div>
+
+                        </div>
+
+                        <div class="editor-info-list">
+
+                            <div class="editor-info-item">
+
+                                <span>
+                                    Durum
+                                </span>
+
+                                <strong id="editorStatus">
+                                    Yeni Haber
+                                </strong>
+
+                            </div>
+
+                            <div class="editor-info-item">
+
+                                <span>
+                                    Kategori
+                                </span>
+
+                                <strong id="editorCategory">
+                                    Seçilmedi
+                                </strong>
+
+                            </div>
+
+                            <div class="editor-info-item">
+
+                                <span>
+                                    Son Dakika
+                                </span>
+
+                                <strong id="editorBreaking">
+                                    Hayır
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- KAYDET -->
+
+                    <section class="editor-card editor-save-card">
+
+                        <button
+                            type="submit"
+                            class="admin-primary-btn"
+                            id="publishBtn">
+                            Haberi Yayınla
+                        </button>
+
+                        <button
+                            type="button"
+                            class="admin-secondary-btn full-width"
+                            id="saveDraftBtn">
+                            Taslak Olarak Kaydet
+                        </button>
+
+                        <a
+                            href="haber.html"
+                            class="admin-text-btn">
+                            Vazgeç
+                        </a>
+
+                    </section>
+
+                </aside>
+
+            </div>
+
+        </form>
+
+    </main>
+
+
+    <!-- =========================================
+         SAYFA SCRIPT
+    ========================================== -->
+
+    <script src="script.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const form = document.getElementById("newsForm");
+
+            const titleInput =
+                document.getElementById("newsTitle");
+
+            const summaryInput =
+                document.getElementById("newsSummary");
+
+            const contentInput =
+                document.getElementById("newsContent");
+
+            const categoryInput =
+                document.getElementById("newsCategory");
+
+            const breakingInput =
+                document.getElementById("isBreaking");
+
+            const imageInput =
+                document.getElementById("newsImage");
+
+            const imagePreview =
+                document.getElementById("imagePreview");
+
+            const imagePlaceholder =
+                document.getElementById("imagePlaceholder");
+
+            const titleCounter =
+                document.getElementById("titleCounter");
+
+            const summaryCounter =
+                document.getElementById("summaryCounter");
+
+            const contentCounter =
+                document.getElementById("contentCounter");
+
+            const editorStatus =
+                document.getElementById("editorStatus");
+
+            const editorCategory =
+                document.getElementById("editorCategory");
+
+            const editorBreaking =
+                document.getElementById("editorBreaking");
+
+            const pageTitle =
+                document.getElementById("pageTitle");
+
+            const pageDescription =
+                document.getElementById("pageDescription");
+
+            const publishBtn =
+                document.getElementById("publishBtn");
+
+            const saveDraftBtn =
+                document.getElementById("saveDraftBtn");
+
+            const clearFormBtn =
+                document.getElementById("clearFormBtn");
+
+
+            /*
+             * ======================================
+             * URL'DEN TASLAK ID'SİNİ AL
+             * ======================================
+             */
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+            const draftId =
+                params.get("draft");
+
+            const editId =
+                params.get("edit");
+
+
+            /*
+             * ======================================
+             * LOCAL STORAGE TASLAKLAR
+             * ======================================
+             */
+
+            function getDrafts() {
+
+                try {
+
+                    const data =
+                        localStorage.getItem("akcaabat_taslaklar");
+
+                    if (!data) {
+                        return [];
+                    }
+
+                    const parsed =
+                        JSON.parse(data);
+
+                    return Array.isArray(parsed)
+                        ? parsed
+                        : [];
+
+                } catch (error) {
+
+                    console.error(
+                        "Taslaklar okunamadı:",
+                        error
+                    );
+
+                    return [];
+
+                }
+
+            }
+
+
+            /*
+             * ======================================
+             * TASLAĞI BUL
+             * ======================================
+             */
+
+            function findDraft(id) {
+
+                const drafts = getDrafts();
+
+                return drafts.find(function (draft) {
+
+                    return String(draft.id) === String(id);
+
+                });
+
+            }
+
+
+            /*
+             * ======================================
+             * TASLAĞI FORMA DOLDUR
+             * ======================================
+             */
+
+            function loadDraft(id) {
+
+                if (!id) {
+                    return;
+                }
+
+                const draft =
+                    findDraft(id);
+
+                if (!draft) {
+
+                    console.warn(
+                        "Taslak bulunamadı:",
+                        id
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Başlık
+                 */
+
+                if (titleInput) {
+
+                    titleInput.value =
+                        draft.title || "";
+
+                }
+
+
+                /*
+                 * Özet
+                 */
+
+                if (summaryInput) {
+
+                    summaryInput.value =
+                        draft.summary || "";
+
+                }
+
+
+                /*
+                 * İçerik
+                 */
+
+                if (contentInput) {
+
+                    contentInput.value =
+                        draft.content || "";
+
+                }
+
+
+                /*
+                 * Kategori
+                 */
+
+                if (categoryInput) {
+
+                    categoryInput.value =
+                        draft.category || "";
+
+                }
+
+
+                /*
+                 * Son dakika
+                 */
+
+                if (breakingInput) {
+
+                    breakingInput.checked =
+                        draft.breaking === true ||
+                        draft.breaking === "true";
+
+                }
+
+
+                /*
+                 * Sayfa başlığı
+                 */
+
+                if (pageTitle) {
+
+                    pageTitle.textContent =
+                        "Taslağı Düzenle";
+
+                }
+
+
+                if (pageDescription) {
+
+                    pageDescription.textContent =
+                        "Kaydedilmiş taslağınızı düzenleyin.";
+
+                }
+
+
+                if (editorStatus) {
+
+                    editorStatus.textContent =
+                        "Taslak Düzenleniyor";
+
+                }
+
+
+                /*
+                 * Buton
+                 */
+
+                if (publishBtn) {
+
+                    publishBtn.textContent =
+                        "Haberi Yayınla";
+
+                }
+
+
+                updateCounters();
+                updateQuickInfo();
+
+            }
+
+
+            /*
+             * ======================================
+             * SAYAC GÜNCELLE
+             * ======================================
+             */
+
+            function updateCounters() {
+
+                if (titleCounter && titleInput) {
+
+                    titleCounter.textContent =
+                        titleInput.value.length +
+                        " / 150";
+
+                }
+
+                if (summaryCounter && summaryInput) {
+
+                    summaryCounter.textContent =
+                        summaryInput.value.length +
+                        " / 300";
+
+                }
+
+                if (contentCounter && contentInput) {
+
+                    contentCounter.textContent =
+                        contentInput.value.length +
+                        " karakter";
+
+                }
+
+            }
+
+
+            /*
+             * ======================================
+             * HIZLI BİLGİ
+             * ======================================
+             */
+
+            function updateQuickInfo() {
+
+                if (editorCategory && categoryInput) {
+
+                    editorCategory.textContent =
+                        categoryInput.value ||
+                        "Seçilmedi";
+
+                }
+
+                if (editorBreaking && breakingInput) {
+
+                    editorBreaking.textContent =
+                        breakingInput.checked
+                            ? "Evet"
+                            : "Hayır";
+
+                }
+
+            }
+
+
+            /*
+             * ======================================
+             * INPUT EVENTLERİ
+             * ======================================
+             */
+
+            if (titleInput) {
+
+                titleInput.addEventListener(
+                    "input",
+                    updateCounters
+                );
+
+            }
+
+
+            if (summaryInput) {
+
+                summaryInput.addEventListener(
+                    "input",
+                    updateCounters
+                );
+
+            }
+
+
+            if (contentInput) {
+
+                contentInput.addEventListener(
+                    "input",
+                    updateCounters
+                );
+
+            }
+
+
+            if (categoryInput) {
+
+                categoryInput.addEventListener(
+                    "change",
+                    updateQuickInfo
+                );
+
+            }
+
+
+            if (breakingInput) {
+
+                breakingInput.addEventListener(
+                    "change",
+                    updateQuickInfo
+                );
+
+            }
+
+
+            /*
+             * ======================================
+             * GÖRSEL ÖNİZLEME
+             * ======================================
+             */
+
+            if (imageInput) {
+
+                imageInput.addEventListener(
+                    "change",
+                    function () {
+
+                        const file =
+                            imageInput.files &&
+                            imageInput.files[0];
+
+                        if (!file) {
+                            return;
+                        }
+
+                        if (
+                            !file.type.startsWith(
+                                "image/"
+                            )
+                        ) {
+
+                            alert(
+                                "Lütfen geçerli bir görsel seçin."
+                            );
+
+                            imageInput.value = "";
+
+                            return;
+
+                        }
+
+
+                        const reader =
+                            new FileReader();
+
+                        reader.onload =
+                            function (event) {
+
+                                if (imagePreview) {
+
+                                    imagePreview.src =
+                                        event.target.result;
+
+                                    imagePreview.style.display =
+                                        "block";
+
+                                }
+
+                                if (imagePlaceholder) {
+
+                                    imagePlaceholder.style.display =
+                                        "none";
+
+                                }
+
+                            };
+
+                        reader.readAsDataURL(file);
+
+                    }
+                );
+
+            }
+
+
+            /*
+             * ======================================
+             * FORM TEMİZLE
+             * ======================================
+             */
+
+            if (clearFormBtn) {
+
+                clearFormBtn.addEventListener(
+                    "click",
+                    function () {
+
+                        const confirmed =
+                            confirm(
+                                "Formdaki tüm bilgiler temizlensin mi?"
+                            );
+
+                        if (!confirmed) {
+                            return;
+                        }
+
+                        if (form) {
+                            form.reset();
+                        }
+
+                        updateCounters();
+                        updateQuickInfo();
+
+                        if (imagePreview) {
+
+                            imagePreview.style.display =
+                                "none";
+
+                            imagePreview.removeAttribute(
+                                "src"
+                            );
+
+                        }
+
+                        if (imagePlaceholder) {
+
+                            imagePlaceholder.style.display =
+                                "flex";
+
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /*
+             * ======================================
+             * TASLAK KAYDET
+             * ======================================
+             */
+
+            function saveCurrentDraft() {
+
+                const title =
+                    titleInput
+                        ? titleInput.value.trim()
+                        : "";
+
+                const summary =
+                    summaryInput
+                        ? summaryInput.value.trim()
+                        : "";
+
+                const content =
+                    contentInput
+                        ? contentInput.value.trim()
+                        : "";
+
+                const category =
+                    categoryInput
+                        ? categoryInput.value
+                        : "";
+
+                const breaking =
+                    breakingInput
+                        ? breakingInput.checked
+                        : false;
+
+
+                if (!title) {
+
+                    alert(
+                        "Taslak kaydetmek için en azından haber başlığı girin."
+                    );
+
+                    if (titleInput) {
+                        titleInput.focus();
+                    }
+
+                    return false;
+
+                }
+
+
+                const drafts =
+                    getDrafts();
+
+                const currentId =
+                    draftId || editId;
+
+
+                if (currentId) {
+
+                    const index =
+                        drafts.findIndex(
+                            function (item) {
+
+                                return String(item.id) ===
+                                    String(currentId);
+
+                            }
+                        );
+
+
+                    if (index !== -1) {
+
+                        drafts[index] = {
+
+                            ...drafts[index],
+
+                            title: title,
+
+                            summary: summary,
+
+                            content: content,
+
+                            category: category,
+
+                            breaking: breaking,
+
+                            updatedAt:
+                                new Date().toISOString()
+
+                        };
+
+                    }
+
+                } else {
+
+                    drafts.unshift({
+
+                        id:
+                            "draft_" +
+                            Date.now(),
+
+                        title: title,
+
+                        summary: summary,
+
+                        content: content,
+
+                        category: category,
+
+                        breaking: breaking,
+
+                        createdAt:
+                            new Date().toISOString(),
+
+                        updatedAt:
+                            new Date().toISOString()
+
+                    });
+
+                }
+
+
+                localStorage.setItem(
+                    "akcaabat_taslaklar",
+                    JSON.stringify(drafts)
+                );
+
+
+                alert(
+                    "Taslak başarıyla kaydedildi."
+                );
+
+
+                return true;
+
+            }
+
+
+            /*
+             * ======================================
+             * TASLAK BUTONU
+             * ======================================
+             */
+
+            if (saveDraftBtn) {
+
+                saveDraftBtn.addEventListener(
+                    "click",
+                    function () {
+
+                        saveCurrentDraft();
+
+                    }
+                );
+
+            }
+
+
+            /*
+             * ======================================
+             * FORM GÖNDER
+             * ======================================
+             */
+
+            if (form) {
+
+                form.addEventListener(
+                    "submit",
+                    function (event) {
+
+                        event.preventDefault();
+
+
+                        const title =
+                            titleInput
+                                ? titleInput.value.trim()
+                                : "";
+
+                        const summary =
+                            summaryInput
+                                ? summaryInput.value.trim()
+                                : "";
+
+                        const content =
+                            contentInput
+                                ? contentInput.value.trim()
+                                : "";
+
+                        const category =
+                            categoryInput
+                                ? categoryInput.value
+                                : "";
+
+                        const breaking =
+                            breakingInput
+                                ? breakingInput.checked
+                                : false;
+
+
+                        /*
+                         * Boş kontrol
+                         */
+
+                        if (!title) {
+
+                            alert(
+                                "Lütfen haber başlığı girin."
+                            );
+
+                            titleInput.focus();
+
+                            return;
+
+                        }
+
+
+                        if (!category) {
+
+                            alert(
+                                "Lütfen haber kategorisi seçin."
+                            );
+
+                            categoryInput.focus();
+
+                            return;
+
+                        }
+
+
+                        if (!content) {
+
+                            alert(
+                                "Lütfen haber içeriğini girin."
+                            );
+
+                            contentInput.focus();
+
+                            return;
+
+                        }
+
+
+                        /*
+                         * Yayın durumu
+                         */
+
+                        const statusElement =
+                            document.querySelector(
+                                'input[name="publishStatus"]:checked'
+                            );
+
+                        const status =
+                            statusElement
+                                ? statusElement.value
+                                : "publish";
+
+
+                        /*
+                         * Taslak seçilmişse
+                         */
+
+                        if (status === "draft") {
+
+                            saveCurrentDraft();
+
+                            return;
+
+                        }
+
+
+                        /*
+                         * Haber oluştur
+                         */
+
+                        const news = {
+
+                            id:
+                                "news_" +
+                                Date.now(),
+
+                            title: title,
+
+                            summary: summary,
+
+                            content: content,
+
+                            category: category,
+
+                            breaking: breaking,
+
+                            published: true,
+
+                            createdAt:
+                                new Date().toISOString(),
+
+                            updatedAt:
+                                new Date().toISOString()
+
+                        };
+
+
+                        /*
+                         * Haberleri oku
+                         */
+
+                        let newsList = [];
+
+                        try {
+
+                            const savedNews =
+                                localStorage.getItem(
+                                    "akcaabat_haberler"
+                                );
+
+                            if (savedNews) {
+
+                                const parsed =
+                                    JSON.parse(savedNews);
+
+                                if (
+                                    Array.isArray(parsed)
+                                ) {
+
+                                    newsList =
+                                        parsed;
+
+                                }
+
+                            }
+
+                        } catch (error) {
+
+                            console.error(
+                                error
+                            );
+
+                        }
+
+
+                        newsList.unshift(news);
+
+
+                        localStorage.setItem(
+                            "akcaabat_haberler",
+                            JSON.stringify(newsList)
+                        );
+
+
+                        /*
+                         * Eğer bir taslaktan
+                         * yayınlandıysa taslağı sil
+                         */
+
+                        const currentId =
+                            draftId || editId;
+
+
+                        if (currentId) {
+
+                            const drafts =
+                                getDrafts();
+
+                            const remainingDrafts =
+                                drafts.filter(
+                                    function (item) {
+
+                                        return String(item.id) !==
+                                            String(currentId);
+
+                                    }
+                                );
+
+                            localStorage.setItem(
+                                "akcaabat_taslaklar",
+                                JSON.stringify(
+                                    remainingDrafts
+                                )
+                            );
+
+                        }
+
+
+                        alert(
+                            "Haber başarıyla yayınlandı."
+                        );
+
+
+                        window.location.href =
+                            "haber.html";
+
+                    }
+                );
+
+            }
+
+
+            /*
+             * ======================================
+             * İLK ÇALIŞTIRMA
+             * ======================================
+             */
+
+            if (draftId) {
+
+                loadDraft(draftId);
+
+            } else if (editId) {
+
+                loadDraft(editId);
+
+            } else {
+
+                updateCounters();
+                updateQuickInfo();
+
+            }
+
+        });
+
+    </script>
 
 </body>
 </html>
