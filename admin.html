@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10233f">
+  <title>Yönetim Paneli | Akçaabat Haber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="admin-login-page">
+
+  <main class="admin-login">
+
+    <div class="admin-brand">
+      <span class="logo-mark">A</span>
+      <strong>AKÇAABAT <b>HABER</b></strong>
+      <small>Yönetim Paneli</small>
+    </div>
+
+    <div class="admin-login-card">
+
+      <div class="admin-title">
+        <span>Yönetici Girişi</span>
+        <h1>Hoş Geldiniz</h1>
+        <p>Yönetim paneline devam etmek için giriş yapın.</p>
+      </div>
+
+      <form id="adminLoginForm">
+
+        <label for="adminEmail">E-posta</label>
+        <input
+          id="adminEmail"
+          type="email"
+          placeholder="admin@akcaabathaber.com.tr"
+          autocomplete="username"
+          required
+        >
+
+        <label for="adminPassword">Şifre</label>
+
+        <div class="password-field">
+          <input
+            id="adminPassword"
+            type="password"
+            placeholder="Şifrenizi girin"
+            autocomplete="current-password"
+            required
+          >
+          <button type="button" id="showPassword">Göster</button>
+        </div>
+
+        <div class="login-options">
+          <label class="remember">
+            <input type="checkbox">
+            <span>Beni hatırla</span>
+          </label>
+
+          <a href="#">Şifremi unuttum</a>
+        </div>
+
+        <button class="admin-login-button" type="submit">
+          Panele Giriş Yap
+        </button>
+
+        <p class="login-message" id="loginMessage"></p>
+
+      </form>
+
+    </div>
+
+    <a class="back-home" href="index.html">
+      ← Siteye Dön
+    </a>
+
+    <small class="admin-copyright">
+      © 2026 Akçaabat Haber · Yönetim Paneli
+    </small>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
