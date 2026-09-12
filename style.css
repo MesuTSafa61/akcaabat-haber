@@ -590,3 +590,8 @@ button,input{font:inherit}
   .categories a{font-size:10px}
   .categories span{font-size:18px}
 }
+
+
+.navigation.mobile-open{display:block}
+.navigation.mobile-open .nav-inner{flex-wrap:wrap}
+.navigation.mobile-open .nav-inner a{display:block}
