@@ -8,36 +8,52 @@
 
     <meta
         name="description"
-        content="Akçaabat Haber sorumlu yayıncılık ve editoryal yayın ilkeleri."
+        content="Akçaabat Haber'in yayıncılık ilkeleri, doğruluk, tarafsızlık, kaynak kullanımı, kişilik hakları ve editoryal sorumluluk politikası."
     >
-
     <meta
-        name="robots"
-        content="index, follow"
+        name="keywords"
+        content="Akçaabat Haber, sorumlu yayıncılık, yayıncılık ilkeleri, editoryal ilkeler, haber etiği, Akçaabat"
     >
+    <meta name="author" content="Akçaabat Haber">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0b1f3a">
 
+    <link rel="canonical" href="https://akcaabathaber.com.tr/sorumlu-yayincilik.html">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="site.webmanifest">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:site_name" content="Akçaabat Haber">
+    <meta property="og:title" content="Sorumlu Yayıncılık | Akçaabat Haber">
     <meta
-        name="theme-color"
-        content="#0b1f3a"
+        property="og:description"
+        content="Akçaabat Haber'in sorumlu ve güvenilir yayıncılık anlayışı."
     >
-
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="manifest" href="/site.webmanifest">
+    <meta
+        property="og:url"
+        content="https://akcaabathaber.com.tr/sorumlu-yayincilik.html"
+    >
 
     <style>
         :root {
             --navy: #0b1f3a;
-            --navy-2: #102b4f;
-            --red: #d71920;
-            --red-dark: #b51218;
+            --navy-dark: #07172b;
+            --blue: #173d70;
+            --red: #c62828;
+            --red-dark: #a91f1f;
             --text: #172033;
-            --muted: #667085;
+            --muted: #687386;
             --light: #f5f7fa;
+            --lighter: #fafbfd;
             --white: #ffffff;
-            --border: #e5e7eb;
-            --success: #168a4b;
-            --shadow: 0 14px 40px rgba(11, 31, 58, 0.08);
+            --border: #e5e9ef;
+            --success: #198754;
+            --shadow: 0 12px 35px rgba(11, 31, 58, 0.08);
+            --shadow-small: 0 5px 18px rgba(11, 31, 58, 0.06);
             --radius: 18px;
+            --radius-small: 12px;
+            --container: 1180px;
         }
 
         * {
@@ -52,16 +68,20 @@
 
         body {
             font-family:
+                Inter,
                 -apple-system,
                 BlinkMacSystemFont,
                 "Segoe UI",
                 Roboto,
-                Helvetica,
                 Arial,
                 sans-serif;
-            background: #f6f8fb;
+            background: var(--light);
             color: var(--text);
             line-height: 1.7;
+        }
+
+        body.menu-open {
+            overflow: hidden;
         }
 
         a {
@@ -70,20 +90,29 @@
         }
 
         button,
-        input,
-        textarea {
+        input {
             font: inherit;
         }
 
-        .topbar {
-            background: var(--navy);
-            color: rgba(255, 255, 255, 0.88);
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            width: min(calc(100% - 32px), var(--container));
+            margin: 0 auto;
+        }
+
+        /* TOP BAR */
+
+        .top-bar {
+            background: var(--navy-dark);
+            color: #dbe5f2;
             font-size: 13px;
         }
 
-        .topbar-inner {
-            width: min(1180px, calc(100% - 32px));
-            margin: 0 auto;
+        .top-bar-inner {
             min-height: 38px;
             display: flex;
             align-items: center;
@@ -91,480 +120,855 @@
             gap: 20px;
         }
 
-        .topbar-left,
-        .topbar-right {
+        .top-left,
+        .top-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
         }
 
-        .topbar a {
-            transition: opacity 0.2s ease;
+        .top-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            white-space: nowrap;
         }
 
-        .topbar a:hover {
-            opacity: 0.7;
+        .top-item strong {
+            color: #fff;
+            font-weight: 700;
         }
 
-        .header {
+        .top-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+
+        /* HEADER */
+
+        .site-header {
             background: var(--white);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .header-inner {
-            width: min(1180px, calc(100% - 32px));
-            margin: 0 auto;
-            min-height: 78px;
+            min-height: 82px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 24px;
+            gap: 25px;
         }
 
         .brand {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 12px;
-            flex-shrink: 0;
+            min-width: 210px;
         }
 
         .brand-logo {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 12px;
+            overflow: hidden;
+            flex: 0 0 46px;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
 
         .brand-text {
             display: flex;
             flex-direction: column;
-            line-height: 1.1;
+            line-height: 1.15;
         }
 
         .brand-title {
             font-size: 22px;
-            font-weight: 800;
+            font-weight: 850;
             color: var(--navy);
-            letter-spacing: -0.6px;
+            letter-spacing: -0.5px;
         }
 
         .brand-subtitle {
-            color: var(--muted);
             font-size: 11px;
+            color: var(--muted);
             margin-top: 4px;
-            letter-spacing: 0.3px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
         }
 
-        .nav {
+        .main-nav {
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            gap: 5px;
+            flex: 1;
         }
 
-        .nav a {
-            padding: 10px 12px;
-            border-radius: 10px;
+        .main-nav a {
+            padding: 10px 13px;
+            border-radius: 9px;
             color: #344054;
             font-size: 14px;
-            font-weight: 600;
-            transition:
-                background 0.2s ease,
-                color 0.2s ease;
+            font-weight: 700;
+            transition: 0.2s ease;
+            white-space: nowrap;
         }
 
-        .nav a:hover,
-        .nav a.active {
+        .main-nav a:hover {
+            color: var(--navy);
+            background: #f1f4f8;
+        }
+
+        .main-nav a.active {
             color: var(--red);
-            background: #fff1f2;
+            background: #fff2f2;
         }
 
-        .mobile-menu-btn {
-            display: none;
-            border: 0;
-            background: var(--navy);
-            color: white;
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .header-button {
             width: 42px;
             height: 42px;
+            border: 1px solid var(--border);
+            background: #fff;
             border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 20px;
+            color: var(--navy);
+            transition: 0.2s ease;
         }
 
-        .hero {
+        .header-button:hover {
+            background: var(--light);
+            border-color: #ccd4df;
+        }
+
+        .menu-button {
+            display: none;
+        }
+
+        /* BREADCRUMB */
+
+        .breadcrumb-area {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breadcrumb {
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--red);
+        }
+
+        .breadcrumb-separator {
+            color: #a4adba;
+        }
+
+        .breadcrumb-current {
+            color: var(--text);
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* HERO */
+
+        .page-hero {
             background:
-                linear-gradient(
-                    135deg,
-                    rgba(11, 31, 58, 0.98),
-                    rgba(16, 43, 79, 0.96)
-                );
-            color: white;
-            padding: 72px 20px;
+                radial-gradient(
+                    circle at 80% 10%,
+                    rgba(198, 40, 40, 0.22),
+                    transparent 30%
+                ),
+                linear-gradient(135deg, #081a31 0%, #0b1f3a 60%, #173d70 100%);
+            color: #fff;
+            padding: 72px 0 76px;
             position: relative;
             overflow: hidden;
         }
 
-        .hero::before {
+        .page-hero::before {
             content: "";
             position: absolute;
-            width: 360px;
-            height: 360px;
-            border-radius: 50%;
-            background: rgba(215, 25, 32, 0.16);
-            right: -100px;
-            top: -150px;
-        }
-
-        .hero::after {
-            content: "";
-            position: absolute;
-            width: 240px;
-            height: 240px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            left: -80px;
-            bottom: -130px;
+            right: 8%;
+            top: -110px;
         }
 
-        .hero-inner {
-            width: min(1000px, calc(100% - 20px));
-            margin: 0 auto;
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            right: -100px;
+            bottom: -260px;
+        }
+
+        .hero-content {
             position: relative;
-            z-index: 2;
+            z-index: 1;
+            max-width: 820px;
         }
 
         .eyebrow {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            color: #ffb0b3;
-            font-size: 13px;
+            gap: 9px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 12px;
             font-weight: 800;
-            letter-spacing: 1.2px;
+            letter-spacing: 0.4px;
             text-transform: uppercase;
-            margin-bottom: 14px;
-        }
-
-        .eyebrow::before {
-            content: "";
-            width: 24px;
-            height: 3px;
-            background: var(--red);
-            border-radius: 10px;
-        }
-
-        .hero h1 {
-            font-size: clamp(34px, 5vw, 58px);
-            line-height: 1.08;
-            letter-spacing: -1.8px;
-            max-width: 780px;
             margin-bottom: 18px;
         }
 
-        .hero p {
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ef5350;
+            box-shadow: 0 0 0 5px rgba(239, 83, 80, 0.12);
+        }
+
+        .page-hero h1 {
+            font-size: clamp(34px, 5vw, 58px);
+            line-height: 1.08;
+            letter-spacing: -1.8px;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .page-hero p {
             max-width: 760px;
-            color: rgba(255, 255, 255, 0.78);
             font-size: 17px;
+            line-height: 1.75;
+            color: #dbe6f4;
         }
 
-        .breadcrumb {
-            width: min(1180px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 18px 0 0;
-            color: var(--muted);
-            font-size: 13px;
+        /* CONTENT */
+
+        .content-section {
+            padding: 55px 0 80px;
         }
 
-        .breadcrumb a {
-            color: var(--navy);
-            font-weight: 700;
-        }
-
-        .breadcrumb span {
-            margin: 0 8px;
-            color: #98a2b3;
-        }
-
-        .content {
-            width: min(1000px, calc(100% - 32px));
-            margin: 28px auto 70px;
-        }
-
-        .layout {
+        .content-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 280px;
-            gap: 26px;
+            grid-template-columns: minmax(0, 1fr) 310px;
+            gap: 28px;
             align-items: start;
         }
 
-        .article {
+        .main-card {
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: clamp(24px, 5vw, 46px);
+            box-shadow: var(--shadow-small);
+            overflow: hidden;
         }
 
-        .article h2 {
-            color: var(--navy);
-            font-size: 25px;
-            line-height: 1.25;
-            margin: 34px 0 12px;
-            letter-spacing: -0.5px;
+        .article-content {
+            padding: 38px 42px 45px;
         }
 
-        .article h2:first-child {
-            margin-top: 0;
+        .intro-box {
+            padding: 22px 24px;
+            background: #f7f9fc;
+            border: 1px solid #e3e9f1;
+            border-left: 4px solid var(--red);
+            border-radius: 12px;
+            margin-bottom: 34px;
         }
 
-        .article h3 {
-            color: #243b5a;
-            font-size: 18px;
-            margin: 24px 0 8px;
-        }
-
-        .article p {
-            color: #475467;
+        .intro-box p {
+            color: #3b4657;
             font-size: 15px;
-            margin-bottom: 15px;
         }
 
-        .article ul {
-            margin: 10px 0 20px 22px;
-            color: #475467;
+        .article-section {
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid var(--border);
         }
 
-        .article li {
-            margin-bottom: 8px;
+        .article-section:first-of-type {
+            padding-top: 0;
+            margin-top: 0;
+            border-top: 0;
+        }
+
+        .article-section h2 {
+            font-size: 24px;
+            line-height: 1.3;
+            color: var(--navy);
+            margin-bottom: 14px;
+            letter-spacing: -0.4px;
+        }
+
+        .article-section h3 {
+            font-size: 17px;
+            color: var(--navy);
+            margin: 23px 0 9px;
+        }
+
+        .article-section p {
+            color: #4b5565;
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        .article-section ul {
+            padding-left: 22px;
+            margin: 10px 0 17px;
+        }
+
+        .article-section li {
+            color: #4b5565;
+            font-size: 15px;
+            margin-bottom: 9px;
             padding-left: 4px;
         }
 
-        .highlight {
-            background: #f7f9fc;
-            border: 1px solid #e6eaf0;
-            border-left: 4px solid var(--red);
-            border-radius: 12px;
-            padding: 18px 20px;
-            margin: 22px 0;
+        .article-section li::marker {
+            color: var(--red);
         }
 
-        .highlight strong {
-            display: block;
-            color: var(--navy);
-            margin-bottom: 4px;
-        }
-
-        .principles {
+        .principles-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 14px;
-            margin: 20px 0 28px;
+            gap: 15px;
+            margin-top: 21px;
         }
 
-        .principle {
-            background: #fafbfc;
+        .principle-card {
             border: 1px solid var(--border);
+            background: #fbfcfe;
             border-radius: 14px;
-            padding: 18px;
+            padding: 20px;
+            transition: 0.2s ease;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-small);
+            border-color: #d3dbe6;
         }
 
         .principle-number {
             width: 34px;
             height: 34px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 10px;
-            background: #fff0f1;
+            background: #fff0f0;
             color: var(--red);
-            font-weight: 800;
+            font-weight: 900;
             font-size: 13px;
             margin-bottom: 12px;
         }
 
-        .principle h3 {
-            margin: 0 0 6px;
+        .principle-card h3 {
+            margin: 0 0 7px;
             font-size: 16px;
         }
 
-        .principle p {
+        .principle-card p {
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.65;
+        }
+
+        .highlight-box {
+            margin-top: 22px;
+            padding: 22px;
+            border-radius: 14px;
+            background: #eef5ff;
+            border: 1px solid #d9e7fb;
+        }
+
+        .highlight-box strong {
+            display: block;
+            color: var(--navy);
+            margin-bottom: 7px;
+            font-size: 15px;
+        }
+
+        .highlight-box p {
             margin: 0;
             font-size: 14px;
+            color: #4d5d72;
         }
+
+        .contact-box {
+            margin-top: 25px;
+            padding: 24px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #0b1f3a, #173d70);
+            color: #fff;
+        }
+
+        .contact-box h3 {
+            color: #fff;
+            margin: 0 0 8px;
+            font-size: 19px;
+        }
+
+        .contact-box p {
+            color: #d9e4f2;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #fff;
+            color: var(--navy);
+            border-radius: 9px;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .contact-link:hover {
+            background: #f1f4f8;
+        }
+
+        /* SIDEBAR */
 
         .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
             position: sticky;
-            top: 104px;
+            top: 105px;
         }
 
-        .side-card {
-            background: white;
+        .sidebar-card {
+            background: #fff;
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 8px 26px rgba(11, 31, 58, 0.05);
+            box-shadow: var(--shadow-small);
+            overflow: hidden;
         }
 
-        .side-card h3 {
+        .sidebar-title {
+            padding: 17px 19px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 9px;
             color: var(--navy);
-            font-size: 16px;
-            margin-bottom: 12px;
+            font-size: 15px;
+            font-weight: 850;
         }
 
-        .side-card ul {
-            list-style: none;
+        .sidebar-title::before {
+            content: "";
+            width: 4px;
+            height: 18px;
+            border-radius: 5px;
+            background: var(--red);
         }
 
-        .side-card li + li {
-            border-top: 1px solid #edf0f4;
+        .sidebar-nav {
+            padding: 8px;
         }
 
-        .side-card a {
+        .sidebar-nav a {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            padding: 10px 0;
-            color: #475467;
+            padding: 11px 12px;
+            border-radius: 9px;
+            color: #4d5869;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 650;
+            transition: 0.2s ease;
         }
 
-        .side-card a:hover {
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #f4f6f9;
+            color: var(--navy);
+        }
+
+        .sidebar-nav a.active {
             color: var(--red);
         }
 
-        .side-card a::after {
-            content: "›";
-            color: #98a2b3;
-            font-size: 18px;
-        }
-
-        .contact-box {
-            background: var(--navy);
-            color: white;
-            border-radius: 16px;
-            padding: 20px;
-        }
-
-        .contact-box h3 {
-            color: white;
-            margin-bottom: 8px;
-        }
-
-        .contact-box p {
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 13px;
-            margin-bottom: 14px;
-        }
-
-        .contact-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 42px;
-            border-radius: 10px;
-            background: var(--red);
-            color: white;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .contact-button:hover {
-            background: var(--red-dark);
-        }
-
-        .last-update {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 32px;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-            color: #98a2b3;
+        .sidebar-nav span {
+            color: #a2abb7;
             font-size: 12px;
         }
 
-        .footer {
-            background: var(--navy);
-            color: white;
-            margin-top: 70px;
+        .info-card {
+            padding: 20px;
         }
 
-        .footer-inner {
-            width: min(1180px, calc(100% - 32px));
-            margin: 0 auto;
-            padding: 44px 0 28px;
+        .info-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff0f0;
+            color: var(--red);
+            border-radius: 11px;
+            margin-bottom: 13px;
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .info-card h3 {
+            color: var(--navy);
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .info-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        /* QUICK LINKS */
+
+        .quick-section {
+            padding: 0 0 70px;
+        }
+
+        .quick-title {
+            text-align: center;
+            margin-bottom: 23px;
+        }
+
+        .quick-title h2 {
+            color: var(--navy);
+            font-size: 26px;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .quick-title p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .quick-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            transition: 0.2s ease;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: #d2dae5;
+        }
+
+        .quick-card-icon {
+            width: 39px;
+            height: 39px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f2f5f9;
+            color: var(--navy);
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 900;
+            margin-bottom: 13px;
+        }
+
+        .quick-card h3 {
+            color: var(--navy);
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .quick-card p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+
+        .site-footer {
+            background: var(--navy-dark);
+            color: #b9c5d5;
+            margin-top: 0;
+        }
+
+        .footer-main {
+            padding: 50px 0 38px;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 32px;
+            grid-template-columns: 1.4fr 1fr 1fr 1fr;
+            gap: 38px;
         }
 
         .footer-brand {
-            max-width: 360px;
+            max-width: 340px;
         }
 
-        .footer-brand h3 {
-            font-size: 21px;
-            margin-bottom: 10px;
+        .footer-brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 15px;
+        }
+
+        .footer-brand-logo img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+        }
+
+        .footer-brand-logo strong {
+            color: #fff;
+            font-size: 19px;
         }
 
         .footer-brand p {
-            color: rgba(255, 255, 255, 0.62);
             font-size: 13px;
+            line-height: 1.7;
+            color: #aab8ca;
         }
 
-        .footer-column h4 {
-            font-size: 13px;
-            margin-bottom: 13px;
-            color: white;
+        .footer-column h3 {
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
 
-        .footer-column a {
-            display: block;
-            color: rgba(255, 255, 255, 0.62);
-            font-size: 13px;
-            margin-bottom: 8px;
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
         }
 
-        .footer-column a:hover {
-            color: white;
+        .footer-links a {
+            font-size: 13px;
+            color: #aab8ca;
+            transition: 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            padding-left: 3px;
         }
 
         .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 32px;
-            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.09);
+            padding: 18px 0;
+        }
+
+        .footer-bottom-inner {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            gap: 20px;
-            color: rgba(255, 255, 255, 0.5);
+            gap: 15px;
+        }
+
+        .footer-bottom p {
+            font-size: 12px;
+            color: #8797ac;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-bottom-links a {
+            color: #8797ac;
             font-size: 12px;
         }
 
-        .mobile-nav {
-            display: none;
+        .footer-bottom-links a:hover {
+            color: #fff;
         }
 
-        @media (max-width: 900px) {
-            .nav {
+        /* MOBILE MENU */
+
+        .mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1998;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.25s ease;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -330px;
+            width: min(330px, 88vw);
+            height: 100vh;
+            background: #fff;
+            z-index: 1999;
+            box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18);
+            transition: 0.28s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            min-height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 19px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .mobile-menu-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-menu-brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+        }
+
+        .mobile-menu-brand strong {
+            color: var(--navy);
+            font-size: 17px;
+        }
+
+        .mobile-close {
+            width: 38px;
+            height: 38px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 9px;
+            cursor: pointer;
+            color: var(--navy);
+            font-size: 18px;
+        }
+
+        .mobile-nav {
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 13px 14px;
+            border-radius: 9px;
+            color: #3d4859;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .mobile-nav a:hover,
+        .mobile-nav a.active {
+            background: #f5f7fa;
+            color: var(--red);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1050px) {
+            .main-nav {
+                gap: 0;
+            }
+
+            .main-nav a {
+                padding: 9px 9px;
+                font-size: 13px;
+            }
+
+            .content-layout {
+                grid-template-columns: minmax(0, 1fr) 280px;
+            }
+
+            .quick-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+            .top-left .top-item:nth-child(2) {
                 display: none;
             }
 
-            .mobile-menu-btn {
-                display: block;
+            .main-nav {
+                display: none;
             }
 
-            .layout {
+            .menu-button {
+                display: inline-flex;
+            }
+
+            .content-layout {
                 grid-template-columns: 1fr;
             }
 
@@ -572,76 +976,91 @@
                 position: static;
                 display: grid;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+                align-items: start;
             }
 
-            .contact-box {
-                grid-column: 1 / -1;
-            }
-
-            .footer-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .article-content {
+                padding: 32px 28px 38px;
             }
         }
 
-        @media (max-width: 640px) {
-            .topbar-left {
-                display: none;
+        @media (max-width: 650px) {
+            .container {
+                width: min(calc(100% - 22px), var(--container));
             }
 
-            .topbar-inner {
-                justify-content: center;
+            .top-bar {
+                display: none;
             }
 
             .header-inner {
                 min-height: 68px;
             }
 
-            .brand-title {
-                font-size: 19px;
-            }
-
-            .brand-subtitle {
-                font-size: 10px;
+            .brand {
+                min-width: 0;
             }
 
             .brand-logo {
                 width: 40px;
                 height: 40px;
+                flex-basis: 40px;
+                border-radius: 10px;
             }
 
-            .hero {
-                padding: 52px 16px;
+            .brand-title {
+                font-size: 18px;
             }
 
-            .hero p {
-                font-size: 15px;
+            .brand-subtitle {
+                font-size: 9px;
+            }
+
+            .header-button {
+                width: 38px;
+                height: 38px;
             }
 
             .breadcrumb {
-                width: min(100% - 24px, 1000px);
+                min-height: 42px;
+                font-size: 12px;
             }
 
-            .content {
-                width: min(100% - 24px, 1000px);
-                margin-top: 18px;
+            .page-hero {
+                padding: 48px 0 52px;
             }
 
-            .article {
-                border-radius: 14px;
-                padding: 22px 18px;
+            .page-hero h1 {
+                font-size: 34px;
+                letter-spacing: -1px;
             }
 
-            .article h2 {
-                font-size: 22px;
-                margin-top: 28px;
-            }
-
-            .article p,
-            .article li {
+            .page-hero p {
                 font-size: 14px;
             }
 
-            .principles {
+            .content-section {
+                padding: 28px 0 50px;
+            }
+
+            .article-content {
+                padding: 25px 20px 30px;
+            }
+
+            .intro-box {
+                padding: 18px;
+            }
+
+            .article-section h2 {
+                font-size: 21px;
+            }
+
+            .article-section p,
+            .article-section li {
+                font-size: 14px;
+            }
+
+            .principles-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -649,38 +1068,44 @@
                 grid-template-columns: 1fr;
             }
 
+            .quick-section {
+                padding-bottom: 50px;
+            }
+
+            .quick-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-title h2 {
+                font-size: 23px;
+            }
+
+            .footer-main {
+                padding: 38px 0 30px;
+            }
+
             .footer-grid {
                 grid-template-columns: 1fr;
-                gap: 25px;
+                gap: 28px;
             }
 
-            .footer-bottom {
+            .footer-bottom-inner {
                 flex-direction: column;
+                align-items: flex-start;
             }
 
-            .mobile-nav {
-                position: fixed;
-                inset: 68px 0 0;
-                background: rgba(11, 31, 58, 0.98);
-                z-index: 99;
-                padding: 22px 18px;
-                overflow-y: auto;
+            .footer-bottom-links {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .brand-subtitle {
+                display: none;
             }
 
-            .mobile-nav.open {
-                display: block;
-            }
-
-            .mobile-nav a {
-                display: block;
-                color: white;
-                padding: 14px 10px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                font-weight: 700;
-            }
-
-            .mobile-nav a:hover {
-                color: #ffb0b3;
+            .page-hero h1 {
+                font-size: 30px;
             }
         }
     </style>
@@ -688,390 +1113,536 @@
 
 <body>
 
-    <div class="topbar">
-        <div class="topbar-inner">
-            <div class="topbar-left">
-                <span>Akçaabat ve Trabzon'dan güncel haberler</span>
+    <!-- ÜST BİLGİ ÇUBUĞU -->
+    <div class="top-bar">
+        <div class="container top-bar-inner">
+            <div class="top-left">
+                <div class="top-item">
+                    <span class="top-dot"></span>
+                    <strong>Akçaabat Haber</strong>
+                </div>
+                <div class="top-item">
+                    Güncel ve yerel haberler
+                </div>
             </div>
 
-            <div class="topbar-right">
-                <a href="iletisim.html">İletişim</a>
-                <a href="reklam.html">Reklam</a>
+            <div class="top-right">
+                <div class="top-item">
+                    Trabzon • Akçaabat
+                </div>
             </div>
         </div>
     </div>
 
-    <header class="header">
-        <div class="header-inner">
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container header-inner">
 
-            <a href="index.html" class="brand">
-                <img
-                    src="favicon.svg"
-                    alt="Akçaabat Haber"
-                    class="brand-logo"
-                >
+            <a href="index.html" class="brand" aria-label="Akçaabat Haber ana sayfa">
+                <span class="brand-logo">
+                    <img src="favicon.svg" alt="Akçaabat Haber">
+                </span>
 
                 <span class="brand-text">
                     <span class="brand-title">Akçaabat Haber</span>
-                    <span class="brand-subtitle">Yerel Haber • Güvenilir Bilgi</span>
+                    <span class="brand-subtitle">Akçaabat ve Trabzon'dan Haberler</span>
                 </span>
             </a>
 
-            <nav class="nav">
+            <nav class="main-nav" aria-label="Ana menü">
                 <a href="index.html">Ana Sayfa</a>
                 <a href="haberler.html">Haberler</a>
-                <a href="hakkimizda.html">Hakkımızda</a>
-                <a href="kunye.html">Künye</a>
-                <a href="sorumlu-yayincilik.html" class="active">Yayın İlkeleri</a>
-                <a href="iletisim.html">İletişim</a>
+                <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
+                <a href="kategori.html?kategori=Trabzon">Trabzon</a>
+                <a href="kategori.html?kategori=Spor">Spor</a>
+                <a href="arama.html">Arama</a>
             </nav>
 
-            <button
-                class="mobile-menu-btn"
-                id="mobileMenuBtn"
-                type="button"
-                aria-label="Menüyü aç"
-                aria-expanded="false"
-            >
-                ☰
-            </button>
+            <div class="header-actions">
+                <a
+                    href="arama.html"
+                    class="header-button"
+                    aria-label="Arama"
+                    title="Arama"
+                >
+                    🔎
+                </a>
+
+                <button
+                    type="button"
+                    class="header-button menu-button"
+                    id="mobileMenuButton"
+                    aria-label="Menüyü aç"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+            </div>
 
         </div>
     </header>
 
-    <nav class="mobile-nav" id="mobileNav">
-        <a href="index.html">Ana Sayfa</a>
-        <a href="haberler.html">Haberler</a>
-        <a href="hakkimizda.html">Hakkımızda</a>
-        <a href="kunye.html">Künye</a>
-        <a href="sorumlu-yayincilik.html">Yayın İlkeleri</a>
-        <a href="iletisim.html">İletişim</a>
-        <a href="reklam.html">Reklam</a>
-    </nav>
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb-area">
+        <div class="container breadcrumb">
+            <a href="index.html">Ana Sayfa</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-current">Sorumlu Yayıncılık</span>
+        </div>
+    </div>
 
-    <section class="hero">
-        <div class="hero-inner">
-            <div class="eyebrow">Editoryal yaklaşım</div>
+    <!-- HERO -->
+    <section class="page-hero">
+        <div class="container">
+            <div class="hero-content">
 
-            <h1>
-                Sorumlu Yayıncılık ve
-                Editoryal İlkeler
-            </h1>
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    Editoryal yaklaşım
+                </div>
 
-            <p>
-                Akçaabat Haber olarak doğru, anlaşılır, güvenilir ve
-                kamu yararını gözeten bir habercilik anlayışını esas alıyoruz.
-            </p>
+                <h1>Sorumlu Yayıncılık</h1>
+
+                <p>
+                    Akçaabat Haber olarak doğru, güvenilir, anlaşılır ve
+                    kamu yararını gözeten bir habercilik anlayışını temel
+                    alıyoruz. Yayınlarımızda doğruluk, kaynak güvenilirliği,
+                    kişilik haklarına saygı ve editoryal sorumluluk
+                    ilkelerini esas alıyoruz.
+                </p>
+
+            </div>
         </div>
     </section>
 
-    <div class="breadcrumb">
-        <a href="index.html">Ana Sayfa</a>
-        <span>/</span>
-        <strong>Sorumlu Yayıncılık</strong>
-    </div>
+    <!-- ANA İÇERİK -->
+    <main class="content-section">
+        <div class="container content-layout">
 
-    <main class="content">
-        <div class="layout">
+            <article class="main-card">
+                <div class="article-content">
 
-            <article class="article">
-
-                <h2>Yayıncılık anlayışımız</h2>
-
-                <p>
-                    Akçaabat Haber; Akçaabat, Trabzon ve çevresindeki
-                    gelişmeleri okuyucularına ulaştırmayı amaçlayan yerel
-                    bir haber platformudur. Yayınlarımızda doğruluk,
-                    açıklık, kaynak kontrolü ve kamu yararı temel
-                    önceliklerimiz arasında yer alır.
-                </p>
-
-                <p>
-                    Haber üretirken yalnızca hızlı olmak değil, aynı zamanda
-                    doğru ve anlaşılır bilgi sunmak gerektiğine inanıyoruz.
-                    Bu nedenle yayımlanan içeriklerin güvenilirliği ve
-                    okuyucu üzerindeki etkisi editoryal değerlendirmelerimizde
-                    dikkate alınır.
-                </p>
-
-                <div class="highlight">
-                    <strong>Temel ilkemiz</strong>
-                    Haber değeri taşıyan bilgileri mümkün olduğunca
-                    doğrulayarak, bağlamından koparmadan ve okuyucuyu
-                    yanıltmayacak şekilde aktarmak.
-                </div>
-
-                <h2>Temel yayın ilkelerimiz</h2>
-
-                <div class="principles">
-
-                    <div class="principle">
-                        <div class="principle-number">01</div>
-                        <h3>Doğruluk</h3>
+                    <div class="intro-box">
                         <p>
-                            Haberlerin doğru ve güvenilir bilgiler
-                            üzerinden hazırlanmasına önem veririz.
+                            <strong>Akçaabat Haber'in temel amacı;</strong>
+                            Akçaabat, Trabzon ve çevresindeki gelişmeleri
+                            okuyuculara mümkün olduğunca doğru, açık ve
+                            anlaşılır biçimde aktarmaktır. Haber üretim
+                            sürecinde yalnızca hız değil, haberin doğruluğu
+                            ve toplumsal etkisi de dikkate alınır.
                         </p>
                     </div>
 
-                    <div class="principle">
-                        <div class="principle-number">02</div>
-                        <h3>Kaynak kontrolü</h3>
+                    <section class="article-section">
+                        <h2>Yayıncılık anlayışımız</h2>
+
                         <p>
-                            Önemli iddiaları mümkün olduğunca birden fazla
-                            güvenilir kaynaktan kontrol etmeye çalışırız.
+                            Haber özgürlüğünün, doğru bilgiye ulaşma hakkıyla
+                            birlikte değerlendirilmesi gerektiğine inanıyoruz.
+                            Bu nedenle yayımlanan içeriklerin güvenilir
+                            kaynaklara dayanmasına, haber ile yorumun
+                            birbirinden ayrılmasına ve okuyucunun yanıltıcı
+                            biçimde yönlendirilmemesine önem veriyoruz.
                         </p>
-                    </div>
 
-                    <div class="principle">
-                        <div class="principle-number">03</div>
-                        <h3>Şeffaflık</h3>
                         <p>
-                            Haber ile yorum, reklam ve tanıtım içerikleri
-                            arasında açık bir ayrım bulunmasına dikkat ederiz.
+                            Yerel haberciliğin temel görevlerinden birinin
+                            bölge halkının doğru bilgiye erişimine katkı
+                            sağlamak olduğunun bilincindeyiz. Akçaabat'ın
+                            sosyal, kültürel, ekonomik, sportif ve gündelik
+                            yaşamına ilişkin gelişmeleri bu sorumluluk
+                            çerçevesinde takip ediyoruz.
                         </p>
-                    </div>
+                    </section>
 
-                    <div class="principle">
-                        <div class="principle-number">04</div>
-                        <h3>Düzeltme hakkı</h3>
+                    <section class="article-section">
+                        <h2>Temel yayıncılık ilkelerimiz</h2>
+
+                        <div class="principles-grid">
+
+                            <div class="principle-card">
+                                <div class="principle-number">01</div>
+                                <h3>Doğruluk</h3>
+                                <p>
+                                    Haberlerde yer alan bilgilerin mümkün
+                                    olduğunca doğrulanmasına ve teyit
+                                    edilebilen kaynaklara dayanmasına
+                                    önem veriyoruz.
+                                </p>
+                            </div>
+
+                            <div class="principle-card">
+                                <div class="principle-number">02</div>
+                                <h3>Tarafsızlık</h3>
+                                <p>
+                                    Haber içeriklerinde kişisel kanaat ile
+                                    haber bilgisini ayırmaya, farklı görüş
+                                    ve tarafların açıklamalarını dengeli
+                                    biçimde aktarmaya çalışıyoruz.
+                                </p>
+                            </div>
+
+                            <div class="principle-card">
+                                <div class="principle-number">03</div>
+                                <h3>Kaynak güvenilirliği</h3>
+                                <p>
+                                    Resmî açıklamalar, yetkili kurumlar,
+                                    doğrudan açıklama yapan kişiler ve
+                                    güvenilir haber kaynakları öncelikli
+                                    referanslarımız arasındadır.
+                                </p>
+                            </div>
+
+                            <div class="principle-card">
+                                <div class="principle-number">04</div>
+                                <h3>Kişilik haklarına saygı</h3>
+                                <p>
+                                    Haberlerde kişi onuru, özel hayat,
+                                    masumiyet karinesi ve kişilik hakları
+                                    gözetilir.
+                                </p>
+                            </div>
+
+                            <div class="principle-card">
+                                <div class="principle-number">05</div>
+                                <h3>Şeffaflık</h3>
+                                <p>
+                                    Hatalı veya eksik yayımlanan bilgilerin
+                                    tespit edilmesi durumunda gerekli
+                                    düzeltmelerin yapılmasını yayıncılık
+                                    sorumluluğunun bir parçası olarak
+                                    görüyoruz.
+                                </p>
+                            </div>
+
+                            <div class="principle-card">
+                                <div class="principle-number">06</div>
+                                <h3>Kamu yararı</h3>
+                                <p>
+                                    Haber değeri taşıyan konuları
+                                    değerlendirirken toplumun bilgi edinme
+                                    hakkını ve kamu yararını dikkate
+                                    alıyoruz.
+                                </p>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="article-section">
+                        <h2>Haber doğrulama süreci</h2>
+
                         <p>
-                            Hatalı veya eksik bir bilgi tespit edildiğinde
-                            gerekli düzeltmeyi yapmaya önem veririz.
+                            Bir haberin hızlı yayımlanması kadar doğru
+                            yayımlanması da önemlidir. Bu nedenle elde edilen
+                            bilgilerin niteliğine göre mümkün olan ölçüde
+                            farklı kaynaklardan doğrulama yapılır.
                         </p>
-                    </div>
 
-                    <div class="principle">
-                        <div class="principle-number">05</div>
-                        <h3>Kişilik hakları</h3>
                         <p>
-                            Haberlerde kişilerin onurunu, özel hayatını
-                            ve temel haklarını gözetmeye çalışırız.
+                            Özellikle kamu kurumları, güvenlik olayları,
+                            kazalar, adli süreçler, sağlık konuları ve
+                            kişileri doğrudan ilgilendiren hassas gelişmelerde
+                            resmî kaynakların açıklamaları esas alınır.
                         </p>
-                    </div>
 
-                    <div class="principle">
-                        <div class="principle-number">06</div>
-                        <h3>Kamu yararı</h3>
+                        <div class="highlight-box">
+                            <strong>Hızlı olmak, doğruluktan daha önemli değildir.</strong>
+                            <p>
+                                Son dakika gelişmelerinde bilgiler zaman
+                                içerisinde değişebilir. Yeni ve doğrulanmış
+                                bilgiler ortaya çıktığında haber içerikleri
+                                güncellenebilir.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="article-section">
+                        <h2>Haber ve yorum ayrımı</h2>
+
                         <p>
-                            Yerel toplumu ilgilendiren gelişmeleri
-                            kamu yararı perspektifiyle değerlendirmeye
-                            özen gösteririz.
+                            Okuyucunun aktarılan bilginin niteliğini açıkça
+                            anlayabilmesi için haber ile kişisel değerlendirme
+                            ve yorumun birbirinden ayrılmasına dikkat edilir.
                         </p>
-                    </div>
 
-                </div>
+                        <p>
+                            Haber metninde mümkün olduğunca somut bilgiler,
+                            açıklamalar ve doğrulanabilir veriler kullanılır.
+                            Yorum niteliğindeki değerlendirmeler ise haber
+                            bilgisinden ayrı tutulmalıdır.
+                        </p>
+                    </section>
 
-                <h2>Haber doğrulama</h2>
+                    <section class="article-section">
+                        <h2>Başlık ve görsel kullanımı</h2>
 
-                <p>
-                    Özellikle kamuoyunu etkileyebilecek iddialar, resmi
-                    açıklamalar ve önemli gelişmelerde bilgilerin doğruluğunu
-                    kontrol etmeye çalışırız.
-                </p>
+                        <p>
+                            Haber başlıklarının okuyucunun dikkatini çekmesi
+                            doğal olmakla birlikte başlığın haberin gerçek
+                            içeriğini çarpıtmaması gerekir. Yanıltıcı,
+                            bağlamından koparılmış veya içeriği olduğundan
+                            farklı gösteren başlıklardan kaçınırız.
+                        </p>
 
-                <p>
-                    Sosyal medya paylaşımları, kullanıcı gönderileri veya
-                    üçüncü taraf kaynaklardan elde edilen bilgiler,
-                    doğrudan doğruya doğrulanmış gerçek olarak kabul
-                    edilmeden önce değerlendirilir.
-                </p>
+                        <p>
+                            Görsel kullanımında da haberle ilgili olma,
+                            gerçekliği yansıtma ve kişilerin haklarına saygı
+                            gösterme kriterleri dikkate alınır.
+                        </p>
 
-                <h2>Haber ve yorum ayrımı</h2>
+                        <h3>Görseller konusunda</h3>
 
-                <p>
-                    Haber içerikleri ile kişisel değerlendirme ve yorumların
-                    birbirinden ayrılmasına önem veririz. Okuyucunun bir
-                    içeriğin haber mi, açıklama mı, görüş mü veya tanıtım
-                    içeriği mi olduğunu mümkün olduğunca kolay şekilde
-                    anlayabilmesini amaçlarız.
-                </p>
+                        <ul>
+                            <li>
+                                Haberle ilgisi bulunmayan görseller
+                                mümkün olduğunca kullanılmaz.
+                            </li>
+                            <li>
+                                Arşiv görsellerinin haber bağlamında
+                                yanlış anlaşılmasına neden olunmamasına
+                                dikkat edilir.
+                            </li>
+                            <li>
+                                Kişilerin özel hayatını ihlal edebilecek
+                                görüntülerden kaçınılır.
+                            </li>
+                            <li>
+                                Çocukların ve hassas durumdaki kişilerin
+                                görüntülerinde özel dikkat gösterilir.
+                            </li>
+                        </ul>
+                    </section>
 
-                <h2>Son dakika yayınları</h2>
+                    <section class="article-section">
+                        <h2>Suç, soruşturma ve adli haberler</h2>
 
-                <p>
-                    Son dakika gelişmelerinde hız önemli olmakla birlikte,
-                    doğrulanmamış bilgilerin kesin gerçek gibi sunulmaması
-                    temel yaklaşımımızdır.
-                </p>
+                        <p>
+                            Bir kişinin hakkında soruşturma yürütülmesi veya
+                            bir iddianın gündeme gelmesi, kişinin kesin olarak
+                            suçlu olduğu anlamına gelmez. Bu nedenle adli
+                            içeriklerde masumiyet karinesi ve hukuki süreç
+                            dikkate alınır.
+                        </p>
 
-                <p>
-                    İlk bilgiler daha sonra değişebilir veya güncellenebilir.
-                    Bu nedenle gelişmeler takip edildikçe haber içerikleri
-                    güncellenebilir.
-                </p>
+                        <p>
+                            Henüz kesinleşmemiş iddialar mümkün olduğunca
+                            iddia niteliği açıkça belirtilerek aktarılır.
+                            Mahkeme kararları ile soruşturma aşamasındaki
+                            bilgiler birbirinden ayrılır.
+                        </p>
+                    </section>
 
-                <h2>Yanlış veya eksik bilgi durumunda</h2>
+                    <section class="article-section">
+                        <h2>Çocuklar ve hassas gruplar</h2>
 
-                <p>
-                    Yayınlanan bir haberde yanlış, eksik veya güncellenmesi
-                    gereken bir bilgi bulunduğunu düşünüyorsanız bizimle
-                    iletişime geçebilirsiniz.
-                </p>
+                        <p>
+                            Çocuklar, mağdurlar, kazalardan etkilenen kişiler
+                            ve benzeri hassas durumdaki bireylerin haberlerde
+                            gereksiz şekilde teşhir edilmemesine özen
+                            gösterilir.
+                        </p>
 
-                <p>
-                    Bildirimlerin değerlendirilmesinde mümkün olduğunca
-                    somut bilgi, belge ve kaynaklardan yararlanılır.
-                    Gerekli görüldüğünde haber içeriğinde düzeltme veya
-                    güncelleme yapılabilir.
-                </p>
+                        <p>
+                            Bir görüntünün veya kişisel bilginin yayımlanması
+                            haber değerinden daha ağır bir mağduriyet
+                            oluşturabilecekse, yayın kararı bu risk
+                            değerlendirilerek ele alınır.
+                        </p>
+                    </section>
 
-                <h2>Fotoğraf ve görsel içerikler</h2>
+                    <section class="article-section">
+                        <h2>Reklam ve haber ayrımı</h2>
 
-                <p>
-                    Haberlerde kullanılan görsellerin haberle ilişkili
-                    olmasına ve okuyucuyu yanıltmamasına dikkat ederiz.
-                    Görsellerin bağlamından koparılarak yanlış bir algı
-                    oluşturmasına karşı özen gösterilir.
-                </p>
+                        <p>
+                            Reklam, tanıtım ve ticari içeriklerle editoryal
+                            haberlerin birbirinden ayrılması okuyucunun doğru
+                            bilgilendirilmesi açısından önemlidir.
+                        </p>
 
-                <h2>Çocuklar ve hassas içerikler</h2>
-
-                <p>
-                    Çocukların, mağdurların ve hassas durumdaki kişilerin
-                    yer aldığı haberlerde kişisel hakların ve mahremiyetin
-                    korunmasına özel önem verilir.
-                </p>
-
-                <p>
-                    Şiddet, kaza, suç veya benzeri olaylarda haber değeri
-                    ile kişilerin zarar görmemesi arasındaki denge
-                    gözetilmeye çalışılır.
-                </p>
-
-                <h2>Reklam ve ticari içerikler</h2>
-
-                <p>
-                    Reklam ve ticari tanıtımların editoryal haber
-                    içeriklerinden ayrıştırılması önemlidir. Ticari
-                    iş birlikleri ve reklam içerikleri, okuyucunun
-                    niteliğini anlayabileceği şekilde sunulmalıdır.
-                </p>
-
-                <h2>Güncelleme ve düzeltme</h2>
-
-                <p>
-                    Haberler yeni bilgiler ortaya çıktığında güncellenebilir.
-                    Önemli değişikliklerde içeriğin güncel bilgilerle
-                    uyumlu hale getirilmesine çalışılır.
-                </p>
-
-                <div class="highlight">
-                    <strong>Okuyucularımızın katkısı önemlidir.</strong>
-                    Bir içerikte hata veya eksiklik olduğunu düşünüyorsanız
-                    bize bildirerek yayın kalitemizin geliştirilmesine
-                    katkıda bulunabilirsiniz.
-                </div>
-
-                <h2>İletişim ve düzeltme talepleri</h2>
-
-                <p>
-                    Haberlerimizle ilgili düzeltme, güncelleme veya
-                    içerik bildirimi için iletişim sayfamız üzerinden
-                    bize ulaşabilirsiniz.
-                </p>
-
-                <p>
-                    Bildirimlerin daha hızlı değerlendirilebilmesi için
-                    ilgili haberin bağlantısını ve düzeltme talebinizin
-                    nedenini açık şekilde belirtmenizi öneririz.
-                </p>
-
-                <div class="last-update">
-                    <span>●</span>
-                    <span>Bu sayfa editoryal politikalarımızı açıklamak amacıyla hazırlanmıştır.</span>
-                </div>
-
-            </article>
-
-            <aside class="sidebar">
-
-                <div class="side-card">
-                    <h3>Bilgi Merkezi</h3>
-
-                    <ul>
-                        <li>
-                            <a href="hakkimizda.html">
-                                Hakkımızda
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="kunye.html">
-                                Künye
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="sorumlu-yayincilik.html">
-                                Yayın İlkeleri
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="gizlilik.html">
-                                Gizlilik Politikası
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="kvkk.html">
-                                KVKK
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="cerez-politikasi.html">
-                                Çerez Politikası
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="side-card">
-                    <h3>Hızlı Erişim</h3>
-
-                    <ul>
-                        <li>
-                            <a href="haberler.html">
-                                Tüm Haberler
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="iletisim.html">
-                                İletişim
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="sorun-bildir.html">
-                                Sorun Bildir
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="reklam.html">
+                        <p>
+                            Ticari amaç taşıyan içeriklerin haber gibi
+                            algılanmasına neden olacak uygulamalardan
+                            kaçınılması hedeflenir. Reklam ve iş birliği
+                            süreçleri hakkında daha fazla bilgi için
+                            <a href="reklam.html" style="color: var(--red); font-weight: 800;">
                                 Reklam ve İş Birliği
                             </a>
-                        </li>
-                    </ul>
+                            sayfamızı inceleyebilirsiniz.
+                        </p>
+                    </section>
+
+                    <section class="article-section">
+                        <h2>Düzeltme ve güncelleme politikası</h2>
+
+                        <p>
+                            Yayınlanan bir haberde maddi hata, eksik bilgi veya
+                            yanlış anlaşılmaya neden olabilecek bir durum
+                            tespit edilirse içerik yeniden değerlendirilir.
+                        </p>
+
+                        <p>
+                            Gerekli görülen durumlarda haber metni
+                            güncellenebilir, yanlış bilgi düzeltilir veya
+                            okuyucunun doğru bilgiye ulaşmasını sağlayacak
+                            açıklama eklenebilir.
+                        </p>
+
+                        <div class="highlight-box">
+                            <strong>Hataları düzeltmek yayıncılık
+                                sorumluluğudur.</strong>
+                            <p>
+                                Yayıncılığın güvenilirliğinin yalnızca doğru
+                                haber yayımlamakla değil, tespit edilen
+                                hataları zamanında düzeltmekle de
+                                güçlendiğine inanıyoruz.
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="article-section">
+                        <h2>Okuyucu geri bildirimleri</h2>
+
+                        <p>
+                            Okuyucularımızın haberlerle ilgili görüş,
+                            düzeltme ve geri bildirimlerini önemsiyoruz.
+                            Bir içerikte maddi hata bulunduğunu düşünüyorsanız
+                            bize ulaşabilirsiniz.
+                        </p>
+
+                        <p>
+                            Geri bildirimlerin değerlendirilmesinde mümkün
+                            olduğunca somut bilgi, kaynak veya açıklama
+                            paylaşılması sürecin daha sağlıklı ilerlemesine
+                            yardımcı olur.
+                        </p>
+
+                        <div class="contact-box">
+                            <h3>Bir haber hakkında düzeltme talebiniz mi var?</h3>
+
+                            <p>
+                                İçerikle ilgili bilgi, belge veya düzeltme
+                                talebinizi bize iletebilirsiniz.
+                            </p>
+
+                            <a
+                                href="iletisim.html"
+                                class="contact-link"
+                            >
+                                İletişim Sayfasına Git →
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="article-section">
+                        <h2>Etik ve hukuki sorumluluk</h2>
+
+                        <p>
+                            Yayınlarımızda yürürlükteki mevzuat, basın
+                            özgürlüğü, kişilik hakları, özel hayatın
+                            gizliliği, telif hakları ve diğer ilgili hukuki
+                            yükümlülükler dikkate alınır.
+                        </p>
+
+                        <p>
+                            Bu sayfadaki ilkeler Akçaabat Haber'in yayın
+                            yaklaşımını açıklamak amacıyla hazırlanmıştır.
+                            Haberlerin niteliğine ve olayın koşullarına göre
+                            editoryal değerlendirmeler farklılık gösterebilir.
+                        </p>
+                    </section>
+
+                    <section class="article-section">
+                        <h2>Yerel habercilik sorumluluğumuz</h2>
+
+                        <p>
+                            Akçaabat ve Trabzon'daki gelişmeleri aktarırken
+                            yerel topluma karşı sorumluluğumuzun farkındayız.
+                            Yerel haberlerin yalnızca günlük gelişmeleri
+                            aktarmakla sınırlı olmadığını; bölgenin sosyal,
+                            kültürel ve ekonomik hafızasına da katkı
+                            sağladığını düşünüyoruz.
+                        </p>
+
+                        <p>
+                            Bu nedenle bölgedeki gelişmeleri takip ederken
+                            doğruluk, güvenilirlik, saygı ve kamu yararı
+                            ilkelerini mümkün olduğunca korumayı hedefliyoruz.
+                        </p>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+
+                <div class="sidebar-card">
+                    <div class="sidebar-title">
+                        Kurumsal
+                    </div>
+
+                    <nav class="sidebar-nav">
+                        <a href="hakkimizda.html">
+                            Hakkımızda
+                            <span>→</span>
+                        </a>
+
+                        <a href="sorumlu-yayincilik.html" class="active">
+                            Sorumlu Yayıncılık
+                            <span>→</span>
+                        </a>
+
+                        <a href="kunye.html">
+                            Künye
+                            <span>→</span>
+                        </a>
+
+                        <a href="iletisim.html">
+                            İletişim
+                            <span>→</span>
+                        </a>
+
+                        <a href="reklam.html">
+                            Reklam ve İş Birliği
+                            <span>→</span>
+                        </a>
+                    </nav>
                 </div>
 
-                <div class="contact-box">
-                    <h3>Bir hata mı gördünüz?</h3>
+                <div class="sidebar-card">
+                    <div class="sidebar-title">
+                        Politikalar
+                    </div>
+
+                    <nav class="sidebar-nav">
+                        <a href="gizlilik.html">
+                            Gizlilik Politikası
+                            <span>→</span>
+                        </a>
+
+                        <a href="kvkk.html">
+                            KVKK
+                            <span>→</span>
+                        </a>
+
+                        <a href="cerez-politikasi.html">
+                            Çerez Politikası
+                            <span>→</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidebar-card info-card">
+                    <div class="info-icon">✓</div>
+
+                    <h3>Güvenilir bilgi</h3>
 
                     <p>
-                        İçeriklerimizle ilgili düzeltme veya güncelleme
-                        talebinizi bize iletebilirsiniz.
+                        Haberlerin mümkün olduğunca doğrulanmış kaynaklara
+                        dayanması ve okuyucunun doğru bilgilendirilmesi
+                        yayıncılık anlayışımızın temel parçalarındandır.
                     </p>
-
-                    <a
-                        href="iletisim.html"
-                        class="contact-button"
-                    >
-                        Bize Ulaşın
-                    </a>
                 </div>
 
             </aside>
@@ -1079,97 +1650,260 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="footer-inner">
+    <!-- HIZLI ERİŞİM -->
+    <section class="quick-section">
+        <div class="container">
 
-            <div class="footer-grid">
+            <div class="quick-title">
+                <h2>Akçaabat Haber</h2>
+                <p>
+                    Site hakkında merak ettiğiniz diğer bilgilere hızlıca ulaşın.
+                </p>
+            </div>
+
+            <div class="quick-grid">
+
+                <a href="hakkimizda.html" class="quick-card">
+                    <div class="quick-card-icon">A</div>
+                    <h3>Hakkımızda</h3>
+                    <p>
+                        Akçaabat Haber hakkında bilgi edinin.
+                    </p>
+                </a>
+
+                <a href="kunye.html" class="quick-card">
+                    <div class="quick-card-icon">K</div>
+                    <h3>Künye</h3>
+                    <p>
+                        Yayın ve iletişim bilgilerini inceleyin.
+                    </p>
+                </a>
+
+                <a href="iletisim.html" class="quick-card">
+                    <div class="quick-card-icon">✉</div>
+                    <h3>İletişim</h3>
+                    <p>
+                        Bizimle iletişime geçin ve görüşlerinizi paylaşın.
+                    </p>
+                </a>
+
+                <a href="reklam.html" class="quick-card">
+                    <div class="quick-card-icon">▣</div>
+                    <h3>Reklam</h3>
+                    <p>
+                        Reklam ve iş birliği seçeneklerini inceleyin.
+                    </p>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <div class="footer-main">
+            <div class="container footer-grid">
 
                 <div class="footer-brand">
-                    <h3>Akçaabat Haber</h3>
+                    <div class="footer-brand-logo">
+                        <img src="favicon.svg" alt="Akçaabat Haber">
+                        <strong>Akçaabat Haber</strong>
+                    </div>
 
                     <p>
-                        Akçaabat ve Trabzon'dan güncel gelişmeleri
-                        okuyucularına ulaştıran yerel haber platformu.
+                        Akçaabat ve Trabzon'dan güncel haberleri,
+                        gelişmeleri ve yerel gündemi okuyucularına
+                        ulaştırmayı amaçlayan yerel haber platformu.
                     </p>
                 </div>
 
                 <div class="footer-column">
-                    <h4>Kurumsal</h4>
+                    <h3>Haber</h3>
 
-                    <a href="hakkimizda.html">Hakkımızda</a>
-                    <a href="kunye.html">Künye</a>
-                    <a href="sorumlu-yayincilik.html">Yayın İlkeleri</a>
+                    <div class="footer-links">
+                        <a href="index.html">Ana Sayfa</a>
+                        <a href="haberler.html">Tüm Haberler</a>
+                        <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
+                        <a href="kategori.html?kategori=Trabzon">Trabzon</a>
+                        <a href="kategori.html?kategori=Spor">Spor</a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Kurumsal</h3>
+
+                    <div class="footer-links">
+                        <a href="hakkimizda.html">Hakkımızda</a>
+                        <a href="sorumlu-yayincilik.html">Sorumlu Yayıncılık</a>
+                        <a href="kunye.html">Künye</a>
+                        <a href="iletisim.html">İletişim</a>
+                        <a href="reklam.html">Reklam</a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Yasal</h3>
+
+                    <div class="footer-links">
+                        <a href="gizlilik.html">Gizlilik Politikası</a>
+                        <a href="kvkk.html">KVKK</a>
+                        <a href="cerez-politikasi.html">Çerez Politikası</a>
+                        <a href="sorumlu-yayincilik.html">
+                            Yayıncılık İlkeleri
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+
+                <p>
+                    © <span id="currentYear"></span> Akçaabat Haber.
+                    Tüm hakları saklıdır.
+                </p>
+
+                <div class="footer-bottom-links">
+                    <a href="gizlilik.html">Gizlilik</a>
+                    <a href="kvkk.html">KVKK</a>
                     <a href="iletisim.html">İletişim</a>
                 </div>
 
-                <div class="footer-column">
-                    <h4>Politikalar</h4>
-
-                    <a href="gizlilik.html">Gizlilik</a>
-                    <a href="kvkk.html">KVKK</a>
-                    <a href="cerez-politikasi.html">Çerez Politikası</a>
-                </div>
-
-                <div class="footer-column">
-                    <h4>Diğer</h4>
-
-                    <a href="reklam.html">Reklam</a>
-                    <a href="haberler.html">Haberler</a>
-                    <a href="index.html">Ana Sayfa</a>
-                </div>
-
             </div>
+        </div>
 
-            <div class="footer-bottom">
-                <span>
-                    © <span id="currentYear"></span> Akçaabat Haber
-                </span>
+    </footer>
 
-                <span>
-                    Tüm hakları saklıdır.
-                </span>
-            </div>
+    <!-- MOBİL MENÜ -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+
+    <aside
+        class="mobile-menu"
+        id="mobileMenu"
+        aria-label="Mobil menü"
+        aria-hidden="true"
+    >
+
+        <div class="mobile-menu-header">
+
+            <a href="index.html" class="mobile-menu-brand">
+                <img src="favicon.svg" alt="Akçaabat Haber">
+                <strong>Akçaabat Haber</strong>
+            </a>
+
+            <button
+                type="button"
+                class="mobile-close"
+                id="mobileCloseButton"
+                aria-label="Menüyü kapat"
+            >
+                ×
+            </button>
 
         </div>
-    </footer>
+
+        <nav class="mobile-nav">
+
+            <a href="index.html">Ana Sayfa</a>
+            <a href="haberler.html">Haberler</a>
+            <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
+            <a href="kategori.html?kategori=Trabzon">Trabzon</a>
+            <a href="kategori.html?kategori=Spor">Spor</a>
+            <a href="arama.html">Haber Ara</a>
+
+            <a href="hakkimizda.html">Hakkımızda</a>
+            <a href="sorumlu-yayincilik.html" class="active">
+                Sorumlu Yayıncılık
+            </a>
+            <a href="kunye.html">Künye</a>
+            <a href="iletisim.html">İletişim</a>
+            <a href="reklam.html">Reklam ve İş Birliği</a>
+
+            <a href="gizlilik.html">Gizlilik Politikası</a>
+            <a href="kvkk.html">KVKK</a>
+            <a href="cerez-politikasi.html">Çerez Politikası</a>
+
+        </nav>
+
+    </aside>
 
     <script>
         (function () {
-            const year = document.getElementById("currentYear");
+            "use strict";
 
-            if (year) {
-                year.textContent = new Date().getFullYear();
+            const yearElement = document.getElementById("currentYear");
+
+            if (yearElement) {
+                yearElement.textContent = new Date().getFullYear();
             }
 
-            const button = document.getElementById("mobileMenuBtn");
-            const mobileNav = document.getElementById("mobileNav");
+            const mobileMenu = document.getElementById("mobileMenu");
+            const mobileOverlay = document.getElementById("mobileOverlay");
+            const mobileMenuButton = document.getElementById("mobileMenuButton");
+            const mobileCloseButton = document.getElementById("mobileCloseButton");
 
-            if (!button || !mobileNav) {
-                return;
+            function openMobileMenu() {
+                if (!mobileMenu || !mobileOverlay) {
+                    return;
+                }
+
+                mobileMenu.classList.add("active");
+                mobileOverlay.classList.add("active");
+                document.body.classList.add("menu-open");
+
+                if (mobileMenuButton) {
+                    mobileMenuButton.setAttribute("aria-expanded", "true");
+                }
+
+                mobileMenu.setAttribute("aria-hidden", "false");
             }
 
-            button.addEventListener("click", function () {
-                const isOpen = mobileNav.classList.toggle("open");
+            function closeMobileMenu() {
+                if (!mobileMenu || !mobileOverlay) {
+                    return;
+                }
 
-                button.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
+                mobileMenu.classList.remove("active");
+                mobileOverlay.classList.remove("active");
+                document.body.classList.remove("menu-open");
 
-                button.textContent = isOpen ? "×" : "☰";
+                if (mobileMenuButton) {
+                    mobileMenuButton.setAttribute("aria-expanded", "false");
+                }
+
+                mobileMenu.setAttribute("aria-hidden", "true");
+            }
+
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener("click", openMobileMenu);
+            }
+
+            if (mobileCloseButton) {
+                mobileCloseButton.addEventListener("click", closeMobileMenu);
+            }
+
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener("click", closeMobileMenu);
+            }
+
+            document.querySelectorAll(".mobile-nav a").forEach(function (link) {
+                link.addEventListener("click", closeMobileMenu);
             });
 
-            mobileNav.querySelectorAll("a").forEach(function (link) {
-                link.addEventListener("click", function () {
-                    mobileNav.classList.remove("open");
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closeMobileMenu();
+                }
+            });
 
-                    button.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
-
-                    button.textContent = "☰";
-                });
+            window.addEventListener("resize", function () {
+                if (window.innerWidth > 850) {
+                    closeMobileMenu();
+                }
             });
         })();
     </script>
