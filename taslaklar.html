@@ -2,398 +2,763 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-    <meta
-        name="description"
-        content="Akçaabat Haber taslak yönetim paneli"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Taslaklar | Akçaabat Haber</title>
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .taslak-sayfa {
+            width: 100%;
+        }
+
+        .taslak-istatistik-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .taslak-istatistik {
+            padding: 20px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .taslak-istatistik-label {
+            margin-bottom: 8px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .taslak-istatistik-value {
+            color: #222;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .taslak-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .taslak-toolbar input,
+        .taslak-toolbar select {
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            outline: none;
+            background: #fff;
+        }
+
+        .taslak-toolbar input {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .taslak-toolbar input:focus,
+        .taslak-toolbar select:focus {
+            border-color: #b40018;
+        }
+
+        .taslak-liste {
+            display: grid;
+            gap: 15px;
+        }
+
+        .taslak-card {
+            display: grid;
+            grid-template-columns: 180px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .taslak-gorsel {
+            width: 180px;
+            height: 120px;
+            overflow: hidden;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .taslak-gorsel img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .taslak-bilgi {
+            min-width: 0;
+        }
+
+        .taslak-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 7px;
+        }
+
+        .taslak-etiket {
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 5px;
+            background: #f0f0f0;
+            color: #555;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .taslak-etiket.son-dakika {
+            background: #111;
+            color: #fff;
+        }
+
+        .taslak-baslik {
+            margin: 0 0 8px;
+            color: #222;
+            font-size: 19px;
+            line-height: 1.35;
+        }
+
+        .taslak-ozet {
+            margin: 0 0 9px;
+            color: #777;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .taslak-tarih {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .taslak-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 105px;
+        }
+
+        .taslak-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            padding: 0 12px;
+            border: 0;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .taslak-duzenle {
+            background: #eee;
+            color: #222;
+        }
+
+        .taslak-yayinla {
+            background: #b40018;
+            color: #fff;
+        }
+
+        .taslak-sil {
+            background: #222;
+            color: #fff;
+        }
+
+        .taslak-bos {
+            padding: 60px 20px;
+            border-radius: 12px;
+            background: #fff;
+            text-align: center;
+            color: #777;
+            box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        }
+
+        .taslak-bos h2 {
+            margin: 0 0 10px;
+            color: #222;
+        }
+
+        .taslak-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,.55);
+        }
+
+        .taslak-modal.active {
+            display: flex;
+        }
+
+        .taslak-modal-box {
+            width: 100%;
+            max-width: 440px;
+            padding: 28px;
+            border-radius: 14px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .taslak-modal-box h2 {
+            margin: 0 0 10px;
+        }
+
+        .taslak-modal-box p {
+            margin: 0 0 22px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .taslak-modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .taslak-modal-actions button {
+            min-height: 40px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        #taslakIptal {
+            background: #eee;
+            color: #222;
+        }
+
+        #taslakOnayla {
+            background: #b40018;
+            color: #fff;
+        }
+
+        @media (max-width: 1000px) {
+            .taslak-istatistik-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .taslak-card {
+                grid-template-columns: 140px 1fr;
+            }
+
+            .taslak-gorsel {
+                width: 140px;
+                height: 100px;
+            }
+
+            .taslak-actions {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .taslak-istatistik-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .taslak-istatistik {
+                padding: 15px;
+            }
+
+            .taslak-istatistik-value {
+                font-size: 23px;
+            }
+
+            .taslak-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .taslak-toolbar input,
+            .taslak-toolbar select {
+                width: 100%;
+            }
+
+            .taslak-card {
+                grid-template-columns: 1fr;
+            }
+
+            .taslak-gorsel {
+                width: 100%;
+                height: 190px;
+            }
+
+            .taslak-actions {
+                grid-column: auto;
+                flex-direction: row;
+            }
+
+            .taslak-btn {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
-<body class="admin-page">
+
+<body>
+
     <!-- =====================================================
-         HEADER
+         ADMIN HEADER
          ===================================================== -->
+
     <header class="admin-header">
+
         <div class="admin-header-left">
+
             <button
                 type="button"
-                class="mobile-menu-btn"
-                id="mobileMenuBtn"
-                aria-label="Menüyü aç"
-                aria-expanded="false"
+                class="admin-menu-btn"
+                id="adminMenuBtn"
             >
                 ☰
             </button>
+
             <a
                 href="index.html"
                 class="admin-logo"
             >
-                <strong>AKÇAABAT</strong>
-                <span>HABER</span>
+                AKÇAABAT <span>HABER</span>
             </a>
+
         </div>
+
         <div class="admin-header-right">
+
             <a
                 href="index.html"
-                class="view-site-btn"
+                target="_blank"
             >
                 Siteyi Gör
             </a>
-            <div class="admin-user">
-                <span class="admin-avatar">
-                    A
-                </span>
-                <span>
-                    Admin
-                </span>
-            </div>
+
         </div>
+
     </header>
+
+
     <!-- =====================================================
          LAYOUT
          ===================================================== -->
+
     <div class="admin-layout">
-        <!-- =================================================
-             SIDEBAR
-             ================================================= -->
+
+
+        <!-- SIDEBAR -->
+
         <aside
             class="admin-sidebar"
-            id="mobileMenu"
+            id="adminSidebar"
         >
-            <div class="sidebar-title">
-                YÖNETİM PANELİ
+
+            <div class="admin-sidebar-title">
+                Yönetim Paneli
             </div>
+
             <nav class="admin-nav">
-                <a
-                    href="admin.html"
-                    class="admin-nav-item"
-                >
+
+                <a href="admin.html">
                     <span>📊</span>
-                    <span>Dashboard</span>
+                    Dashboard
                 </a>
-                <a
-                    href="yeni-haber.html"
-                    class="admin-nav-item"
-                >
-                    <span>➕</span>
-                    <span>Yeni Haber</span>
-                </a>
-                <a
-                    href="haber.html"
-                    class="admin-nav-item"
-                >
+
+                <a href="haber.html">
                     <span>📰</span>
-                    <span>Haberler</span>
+                    Haberler
                 </a>
+
+                <a href="yeni-haber.html">
+                    <span>✏️</span>
+                    Yeni Haber
+                </a>
+
                 <a
                     href="taslaklar.html"
-                    class="admin-nav-item active"
+                    class="active"
                 >
                     <span>📝</span>
-                    <span>Taslaklar</span>
+                    Taslaklar
                 </a>
-                <a
-                    href="kategoriler.html"
-                    class="admin-nav-item"
-                >
-                    <span>📂</span>
-                    <span>Kategoriler</span>
-                </a>
-                <a
-                    href="yorumlar.html"
-                    class="admin-nav-item"
-                >
-                    <span>💬</span>
-                    <span>Yorumlar</span>
-                </a>
-                <div class="admin-nav-divider"></div>
-                <a
-                    href="ayarlar.html"
-                    class="admin-nav-item"
-                >
-                    <span>⚙️</span>
-                    <span>Ayarlar</span>
-                </a>
-                <a
-                    href="index.html"
-                    class="admin-nav-item"
-                >
+
+                <a href="index.html">
                     <span>🌐</span>
-                    <span>Siteye Git</span>
+                    Siteye Git
                 </a>
+
             </nav>
+
         </aside>
+
+
         <!-- =================================================
              MAIN
              ================================================= -->
-        <main class="admin-main">
-            <!-- SAYFA BAŞLIĞI -->
-            <section class="admin-page-heading">
+
+        <main class="admin-main taslak-sayfa">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="admin-page-header">
+
                 <div>
-                    <div class="breadcrumb">
-                        Admin / Taslaklar
-                    </div>
+
                     <h1>
                         Taslaklar
                     </h1>
+
                     <p>
-                        Henüz yayınlanmamış haberlerinizi
-                        buradan yönetebilirsiniz.
+                        Henüz yayınlanmamış haberleri yönetin.
                     </p>
+
                 </div>
+
                 <a
                     href="yeni-haber.html"
                     class="admin-primary-btn"
                 >
                     + Yeni Haber
                 </a>
-            </section>
-            <!-- =================================================
-                 TASLAK İSTATİSTİKLERİ
-                 ================================================= -->
-            <section class="news-stat-grid">
-                <div class="news-stat-card">
-                    <div class="news-stat-icon">
-                        📝
-                    </div>
-                    <div>
-                        <span>
-                            Toplam Taslak
-                        </span>
-                        <strong id="draftTotal">
-                            0
-                        </strong>
-                    </div>
-                </div>
-                <div class="news-stat-card">
-                    <div class="news-stat-icon">
-                        ⚡
-                    </div>
-                    <div>
-                        <span>
-                            Son Dakika Taslağı
-                        </span>
-                        <strong id="draftBreaking">
-                            0
-                        </strong>
-                    </div>
-                </div>
-                <div class="news-stat-card">
-                    <div class="news-stat-icon">
-                        📅
-                    </div>
-                    <div>
-                        <span>
-                            Bugün Kaydedilen
-                        </span>
-                        <strong id="draftToday">
-                            0
-                        </strong>
-                    </div>
-                </div>
-            </section>
-            <!-- =================================================
-                 ARAMA
-                 ================================================= -->
-            <section class="news-toolbar">
-                <div class="news-search">
-                    <span>
-                        🔎
-                    </span>
-                    <input
-                        type="search"
-                        id="draftSearch"
-                        placeholder="Taslaklarda ara..."
-                        autocomplete="off"
-                    >
-                </div>
-                <button
-                    type="button"
-                    id="refreshDrafts"
-                    class="admin-secondary-btn"
-                >
-                    ↻ Yenile
-                </button>
-            </section>
-            <!-- =================================================
-                 TASLAK LİSTESİ
-                 ================================================= -->
-            <section class="news-list-card">
-                <div class="news-list-header">
-                    <div>
-                        <h2>
-                            Taslak Haberler
-                        </h2>
-                        <span id="draftResultCount">
-                            0 taslak
-                        </span>
-                    </div>
-                </div>
-                <div
-                    class="draft-list"
-                    id="draftList"
-                >
-                    <!-- JavaScript dolduracak -->
-                </div>
-                <!-- BOŞ DURUM -->
-                <div
-                    class="empty-news"
-                    id="emptyDrafts"
-                    style="display:none;"
-                >
-                    <div class="empty-news-icon">
-                        📝
-                    </div>
-                    <h3>
-                        Henüz taslak yok
-                    </h3>
-                    <p>
-                        Yeni bir haber oluşturarak
-                        taslak olarak kaydedebilirsiniz.
-                    </p>
-                    <a
-                        href="yeni-haber.html"
-                        class="admin-primary-btn"
-                    >
-                        + Yeni Haber Oluştur
-                    </a>
-                </div>
-            </section>
-        </main>
-    </div>
-    <!-- =====================================================
-         SİLME MODALI
-         ===================================================== -->
-    <div
-        class="admin-modal"
-        id="draftDeleteModal"
-        aria-hidden="true"
-    >
-        <div class="admin-modal-overlay"></div>
-        <div class="admin-modal-box">
-            <button
-                type="button"
-                class="admin-modal-close"
-                id="closeDraftModal"
-                aria-label="Kapat"
-            >
-                ×
-            </button>
-            <div class="admin-modal-icon">
-                🗑️
+
             </div>
-            <h2>
+
+
+            <!-- =================================================
+                 İSTATİSTİKLER
+                 ================================================= -->
+
+            <div class="taslak-istatistik-grid">
+
+                <div class="taslak-istatistik">
+
+                    <div class="taslak-istatistik-label">
+                        Toplam Taslak
+                    </div>
+
+                    <div
+                        class="taslak-istatistik-value"
+                        id="toplamTaslak"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="taslak-istatistik">
+
+                    <div class="taslak-istatistik-label">
+                        Son Dakika Taslağı
+                    </div>
+
+                    <div
+                        class="taslak-istatistik-value"
+                        id="sonDakikaTaslak"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="taslak-istatistik">
+
+                    <div class="taslak-istatistik-label">
+                        Kategorisi Belirli
+                    </div>
+
+                    <div
+                        class="taslak-istatistik-value"
+                        id="kategoriliTaslak"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FİLTRELER
+                 ================================================= -->
+
+            <div class="taslak-toolbar">
+
+                <input
+                    type="search"
+                    id="taslakArama"
+                    placeholder="Taslak ara..."
+                >
+
+                <select id="taslakKategori">
+
+                    <option value="">
+                        Tüm Kategoriler
+                    </option>
+
+                    <option value="Akçaabat">
+                        Akçaabat
+                    </option>
+
+                    <option value="Trabzon">
+                        Trabzon
+                    </option>
+
+                    <option value="Gündem">
+                        Gündem
+                    </option>
+
+                    <option value="Spor">
+                        Spor
+                    </option>
+
+                    <option value="Ekonomi">
+                        Ekonomi
+                    </option>
+
+                    <option value="Siyaset">
+                        Siyaset
+                    </option>
+
+                    <option value="Magazin">
+                        Magazin
+                    </option>
+
+                    <option value="Sağlık">
+                        Sağlık
+                    </option>
+
+                    <option value="Eğitim">
+                        Eğitim
+                    </option>
+
+                    <option value="Kültür Sanat">
+                        Kültür Sanat
+                    </option>
+
+                    <option value="Yaşam">
+                        Yaşam
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =================================================
+                 LİSTE
+                 ================================================= -->
+
+            <div
+                class="taslak-liste"
+                id="taslakListesi"
+            ></div>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         MODAL
+         ===================================================== -->
+
+    <div
+        class="taslak-modal"
+        id="taslakModal"
+    >
+
+        <div class="taslak-modal-box">
+
+            <h2 id="modalTitle">
                 Taslağı Sil
             </h2>
-            <p>
-                Bu taslağı silmek istediğinizden
-                emin misiniz?
+
+            <p id="modalText">
+                Bu taslak kalıcı olarak silinecek.
             </p>
-            <div class="admin-modal-actions">
+
+            <div class="taslak-modal-actions">
+
                 <button
                     type="button"
-                    id="cancelDraftDelete"
-                    class="admin-secondary-btn"
+                    id="taslakIptal"
                 >
                     Vazgeç
                 </button>
+
                 <button
                     type="button"
-                    id="confirmDraftDelete"
-                    class="admin-danger-btn"
+                    id="taslakOnayla"
                 >
-                    Taslağı Sil
+                    Onayla
                 </button>
+
             </div>
+
         </div>
+
     </div>
+
+
     <!-- =====================================================
          JAVASCRIPT
          ===================================================== -->
-    <script src="script.js"></script>
+
     <script>
+
         document.addEventListener(
             "DOMContentLoaded",
             function () {
-                const draftList =
+
+
+                /* =================================================
+                   ELEMENTLER
+                   ================================================= */
+
+                const list =
                     document.getElementById(
-                        "draftList"
+                        "taslakListesi"
                     );
-                const emptyDrafts =
-                    document.getElementById(
-                        "emptyDrafts"
-                    );
+
                 const searchInput =
                     document.getElementById(
-                        "draftSearch"
+                        "taslakArama"
                     );
-                const refreshButton =
+
+                const categoryFilter =
                     document.getElementById(
-                        "refreshDrafts"
+                        "taslakKategori"
                     );
-                const resultCount =
+
+                const modal =
                     document.getElementById(
-                        "draftResultCount"
+                        "taslakModal"
                     );
-                const totalElement =
+
+                const modalTitle =
                     document.getElementById(
-                        "draftTotal"
+                        "modalTitle"
                     );
-                const breakingElement =
+
+                const modalText =
                     document.getElementById(
-                        "draftBreaking"
+                        "modalText"
                     );
-                const todayElement =
+
+                const cancelButton =
                     document.getElementById(
-                        "draftToday"
+                        "taslakIptal"
                     );
-                const deleteModal =
+
+                const confirmButton =
                     document.getElementById(
-                        "draftDeleteModal"
+                        "taslakOnayla"
                     );
-                const closeModalButton =
-                    document.getElementById(
-                        "closeDraftModal"
-                    );
-                const cancelDeleteButton =
-                    document.getElementById(
-                        "cancelDraftDelete"
-                    );
-                const confirmDeleteButton =
-                    document.getElementById(
-                        "confirmDraftDelete"
-                    );
-                let selectedDraftId = null;
-                /* ---------------------------------------------
-                   TASLAKLARI GETİR
-                   --------------------------------------------- */
+
+
+                let actionId = null;
+                let actionType = null;
+
+
+                /* =================================================
+                   STORAGE
+                   ================================================= */
+
                 function getDrafts() {
-                    try {
-                        return JSON.parse(
-                            localStorage.getItem(
-                                "akcaabat_taslaklar"
-                            )
-                        ) || [];
-                    } catch (error) {
-                        console.error(
-                            "Taslaklar okunamadı:",
-                            error
-                        );
-                        return [];
-                    }
+
+                    return JSON.parse(
+                        localStorage.getItem(
+                            "akcaabat_taslaklar"
+                        ) || "[]"
+                    );
+
                 }
-                /* ---------------------------------------------
-                   HTML GÜVENLİĞİ
-                   --------------------------------------------- */
-                function escapeHTML(value) {
-                    return String(value || "")
+
+
+                function saveDrafts(
+                    drafts
+                ) {
+
+                    localStorage.setItem(
+                        "akcaabat_taslaklar",
+                        JSON.stringify(
+                            drafts
+                        )
+                    );
+
+                }
+
+
+                function getNews() {
+
+                    return JSON.parse(
+                        localStorage.getItem(
+                            "akcaabat_haberler"
+                        ) || "[]"
+                    );
+
+                }
+
+
+                function saveNews(
+                    news
+                ) {
+
+                    localStorage.setItem(
+                        "akcaabat_haberler",
+                        JSON.stringify(
+                            news
+                        )
+                    );
+
+                }
+
+
+                /* =================================================
+                   ESCAPE
+                   ================================================= */
+
+                function escapeHtml(
+                    value
+                ) {
+
+                    if (
+                        value === null ||
+                        value === undefined
+                    ) {
+                        return "";
+                    }
+
+                    return String(value)
                         .replace(
                             /&/g,
                             "&amp;"
@@ -414,395 +779,973 @@
                             /'/g,
                             "&#039;"
                         );
+
                 }
-                /* ---------------------------------------------
+
+
+                /* =================================================
+                   FALLBACK
+                   ================================================= */
+
+                const fallbackImage =
+                    "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80";
+
+
+                function getImage(
+                    draft
+                ) {
+
+                    if (
+                        draft.image &&
+                        typeof draft.image ===
+                            "string" &&
+                        draft.image.trim() !== ""
+                    ) {
+
+                        return draft.image;
+
+                    }
+
+                    return fallbackImage;
+
+                }
+
+
+                /* =================================================
                    TARİH
-                   --------------------------------------------- */
-                function formatDate(date) {
-                    if (!date) {
+                   ================================================= */
+
+                function getDate(
+                    draft
+                ) {
+
+                    return (
+                        draft.updatedAt ||
+                        draft.createdAt ||
+                        ""
+                    );
+
+                }
+
+
+                function formatDate(
+                    value
+                ) {
+
+                    if (!value) {
                         return "Tarih yok";
                     }
-                    const parsed =
-                        new Date(date);
+
+                    const date =
+                        new Date(value);
+
                     if (
-                        Number.isNaN(
-                            parsed.getTime()
+                        isNaN(
+                            date.getTime()
                         )
                     ) {
-                        return "Tarih yok";
+
+                        return value;
+
                     }
-                    return parsed.toLocaleDateString(
+
+                    return date.toLocaleString(
                         "tr-TR",
                         {
                             day: "2-digit",
                             month: "2-digit",
-                            year: "numeric"
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit"
                         }
                     );
+
                 }
-                /* ---------------------------------------------
-                   BUGÜN MÜ?
-                   --------------------------------------------- */
-                function isToday(date) {
-                    if (!date) {
-                        return false;
-                    }
-                    const value =
-                        new Date(date);
-                    const today =
-                        new Date();
-                    return (
-                        value.getDate() ===
-                        today.getDate() &&
-                        value.getMonth() ===
-                        today.getMonth() &&
-                        value.getFullYear() ===
-                        today.getFullYear()
-                    );
-                }
-                /* ---------------------------------------------
-                   İSTATİSTİKLER
-                   --------------------------------------------- */
-                function updateStats(drafts) {
+
+
+                /* =================================================
+                   İSTATİSTİK
+                   ================================================= */
+
+                function updateStats(
+                    drafts
+                ) {
+
+                    const total =
+                        drafts.length;
+
+
                     const breaking =
                         drafts.filter(
-                            function (draft) {
-                                return draft.breaking ===
-                                    true;
-                            }
-                        ).length;
-                    const today =
-                        drafts.filter(
-                            function (draft) {
-                                return isToday(
-                                    draft.savedAt
+                            function (
+                                item
+                            ) {
+
+                                return (
+                                    item.breaking ===
+                                    true
                                 );
+
                             }
                         ).length;
-                    totalElement.textContent =
-                        drafts.length;
-                    breakingElement.textContent =
+
+
+                    const categorized =
+                        drafts.filter(
+                            function (
+                                item
+                            ) {
+
+                                return (
+                                    item.category &&
+                                    item.category.trim()
+                                );
+
+                            }
+                        ).length;
+
+
+                    document.getElementById(
+                        "toplamTaslak"
+                    ).textContent =
+                        total;
+
+
+                    document.getElementById(
+                        "sonDakikaTaslak"
+                    ).textContent =
                         breaking;
-                    todayElement.textContent =
-                        today;
+
+
+                    document.getElementById(
+                        "kategoriliTaslak"
+                    ).textContent =
+                        categorized;
+
                 }
-                /* ---------------------------------------------
-                   TASLAKLARI GÖSTER
-                   --------------------------------------------- */
+
+
+                /* =================================================
+                   TASLAK KARTI
+                   ================================================= */
+
+                function createCard(
+                    draft
+                ) {
+
+                    const title =
+                        draft.title ||
+                        draft.baslik ||
+                        "Başlıksız Taslak";
+
+
+                    const summary =
+                        draft.summary ||
+                        draft.ozet ||
+                        "";
+
+
+                    const category =
+                        draft.category ||
+                        draft.kategori ||
+                        "Kategori yok";
+
+
+                    const id =
+                        draft.id;
+
+
+                    return `
+
+                        <article
+                            class="taslak-card"
+                        >
+
+                            <div
+                                class="taslak-gorsel"
+                            >
+
+                                <img
+                                    src="${escapeHtml(
+                                        getImage(
+                                            draft
+                                        )
+                                    )}"
+                                    alt="${escapeHtml(
+                                        title
+                                    )}"
+                                    onerror="
+                                        this.src='${fallbackImage}'
+                                    "
+                                >
+
+                            </div>
+
+
+                            <div
+                                class="taslak-bilgi"
+                            >
+
+                                <div
+                                    class="taslak-meta"
+                                >
+
+                                    <span
+                                        class="taslak-etiket"
+                                    >
+                                        ${escapeHtml(
+                                            category
+                                        )}
+                                    </span>
+
+
+                                    ${
+                                        draft.breaking
+                                            ? `
+                                                <span
+                                                    class="
+                                                        taslak-etiket
+                                                        son-dakika
+                                                    "
+                                                >
+                                                    ● SON DAKİKA
+                                                </span>
+                                              `
+                                            : ""
+                                    }
+
+                                </div>
+
+
+                                <h2
+                                    class="taslak-baslik"
+                                >
+                                    ${escapeHtml(
+                                        title
+                                    )}
+                                </h2>
+
+
+                                ${
+                                    summary
+                                        ? `
+                                            <p
+                                                class="
+                                                    taslak-ozet
+                                                "
+                                            >
+                                                ${escapeHtml(
+                                                    summary
+                                                )}
+                                            </p>
+                                          `
+                                        : ""
+                                }
+
+
+                                <div
+                                    class="taslak-tarih"
+                                >
+                                    Son düzenleme:
+                                    ${escapeHtml(
+                                        formatDate(
+                                            getDate(
+                                                draft
+                                            )
+                                        )
+                                    )}
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="taslak-actions"
+                            >
+
+                                <a
+                                    href="
+                                        yeni-haber.html?draft=${encodeURIComponent(
+                                            id
+                                        )}
+                                    "
+                                    class="
+                                        taslak-btn
+                                        taslak-duzenle
+                                    "
+                                >
+                                    Düzenle
+                                </a>
+
+
+                                <button
+                                    type="button"
+                                    class="
+                                        taslak-btn
+                                        taslak-yayinla
+                                    "
+                                    data-publish-id="${escapeHtml(
+                                        id
+                                    )}"
+                                >
+                                    Yayınla
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="
+                                        taslak-btn
+                                        taslak-sil
+                                    "
+                                    data-delete-id="${escapeHtml(
+                                        id
+                                    )}"
+                                >
+                                    Sil
+                                </button>
+
+                            </div>
+
+                        </article>
+
+                    `;
+
+                }
+
+
+                /* =================================================
+                   LİSTELE
+                   ================================================= */
+
                 function renderDrafts() {
+
                     const drafts =
                         getDrafts();
-                    updateStats(drafts);
+
+
+                    updateStats(
+                        drafts
+                    );
+
+
                     const search =
                         searchInput.value
                             .trim()
                             .toLocaleLowerCase(
                                 "tr-TR"
                             );
-                    const filtered =
+
+
+                    const category =
+                        categoryFilter.value;
+
+
+                    let filtered =
                         drafts.filter(
-                            function (draft) {
-                                if (!search) {
-                                    return true;
-                                }
+                            function (
+                                item
+                            ) {
+
                                 const title =
-                                    String(
-                                        draft.title ||
+                                    (
+                                        item.title ||
+                                        item.baslik ||
                                         ""
                                     )
                                     .toLocaleLowerCase(
                                         "tr-TR"
                                     );
-                                const content =
-                                    String(
-                                        draft.content ||
+
+
+                                const summary =
+                                    (
+                                        item.summary ||
+                                        item.ozet ||
                                         ""
                                     )
                                     .toLocaleLowerCase(
                                         "tr-TR"
                                     );
-                                const category =
-                                    String(
-                                        draft.category ||
-                                        ""
-                                    )
-                                    .toLocaleLowerCase(
-                                        "tr-TR"
-                                    );
-                                return (
+
+
+                                const itemCategory =
+                                    item.category ||
+                                    item.kategori ||
+                                    "";
+
+
+                                const matchesSearch =
+                                    !search ||
                                     title.includes(
                                         search
                                     ) ||
-                                    content.includes(
+                                    summary.includes(
                                         search
-                                    ) ||
-                                    category.includes(
-                                        search
-                                    )
+                                    );
+
+
+                                const matchesCategory =
+                                    !category ||
+                                    itemCategory ===
+                                        category;
+
+
+                                return (
+                                    matchesSearch &&
+                                    matchesCategory
                                 );
+
                             }
                         );
-                    resultCount.textContent =
-                        filtered.length +
-                        " taslak";
-                    draftList.innerHTML = "";
-                    if (filtered.length === 0) {
-                        draftList.style.display =
-                            "none";
-                        emptyDrafts.style.display =
-                            "block";
+
+
+                    filtered.sort(
+                        function (
+                            a,
+                            b
+                        ) {
+
+                            return (
+                                new Date(
+                                    getDate(b) ||
+                                    0
+                                ) -
+                                new Date(
+                                    getDate(a) ||
+                                    0
+                                )
+                            );
+
+                        }
+                    );
+
+
+                    if (
+                        filtered.length ===
+                        0
+                    ) {
+
+                        list.innerHTML = `
+
+                            <div
+                                class="taslak-bos"
+                            >
+
+                                <h2>
+                                    Taslak bulunamadı
+                                </h2>
+
+                                <p>
+                                    Henüz kaydedilmiş
+                                    bir taslak yok veya
+                                    filtrelerinize uygun
+                                    sonuç bulunamadı.
+                                </p>
+
+                            </div>
+
+                        `;
+
                         return;
+
                     }
-                    draftList.style.display =
-                        "grid";
-                    emptyDrafts.style.display =
-                        "none";
-                    filtered.forEach(
-                        function (draft) {
-                            const card =
-                                document.createElement(
-                                    "article"
-                                );
-                            card.className =
-                                "draft-card";
-                            const title =
-                                escapeHTML(
-                                    draft.title ||
-                                    "Başlıksız Taslak"
-                                );
-                            const category =
-                                escapeHTML(
-                                    draft.category ||
-                                    "Genel"
-                                );
-                            const summary =
-                                escapeHTML(
-                                    draft.summary ||
-                                    draft.content ||
-                                    "Bu taslak için içerik bulunmuyor."
-                                );
-                            const date =
-                                formatDate(
-                                    draft.savedAt
-                                );
-                            const breakingBadge =
-                                draft.breaking
-                                    ? '<span class="breaking-badge">⚡ SON DAKİKA</span>'
-                                    : "";
-                            card.innerHTML =
-                                '<div class="draft-card-top">' +
-                                    '<div class="draft-card-icon">' +
-                                        '📝' +
-                                    '</div>' +
-                                    '<div class="draft-card-info">' +
-                                        '<div class="draft-card-title">' +
-                                            '<h3>' +
-                                                title +
-                                            '</h3>' +
-                                            breakingBadge +
-                                        '</div>' +
-                                        '<div class="draft-card-meta">' +
-                                            '<span>' +
-                                                category +
-                                            '</span>' +
-                                            '<span>•</span>' +
-                                            '<span>' +
-                                                date +
-                                            '</span>' +
-                                        '</div>' +
-                                    '</div>' +
-                                '</div>' +
-                                '<div class="draft-card-content">' +
-                                    '<p>' +
-                                        summary.substring(
-                                            0,
-                                            180
-                                        ) +
-                                        (
-                                            summary.length > 180
-                                                ? "..."
-                                                : ""
-                                        ) +
-                                    '</p>' +
-                                '</div>' +
-                                '<div class="draft-card-footer">' +
-                                    '<span class="draft-status">' +
-                                        '📝 Taslak' +
-                                    '</span>' +
-                                    '<div class="draft-actions">' +
-                                        '<button ' +
-                                            'type="button" ' +
-                                            'class="draft-edit-btn" ' +
-                                            'data-id="' +
-                                                escapeHTML(
-                                                    draft.id
-                                                ) +
-                                            '">' +
-                                            '✏️ Düzenle' +
-                                        '</button>' +
-                                        '<button ' +
-                                            'type="button" ' +
-                                            'class="draft-delete-btn" ' +
-                                            'data-id="' +
-                                                escapeHTML(
-                                                    draft.id
-                                                ) +
-                                            '">' +
-                                            '🗑️ Sil' +
-                                        '</button>' +
-                                    '</div>' +
-                                '</div>';
-                            draftList.appendChild(
-                                card
-                            );
-                        }
-                    );
+
+
+                    list.innerHTML =
+                        filtered
+                            .map(
+                                createCard
+                            )
+                            .join("");
+
+
+                    bindActions();
+
                 }
-                /* ---------------------------------------------
-                   BUTONLAR
-                   --------------------------------------------- */
-                draftList.addEventListener(
-                    "click",
-                    function (event) {
-                        const editButton =
-                            event.target.closest(
-                                ".draft-edit-btn"
-                            );
-                        const deleteButton =
-                            event.target.closest(
-                                ".draft-delete-btn"
-                            );
-                        if (editButton) {
-                            const id =
-                                editButton.dataset.id;
-                            window.location.href =
-                                "yeni-haber.html?draft=" +
-                                encodeURIComponent(
-                                    id
+
+
+                /* =================================================
+                   BUTONLARI BAĞLA
+                   ================================================= */
+
+                function bindActions() {
+
+
+                    document
+                        .querySelectorAll(
+                            "[data-delete-id]"
+                        )
+                        .forEach(
+                            function (
+                                button
+                            ) {
+
+                                button.addEventListener(
+                                    "click",
+                                    function () {
+
+                                        actionId =
+                                            this.dataset.deleteId;
+
+                                        actionType =
+                                            "delete";
+
+                                        modalTitle.textContent =
+                                            "Taslağı Sil";
+
+                                        modalText.textContent =
+                                            "Bu taslak kalıcı olarak silinecek. Bu işlem geri alınamaz.";
+
+                                        modal.classList.add(
+                                            "active"
+                                        );
+
+                                    }
                                 );
-                            return;
-                        }
-                        if (deleteButton) {
-                            selectedDraftId =
-                                deleteButton.dataset.id;
-                            deleteModal.classList.add(
-                                "active"
-                            );
-                            deleteModal.setAttribute(
-                                "aria-hidden",
-                                "false"
-                            );
-                        }
-                    }
-                );
-                /* ---------------------------------------------
-                   MODAL KAPAT
-                   --------------------------------------------- */
-                function closeDeleteModal() {
-                    selectedDraftId =
-                        null;
-                    deleteModal.classList.remove(
-                        "active"
-                    );
-                    deleteModal.setAttribute(
-                        "aria-hidden",
-                        "true"
-                    );
+
+                            }
+                        );
+
+
+                    document
+                        .querySelectorAll(
+                            "[data-publish-id]"
+                        )
+                        .forEach(
+                            function (
+                                button
+                            ) {
+
+                                button.addEventListener(
+                                    "click",
+                                    function () {
+
+                                        actionId =
+                                            this.dataset.publishId;
+
+                                        actionType =
+                                            "publish";
+
+                                        modalTitle.textContent =
+                                            "Taslağı Yayınla";
+
+                                        modalText.textContent =
+                                            "Bu taslak haber olarak yayınlanacak.";
+
+                                        modal.classList.add(
+                                            "active"
+                                        );
+
+                                    }
+                                );
+
+                            }
+                        );
+
                 }
-                closeModalButton.addEventListener(
-                    "click",
-                    closeDeleteModal
-                );
-                cancelDeleteButton.addEventListener(
-                    "click",
-                    closeDeleteModal
-                );
-                /* ---------------------------------------------
-                   TASLAK SİL
-                   --------------------------------------------- */
-                confirmDeleteButton.addEventListener(
+
+
+                /* =================================================
+                   MODAL İPTAL
+                   ================================================= */
+
+                cancelButton.addEventListener(
                     "click",
                     function () {
-                        if (!selectedDraftId) {
-                            return;
-                        }
-                        const drafts =
-                            getDrafts();
-                        const updated =
-                            drafts.filter(
-                                function (draft) {
-                                    return draft.id !==
-                                        selectedDraftId;
-                                }
-                            );
-                        localStorage.setItem(
-                            "akcaabat_taslaklar",
-                            JSON.stringify(
-                                updated
-                            )
-                        );
-                        closeDeleteModal();
-                        renderDrafts();
-                        if (
-                            typeof showMessage ===
-                            "function"
-                        ) {
-                            showMessage(
-                                "Taslak silindi.",
-                                "success"
-                            );
-                        }
+
+                        closeModal();
+
                     }
                 );
-                /* ---------------------------------------------
-                   MODAL DIŞI
-                   --------------------------------------------- */
-                deleteModal.addEventListener(
+
+
+                function closeModal() {
+
+                    modal.classList.remove(
+                        "active"
+                    );
+
+                    actionId =
+                        null;
+
+                    actionType =
+                        null;
+
+                }
+
+
+                /* =================================================
+                   MODAL ONAY
+                   ================================================= */
+
+                confirmButton.addEventListener(
                     "click",
-                    function (event) {
+                    function () {
+
                         if (
-                            event.target.classList
-                                .contains(
-                                    "admin-modal-overlay"
-                                )
+                            !actionId ||
+                            !actionType
                         ) {
-                            closeDeleteModal();
+
+                            closeModal();
+
+                            return;
+
                         }
+
+
+                        if (
+                            actionType ===
+                            "delete"
+                        ) {
+
+                            deleteDraft();
+
+                        }
+
+
+                        if (
+                            actionType ===
+                            "publish"
+                        ) {
+
+                            publishDraft();
+
+                        }
+
+
+                        closeModal();
+
                     }
                 );
-                /* ---------------------------------------------
-                   ARAMA
-                   --------------------------------------------- */
+
+
+                /* =================================================
+                   TASLAK SİL
+                   ================================================= */
+
+                function deleteDraft() {
+
+                    const drafts =
+                        getDrafts();
+
+
+                    const updated =
+                        drafts.filter(
+                            function (
+                                item
+                            ) {
+
+                                return String(
+                                    item.id
+                                ) !==
+                                String(
+                                    actionId
+                                );
+
+                            }
+                        );
+
+
+                    saveDrafts(
+                        updated
+                    );
+
+
+                    renderDrafts();
+
+                }
+
+
+                /* =================================================
+                   TASLAK YAYINLA
+                   ================================================= */
+
+                function publishDraft() {
+
+                    const drafts =
+                        getDrafts();
+
+
+                    const draft =
+                        drafts.find(
+                            function (
+                                item
+                            ) {
+
+                                return String(
+                                    item.id
+                                ) ===
+                                String(
+                                    actionId
+                                );
+
+                            }
+                        );
+
+
+                    if (!draft) {
+
+                        alert(
+                            "Taslak bulunamadı."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const news =
+                        getNews();
+
+
+                    /*
+                     * Aynı ID ile haber varsa
+                     * güncelle.
+                     */
+
+                    const existingIndex =
+                        news.findIndex(
+                            function (
+                                item
+                            ) {
+
+                                return String(
+                                    item.id
+                                ) ===
+                                String(
+                                    draft.id
+                                );
+
+                            }
+                        );
+
+
+                    const publishedNews = {
+
+                        id:
+                            draft.id,
+
+                        title:
+                            draft.title ||
+                            "",
+
+                        summary:
+                            draft.summary ||
+                            "",
+
+                        content:
+                            draft.content ||
+                            "",
+
+                        category:
+                            draft.category ||
+                            "",
+
+                        status:
+                            "published",
+
+                        breaking:
+                            draft.breaking ===
+                            true,
+
+                        image:
+                            draft.image ||
+                            "",
+
+                        views:
+                            existingIndex !== -1
+                                ? Number(
+                                    news[
+                                        existingIndex
+                                    ].views || 0
+                                )
+                                : 0,
+
+                        publishedAt:
+                            new Date().toISOString(),
+
+                        createdAt:
+                            draft.createdAt ||
+                            new Date().toISOString(),
+
+                        updatedAt:
+                            new Date().toISOString()
+
+                    };
+
+
+                    if (
+                        existingIndex !==
+                        -1
+                    ) {
+
+                        news[
+                            existingIndex
+                        ] =
+                            {
+                                ...news[
+                                    existingIndex
+                                ],
+                                ...publishedNews
+                            };
+
+                    } else {
+
+                        news.unshift(
+                            publishedNews
+                        );
+
+                    }
+
+
+                    saveNews(
+                        news
+                    );
+
+
+                    /*
+                     * Taslağı kaldır
+                     */
+
+                    const remaining =
+                        drafts.filter(
+                            function (
+                                item
+                            ) {
+
+                                return String(
+                                    item.id
+                                ) !==
+                                String(
+                                    actionId
+                                );
+
+                            }
+                        );
+
+
+                    saveDrafts(
+                        remaining
+                    );
+
+
+                    /*
+                     * Haber yönetimine git
+                     */
+
+                    window.location.href =
+                        "haber.html";
+
+                }
+
+
+                /* =================================================
+                   ARAMA / FİLTRE
+                   ================================================= */
+
                 searchInput.addEventListener(
                     "input",
                     renderDrafts
                 );
-                /* ---------------------------------------------
-                   YENİLE
-                   --------------------------------------------- */
-                refreshButton.addEventListener(
-                    "click",
+
+
+                categoryFilter.addEventListener(
+                    "change",
                     renderDrafts
                 );
-                /* ---------------------------------------------
-                   ESC
-                   --------------------------------------------- */
-                document.addEventListener(
-                    "keydown",
-                    function (event) {
+
+
+                /* =================================================
+                   MODAL DIŞINA TIKLAMA
+                   ================================================= */
+
+                modal.addEventListener(
+                    "click",
+                    function (
+                        event
+                    ) {
+
                         if (
-                            event.key === "Escape"
+                            event.target ===
+                            modal
                         ) {
-                            closeDeleteModal();
+
+                            closeModal();
+
                         }
+
                     }
                 );
-                /* ---------------------------------------------
+
+
+                /* =================================================
+                   ESC
+                   ================================================= */
+
+                document.addEventListener(
+                    "keydown",
+                    function (
+                        event
+                    ) {
+
+                        if (
+                            event.key ===
+                            "Escape"
+                        ) {
+
+                            closeModal();
+
+                        }
+
+                    }
+                );
+
+
+                /* =================================================
+                   MOBİL ADMIN MENÜ
+                   ================================================= */
+
+                const adminMenuBtn =
+                    document.getElementById(
+                        "adminMenuBtn"
+                    );
+
+                const adminSidebar =
+                    document.getElementById(
+                        "adminSidebar"
+                    );
+
+
+                if (
+                    adminMenuBtn &&
+                    adminSidebar
+                ) {
+
+                    adminMenuBtn.addEventListener(
+                        "click",
+                        function () {
+
+                            adminSidebar.classList.toggle(
+                                "open"
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /* =================================================
                    BAŞLAT
-                   --------------------------------------------- */
+                   ================================================= */
+
                 renderDrafts();
-            }
-        );
+
+            });
+
     </script>
+
 </body>
 </html>
