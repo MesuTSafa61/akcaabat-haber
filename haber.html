@@ -1,197 +1,1621 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Akçaabat Haber - Güncel haberler ve son dakika gelişmeleri.">
-  <meta name="theme-color" content="#ffffff">
-  <title>Haber Detayı | Akçaabat Haber</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Haberler | Akçaabat Haber</title>
+
+    <meta
+        name="description"
+        content="Akçaabat Haber yönetim paneli haber yönetimi">
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <div class="topbar">
-    <div class="container topbar-inner">
-      <span>12 Eylül 2026, Cumartesi</span>
-      <span>☀️ 22°C Akçaabat</span>
-      <div class="top-links">
-        <a href="#">Bize Ulaşın</a>
-        <a href="#">Reklam</a>
-        <a href="#">Instagram</a>
-        <a href="#">YouTube</a>
-      </div>
-    </div>
-  </div>
+    <!-- =========================================
+         ADMIN HEADER
+    ========================================== -->
 
-  <header class="header">
-    <div class="container header-inner">
-      <a class="logo" href="index.html">
-        <span class="logo-mark">A</span>
-        <span>
-          <strong>AKÇAABAT <b>HABER</b></strong>
-          <small>Akçaabat'ın Güncel Haber Kaynağı</small>
-        </span>
-      </a>
+    <header class="admin-header">
 
-      <div class="search">
-        <input type="search" placeholder="Haber, kategori veya kelime ara...">
-        <button aria-label="Ara">⌕</button>
-      </div>
+        <div class="admin-header-left">
 
-      <button class="menu-button" aria-label="Menüyü aç">☰</button>
-    </div>
-  </header>
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                aria-label="Menüyü aç">
+                ☰
+            </button>
 
-  <nav class="navigation">
-    <div class="container nav-inner">
-      <a href="index.html">Ana Sayfa</a>
-      <a class="active" href="#">Akçaabat</a>
-      <a href="#">Trabzon</a>
-      <a href="#">Siyaset</a>
-      <a href="#">Spor</a>
-      <a href="#">Ekonomi</a>
-      <a href="#">Yaşam</a>
-      <a href="#">Eğitim</a>
-      <a href="#">Kültür-Sanat</a>
-      <a href="#">Asayiş</a>
-      <a href="#">Galeri</a>
-      <a href="#">Video</a>
-    </div>
-  </nav>
+            <a
+                href="index.html"
+                class="admin-logo">
+                AKÇAABAT <span>HABER</span>
+            </a>
 
-  <div class="breaking">
-    <div class="container breaking-inner">
-      <strong>⚡ SON DAKİKA</strong>
-      <div class="breaking-text">
-        Akçaabat'tan son dakika gelişmeleri burada...
-      </div>
-      <span class="breaking-time">12:42</span>
-    </div>
-  </div>
-
-  <main class="container article-page">
-
-    <div class="article-breadcrumb">
-      <a href="index.html">Ana Sayfa</a>
-      <span>›</span>
-      <a href="#">Akçaabat</a>
-      <span>›</span>
-      <span>Haber</span>
-    </div>
-
-    <div class="article-layout">
-
-      <article class="article">
-
-        <span class="category">AKÇAABAT</span>
-
-        <h1>Akçaabat'tan günün öne çıkan gelişmeleri</h1>
-
-        <p class="article-lead">
-          Akçaabat ve çevresinde yaşanan son gelişmeler vatandaşların
-          gündeminde. İlçeden güncel haberler ve önemli detaylar...
-        </p>
-
-        <div class="article-meta">
-          <span>12 Eylül 2026</span>
-          <span>12:42</span>
-          <span>2.4K okunma</span>
         </div>
 
-        <img
-          class="article-cover"
-          src="https://images.unsplash.com/photo-1565011523534-747a8601f10a?auto=format&fit=crop&w=1400&q=85"
-          alt="Akçaabat Haber"
-        >
+        <div class="admin-header-right">
 
-        <div class="article-caption">
-          Akçaabat'tan günün öne çıkan gelişmeleri.
+            <a
+                href="index.html"
+                class="view-site-btn">
+                Siteyi Gör
+            </a>
+
         </div>
 
-        <div class="article-body">
-          <p>
-            Akçaabat'ta gün içerisinde yaşanan gelişmeler vatandaşların
-            dikkatini çekti. İlçenin farklı noktalarında gündeme gelen
-            gelişmelerle ilgili bilgiler paylaşılmaya devam ediyor.
-          </p>
+    </header>
 
-          <p>
-            Akçaabat Haber olarak ilçede yaşanan gelişmeleri yakından
-            takip ediyor, önemli bilgileri okuyucularımıza ulaştırıyoruz.
-          </p>
 
-          <h2>Gelişmeler yakından takip ediliyor</h2>
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
 
-          <p>
-            Gün içerisinde yaşanan gelişmelerin detayları netleştikçe
-            haberimiz güncellenecektir. Akçaabat ve Trabzon gündemindeki
-            son gelişmeleri sitemiz üzerinden takip edebilirsiniz.
-          </p>
+    <aside
+        class="admin-sidebar"
+        id="adminSidebar">
+
+        <div class="admin-sidebar-title">
+            YÖNETİM PANELİ
         </div>
 
-        <div class="article-tags">
-          <span>#Akçaabat</span>
-          <span>#Trabzon</span>
-          <span>#Haber</span>
-          <span>#SonDakika</span>
+        <nav class="admin-nav">
+
+            <a
+                href="admin.html"
+                class="admin-nav-item">
+
+                <span>📊</span>
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="yeni-haber.html"
+                class="admin-nav-item">
+
+                <span>✍️</span>
+                Yeni Haber
+
+            </a>
+
+
+            <a
+                href="haber.html"
+                class="admin-nav-item active">
+
+                <span>📰</span>
+                Haberler
+
+            </a>
+
+
+            <a
+                href="taslaklar.html"
+                class="admin-nav-item">
+
+                <span>📝</span>
+                Taslaklar
+
+            </a>
+
+
+            <a
+                href="kategoriler.html"
+                class="admin-nav-item">
+
+                <span>📁</span>
+                Kategoriler
+
+            </a>
+
+
+            <a
+                href="yorumlar.html"
+                class="admin-nav-item">
+
+                <span>💬</span>
+                Yorumlar
+
+            </a>
+
+
+            <a
+                href="ayarlar.html"
+                class="admin-nav-item">
+
+                <span>⚙️</span>
+                Ayarlar
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-sidebar-bottom">
+
+            <a
+                href="index.html"
+                class="admin-nav-item">
+
+                <span>🌐</span>
+                Siteye Git
+
+            </a>
+
         </div>
 
-        <div class="article-share">
-          <strong>Haberi Paylaş</strong>
-          <button>WhatsApp</button>
-          <button>Facebook</button>
-          <button>𝕏</button>
+    </aside>
+
+
+    <!-- =========================================
+         ANA İÇERİK
+    ========================================== -->
+
+    <main class="admin-main">
+
+        <!-- SAYFA BAŞLIĞI -->
+
+        <div class="admin-page-header">
+
+            <div>
+
+                <div class="admin-breadcrumb">
+                    Yönetim Paneli / Haberler
+                </div>
+
+                <h1>
+                    Haberler
+                </h1>
+
+                <p>
+                    Yayındaki haberlerinizi yönetin.
+                </p>
+
+            </div>
+
+
+            <div class="admin-page-actions">
+
+                <a
+                    href="yeni-haber.html"
+                    class="admin-primary-btn">
+
+                    + Yeni Haber
+
+                </a>
+
+            </div>
+
         </div>
 
-      </article>
 
-      <aside class="article-sidebar">
+        <!-- =====================================
+             İSTATİSTİKLER
+        ====================================== -->
 
-        <div class="widget">
-          <h3>En Çok Okunanlar</h3>
-          <ol class="popular-list">
-            <li>Akçaabat'tan günün gelişmeleri</li>
-            <li>Trabzonspor'da son gelişmeler</li>
-            <li>Trabzon'da gündem</li>
-            <li>Akçaabat'ta hafta sonu</li>
-            <li>Yeni gelişmeler yaşanıyor</li>
-          </ol>
+        <div class="admin-stats-grid">
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    📰
+                </div>
+
+                <div>
+
+                    <span>
+                        Toplam Haber
+                    </span>
+
+                    <strong id="totalNews">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    🚨
+                </div>
+
+                <div>
+
+                    <span>
+                        Son Dakika
+                    </span>
+
+                    <strong id="breakingNews">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    📅
+                </div>
+
+                <div>
+
+                    <span>
+                        Bugün Eklenen
+                    </span>
+
+                    <strong id="todayNews">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon">
+                    📂
+                </div>
+
+                <div>
+
+                    <span>
+                        Kategori
+                    </span>
+
+                    <strong id="categoryCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="widget">
-          <h3>Son Dakika</h3>
-          <div class="article-latest">
-            <a href="#"><b>12:42</b> Akçaabat'tan son dakika gelişmesi</a>
-            <a href="#"><b>12:20</b> Trabzonspor'da yeni gelişme</a>
-            <a href="#"><b>11:55</b> Trabzon'da önemli açıklama</a>
-            <a href="#"><b>11:32</b> Akçaabat'ta yeni çalışma başladı</a>
-          </div>
-        </div>
 
-      </aside>
+        <!-- =====================================
+             FİLTRE ALANI
+        ====================================== -->
+
+        <section class="editor-card news-management-card">
+
+            <div class="news-filter-area">
+
+                <div class="news-search-box">
+
+                    <label for="newsSearch">
+                        Haber Ara
+                    </label>
+
+                    <input
+                        type="search"
+                        id="newsSearch"
+                        class="form-control"
+                        placeholder="Başlık veya içerik ara...">
+
+                </div>
+
+
+                <div class="news-filter-box">
+
+                    <label for="categoryFilter">
+                        Kategori
+                    </label>
+
+                    <select
+                        id="categoryFilter"
+                        class="form-control">
+
+                        <option value="">
+                            Tüm Kategoriler
+                        </option>
+
+                        <option value="Akçaabat">
+                            Akçaabat
+                        </option>
+
+                        <option value="Trabzon">
+                            Trabzon
+                        </option>
+
+                        <option value="Gündem">
+                            Gündem
+                        </option>
+
+                        <option value="Spor">
+                            Spor
+                        </option>
+
+                        <option value="Ekonomi">
+                            Ekonomi
+                        </option>
+
+                        <option value="Siyaset">
+                            Siyaset
+                        </option>
+
+                        <option value="Magazin">
+                            Magazin
+                        </option>
+
+                        <option value="Sağlık">
+                            Sağlık
+                        </option>
+
+                        <option value="Eğitim">
+                            Eğitim
+                        </option>
+
+                        <option value="Kültür Sanat">
+                            Kültür Sanat
+                        </option>
+
+                        <option value="Yaşam">
+                            Yaşam
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="news-filter-box">
+
+                    <label for="statusFilter">
+                        Durum
+                    </label>
+
+                    <select
+                        id="statusFilter"
+                        class="form-control">
+
+                        <option value="">
+                            Tümü
+                        </option>
+
+                        <option value="breaking">
+                            Son Dakika
+                        </option>
+
+                        <option value="normal">
+                            Normal Haber
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="resetFilters"
+                    class="admin-secondary-btn">
+
+                    Filtreleri Temizle
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             HABER LİSTESİ
+        ====================================== -->
+
+        <section class="editor-card">
+
+            <div class="editor-card-header">
+
+                <div>
+
+                    <h2>
+                        Yayındaki Haberler
+                    </h2>
+
+                    <p id="listDescription">
+                        Tüm yayınlanan haberler burada görünür.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        type="button"
+                        id="refreshNews"
+                        class="admin-secondary-btn">
+
+                        ↻ Yenile
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- TABLO -->
+
+            <div
+                class="news-table-wrapper"
+                id="newsTableWrapper">
+
+                <table class="news-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Haber
+                            </th>
+
+                            <th>
+                                Kategori
+                            </th>
+
+                            <th>
+                                Durum
+                            </th>
+
+                            <th>
+                                Tarih
+                            </th>
+
+                            <th>
+                                İşlem
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="newsTableBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- BOŞ EKRAN -->
+
+            <div
+                id="emptyNews"
+                class="admin-empty-state"
+                style="display:none;">
+
+                <div class="empty-icon">
+                    📰
+                </div>
+
+                <h3>
+                    Henüz haber bulunmuyor
+                </h3>
+
+                <p>
+                    Yayına alınmış bir haberiniz bulunmuyor.
+                </p>
+
+                <a
+                    href="yeni-haber.html"
+                    class="admin-primary-btn">
+
+                    İlk Haberi Oluştur
+
+                </a>
+
+            </div>
+
+
+            <!-- FİLTRE SONUCU YOK -->
+
+            <div
+                id="noResults"
+                class="admin-empty-state"
+                style="display:none;">
+
+                <div class="empty-icon">
+                    🔎
+                </div>
+
+                <h3>
+                    Sonuç bulunamadı
+                </h3>
+
+                <p>
+                    Arama veya filtre kriterlerinize uygun haber yok.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================
+         SİLME MODALI
+    ========================================== -->
+
+    <div
+        id="deleteModal"
+        class="admin-modal"
+        style="display:none;">
+
+        <div class="admin-modal-overlay"></div>
+
+        <div class="admin-modal-box">
+
+            <button
+                type="button"
+                class="admin-modal-close"
+                id="closeDeleteModal"
+                aria-label="Kapat">
+
+                ×
+
+            </button>
+
+            <div class="admin-modal-icon">
+                🗑️
+            </div>
+
+            <h2>
+                Haberi Sil
+            </h2>
+
+            <p>
+                Bu haberi silmek istediğinizden emin misiniz?
+                Bu işlem geri alınamaz.
+            </p>
+
+            <div class="admin-modal-actions">
+
+                <button
+                    type="button"
+                    class="admin-secondary-btn"
+                    id="cancelDelete">
+
+                    Vazgeç
+
+                </button>
+
+                <button
+                    type="button"
+                    class="admin-danger-btn"
+                    id="confirmDelete">
+
+                    Haberi Sil
+
+                </button>
+
+            </div>
+
+        </div>
 
     </div>
 
-  </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div>
-        <strong>AKÇAABAT <b>HABER</b></strong>
-        <p>Akçaabat'ın güncel haber kaynağı.</p>
-      </div>
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
 
-      <div class="footer-links">
-        <a href="#">Hakkımızda</a>
-        <a href="#">Gizlilik Politikası</a>
-        <a href="#">Kullanım Koşulları</a>
-        <a href="#">İletişim</a>
-      </div>
+    <script src="script.js"></script>
 
-      <span>© 2026 Akçaabat Haber</span>
-    </div>
-  </footer>
+    <script>
 
-  <script src="script.js"></script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const tableBody =
+                    document.getElementById(
+                        "newsTableBody"
+                    );
+
+                const emptyNews =
+                    document.getElementById(
+                        "emptyNews"
+                    );
+
+                const noResults =
+                    document.getElementById(
+                        "noResults"
+                    );
+
+                const tableWrapper =
+                    document.getElementById(
+                        "newsTableWrapper"
+                    );
+
+                const searchInput =
+                    document.getElementById(
+                        "newsSearch"
+                    );
+
+                const categoryFilter =
+                    document.getElementById(
+                        "categoryFilter"
+                    );
+
+                const statusFilter =
+                    document.getElementById(
+                        "statusFilter"
+                    );
+
+                const resetFilters =
+                    document.getElementById(
+                        "resetFilters"
+                    );
+
+                const refreshNews =
+                    document.getElementById(
+                        "refreshNews"
+                    );
+
+                const totalNews =
+                    document.getElementById(
+                        "totalNews"
+                    );
+
+                const breakingNews =
+                    document.getElementById(
+                        "breakingNews"
+                    );
+
+                const todayNews =
+                    document.getElementById(
+                        "todayNews"
+                    );
+
+                const categoryCount =
+                    document.getElementById(
+                        "categoryCount"
+                    );
+
+                const deleteModal =
+                    document.getElementById(
+                        "deleteModal"
+                    );
+
+                const closeDeleteModal =
+                    document.getElementById(
+                        "closeDeleteModal"
+                    );
+
+                const cancelDelete =
+                    document.getElementById(
+                        "cancelDelete"
+                    );
+
+                const confirmDelete =
+                    document.getElementById(
+                        "confirmDelete"
+                    );
+
+
+                let newsList = [];
+
+                let deleteId = null;
+
+
+                /*
+                 * ==================================
+                 * HABERLERİ OKU
+                 * ==================================
+                 */
+
+                function getNews() {
+
+                    try {
+
+                        const saved =
+                            localStorage.getItem(
+                                "akcaabat_haberler"
+                            );
+
+                        if (!saved) {
+
+                            return [];
+
+                        }
+
+                        const parsed =
+                            JSON.parse(saved);
+
+                        if (
+                            !Array.isArray(parsed)
+                        ) {
+
+                            return [];
+
+                        }
+
+                        return parsed;
+
+                    } catch (error) {
+
+                        console.error(
+                            "Haberler okunamadı:",
+                            error
+                        );
+
+                        return [];
+
+                    }
+
+                }
+
+
+                /*
+                 * ==================================
+                 * HABERLERİ KAYDET
+                 * ==================================
+                 */
+
+                function saveNews() {
+
+                    localStorage.setItem(
+                        "akcaabat_haberler",
+                        JSON.stringify(
+                            newsList
+                        )
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * TARİH FORMATLA
+                 * ==================================
+                 */
+
+                function formatDate(value) {
+
+                    if (!value) {
+
+                        return "-";
+
+                    }
+
+                    const date =
+                        new Date(value);
+
+                    if (
+                        Number.isNaN(
+                            date.getTime()
+                        )
+                    ) {
+
+                        return "-";
+
+                    }
+
+                    return date.toLocaleDateString(
+                        "tr-TR",
+                        {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric"
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * SAAT
+                 * ==================================
+                 */
+
+                function formatTime(value) {
+
+                    if (!value) {
+
+                        return "";
+
+                    }
+
+                    const date =
+                        new Date(value);
+
+                    if (
+                        Number.isNaN(
+                            date.getTime()
+                        )
+                    ) {
+
+                        return "";
+
+                    }
+
+                    return date.toLocaleTimeString(
+                        "tr-TR",
+                        {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * HTML GÜVENLİK
+                 * ==================================
+                 */
+
+                function escapeHTML(value) {
+
+                    if (
+                        value === null ||
+                        value === undefined
+                    ) {
+
+                        return "";
+
+                    }
+
+                    return String(value)
+                        .replace(
+                            /&/g,
+                            "&amp;"
+                        )
+                        .replace(
+                            /</g,
+                            "&lt;"
+                        )
+                        .replace(
+                            />/g,
+                            "&gt;"
+                        )
+                        .replace(
+                            /"/g,
+                            "&quot;"
+                        )
+                        .replace(
+                            /'/g,
+                            "&#039;"
+                        );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * BUGÜN MÜ?
+                 * ==================================
+                 */
+
+                function isToday(value) {
+
+                    if (!value) {
+
+                        return false;
+
+                    }
+
+                    const date =
+                        new Date(value);
+
+                    const today =
+                        new Date();
+
+                    return (
+                        date.getDate() ===
+                            today.getDate() &&
+
+                        date.getMonth() ===
+                            today.getMonth() &&
+
+                        date.getFullYear() ===
+                            today.getFullYear()
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * İSTATİSTİKLER
+                 * ==================================
+                 */
+
+                function updateStats() {
+
+                    const breaking =
+                        newsList.filter(
+                            function (news) {
+
+                                return (
+                                    news.breaking === true ||
+                                    news.breaking === "true"
+                                );
+
+                            }
+                        ).length;
+
+
+                    const today =
+                        newsList.filter(
+                            function (news) {
+
+                                return isToday(
+                                    news.createdAt
+                                );
+
+                            }
+                        ).length;
+
+
+                    const categories =
+                        new Set(
+                            newsList
+                                .map(
+                                    function (news) {
+
+                                        return news.category;
+
+                                    }
+                                )
+                                .filter(Boolean)
+                        );
+
+
+                    totalNews.textContent =
+                        newsList.length;
+
+                    breakingNews.textContent =
+                        breaking;
+
+                    todayNews.textContent =
+                        today;
+
+                    categoryCount.textContent =
+                        categories.size;
+
+                }
+
+
+                /*
+                 * ==================================
+                 * FİLTRELE
+                 * ==================================
+                 */
+
+                function getFilteredNews() {
+
+                    const search =
+                        searchInput.value
+                            .trim()
+                            .toLocaleLowerCase(
+                                "tr-TR"
+                            );
+
+                    const category =
+                        categoryFilter.value;
+
+                    const status =
+                        statusFilter.value;
+
+
+                    return newsList.filter(
+                        function (news) {
+
+                            const title =
+                                String(
+                                    news.title || ""
+                                )
+                                .toLocaleLowerCase(
+                                    "tr-TR"
+                                );
+
+                            const content =
+                                String(
+                                    news.content || ""
+                                )
+                                .toLocaleLowerCase(
+                                    "tr-TR"
+                                );
+
+                            const summary =
+                                String(
+                                    news.summary || ""
+                                )
+                                .toLocaleLowerCase(
+                                    "tr-TR"
+                                );
+
+
+                            const matchesSearch =
+                                !search ||
+                                title.includes(
+                                    search
+                                ) ||
+                                content.includes(
+                                    search
+                                ) ||
+                                summary.includes(
+                                    search
+                                );
+
+
+                            const matchesCategory =
+                                !category ||
+                                news.category ===
+                                    category;
+
+
+                            const isBreaking =
+                                news.breaking === true ||
+                                news.breaking === "true";
+
+
+                            const matchesStatus =
+                                !status ||
+
+                                (
+                                    status === "breaking" &&
+                                    isBreaking
+                                ) ||
+
+                                (
+                                    status === "normal" &&
+                                    !isBreaking
+                                );
+
+
+                            return (
+                                matchesSearch &&
+                                matchesCategory &&
+                                matchesStatus
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * HABERLERİ RENDER ET
+                 * ==================================
+                 */
+
+                function renderNews() {
+
+                    const filtered =
+                        getFilteredNews();
+
+
+                    tableBody.innerHTML = "";
+
+
+                    /*
+                     * Hiç haber yok
+                     */
+
+                    if (
+                        newsList.length === 0
+                    ) {
+
+                        tableWrapper.style.display =
+                            "none";
+
+                        emptyNews.style.display =
+                            "flex";
+
+                        noResults.style.display =
+                            "none";
+
+                        return;
+
+                    }
+
+
+                    emptyNews.style.display =
+                        "none";
+
+
+                    /*
+                     * Filtre sonucu yok
+                     */
+
+                    if (
+                        filtered.length === 0
+                    ) {
+
+                        tableWrapper.style.display =
+                            "none";
+
+                        noResults.style.display =
+                            "flex";
+
+                        return;
+
+                    }
+
+
+                    noResults.style.display =
+                        "none";
+
+                    tableWrapper.style.display =
+                        "block";
+
+
+                    filtered.forEach(
+                        function (news) {
+
+                            const row =
+                                document.createElement(
+                                    "tr"
+                                );
+
+
+                            const breaking =
+                                news.breaking === true ||
+                                news.breaking === "true";
+
+
+                            const title =
+                                escapeHTML(
+                                    news.title ||
+                                    "Başlıksız Haber"
+                                );
+
+
+                            const category =
+                                escapeHTML(
+                                    news.category ||
+                                    "Genel"
+                                );
+
+
+                            const date =
+                                formatDate(
+                                    news.createdAt
+                                );
+
+
+                            const time =
+                                formatTime(
+                                    news.createdAt
+                                );
+
+
+                            row.innerHTML = `
+
+                                <td>
+
+                                    <div class="news-table-title">
+
+                                        <div class="news-table-icon">
+                                            📰
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                ${title}
+                                            </strong>
+
+                                            ${
+                                                breaking
+                                                    ? `
+                                                        <span class="breaking-mini">
+                                                            SON DAKİKA
+                                                        </span>
+                                                      `
+                                                    : ""
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="news-category-badge">
+                                        ${category}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="news-status-badge published">
+                                        Yayında
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="news-date">
+
+                                        <strong>
+                                            ${date}
+                                        </strong>
+
+                                        <small>
+                                            ${time}
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="news-actions">
+
+                                        <a
+                                            href="yeni-haber.html?edit=${encodeURIComponent(
+                                                news.id || ""
+                                            )}"
+                                            class="news-action edit"
+                                            title="Düzenle">
+
+                                            ✏️
+
+                                        </a>
+
+
+                                        <button
+                                            type="button"
+                                            class="news-action delete"
+                                            data-delete-id="${escapeHTML(
+                                                news.id || ""
+                                            )}"
+                                            title="Sil">
+
+                                            🗑️
+
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            `;
+
+
+                            tableBody.appendChild(
+                                row
+                            );
+
+                        }
+                    );
+
+
+                    /*
+                     * Sil butonları
+                     */
+
+                    const deleteButtons =
+                        document.querySelectorAll(
+                            "[data-delete-id]"
+                        );
+
+
+                    deleteButtons.forEach(
+                        function (button) {
+
+                            button.addEventListener(
+                                "click",
+                                function () {
+
+                                    deleteId =
+                                        button.getAttribute(
+                                            "data-delete-id"
+                                        );
+
+                                    openDeleteModal();
+
+                                }
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * MODAL AÇ
+                 * ==================================
+                 */
+
+                function openDeleteModal() {
+
+                    deleteModal.style.display =
+                        "flex";
+
+                }
+
+
+                /*
+                 * ==================================
+                 * MODAL KAPAT
+                 * ==================================
+                 */
+
+                function closeModal() {
+
+                    deleteModal.style.display =
+                        "none";
+
+                    deleteId = null;
+
+                }
+
+
+                /*
+                 * ==================================
+                 * HABER SİL
+                 * ==================================
+                 */
+
+                function deleteNews() {
+
+                    if (!deleteId) {
+
+                        return;
+
+                    }
+
+
+                    newsList =
+                        newsList.filter(
+                            function (news) {
+
+                                return String(
+                                    news.id
+                                ) !==
+                                    String(
+                                        deleteId
+                                    );
+
+                            }
+                        );
+
+
+                    saveNews();
+
+                    closeModal();
+
+                    updateStats();
+
+                    renderNews();
+
+                }
+
+
+                /*
+                 * ==================================
+                 * ARAMA
+                 * ==================================
+                 */
+
+                if (searchInput) {
+
+                    searchInput.addEventListener(
+                        "input",
+                        renderNews
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * KATEGORİ
+                 * ==================================
+                 */
+
+                if (categoryFilter) {
+
+                    categoryFilter.addEventListener(
+                        "change",
+                        renderNews
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * DURUM
+                 * ==================================
+                 */
+
+                if (statusFilter) {
+
+                    statusFilter.addEventListener(
+                        "change",
+                        renderNews
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * FİLTRE SIFIRLA
+                 * ==================================
+                 */
+
+                if (resetFilters) {
+
+                    resetFilters.addEventListener(
+                        "click",
+                        function () {
+
+                            searchInput.value =
+                                "";
+
+                            categoryFilter.value =
+                                "";
+
+                            statusFilter.value =
+                                "";
+
+                            renderNews();
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * YENİLE
+                 * ==================================
+                 */
+
+                if (refreshNews) {
+
+                    refreshNews.addEventListener(
+                        "click",
+                        function () {
+
+                            newsList =
+                                getNews();
+
+                            updateStats();
+
+                            renderNews();
+
+                        }
+                    );
+
+                }
+
+
+                /*
+                 * ==================================
+                 * MODAL BUTONLARI
+                 * ==================================
+                 */
+
+                if (closeDeleteModal) {
+
+                    closeDeleteModal.addEventListener(
+                        "click",
+                        closeModal
+                    );
+
+                }
+
+
+                if (cancelDelete) {
+
+                    cancelDelete.addEventListener(
+                        "click",
+                        closeModal
+                    );
+
+                }
+
+
+                if (confirmDelete) {
+
+                    confirmDelete.addEventListener(
+                        "click",
+                        deleteNews
+                    );
+
+                }
+
+
+                /*
+                 * Overlay tıklama
+                 */
+
+                const overlay =
+                    document.querySelector(
+                        ".admin-modal-overlay"
+                    );
+
+
+                if (overlay) {
+
+                    overlay.addEventListener(
+                        "click",
+                        closeModal
+                    );
+
+                }
+
+
+                /*
+                 * ESC
+                 */
+
+                document.addEventListener(
+                    "keydown",
+                    function (event) {
+
+                        if (
+                            event.key === "Escape"
+                        ) {
+
+                            closeModal();
+
+                        }
+
+                    }
+                );
+
+
+                /*
+                 * ==================================
+                 * BAŞLAT
+                 * ==================================
+                 */
+
+                newsList =
+                    getNews();
+
+                updateStats();
+
+                renderNews();
+
+            }
+        );
+
+    </script>
+
 </body>
 </html>
