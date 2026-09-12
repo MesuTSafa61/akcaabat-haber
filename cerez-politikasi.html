@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Çerez Politikası | Akçaabat Haber</title>
+  <meta
+    name="description"
+    content="Akçaabat Haber çerez politikası ve kullanılan tarayıcı teknolojileri hakkında bilgilendirme."
+  >
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0b1f3a">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy: #0b1f3a;
+      --blue: #153d6b;
+      --red: #d62839;
+      --text: #172033;
+      --muted: #667085;
+      --border: #e7eaf0;
+      --bg: #f6f8fb;
+      --white: #ffffff;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      background: var(--navy);
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 38px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 76px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--navy);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .brand-name {
+      display: block;
+      color: var(--navy);
+      font-size: 20px;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    nav {
+      display: flex;
+      gap: 22px;
+    }
+
+    nav a {
+      color: #344054;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    nav a:hover {
+      color: var(--red);
+    }
+
+    .page {
+      width: min(920px, calc(100% - 32px));
+      margin: 48px auto 70px;
+    }
+
+    .hero {
+      padding: 42px;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, #0b1f3a, #153d6b);
+      color: #fff;
+      box-shadow: 0 20px 55px rgba(11, 31, 58, 0.14);
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+    }
+
+    .hero p {
+      max-width: 720px;
+      color: rgba(255, 255, 255, .78);
+      font-size: 15px;
+    }
+
+    .content {
+      margin-top: 24px;
+      padding: 40px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--white);
+      box-shadow: 0 12px 35px rgba(16, 24, 40, .05);
+    }
+
+    section + section {
+      margin-top: 34px;
+      padding-top: 34px;
+      border-top: 1px solid var(--border);
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      color: var(--navy);
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      color: #25324a;
+      font-size: 17px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: #475467;
+      font-size: 15px;
+    }
+
+    ul {
+      margin: 12px 0 0 22px;
+      color: #475467;
+    }
+
+    li {
+      margin: 7px 0;
+    }
+
+    .cookie-card {
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #f9fafb;
+    }
+
+    .cookie-card strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--navy);
+      font-size: 16px;
+    }
+
+    .cookie-card p {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
+    .notice {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--red);
+      border-radius: 10px;
+      background: #fff5f6;
+      color: #475467;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 34px 20px;
+      border-top: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-brand {
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .footer-copy {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .footer-links a:hover {
+      color: var(--red);
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner {
+        justify-content: center;
+      }
+
+      .topbar-inner span:last-child {
+        display: none;
+      }
+
+      .header-inner {
+        min-height: 68px;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      nav a:nth-child(n + 3) {
+        display: none;
+      }
+
+      .page {
+        margin-top: 24px;
+      }
+
+      .hero {
+        padding: 30px 24px;
+        border-radius: 20px;
+      }
+
+      .content {
+        padding: 28px 22px;
+        border-radius: 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        width: calc(100% - 20px);
+      }
+
+      .header-inner {
+        width: calc(100% - 20px);
+      }
+
+      .brand-name {
+        font-size: 18px;
+      }
+
+      .brand-logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .hero {
+        padding: 26px 20px;
+      }
+
+      .content {
+        padding: 24px 18px;
+      }
+
+      p,
+      li {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span>
+        <strong>Akçaabat Haber</strong> · Yerelden dünyaya
+      </span>
+
+      <span>Güncel · Güvenilir · Yerel</span>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-inner">
+
+      <a class="brand" href="/">
+        <span class="brand-logo">AH</span>
+
+        <span>
+          <span class="brand-name">Akçaabat Haber</span>
+          <span class="brand-subtitle">
+            Akçaabat ve Trabzon'dan haberler
+          </span>
+        </span>
+      </a>
+
+      <nav aria-label="Ana menü">
+        <a href="/">Ana Sayfa</a>
+        <a href="/haberler.html">Haberler</a>
+        <a href="/gizlilik.html">Gizlilik</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="hero">
+      <span class="label">Çerez Bilgilendirme</span>
+
+      <h1>Çerez Politikası</h1>
+
+      <p>
+        Akçaabat Haber internet sitesinde kullanılan çerezler ve
+        benzeri tarayıcı teknolojileri hakkında bilgilendirme.
+      </p>
+    </section>
+
+    <article class="content">
+
+      <section>
+        <h2>1. Çerez Nedir?</h2>
+
+        <p>
+          Çerezler, ziyaret edilen internet siteleri tarafından
+          kullanıcının tarayıcısına kaydedilebilen küçük veri
+          dosyalarıdır.
+        </p>
+
+        <p>
+          Bu teknolojiler sitelerin daha düzgün çalışmasına,
+          tercihlerin hatırlanmasına ve kullanıcı deneyiminin
+          geliştirilmesine yardımcı olabilir.
+        </p>
+      </section>
+
+      <section>
+        <h2>2. Akçaabat Haber'de Kullanım</h2>
+
+        <p>
+          Sitemizin mevcut statik sürümünde bazı özelliklerin
+          çalışması için tarayıcının yerel depolama alanından
+          yararlanılabilir.
+        </p>
+
+        <div class="cookie-card">
+          <strong>Yerel Depolama</strong>
+
+          <p>
+            Bazı site ve yönetim paneli verileri tarayıcıdaki
+            localStorage alanında tutulabilir.
+          </p>
+        </div>
+
+        <div class="cookie-card">
+          <strong>Teknik Veriler</strong>
+
+          <p>
+            Siteyi barındıran veya kullanılan üçüncü taraf teknik
+            hizmetler, hizmetin çalışması için gerekli bazı teknik
+            verileri işleyebilir.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. Çerezlerin Amaçları</h2>
+
+        <p>
+          Kullanılan çerez veya benzeri teknolojiler genel olarak
+          aşağıdaki amaçlara hizmet edebilir:
+        </p>
+
+        <ul>
+          <li>Site işlevlerinin düzgün çalışmasını sağlamak</li>
+          <li>Kullanıcı tercihlerini hatırlamak</li>
+          <li>Güvenliği desteklemek</li>
+          <li>Performansı değerlendirmek</li>
+          <li>Kullanıcı deneyimini geliştirmek</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>4. Zorunlu Teknolojiler</h2>
+
+        <p>
+          Bazı teknik depolama yöntemleri sitenin temel işlevlerinin
+          çalışması için gerekli olabilir.
+        </p>
+
+        <p>
+          Bu tür teknolojilerin devre dışı bırakılması halinde
+          sitenin bazı özellikleri beklenildiği şekilde çalışmayabilir.
+        </p>
+      </section>
+
+      <section>
+        <h2>5. Üçüncü Taraf Çerezleri</h2>
+
+        <p>
+          İlerleyen dönemlerde sitede analiz, reklam, video,
+          sosyal medya veya başka harici hizmetler kullanılabilir.
+        </p>
+
+        <p>
+          Bu hizmetlerin kendi çerez politikaları bulunabilir.
+          Kullanıcıların ilgili hizmet sağlayıcıların politikalarını
+          ayrıca incelemesi önerilir.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. Çerezleri Yönetme</h2>
+
+        <p>
+          Kullanıcılar kullandıkları internet tarayıcısının
+          ayarlarından çerezleri görüntüleyebilir, silebilir veya
+          engelleyebilir.
+        </p>
+
+        <p>
+          Ancak çerezlerin veya yerel depolama teknolojilerinin
+          engellenmesi bazı site özelliklerinin çalışmasını
+          etkileyebilir.
+        </p>
+      </section>
+
+      <section>
+        <h2>7. Politika Değişiklikleri</h2>
+
+        <p>
+          Kullanılan teknik altyapı ve üçüncü taraf hizmetlerde
+          meydana gelebilecek değişiklikler doğrultusunda bu
+          Çerez Politikası güncellenebilir.
+        </p>
+
+        <div class="notice">
+          Bu metin genel bilgilendirme amacıyla hazırlanmıştır.
+          Sitede reklam, analiz veya başka üçüncü taraf hizmetleri
+          aktif hale getirildiğinde kullanılan teknolojilere göre
+          politika yeniden düzenlenmelidir.
+        </div>
+      </section>
+
+      <section>
+        <h2>8. İletişim</h2>
+
+        <p>
+          Çerez politikası hakkında sorularınız veya talepleriniz
+          olması halinde Akçaabat Haber yönetimiyle iletişime
+          geçebilirsiniz.
+        </p>
+      </section>
+
+    </article>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+
+      <div>
+        <div class="footer-brand">Akçaabat Haber</div>
+
+        <div class="footer-copy">
+          © <span id="year"></span> Akçaabat Haber
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <a href="/">Ana Sayfa</a>
+        <a href="/haberler.html">Haberler</a>
+        <a href="/gizlilik.html">Gizlilik</a>
+        <a href="/kvkk.html">KVKK</a>
+        <a href="/cerez-politikasi.html">Çerez Politikası</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
