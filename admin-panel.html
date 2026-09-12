@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10233f">
+  <title>Dashboard | Akçaabat Haber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-page">
+
+  <aside class="admin-sidebar">
+
+    <div class="admin-sidebar-brand">
+      <span class="logo-mark">A</span>
+      <div>
+        <strong>AKÇAABAT <b>HABER</b></strong>
+        <small>Yönetim Paneli</small>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <span class="admin-nav-title">YÖNETİM</span>
+
+      <a class="active" href="admin-panel.html">
+        <span>▦</span> Dashboard
+      </a>
+
+      <a href="#">
+        <span>📰</span> Haberler
+      </a>
+
+      <a href="#">
+        <span>＋</span> Yeni Haber
+      </a>
+
+      <a href="#">
+        <span>▤</span> Kategoriler
+      </a>
+
+      <span class="admin-nav-title">İÇERİK</span>
+
+      <a href="#">
+        <span>▧</span> Foto Galeri
+      </a>
+
+      <a href="#">
+        <span>▶</span> Videolar
+      </a>
+
+      <a href="#">
+        <span>⚡</span> Son Dakika
+      </a>
+
+      <span class="admin-nav-title">SİSTEM</span>
+
+      <a href="#">
+        <span>♙</span> Kullanıcılar
+      </a>
+
+      <a href="#">
+        <span>⚙</span> Site Ayarları
+      </a>
+    </nav>
+
+    <a class="admin-sidebar-bottom" href="index.html">
+      ← Siteye Dön
+    </a>
+
+  </aside>
+
+  <main class="dashboard-main">
+
+    <header class="dashboard-header">
+
+      <button class="dashboard-menu" type="button">
+        ☰
+      </button>
+
+      <div>
+        <span>Yönetim Paneli</span>
+        <h1>Dashboard</h1>
+      </div>
+
+      <div class="admin-user">
+        <span class="admin-avatar">A</span>
+        <div>
+          <strong>Yönetici</strong>
+          <small>Admin</small>
+        </div>
+      </div>
+
+    </header>
+
+    <section class="dashboard-content">
+
+      <div class="dashboard-welcome">
+        <div>
+          <span>12 EYLÜL 2026</span>
+          <h2>Hoş geldiniz 👋</h2>
+          <p>Akçaabat Haber yönetim paneline hoş geldiniz.</p>
+        </div>
+
+        <a href="#" class="dashboard-add">
+          + Yeni Haber
+        </a>
+      </div>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <span class="stat-icon">📰</span>
+          <div>
+            <small>Toplam Haber</small>
+            <strong>248</strong>
+          </div>
+          <em>+12%</em>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">◉</span>
+          <div>
+            <small>Bugünkü Haber</small>
+            <strong>18</strong>
+          </div>
+          <em>+5%</em>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">▣</span>
+          <div>
+            <small>Toplam Okunma</small>
+            <strong>84.6K</strong>
+          </div>
+          <em>+18%</em>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">⚡</span>
+          <div>
+            <small>Son Dakika</small>
+            <strong>7</strong>
+          </div>
+          <em>Aktif</em>
+        </div>
+
+      </div>
+
+      <div class="dashboard-grid">
+
+        <section class="dashboard-card">
+
+          <div class="dashboard-card-head">
+            <div>
+              <span>İÇERİK</span>
+              <h3>Son Eklenen Haberler</h3>
+            </div>
+
+            <a href="#">Tümünü Gör →</a>
+          </div>
+
+          <div class="admin-news-list">
+
+            <a href="#">
+              <span class="admin-news-time">12:42</span>
+              <div>
+                <strong>Akçaabat'tan günün öne çıkan gelişmeleri</strong>
+                <small>Akçaabat · 2.4K okunma</small>
+              </div>
+              <span class="status published">Yayında</span>
+            </a>
+
+            <a href="#">
+              <span class="admin-news-time">12:20</span>
+              <div>
+                <strong>Trabzonspor'da yeni gelişme</strong>
+                <small>Spor · 1.9K okunma</small>
+              </div>
+              <span class="status published">Yayında</span>
+            </a>
+
+            <a href="#">
+              <span class="admin-news-time">11:55</span>
+              <div>
+                <strong>Trabzon'da önemli açıklama</strong>
+                <small>Trabzon · 1.5K okunma</small>
+              </div>
+              <span class="status draft">Taslak</span>
+            </a>
+
+            <a href="#">
+              <span class="admin-news-time">11:32</span>
+              <div>
+                <strong>Akçaabat'ta yeni çalışma başladı</strong>
+                <small>Akçaabat · 1.2K okunma</small>
+              </div>
+              <span class="status published">Yayında</span>
+            </a>
+
+          </div>
+
+        </section>
+
+        <section class="dashboard-card">
+
+          <div class="dashboard-card-head">
+            <div>
+              <span>İSTATİSTİK</span>
+              <h3>Bugünkü Durum</h3>
+            </div>
+          </div>
+
+          <div class="mini-stat">
+            <span>Sayfa Görüntülenme</span>
+            <strong>12.840</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>Yeni Ziyaretçi</span>
+            <strong>4.280</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>Mobil Ziyaret</span>
+            <strong>%72</strong>
+          </div>
+
+          <div class="mini-stat">
+            <span>Ortalama Okuma</span>
+            <strong>2:48</strong>
+          </div>
+
+        </section>
+
+      </div>
+
+      <section class="dashboard-card quick-actions">
+
+        <div class="dashboard-card-head">
+          <div>
+            <span>HIZLI İŞLEMLER</span>
+            <h3>Yönetim Kısayolları</h3>
+          </div>
+        </div>
+
+        <div class="quick-grid">
+
+          <a href="#">
+            <strong>＋</strong>
+            <span>Yeni Haber</span>
+            <small>Haber oluştur</small>
+          </a>
+
+          <a href="#">
+            <strong>▤</strong>
+            <span>Kategoriler</span>
+            <small>Kategori düzenle</small>
+          </a>
+
+          <a href="#">
+            <strong>▧</strong>
+            <span>Galeri</span>
+            <small>Fotoğraf yükle</small>
+          </a>
+
+          <a href="#">
+            <strong>⚡</strong>
+            <span>Son Dakika</span>
+            <small>Gelişme yayınla</small>
+          </a>
+
+        </div>
+
+      </section>
+
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
