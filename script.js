@@ -1,31 +1,27 @@
 /* =========================================================
    AKÇAABAT HABER
    ANA JAVASCRIPT
+   SÜRÜM: SEO SLUG SİSTEMİ
    ========================================================= */
 
 (function () {
 
     "use strict";
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        STORAGE ANAHTARLARI
-    --------------------------------------------------------- */
+       ========================================================= */
 
     const NEWS_KEY = "akcaabat_haberler";
     const DRAFT_KEY = "akcaabat_taslaklar";
-
-
-    /* ---------------------------------------------------------
-       GENEL AYARLAR
-    --------------------------------------------------------- */
 
     const FALLBACK_IMAGE =
         "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80";
 
 
-    /* ---------------------------------------------------------
-       YARDIMCI FONKSİYONLAR
-    --------------------------------------------------------- */
+    /* =========================================================
+       STORAGE
+       ========================================================= */
 
     function readStorage(key) {
 
@@ -84,6 +80,10 @@
     }
 
 
+    /* =========================================================
+       ID
+       ========================================================= */
+
     function createId(prefix) {
 
         const random =
@@ -106,6 +106,10 @@
     }
 
 
+    /* =========================================================
+       HTML GÜVENLİĞİ
+       ========================================================= */
+
     function escapeHtml(value) {
 
         if (
@@ -125,48 +129,62 @@
     }
 
 
+    /* =========================================================
+       HABER ALANLARI
+       ========================================================= */
+
     function getTitle(item) {
 
-        return item.title ||
+        return (
+            item.title ||
             item.baslik ||
-            "";
+            ""
+        );
 
     }
 
 
     function getSummary(item) {
 
-        return item.summary ||
+        return (
+            item.summary ||
             item.ozet ||
-            "";
+            ""
+        );
 
     }
 
 
     function getContent(item) {
 
-        return item.content ||
+        return (
+            item.content ||
             item.icerik ||
-            "";
+            ""
+        );
 
     }
 
 
     function getCategory(item) {
 
-        return item.category ||
+        return (
+            item.category ||
             item.kategori ||
-            "Genel";
+            "Genel"
+        );
 
     }
 
 
     function getImage(item) {
 
-        return item.image ||
+        return (
+            item.image ||
             item.gorsel ||
             item.resim ||
-            FALLBACK_IMAGE;
+            FALLBACK_IMAGE
+        );
 
     }
 
@@ -190,28 +208,36 @@
 
     function getNewsId(item) {
 
-        return item.id ||
+        return (
+            item.id ||
             item.newsId ||
             item.haberId ||
-            "";
+            ""
+        );
 
     }
 
 
     function getDate(item) {
 
-        return item.publishedAt ||
+        return (
+            item.publishedAt ||
             item.createdAt ||
             item.updatedAt ||
-            "";
+            ""
+        );
 
     }
 
 
     function isBreaking(item) {
 
-        return item.breaking === true ||
-            item.breaking === "true";
+        return (
+            item.breaking === true ||
+            item.breaking === "true" ||
+            item.breaking === 1 ||
+            item.breaking === "1"
+        );
 
     }
 
@@ -222,6 +248,10 @@
 
     }
 
+
+    /* =========================================================
+       TARİH
+       ========================================================= */
 
     function formatDate(value) {
 
@@ -269,101 +299,299 @@
             return "-";
         }
 
-        return date.toLocaleDateString(
-            "tr-TR",
-            {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric"
-            }
-        ) +
-        " " +
-        date.toLocaleTimeString(
-            "tr-TR",
-            {
-                hour: "2-digit",
-                minute: "2-digit"
-            }
+        return (
+            date.toLocaleDateString(
+                "tr-TR",
+                {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                }
+            ) +
+            " " +
+            date.toLocaleTimeString(
+                "tr-TR",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            )
         );
 
     }
 
+
+    /* =========================================================
+       SEO SLUG
+       ========================================================= */
 
     function slugify(text) {
 
         return String(text || "")
             .toLowerCase()
             .trim()
+
+            /* Türkçe karakterler */
             .replace(/ğ/g, "g")
             .replace(/ü/g, "u")
             .replace(/ş/g, "s")
             .replace(/ı/g, "i")
             .replace(/ö/g, "o")
             .replace(/ç/g, "c")
-            .replace(/[^a-z0-9]+/g, "-")
+
+            /* Türkçe büyük harf ihtimali */
+            .replace(/Ğ/g, "g")
+            .replace(/Ü/g, "u")
+            .replace(/Ş/g, "s")
+            .replace(/İ/g, "i")
+            .replace(/I/g, "i")
+            .replace(/Ö/g, "o")
+            .replace(/Ç/g, "c")
+
+            /* Noktalama */
+            .replace(/[^a-z0-9\s-]/g, "")
+
+            /* Boşluk */
+            .replace(/\s+/g, "-")
+
+            /* Fazla tire */
+            .replace(/-+/g, "-")
+
+            /* Baş / son tire */
             .replace(/^-+|-+$/g, "");
 
     }
 
 
-    /* ---------------------------------------------------------
-       GLOBAL OBJE
-    --------------------------------------------------------- */
+    /* =========================================================
+       BENZERSİZ SLUG
+       ========================================================= */
 
-    window.AkcaaabatHaber = {
+    function createUniqueSlug(
+        title,
+        newsList,
+        currentId
+    ) {
 
-        NEWS_KEY: NEWS_KEY,
+        const base =
+            slugify(title) ||
+            "haber";
 
-        DRAFT_KEY: DRAFT_KEY,
+        let slug = base;
 
-        FALLBACK_IMAGE: FALLBACK_IMAGE,
+        let counter = 2;
 
-        readNews: function () {
+        while (
+            newsList.some(function (item) {
 
-            return readStorage(
+                const itemId =
+                    getNewsId(item);
+
+                return (
+                    String(itemId) !==
+                        String(currentId || "") &&
+                    String(item.slug || "")
+                        .toLowerCase() ===
+                        String(slug)
+                            .toLowerCase()
+                );
+
+            })
+        ) {
+
+            slug =
+                base +
+                "-" +
+                counter;
+
+            counter++;
+
+        }
+
+        return slug;
+
+    }
+
+
+    /* =========================================================
+       SLUG'DAN HABER BUL
+       ========================================================= */
+
+    function findNewsBySlug(slug) {
+
+        if (!slug) {
+            return null;
+        }
+
+        const news =
+            readStorage(
                 NEWS_KEY
             );
 
-        },
+        const normalized =
+            String(slug)
+                .trim()
+                .toLowerCase();
 
-        readDrafts: function () {
+        return (
+            news.find(
+                function (item) {
 
-            return readStorage(
-                DRAFT_KEY
-            );
+                    return (
+                        String(
+                            item.slug || ""
+                        )
+                        .trim()
+                        .toLowerCase() ===
+                        normalized
+                    );
 
-        },
+                }
+            ) ||
+            null
+        );
 
-        saveNews: function (data) {
+    }
 
-            return writeStorage(
-                NEWS_KEY,
-                data
-            );
 
-        },
+    /* =========================================================
+       HABER URL
+       ========================================================= */
 
-        saveDrafts: function (data) {
+    function getNewsUrl(item) {
 
-            return writeStorage(
-                DRAFT_KEY,
-                data
-            );
+        const slug =
+            item &&
+            item.slug
+                ? item.slug
+                : slugify(
+                    getTitle(item)
+                );
 
-        },
+        if (!slug) {
+            return "haber-detay.html";
+        }
 
-        createId: createId,
+        /*
+         * GitHub Pages uyumlu güvenli URL.
+         *
+         * Şimdilik:
+         * haber-detay.html?slug=...
+         *
+         * Daha sonra gerçek rewrite sistemine
+         * geçtiğimizde:
+         *
+         * /spor/haber-basligi
+         *
+         * şekline çevireceğiz.
+         */
 
-        escapeHtml: escapeHtml,
+        return (
+            "haber-detay.html?slug=" +
+            encodeURIComponent(slug)
+        );
 
-        slugify: slugify
+    }
+
+
+    /* =========================================================
+       GLOBAL OBJE
+       ========================================================= */
+
+    window.AkcaabatHaber = {
+
+        NEWS_KEY:
+            NEWS_KEY,
+
+        DRAFT_KEY:
+            DRAFT_KEY,
+
+        FALLBACK_IMAGE:
+            FALLBACK_IMAGE,
+
+        readNews:
+            function () {
+
+                return readStorage(
+                    NEWS_KEY
+                );
+
+            },
+
+        readDrafts:
+            function () {
+
+                return readStorage(
+                    DRAFT_KEY
+                );
+
+            },
+
+        saveNews:
+            function (data) {
+
+                return writeStorage(
+                    NEWS_KEY,
+                    data
+                );
+
+            },
+
+        saveDrafts:
+            function (data) {
+
+                return writeStorage(
+                    DRAFT_KEY,
+                    data
+                );
+
+            },
+
+        createId:
+            createId,
+
+        escapeHtml:
+            escapeHtml,
+
+        slugify:
+            slugify,
+
+        createUniqueSlug:
+            createUniqueSlug,
+
+        findNewsBySlug:
+            findNewsBySlug,
+
+        getNewsUrl:
+            getNewsUrl,
+
+        getTitle:
+            getTitle,
+
+        getSummary:
+            getSummary,
+
+        getContent:
+            getContent,
+
+        getCategory:
+            getCategory,
+
+        getImage:
+            getImage,
+
+        getViews:
+            getViews,
+
+        getNewsId:
+            getNewsId
 
     };
 
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        MOBİL MENÜ
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function initMobileMenu() {
 
@@ -372,20 +600,22 @@
                 "[data-mobile-menu]"
             );
 
-        buttons.forEach(function (button) {
+        buttons.forEach(
+            function (button) {
 
-            button.addEventListener(
-                "click",
-                function () {
+                button.addEventListener(
+                    "click",
+                    function () {
 
-                    document.body.classList.toggle(
-                        "mobile-menu-open"
-                    );
+                        document.body.classList.toggle(
+                            "mobile-menu-open"
+                        );
 
-                }
-            );
+                    }
+                );
 
-        });
+            }
+        );
 
 
         document.addEventListener(
@@ -413,9 +643,9 @@
     }
 
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        RESİM ÖNİZLEME
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function initImagePreview() {
 
@@ -424,17 +654,14 @@
                 'input[type="file"][data-image-input]'
             );
 
-
         const preview =
             document.querySelector(
                 "[data-image-preview]"
             );
 
-
         if (!input || !preview) {
             return;
         }
-
 
         input.addEventListener(
             "change",
@@ -444,11 +671,9 @@
                     input.files &&
                     input.files[0];
 
-
                 if (!file) {
                     return;
                 }
-
 
                 if (
                     !file.type.startsWith(
@@ -466,10 +691,8 @@
 
                 }
 
-
                 const reader =
                     new FileReader();
-
 
                 reader.onload =
                     function (event) {
@@ -482,7 +705,6 @@
 
                     };
 
-
                 reader.readAsDataURL(
                     file
                 );
@@ -493,68 +715,9 @@
     }
 
 
-    /* ---------------------------------------------------------
-       FORM ELEMENT OKUMA
-    --------------------------------------------------------- */
-
-    function getFormValue(
-        form,
-        selectors
-    ) {
-
-        for (
-            let i = 0;
-            i < selectors.length;
-            i++
-        ) {
-
-            const element =
-                form.querySelector(
-                    selectors[i]
-                );
-
-
-            if (element) {
-
-                return element.value
-                    .trim();
-
-            }
-
-        }
-
-        return "";
-
-    }
-
-
-    function getFormCheckbox(
-        form,
-        selectors
-    ) {
-
-        for (
-            let i = 0;
-            i < selectors.length;
-            i++
-        ) {
-
-            const element =
-                form.querySelector(
-                    selectors[i]
-                );
-
-
-            if (element) {
-                return element.checked;
-            }
-
-        }
-
-        return false;
-
-    }
-
+    /* =========================================================
+       FORM ELEMENTLERİ
+       ========================================================= */
 
     function findFormElement(
         form,
@@ -572,7 +735,6 @@
                     selectors[i]
                 );
 
-
             if (element) {
                 return element;
             }
@@ -584,9 +746,64 @@
     }
 
 
-    /* ---------------------------------------------------------
+    function findInput(
+        form,
+        selectors
+    ) {
+
+        return findFormElement(
+            form,
+            selectors
+        );
+
+    }
+
+
+    function getFormValue(
+        form,
+        selectors
+    ) {
+
+        const element =
+            findFormElement(
+                form,
+                selectors
+            );
+
+        if (!element) {
+            return "";
+        }
+
+        return String(
+            element.value || ""
+        ).trim();
+
+    }
+
+
+    function getFormCheckbox(
+        form,
+        selectors
+    ) {
+
+        const element =
+            findFormElement(
+                form,
+                selectors
+            );
+
+        if (!element) {
+            return false;
+        }
+
+        return !!element.checked;
+
+    }
+
+
+    /* =========================================================
        HABER FORMU
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function initNewsForm() {
 
@@ -595,14 +812,13 @@
                 "[data-news-form]"
             );
 
-
         if (!form) {
             return;
         }
 
 
         const titleInput =
-            findFormElement(
+            findInput(
                 form,
                 [
                     "#title",
@@ -614,7 +830,7 @@
 
 
         const summaryInput =
-            findFormElement(
+            findInput(
                 form,
                 [
                     "#summary",
@@ -626,7 +842,7 @@
 
 
         const contentInput =
-            findFormElement(
+            findInput(
                 form,
                 [
                     "#content",
@@ -638,7 +854,7 @@
 
 
         const categoryInput =
-            findFormElement(
+            findInput(
                 form,
                 [
                     "#category",
@@ -650,7 +866,7 @@
 
 
         const imageInput =
-            findFormElement(
+            findInput(
                 form,
                 [
                     "#image",
@@ -662,7 +878,7 @@
 
 
         const breakingInput =
-            findFormElement(
+            findInput(
                 form,
                 [
                     "#breaking",
@@ -707,6 +923,10 @@
             );
 
 
+        /* -----------------------------------------------------
+           KARAKTER SAYACI
+           ----------------------------------------------------- */
+
         function updateCounters() {
 
             if (
@@ -748,29 +968,34 @@
             titleInput,
             summaryInput,
             contentInput
-        ].forEach(function (input) {
+        ].forEach(
+            function (input) {
 
-            if (!input) {
-                return;
+                if (!input) {
+                    return;
+                }
+
+                input.addEventListener(
+                    "input",
+                    updateCounters
+                );
+
             }
-
-            input.addEventListener(
-                "input",
-                updateCounters
-            );
-
-        });
+        );
 
 
         updateCounters();
 
+
+        /* -----------------------------------------------------
+           GÖRSEL
+           ----------------------------------------------------- */
 
         function getImageValue() {
 
             if (!imageInput) {
                 return FALLBACK_IMAGE;
             }
-
 
             if (
                 imageInput.type ===
@@ -781,7 +1006,6 @@
                     document.querySelector(
                         "[data-image-preview]"
                     );
-
 
                 if (
                     preview &&
@@ -795,20 +1019,100 @@
 
                 }
 
-
                 return FALLBACK_IMAGE;
 
             }
 
-
-            return imageInput.value ||
-                FALLBACK_IMAGE;
+            return (
+                imageInput.value ||
+                FALLBACK_IMAGE
+            );
 
         }
 
 
+        /* -----------------------------------------------------
+           EDIT ID
+           ----------------------------------------------------- */
+
+        function getEditId() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return (
+                params.get("edit") ||
+                ""
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           TASLAK ID
+           ----------------------------------------------------- */
+
+        function getDraftId() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            return (
+                params.get("draft") ||
+                ""
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           MEVCUT HABER
+           ----------------------------------------------------- */
+
+        function findExistingNews() {
+
+            const editId =
+                getEditId();
+
+            if (!editId) {
+                return null;
+            }
+
+            const news =
+                readStorage(
+                    NEWS_KEY
+                );
+
+            return (
+                news.find(
+                    function (item) {
+
+                        return (
+                            String(
+                                getNewsId(item)
+                            ) ===
+                            String(editId)
+                        );
+
+                    }
+                ) ||
+                null
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           FORM VERİSİ
+           ----------------------------------------------------- */
+
         function collectData(
-            existing
+            existing,
+            status
         ) {
 
             const title =
@@ -841,6 +1145,29 @@
                     : false;
 
 
+            const newsList =
+                readStorage(
+                    NEWS_KEY
+                );
+
+
+            /*
+             * Mevcut haber düzenleniyorsa
+             * eski slug'ı korumuyoruz.
+             *
+             * Başlık değişirse URL de değişsin.
+             */
+
+            const slug =
+                createUniqueSlug(
+                    title,
+                    newsList,
+                    existing
+                        ? existing.id
+                        : ""
+                );
+
+
             return {
 
                 id:
@@ -849,27 +1176,48 @@
                         ? existing.id
                         : createId("haber"),
 
-                title: title,
 
-                summary: summary,
+                title:
+                    title,
 
-                content: content,
+
+                slug:
+                    slug,
+
+
+                summary:
+                    summary,
+
+
+                content:
+                    content,
+
 
                 category:
-                    category || "Genel",
+                    category ||
+                    "Genel",
 
-                breaking: breaking,
+
+                breaking:
+                    breaking,
+
 
                 image:
                     getImageValue(),
 
+
                 views:
                     existing &&
                     Number.isFinite(
-                        Number(existing.views)
+                        Number(
+                            existing.views
+                        )
                     )
-                        ? Number(existing.views)
+                        ? Number(
+                            existing.views
+                        )
                         : 0,
+
 
                 createdAt:
                     existing &&
@@ -877,8 +1225,10 @@
                         ? existing.createdAt
                         : nowIso(),
 
+
                 updatedAt:
                     nowIso(),
+
 
                 publishedAt:
                     existing &&
@@ -886,7 +1236,9 @@
                         ? existing.publishedAt
                         : nowIso(),
 
+
                 status:
+                    status ||
                     "published"
 
             };
@@ -894,7 +1246,13 @@
         }
 
 
-        function validateData(data) {
+        /* -----------------------------------------------------
+           DOĞRULAMA
+           ----------------------------------------------------- */
+
+        function validateData(
+            data
+        ) {
 
             if (!data.title) {
 
@@ -920,7 +1278,9 @@
                     "Haber başlığı en az 5 karakter olmalı."
                 );
 
-                titleInput.focus();
+                if (titleInput) {
+                    titleInput.focus();
+                }
 
                 return false;
 
@@ -951,7 +1311,9 @@
                     "Haber içeriği çok kısa."
                 );
 
-                contentInput.focus();
+                if (contentInput) {
+                    contentInput.focus();
+                }
 
                 return false;
 
@@ -963,70 +1325,28 @@
         }
 
 
-        function getEditId() {
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-
-            return (
-                params.get("edit") ||
-                ""
-            );
-
-        }
-
-
-        function findExistingNews() {
-
-            const editId =
-                getEditId();
-
-
-            if (!editId) {
-                return null;
-            }
-
-
-            const news =
-                readStorage(
-                    NEWS_KEY
-                );
-
-
-            return news.find(
-                function (item) {
-
-                    return String(
-                        getNewsId(item)
-                    ) === String(
-                        editId
-                    );
-
-                }
-            ) || null;
-
-        }
-
+        /* -----------------------------------------------------
+           YAYINLA
+           ----------------------------------------------------- */
 
         function savePublishedNews() {
 
             const existing =
                 findExistingNews();
 
-
             const data =
                 collectData(
-                    existing
+                    existing,
+                    "published"
                 );
 
 
             if (
                 !validateData(data)
             ) {
+
                 return false;
+
             }
 
 
@@ -1040,10 +1360,13 @@
                 news.findIndex(
                     function (item) {
 
-                        return String(
-                            getNewsId(item)
-                        ) === String(
-                            data.id
+                        return (
+                            String(
+                                getNewsId(item)
+                            ) ===
+                            String(
+                                data.id
+                            )
                         );
 
                     }
@@ -1083,11 +1406,6 @@
             }
 
 
-            /*
-             * Eğer bu haber daha önce taslakta
-             * bulunuyorsa aynı ID'li taslağı temizle.
-             */
-
             removeDraftByNewsId(
                 data.id
             );
@@ -1097,6 +1415,10 @@
 
         }
 
+
+        /* -----------------------------------------------------
+           TASLAK KAYDET
+           ----------------------------------------------------- */
 
         function saveDraft() {
 
@@ -1140,40 +1462,18 @@
                 );
 
 
+            const requestedDraftId =
+                params.get("draft");
+
+
             const draftId =
-                params.get("draft") ||
+                requestedDraftId ||
                 (
-                    existing
+                    existing &&
+                    existing.id
                         ? existing.id
                         : createId("taslak")
                 );
-
-
-            const draft = {
-
-                id: draftId,
-
-                title: title,
-
-                summary: summary,
-
-                content: content,
-
-                category:
-                    category || "Genel",
-
-                breaking: breaking,
-
-                image:
-                    getImageValue(),
-
-                createdAt:
-                    nowIso(),
-
-                updatedAt:
-                    nowIso()
-
-            };
 
 
             const drafts =
@@ -1182,14 +1482,85 @@
                 );
 
 
+            const existingDraft =
+                drafts.find(
+                    function (item) {
+
+                        return (
+                            String(
+                                item.id
+                            ) ===
+                            String(
+                                draftId
+                            )
+                        );
+
+                    }
+                );
+
+
+            const newsList =
+                readStorage(
+                    NEWS_KEY
+                );
+
+
+            const draft = {
+
+                id:
+                    draftId,
+
+                title:
+                    title,
+
+                slug:
+                    createUniqueSlug(
+                        title,
+                        newsList,
+                        existing
+                            ? existing.id
+                            : ""
+                    ),
+
+                summary:
+                    summary,
+
+                content:
+                    content,
+
+                category:
+                    category ||
+                    "Genel",
+
+                breaking:
+                    breaking,
+
+                image:
+                    getImageValue(),
+
+                createdAt:
+                    existingDraft &&
+                    existingDraft.createdAt
+                        ? existingDraft.createdAt
+                        : nowIso(),
+
+                updatedAt:
+                    nowIso()
+
+            };
+
+
             const index =
                 drafts.findIndex(
                     function (item) {
 
-                        return String(
-                            item.id
-                        ) === String(
-                            draftId
+                        return (
+                            String(
+                                item.id
+                            ) ===
+                            String(
+                                draftId
+                            )
                         );
 
                     }
@@ -1197,15 +1568,6 @@
 
 
             if (index >= 0) {
-
-                /*
-                 * Eski createdAt bilgisini koru.
-                 */
-
-                draft.createdAt =
-                    drafts[index].createdAt ||
-                    draft.createdAt;
-
 
                 drafts[index] =
                     draft;
@@ -1247,6 +1609,10 @@
         }
 
 
+        /* -----------------------------------------------------
+           TASLAK SİL
+           ----------------------------------------------------- */
+
         function removeDraftByNewsId(
             id
         ) {
@@ -1261,10 +1627,11 @@
                 drafts.filter(
                     function (item) {
 
-                        return String(
-                            item.id
-                        ) !== String(
-                            id
+                        return (
+                            String(
+                                item.id
+                            ) !==
+                            String(id)
                         );
 
                     }
@@ -1278,6 +1645,10 @@
 
         }
 
+
+        /* -----------------------------------------------------
+           YAYINLA BUTONU
+           ----------------------------------------------------- */
 
         if (publishButton) {
 
@@ -1311,6 +1682,10 @@
         }
 
 
+        /* -----------------------------------------------------
+           TASLAK BUTONU
+           ----------------------------------------------------- */
+
         if (draftButton) {
 
             draftButton.addEventListener(
@@ -1326,6 +1701,10 @@
 
         }
 
+
+        /* -----------------------------------------------------
+           ÖNİZLEME
+           ----------------------------------------------------- */
 
         if (previewButton) {
 
@@ -1353,9 +1732,14 @@
                     }
 
 
+                    const existing =
+                        findExistingNews();
+
+
                     const temporary =
                         collectData(
-                            null
+                            existing,
+                            "preview"
                         );
 
 
@@ -1380,9 +1764,9 @@
     }
 
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        OTOMATİK TASLAK
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function initAutoDraft() {
 
@@ -1390,7 +1774,6 @@
             document.querySelector(
                 "[data-news-form]"
             );
-
 
         if (!form) {
             return;
@@ -1470,16 +1853,14 @@
             };
 
 
-            /*
-             * Tamamen boş formu kaydetme.
-             */
-
             if (
                 !data.title &&
                 !data.summary &&
                 !data.content
             ) {
+
                 return;
+
             }
 
 
@@ -1506,67 +1887,41 @@
             title,
             summary,
             content
-        ].forEach(function (input) {
+        ].forEach(
+            function (input) {
 
-            if (!input) {
-                return;
-            }
-
-
-            input.addEventListener(
-                "input",
-                function () {
-
-                    clearTimeout(
-                        timer
-                    );
+                if (!input) {
+                    return;
+                }
 
 
-                    timer =
-                        setTimeout(
-                            saveTemporary,
-                            1200
+                input.addEventListener(
+                    "input",
+                    function () {
+
+                        clearTimeout(
+                            timer
                         );
 
-                }
-            );
 
-        });
+                        timer =
+                            setTimeout(
+                                saveTemporary,
+                                1200
+                            );
 
-    }
-
-
-    function findInput(
-        form,
-        selectors
-    ) {
-
-        for (
-            let i = 0;
-            i < selectors.length;
-            i++
-        ) {
-
-            const input =
-                form.querySelector(
-                    selectors[i]
+                    }
                 );
 
-
-            if (input) {
-                return input;
             }
-
-        }
-
-        return null;
+        );
 
     }
 
 
-    /* ---------------------------------------------------------
-       FORM TEMİZLEME
-    --------------------------------------------------------- */
+    /* =========================================================
+       FORM TEMİZLE
+       ========================================================= */
 
     function initClearForm() {
 
@@ -1633,7 +1988,11 @@
                     );
 
                 } catch (error) {
-                    console.warn(error);
+
+                    console.warn(
+                        error
+                    );
+
                 }
 
 
@@ -1641,12 +2000,14 @@
                     .querySelectorAll(
                         "[data-title-counter], [data-summary-counter], [data-content-counter]"
                     )
-                    .forEach(function (element) {
+                    .forEach(
+                        function (element) {
 
-                        element.textContent =
-                            "0";
+                            element.textContent =
+                                "0";
 
-                    });
+                        }
+                    );
 
             }
         );
@@ -1654,9 +2015,9 @@
     }
 
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        OTOMATİK TASLAĞI YÜKLE
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function loadAutoDraft() {
 
@@ -1664,7 +2025,6 @@
             document.querySelector(
                 "[data-news-form]"
             );
-
 
         if (!form) {
             return;
@@ -1677,16 +2037,13 @@
             );
 
 
-        /*
-         * Düzenleme veya gerçek taslak sayfasında
-         * otomatik taslak formu ezmesin.
-         */
-
         if (
             params.has("edit") ||
             params.has("draft")
         ) {
+
             return;
+
         }
 
 
@@ -1752,8 +2109,10 @@
                 title &&
                 data.title
             ) {
+
                 title.value =
                     data.title;
+
             }
 
 
@@ -1761,8 +2120,10 @@
                 summary &&
                 data.summary
             ) {
+
                 summary.value =
                     data.summary;
+
             }
 
 
@@ -1770,10 +2131,11 @@
                 content &&
                 data.content
             ) {
+
                 content.value =
                     data.content;
-            }
 
+            }
 
         } catch (error) {
 
@@ -1787,9 +2149,9 @@
     }
 
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        BUTON ANİMASYONU
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function initButtonEffects() {
 
@@ -1797,39 +2159,41 @@
             .querySelectorAll(
                 "button, .btn, .button"
             )
-            .forEach(function (button) {
+            .forEach(
+                function (button) {
 
-                button.addEventListener(
-                    "click",
-                    function () {
+                    button.addEventListener(
+                        "click",
+                        function () {
 
-                        button.classList.add(
-                            "button-clicked"
-                        );
+                            button.classList.add(
+                                "button-clicked"
+                            );
 
 
-                        setTimeout(
-                            function () {
+                            setTimeout(
+                                function () {
 
-                                button.classList.remove(
-                                    "button-clicked"
-                                );
+                                    button.classList.remove(
+                                        "button-clicked"
+                                    );
 
-                            },
-                            180
-                        );
+                                },
+                                180
+                            );
 
-                    }
-                );
+                        }
+                    );
 
-            });
+                }
+            );
 
     }
 
 
-    /* ---------------------------------------------------------
-       GÖRSEL URL KONTROLÜ
-    --------------------------------------------------------- */
+    /* =========================================================
+       GÖRSEL URL
+       ========================================================= */
 
     function initImageUrlInputs() {
 
@@ -1837,53 +2201,57 @@
             .querySelectorAll(
                 "[data-image-url]"
             )
-            .forEach(function (input) {
+            .forEach(
+                function (input) {
 
-                input.addEventListener(
-                    "input",
-                    function () {
+                    input.addEventListener(
+                        "input",
+                        function () {
 
-                        const preview =
-                            document.querySelector(
-                                "[data-image-preview]"
-                            );
+                            const preview =
+                                document.querySelector(
+                                    "[data-image-preview]"
+                                );
 
 
-                        if (
-                            !preview ||
-                            !input.value.trim()
-                        ) {
-                            return;
+                            if (
+                                !preview ||
+                                !input.value.trim()
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            preview.src =
+                                input.value.trim();
+
+
+                            preview.style.display =
+                                "block";
+
+
+                            preview.onerror =
+                                function () {
+
+                                    preview.src =
+                                        FALLBACK_IMAGE;
+
+                                };
+
                         }
+                    );
 
-
-                        preview.src =
-                            input.value.trim();
-
-
-                        preview.style.display =
-                            "block";
-
-
-                        preview.onerror =
-                            function () {
-
-                                preview.src =
-                                    FALLBACK_IMAGE;
-
-                            };
-
-                    }
-                );
-
-            });
+                }
+            );
 
     }
 
 
-    /* ---------------------------------------------------------
+    /* =========================================================
        FORM DOĞRULAMA
-    --------------------------------------------------------- */
+       ========================================================= */
 
     function initValidation() {
 
@@ -1891,75 +2259,86 @@
             .querySelectorAll(
                 "form"
             )
-            .forEach(function (form) {
+            .forEach(
+                function (form) {
 
-                if (
-                    form.matches(
-                        "[data-no-validation]"
-                    )
-                ) {
-                    return;
-                }
+                    if (
+                        form.matches(
+                            "[data-no-validation]"
+                        )
+                    ) {
 
-
-                form.addEventListener(
-                    "submit",
-                    function () {
-
-                        const required =
-                            form.querySelectorAll(
-                                "[required]"
-                            );
-
-
-                        let valid = true;
-
-
-                        required.forEach(
-                            function (field) {
-
-                                if (
-                                    !field.value.trim()
-                                ) {
-
-                                    valid =
-                                        false;
-
-                                    field.classList.add(
-                                        "input-error"
-                                    );
-
-                                } else {
-
-                                    field.classList.remove(
-                                        "input-error"
-                                    );
-
-                                }
-
-                            }
-                        );
-
-
-                        if (!valid) {
-
-                            alert(
-                                "Lütfen zorunlu alanları doldur."
-                            );
-
-                        }
+                        return;
 
                     }
-                );
 
-            });
+
+                    form.addEventListener(
+                        "submit",
+                        function (event) {
+
+                            const required =
+                                form.querySelectorAll(
+                                    "[required]"
+                                );
+
+
+                            let valid =
+                                true;
+
+
+                            required.forEach(
+                                function (field) {
+
+                                    if (
+                                        !String(
+                                            field.value || ""
+                                        ).trim()
+                                    ) {
+
+                                        valid =
+                                            false;
+
+
+                                        field.classList.add(
+                                            "input-error"
+                                        );
+
+                                    } else {
+
+                                        field.classList.remove(
+                                            "input-error"
+                                        );
+
+                                    }
+
+                                }
+                            );
+
+
+                            if (!valid) {
+
+                                event.preventDefault();
+
+
+                                alert(
+                                    "Lütfen zorunlu alanları doldur."
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
 
     }
 
 
-    /* ---------------------------------------------------------
-       TARİH GÖSTER
-    --------------------------------------------------------- */
+    /* =========================================================
+       TARİH
+       ========================================================= */
 
     function initDateElements() {
 
@@ -1967,41 +2346,49 @@
             .querySelectorAll(
                 "[data-current-date]"
             )
-            .forEach(function (element) {
+            .forEach(
+                function (element) {
 
-                element.textContent =
-                    new Date()
-                        .toLocaleDateString(
-                            "tr-TR",
-                            {
-                                weekday: "long",
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric"
-                            }
-                        );
+                    element.textContent =
+                        new Date()
+                            .toLocaleDateString(
+                                "tr-TR",
+                                {
+                                    weekday:
+                                        "long",
+                                    day:
+                                        "2-digit",
+                                    month:
+                                        "long",
+                                    year:
+                                        "numeric"
+                                }
+                            );
 
-            });
+                }
+            );
 
 
         document
             .querySelectorAll(
                 "[data-current-year]"
             )
-            .forEach(function (element) {
+            .forEach(
+                function (element) {
 
-                element.textContent =
-                    new Date()
-                        .getFullYear();
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
 
-            });
+                }
+            );
 
     }
 
 
-    /* ---------------------------------------------------------
-       HABER SAYISI GÖSTER
-    --------------------------------------------------------- */
+    /* =========================================================
+       HABER SAYAÇLARI
+       ========================================================= */
 
     function initNewsCounters() {
 
@@ -2021,52 +2408,63 @@
             .querySelectorAll(
                 "[data-news-count]"
             )
-            .forEach(function (element) {
+            .forEach(
+                function (element) {
 
-                element.textContent =
-                    news.length;
+                    element.textContent =
+                        news.length;
 
-            });
+                }
+            );
 
 
         document
             .querySelectorAll(
                 "[data-draft-count]"
             )
-            .forEach(function (element) {
+            .forEach(
+                function (element) {
 
-                element.textContent =
-                    drafts.length;
+                    element.textContent =
+                        drafts.length;
 
-            });
+                }
+            );
 
 
         document
             .querySelectorAll(
                 "[data-breaking-count]"
             )
-            .forEach(function (element) {
+            .forEach(
+                function (element) {
 
-                element.textContent =
-                    news.filter(
-                        function (item) {
+                    element.textContent =
+                        news.filter(
+                            function (item) {
 
-                            return isBreaking(
-                                item
-                            );
+                                return isBreaking(
+                                    item
+                                );
 
-                        }
-                    ).length;
+                            }
+                        ).length;
 
-            });
+                }
+            );
 
 
         const views =
             news.reduce(
-                function (total, item) {
+                function (
+                    total,
+                    item
+                ) {
 
-                    return total +
-                        getViews(item);
+                    return (
+                        total +
+                        getViews(item)
+                    );
 
                 },
                 0
@@ -2077,21 +2475,23 @@
             .querySelectorAll(
                 "[data-view-count]"
             )
-            .forEach(function (element) {
+            .forEach(
+                function (element) {
 
-                element.textContent =
-                    views.toLocaleString(
-                        "tr-TR"
-                    );
+                    element.textContent =
+                        views.toLocaleString(
+                            "tr-TR"
+                        );
 
-            });
+                }
+            );
 
     }
 
 
-    /* ---------------------------------------------------------
-       ESC TUŞU
-    --------------------------------------------------------- */
+    /* =========================================================
+       ESC
+       ========================================================= */
 
     function initEscapeKey() {
 
@@ -2132,9 +2532,9 @@
     }
 
 
-    /* ---------------------------------------------------------
-       SAYFA YÜKLENDİĞİNDE
-    --------------------------------------------------------- */
+    /* =========================================================
+       BAŞLANGIÇ
+       ========================================================= */
 
     function init() {
 
