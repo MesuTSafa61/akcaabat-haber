@@ -1,283 +1,1664 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#10233f">
-  <title>Dashboard | Akçaabat Haber</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#b40000">
+    <title>Yönetim Paneli | Akçaabat Haber</title>
+    <meta name="description" content="Akçaabat Haber yönetim ve kontrol paneli.">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --admin-red: #b40000;
+            --admin-dark: #111827;
+            --admin-text: #172033;
+            --admin-muted: #718096;
+            --admin-border: #e5e7eb;
+            --admin-bg: #f5f7fa;
+            --admin-white: #ffffff;
+            --admin-green: #16803c;
+            --admin-orange: #c56a00;
+            --admin-blue: #1769aa;
+            --admin-shadow: 0 8px 30px rgba(15, 23, 42, .07);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--admin-bg);
+            color: var(--admin-text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        .panel-layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .panel-sidebar {
+            width: 255px;
+            min-width: 255px;
+            background: #111827;
+            color: #fff;
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .panel-brand {
+            height: 76px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+        .panel-brand-mark {
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: var(--admin-red);
+            font-weight: 900;
+            font-size: 17px;
+        }
+
+        .panel-brand-text strong {
+            display: block;
+            font-size: 16px;
+            line-height: 1.1;
+        }
+
+        .panel-brand-text span {
+            display: block;
+            margin-top: 4px;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        .panel-nav {
+            padding: 18px 12px;
+        }
+
+        .panel-nav-title {
+            color: #6b7280;
+            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 10px 10px 8px;
+        }
+
+        .panel-nav a {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-height: 44px;
+            padding: 0 12px;
+            margin-bottom: 4px;
+            border-radius: 9px;
+            color: #d1d5db;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .panel-nav a:hover,
+        .panel-nav a.active {
+            color: #fff;
+            background: rgba(180,0,0,.9);
+        }
+
+        .nav-icon {
+            width: 21px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .panel-sidebar-bottom {
+            margin: 12px;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 12px;
+            background: rgba(255,255,255,.03);
+        }
+
+        .panel-sidebar-bottom small {
+            color: #9ca3af;
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .panel-sidebar-bottom strong {
+            font-size: 13px;
+        }
+
+        .panel-main {
+            width: calc(100% - 255px);
+            margin-left: 255px;
+            min-width: 0;
+        }
+
+        .panel-topbar {
+            height: 76px;
+            background: #fff;
+            border-bottom: 1px solid var(--admin-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .panel-top-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .panel-topbar h1 {
+            margin: 0;
+            font-size: 21px;
+            color: #111827;
+        }
+
+        .panel-topbar p {
+            margin: 4px 0 0;
+            font-size: 12px;
+            color: var(--admin-muted);
+        }
+
+        .panel-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .panel-top-actions a,
+        .panel-refresh {
+            border: 1px solid var(--admin-border);
+            background: #fff;
+            min-height: 38px;
+            padding: 0 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #374151;
+            font-size: 13px;
+        }
+
+        .panel-top-actions a:hover,
+        .panel-refresh:hover {
+            border-color: #c7ccd4;
+            background: #f9fafb;
+        }
+
+        .mobile-panel-button {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 0;
+            border-radius: 8px;
+            background: #f3f4f6;
+            cursor: pointer;
+            font-size: 19px;
+        }
+
+        .panel-content {
+            padding: 28px;
+            max-width: 1600px;
+            margin: auto;
+        }
+
+        .welcome-box {
+            background: linear-gradient(135deg, #9f0000, #c81414);
+            color: #fff;
+            border-radius: 15px;
+            padding: 24px 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 12px 35px rgba(180,0,0,.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .welcome-box h2 {
+            margin: 0;
+            font-size: 23px;
+        }
+
+        .welcome-box p {
+            margin: 8px 0 0;
+            color: rgba(255,255,255,.82);
+            font-size: 13px;
+        }
+
+        .welcome-date {
+            white-space: nowrap;
+            font-size: 12px;
+            color: rgba(255,255,255,.85);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0,1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--admin-border);
+            border-radius: 13px;
+            padding: 19px;
+            box-shadow: var(--admin-shadow);
+        }
+
+        .stat-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-label {
+            color: var(--admin-muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #f5f6f8;
+            font-size: 17px;
+        }
+
+        .stat-number {
+            margin-top: 12px;
+            font-size: 27px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .stat-footer {
+            margin-top: 7px;
+            font-size: 11px;
+            color: #8a94a6;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(300px, .8fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .dashboard-card {
+            background: #fff;
+            border: 1px solid var(--admin-border);
+            border-radius: 13px;
+            box-shadow: var(--admin-shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            min-height: 62px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--admin-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 15px;
+            color: #111827;
+        }
+
+        .card-header span {
+            color: var(--admin-muted);
+            font-size: 11px;
+        }
+
+        .card-body {
+            padding: 18px;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .quick-action {
+            min-height: 76px;
+            border: 1px solid var(--admin-border);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            background: #fff;
+            transition: .2s;
+        }
+
+        .quick-action:hover {
+            border-color: #c9ced7;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(15,23,42,.06);
+        }
+
+        .quick-action strong {
+            font-size: 13px;
+        }
+
+        .quick-action small {
+            color: var(--admin-muted);
+            font-size: 10px;
+        }
+
+        .quick-action-icon {
+            font-size: 17px;
+        }
+
+        .news-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-row {
+            padding: 14px 18px;
+            border-bottom: 1px solid #edf0f3;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .news-row:last-child {
+            border-bottom: 0;
+        }
+
+        .news-number {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            background: #f3f4f6;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .news-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .news-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #202938;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .news-meta {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .news-meta span {
+            color: #8993a4;
+            font-size: 10px;
+        }
+
+        .news-status {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-published {
+            color: var(--admin-green);
+            background: #eaf7ef;
+        }
+
+        .status-draft {
+            color: var(--admin-orange);
+            background: #fff3df;
+        }
+
+        .news-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mini-btn {
+            border: 1px solid var(--admin-border);
+            background: #fff;
+            border-radius: 7px;
+            width: 31px;
+            height: 31px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            color: #5d6675;
+        }
+
+        .mini-btn:hover {
+            background: #f6f7f9;
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .category-item {
+            display: grid;
+            grid-template-columns: 90px 1fr 35px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-name {
+            font-size: 12px;
+            color: #374151;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .category-track {
+            height: 7px;
+            border-radius: 10px;
+            background: #edf0f3;
+            overflow: hidden;
+        }
+
+        .category-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: var(--admin-red);
+            width: 0;
+        }
+
+        .category-count {
+            text-align: right;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .popular-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .popular-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 0;
+            border-bottom: 1px solid #edf0f3;
+        }
+
+        .popular-item:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .popular-rank {
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #f1f3f5;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .popular-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .popular-info strong {
+            display: block;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .popular-info span {
+            display: block;
+            margin-top: 4px;
+            color: #8a94a6;
+            font-size: 10px;
+        }
+
+        .system-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .system-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf0f3;
+            font-size: 12px;
+        }
+
+        .system-line:last-child {
+            border-bottom: 0;
+        }
+
+        .system-line span {
+            color: #7a8494;
+        }
+
+        .system-line strong {
+            color: #293241;
+            text-align: right;
+        }
+
+        .online-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #1ca353;
+            margin-right: 5px;
+        }
+
+        .empty-panel {
+            padding: 30px 18px;
+            text-align: center;
+            color: #8993a4;
+            font-size: 12px;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .view-all {
+            color: var(--admin-red);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .panel-overlay {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 3000;
+            background: #111827;
+            color: #fff;
+            border-radius: 9px;
+            padding: 12px 15px;
+            font-size: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.2);
+            opacity: 0;
+            transform: translateY(15px);
+            pointer-events: none;
+            transition: .25s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid,
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .panel-sidebar {
+                transform: translateX(-100%);
+                transition: transform .25s ease;
+            }
+
+            .panel-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .panel-main {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .mobile-panel-button {
+                display: grid;
+                place-items: center;
+            }
+
+            .panel-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 950;
+                background: rgba(0,0,0,.42);
+            }
+
+            .panel-overlay.show {
+                display: block;
+            }
+
+            .panel-content {
+                padding: 18px;
+            }
+
+            .panel-topbar {
+                padding: 0 18px;
+            }
+
+            .panel-top-actions a span {
+                display: none;
+            }
+
+            .welcome-box {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-topbar h1 {
+                font-size: 17px;
+            }
+
+            .panel-topbar p {
+                display: none;
+            }
+
+            .panel-top-actions {
+                display: none;
+            }
+
+            .welcome-box {
+                padding: 20px;
+            }
+
+            .welcome-box h2 {
+                font-size: 19px;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .news-actions {
+                display: none;
+            }
+
+            .category-item {
+                grid-template-columns: 80px 1fr 30px;
+            }
+        }
+    </style>
 </head>
 
-<body class="dashboard-page">
+<body>
 
-  <aside class="admin-sidebar">
+<div class="panel-layout">
 
-    <div class="admin-sidebar-brand">
-      <span class="logo-mark">A</span>
-      <div>
-        <strong>AKÇAABAT <b>HABER</b></strong>
-        <small>Yönetim Paneli</small>
-      </div>
-    </div>
+    <aside class="panel-sidebar" id="panelSidebar">
 
-    <nav class="admin-nav">
-      <span class="admin-nav-title">YÖNETİM</span>
-
-      <a class="active" href="admin-panel.html">
-        <span>▦</span> Dashboard
-      </a>
-
-      <a href="#">
-        <span>📰</span> Haberler
-      </a>
-
-      <a href="#">
-        <span>＋</span> Yeni Haber
-      </a>
-
-      <a href="#">
-        <span>▤</span> Kategoriler
-      </a>
-
-      <span class="admin-nav-title">İÇERİK</span>
-
-      <a href="#">
-        <span>▧</span> Foto Galeri
-      </a>
-
-      <a href="#">
-        <span>▶</span> Videolar
-      </a>
-
-      <a href="#">
-        <span>⚡</span> Son Dakika
-      </a>
-
-      <span class="admin-nav-title">SİSTEM</span>
-
-      <a href="#">
-        <span>♙</span> Kullanıcılar
-      </a>
-
-      <a href="#">
-        <span>⚙</span> Site Ayarları
-      </a>
-    </nav>
-
-    <a class="admin-sidebar-bottom" href="index.html">
-      ← Siteye Dön
-    </a>
-
-  </aside>
-
-  <main class="dashboard-main">
-
-    <header class="dashboard-header">
-
-      <button class="dashboard-menu" type="button">
-        ☰
-      </button>
-
-      <div>
-        <span>Yönetim Paneli</span>
-        <h1>Dashboard</h1>
-      </div>
-
-      <div class="admin-user">
-        <span class="admin-avatar">A</span>
-        <div>
-          <strong>Yönetici</strong>
-          <small>Admin</small>
-        </div>
-      </div>
-
-    </header>
-
-    <section class="dashboard-content">
-
-      <div class="dashboard-welcome">
-        <div>
-          <span>12 EYLÜL 2026</span>
-          <h2>Hoş geldiniz 👋</h2>
-          <p>Akçaabat Haber yönetim paneline hoş geldiniz.</p>
+        <div class="panel-brand">
+            <div class="panel-brand-mark">AH</div>
+            <div class="panel-brand-text">
+                <strong>Akçaabat Haber</strong>
+                <span>Yönetim Merkezi</span>
+            </div>
         </div>
 
-        <a href="#" class="dashboard-add">
-          + Yeni Haber
-        </a>
-      </div>
+        <nav class="panel-nav">
 
-      <div class="stats-grid">
+            <div class="panel-nav-title">Yönetim</div>
 
-        <div class="stat-card">
-          <span class="stat-icon">📰</span>
-          <div>
-            <small>Toplam Haber</small>
-            <strong>248</strong>
-          </div>
-          <em>+12%</em>
+            <a href="admin-panel.html" class="active">
+                <span class="nav-icon">⌂</span>
+                <span>Kontrol Paneli</span>
+            </a>
+
+            <a href="admin.html">
+                <span class="nav-icon">▣</span>
+                <span>Yönetim Ana Sayfası</span>
+            </a>
+
+            <a href="haberler.html">
+                <span class="nav-icon">📰</span>
+                <span>Haberler</span>
+            </a>
+
+            <a href="yeni-haber.html">
+                <span class="nav-icon">＋</span>
+                <span>Yeni Haber</span>
+            </a>
+
+            <a href="taslaklar.html">
+                <span class="nav-icon">▤</span>
+                <span>Taslaklar</span>
+            </a>
+
+            <div class="panel-nav-title">Site</div>
+
+            <a href="kategoriler.html">
+                <span class="nav-icon">☷</span>
+                <span>Kategoriler</span>
+            </a>
+
+            <a href="yorumlar.html">
+                <span class="nav-icon">☵</span>
+                <span>Yorumlar</span>
+            </a>
+
+            <a href="ayarlar.html">
+                <span class="nav-icon">⚙</span>
+                <span>Ayarlar</span>
+            </a>
+
+            <div class="panel-nav-title">Kısayollar</div>
+
+            <a href="index.html" target="_blank">
+                <span class="nav-icon">↗</span>
+                <span>Siteyi Görüntüle</span>
+            </a>
+
+        </nav>
+
+        <div class="panel-sidebar-bottom">
+            <small>Panel durumu</small>
+            <strong><span class="online-dot"></span>Yerel sistem aktif</strong>
         </div>
 
-        <div class="stat-card">
-          <span class="stat-icon">◉</span>
-          <div>
-            <small>Bugünkü Haber</small>
-            <strong>18</strong>
-          </div>
-          <em>+5%</em>
-        </div>
+    </aside>
 
-        <div class="stat-card">
-          <span class="stat-icon">▣</span>
-          <div>
-            <small>Toplam Okunma</small>
-            <strong>84.6K</strong>
-          </div>
-          <em>+18%</em>
-        </div>
+    <div class="panel-overlay" id="panelOverlay"></div>
 
-        <div class="stat-card">
-          <span class="stat-icon">⚡</span>
-          <div>
-            <small>Son Dakika</small>
-            <strong>7</strong>
-          </div>
-          <em>Aktif</em>
-        </div>
+    <main class="panel-main">
 
-      </div>
+        <header class="panel-topbar">
 
-      <div class="dashboard-grid">
+            <div class="panel-top-left">
 
-        <section class="dashboard-card">
+                <button
+                    type="button"
+                    class="mobile-panel-button"
+                    id="mobilePanelButton"
+                    aria-label="Menüyü aç">
+                    ☰
+                </button>
 
-          <div class="dashboard-card-head">
-            <div>
-              <span>İÇERİK</span>
-              <h3>Son Eklenen Haberler</h3>
+                <div>
+                    <h1>Kontrol Paneli</h1>
+                    <p>Akçaabat Haber yönetim merkezi</p>
+                </div>
+
             </div>
 
-            <a href="#">Tümünü Gör →</a>
-          </div>
+            <div class="panel-top-actions">
 
-          <div class="admin-news-list">
+                <button
+                    type="button"
+                    class="panel-refresh"
+                    id="refreshPanel">
+                    ↻ Yenile
+                </button>
 
-            <a href="#">
-              <span class="admin-news-time">12:42</span>
-              <div>
-                <strong>Akçaabat'tan günün öne çıkan gelişmeleri</strong>
-                <small>Akçaabat · 2.4K okunma</small>
-              </div>
-              <span class="status published">Yayında</span>
-            </a>
+                <a href="index.html" target="_blank">
+                    ↗ <span>Siteyi Aç</span>
+                </a>
 
-            <a href="#">
-              <span class="admin-news-time">12:20</span>
-              <div>
-                <strong>Trabzonspor'da yeni gelişme</strong>
-                <small>Spor · 1.9K okunma</small>
-              </div>
-              <span class="status published">Yayında</span>
-            </a>
+            </div>
 
-            <a href="#">
-              <span class="admin-news-time">11:55</span>
-              <div>
-                <strong>Trabzon'da önemli açıklama</strong>
-                <small>Trabzon · 1.5K okunma</small>
-              </div>
-              <span class="status draft">Taslak</span>
-            </a>
+        </header>
 
-            <a href="#">
-              <span class="admin-news-time">11:32</span>
-              <div>
-                <strong>Akçaabat'ta yeni çalışma başladı</strong>
-                <small>Akçaabat · 1.2K okunma</small>
-              </div>
-              <span class="status published">Yayında</span>
-            </a>
+        <section class="panel-content">
 
-          </div>
+            <div class="welcome-box">
+
+                <div>
+                    <h2>Akçaabat Haber Yönetim Merkezi</h2>
+                    <p>
+                        Haberlerinizi, taslaklarınızı ve site istatistiklerinizi
+                        tek ekrandan kontrol edin.
+                    </p>
+                </div>
+
+                <div class="welcome-date" id="currentDate">
+                    -
+                </div>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-head">
+                        <div class="stat-label">TOPLAM HABER</div>
+                        <div class="stat-icon">📰</div>
+                    </div>
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-footer">Sistemde kayıtlı haber</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-head">
+                        <div class="stat-label">YAYINDA</div>
+                        <div class="stat-icon">✓</div>
+                    </div>
+                    <div class="stat-number" id="statPublished">0</div>
+                    <div class="stat-footer">Okuyuculara açık haber</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-head">
+                        <div class="stat-label">TASLAK</div>
+                        <div class="stat-icon">✎</div>
+                    </div>
+                    <div class="stat-number" id="statDraft">0</div>
+                    <div class="stat-footer">Yayınlanmayı bekleyen</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-head">
+                        <div class="stat-label">GÖRÜNTÜLENME</div>
+                        <div class="stat-icon">◉</div>
+                    </div>
+                    <div class="stat-number" id="statViews">0</div>
+                    <div class="stat-footer">Toplam haber görüntülenmesi</div>
+                </div>
+
+            </div>
+
+            <div class="dashboard-grid">
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Son Haberler</h3>
+                            <span>En son eklenen içerikler</span>
+                        </div>
+
+                        <a href="haberler.html" class="view-all">
+                            Tümünü Gör →
+                        </a>
+                    </div>
+
+                    <div class="news-list" id="recentNews">
+                        <div class="empty-panel">
+                            Haberler yükleniyor...
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Hızlı İşlemler</h3>
+                            <span>Sık kullanılan araçlar</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="quick-actions">
+
+                            <a href="yeni-haber.html" class="quick-action">
+                                <span class="quick-action-icon">＋</span>
+                                <strong>Yeni Haber</strong>
+                                <small>Yeni içerik oluştur</small>
+                            </a>
+
+                            <a href="haberler.html" class="quick-action">
+                                <span class="quick-action-icon">📰</span>
+                                <strong>Haberleri Yönet</strong>
+                                <small>İçerikleri düzenle</small>
+                            </a>
+
+                            <a href="taslaklar.html" class="quick-action">
+                                <span class="quick-action-icon">▤</span>
+                                <strong>Taslaklar</strong>
+                                <small>Bekleyen içerikler</small>
+                            </a>
+
+                            <a href="index.html" target="_blank" class="quick-action">
+                                <span class="quick-action-icon">↗</span>
+                                <strong>Siteyi Gör</strong>
+                                <small>Canlı siteyi aç</small>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="bottom-grid">
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Kategori Dağılımı</h3>
+                            <span>Yayınlanan haberlerin kategorileri</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="category-list" id="categoryList">
+                            <div class="empty-panel">
+                                Kategoriler hesaplanıyor...
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>En Çok Okunanlar</h3>
+                            <span>Görüntülenme sıralaması</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="popular-list" id="popularList">
+                            <div class="empty-panel">
+                                Veriler yükleniyor...
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="bottom-grid">
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Son Taslaklar</h3>
+                            <span>Yayınlanmayı bekleyen içerikler</span>
+                        </div>
+
+                        <a href="taslaklar.html" class="view-all">
+                            Taslaklara Git →
+                        </a>
+                    </div>
+
+                    <div class="news-list" id="draftList">
+                        <div class="empty-panel">
+                            Taslaklar yükleniyor...
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Sistem Bilgileri</h3>
+                            <span>Mevcut çalışma durumu</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="system-box">
+
+                            <div class="system-line">
+                                <span>Site</span>
+                                <strong>Akçaabat Haber</strong>
+                            </div>
+
+                            <div class="system-line">
+                                <span>Alan adı</span>
+                                <strong>akcaabathaber.com.tr</strong>
+                            </div>
+
+                            <div class="system-line">
+                                <span>İçerik sistemi</span>
+                                <strong>localStorage</strong>
+                            </div>
+
+                            <div class="system-line">
+                                <span>Haber kayıtları</span>
+                                <strong id="systemNewsCount">0</strong>
+                            </div>
+
+                            <div class="system-line">
+                                <span>Taslak kayıtları</span>
+                                <strong id="systemDraftCount">0</strong>
+                            </div>
+
+                            <div class="system-line">
+                                <span>Panel</span>
+                                <strong>
+                                    <span class="online-dot"></span>Aktif
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
-        <section class="dashboard-card">
+    </main>
 
-          <div class="dashboard-card-head">
-            <div>
-              <span>İSTATİSTİK</span>
-              <h3>Bugünkü Durum</h3>
-            </div>
-          </div>
+</div>
 
-          <div class="mini-stat">
-            <span>Sayfa Görüntülenme</span>
-            <strong>12.840</strong>
-          </div>
+<div class="toast" id="panelToast"></div>
 
-          <div class="mini-stat">
-            <span>Yeni Ziyaretçi</span>
-            <strong>4.280</strong>
-          </div>
+<script src="script.js"></script>
 
-          <div class="mini-stat">
-            <span>Mobil Ziyaret</span>
-            <strong>%72</strong>
-          </div>
+<script>
+(function () {
+    "use strict";
 
-          <div class="mini-stat">
-            <span>Ortalama Okuma</span>
-            <strong>2:48</strong>
-          </div>
+    const NEWS_KEY = "akcaabat_haberler";
+    const DRAFT_KEY = "akcaabat_taslaklar";
 
-        </section>
+    function safeParse(value, fallback) {
+        try {
+            const parsed = JSON.parse(value);
+            return parsed ?? fallback;
+        } catch (error) {
+            return fallback;
+        }
+    }
 
-      </div>
+    function getNews() {
+        const data = safeParse(localStorage.getItem(NEWS_KEY), []);
+        return Array.isArray(data) ? data : [];
+    }
 
-      <section class="dashboard-card quick-actions">
+    function getDrafts() {
+        const data = safeParse(localStorage.getItem(DRAFT_KEY), []);
+        return Array.isArray(data) ? data : [];
+    }
 
-        <div class="dashboard-card-head">
-          <div>
-            <span>HIZLI İŞLEMLER</span>
-            <h3>Yönetim Kısayolları</h3>
-          </div>
-        </div>
+    function isPublished(item) {
+        if (!item) return false;
 
-        <div class="quick-grid">
+        const status = String(
+            item.status ||
+            item.durum ||
+            item.state ||
+            ""
+        ).toLowerCase();
 
-          <a href="#">
-            <strong>＋</strong>
-            <span>Yeni Haber</span>
-            <small>Haber oluştur</small>
-          </a>
+        return (
+            status === "published" ||
+            status === "yayinda" ||
+            status === "yayında" ||
+            status === "active" ||
+            status === "published"
+        );
+    }
 
-          <a href="#">
-            <strong>▤</strong>
-            <span>Kategoriler</span>
-            <small>Kategori düzenle</small>
-          </a>
+    function getTitle(item) {
+        return String(
+            item.title ||
+            item.baslik ||
+            item.name ||
+            "Başlıksız Haber"
+        ).trim();
+    }
 
-          <a href="#">
-            <strong>▧</strong>
-            <span>Galeri</span>
-            <small>Fotoğraf yükle</small>
-          </a>
+    function getCategory(item) {
+        return String(
+            item.category ||
+            item.kategori ||
+            "Genel"
+        ).trim() || "Genel";
+    }
 
-          <a href="#">
-            <strong>⚡</strong>
-            <span>Son Dakika</span>
-            <small>Gelişme yayınla</small>
-          </a>
+    function getViews(item) {
+        const value = Number(
+            item.views ??
+            item.goruntulenme ??
+            item.viewCount ??
+            item.okunma ??
+            0
+        );
 
-        </div>
+        return Number.isFinite(value) ? value : 0;
+    }
 
-      </section>
+    function getDate(item) {
+        return (
+            item.publishedAt ||
+            item.publishedDate ||
+            item.createdAt ||
+            item.updatedAt ||
+            item.tarih ||
+            item.date ||
+            ""
+        );
+    }
 
-    </section>
+    function formatDate(value) {
+        if (!value) return "Tarih yok";
 
-  </main>
+        const date = new Date(value);
 
-  <script src="script.js"></script>
+        if (Number.isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        return date.toLocaleDateString("tr-TR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        });
+    }
+
+    function formatNumber(value) {
+        return Number(value || 0).toLocaleString("tr-TR");
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function makeSlug(text) {
+        if (
+            window.AkcaabatHaber &&
+            typeof window.AkcaabatHaber.slugify === "function"
+        ) {
+            return window.AkcaabatHaber.slugify(text);
+        }
+
+        return String(text || "")
+            .toLowerCase()
+            .replace(/ğ/g, "g")
+            .replace(/ü/g, "u")
+            .replace(/ş/g, "s")
+            .replace(/ı/g, "i")
+            .replace(/ö/g, "o")
+            .replace(/ç/g, "c")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
+    }
+
+    function getNewsUrl(item) {
+        if (
+            window.AkcaabatHaber &&
+            typeof window.AkcaabatHaber.getNewsUrl === "function"
+        ) {
+            return window.AkcaabatHaber.getNewsUrl(item);
+        }
+
+        const slug = item.slug || item.seoSlug || makeSlug(getTitle(item));
+
+        if (slug) {
+            return "haber-detay.html?slug=" + encodeURIComponent(slug);
+        }
+
+        if (item.id !== undefined && item.id !== null) {
+            return "haber-detay.html?id=" + encodeURIComponent(item.id);
+        }
+
+        return "haber-detay.html";
+    }
+
+    function sortByDate(list) {
+        return [...list].sort(function (a, b) {
+            const da = new Date(getDate(a)).getTime() || 0;
+            const db = new Date(getDate(b)).getTime() || 0;
+            return db - da;
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("panelToast");
+
+        if (!toast) return;
+
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        clearTimeout(window.__panelToastTimer);
+
+        window.__panelToastTimer = setTimeout(function () {
+            toast.classList.remove("show");
+        }, 2200);
+    }
+
+    function renderStats(news, drafts) {
+        const published = news.filter(isPublished);
+
+        const totalViews = published.reduce(function (sum, item) {
+            return sum + getViews(item);
+        }, 0);
+
+        document.getElementById("statTotal").textContent =
+            formatNumber(news.length);
+
+        document.getElementById("statPublished").textContent =
+            formatNumber(published.length);
+
+        document.getElementById("statDraft").textContent =
+            formatNumber(drafts.length);
+
+        document.getElementById("statViews").textContent =
+            formatNumber(totalViews);
+
+        document.getElementById("systemNewsCount").textContent =
+            formatNumber(news.length);
+
+        document.getElementById("systemDraftCount").textContent =
+            formatNumber(drafts.length);
+    }
+
+    function renderRecentNews(news) {
+        const box = document.getElementById("recentNews");
+
+        const items = sortByDate(news).slice(0, 7);
+
+        if (!items.length) {
+            box.innerHTML =
+                '<div class="empty-panel">Henüz haber bulunmuyor.</div>';
+            return;
+        }
+
+        box.innerHTML = items.map(function (item, index) {
+            const published = isPublished(item);
+
+            return `
+                <div class="news-row">
+                    <div class="news-number">${index + 1}</div>
+
+                    <div class="news-info">
+                        <div class="news-title">
+                            ${escapeHtml(getTitle(item))}
+                        </div>
+
+                        <div class="news-meta">
+                            <span>${escapeHtml(getCategory(item))}</span>
+                            <span>•</span>
+                            <span>${escapeHtml(formatDate(getDate(item)))}</span>
+                            <span>•</span>
+                            <span>${formatNumber(getViews(item))} görüntülenme</span>
+                        </div>
+                    </div>
+
+                    <span class="news-status ${
+                        published
+                            ? "status-published"
+                            : "status-draft"
+                    }">
+                        ${published ? "Yayında" : "Taslak"}
+                    </span>
+
+                    <div class="news-actions">
+                        <a
+                            class="mini-btn"
+                            href="${getNewsUrl(item)}"
+                            target="_blank"
+                            title="Haberi görüntüle">
+                            ↗
+                        </a>
+
+                        <a
+                            class="mini-btn"
+                            href="yeni-haber.html?edit=${encodeURIComponent(item.id ?? "")}"
+                            title="Haberi düzenle">
+                            ✎
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderDrafts(drafts) {
+        const box = document.getElementById("draftList");
+
+        const items = [...drafts]
+            .sort(function (a, b) {
+                const da = new Date(
+                    a.updatedAt ||
+                    a.createdAt ||
+                    a.tarih ||
+                    0
+                ).getTime() || 0;
+
+                const db = new Date(
+                    b.updatedAt ||
+                    b.createdAt ||
+                    b.tarih ||
+                    0
+                ).getTime() || 0;
+
+                return db - da;
+            })
+            .slice(0, 5);
+
+        if (!items.length) {
+            box.innerHTML =
+                '<div class="empty-panel">Bekleyen taslak bulunmuyor.</div>';
+            return;
+        }
+
+        box.innerHTML = items.map(function (item, index) {
+            const id =
+                item.id ??
+                item._id ??
+                item.newsId ??
+                "";
+
+            return `
+                <div class="news-row">
+                    <div class="news-number">${index + 1}</div>
+
+                    <div class="news-info">
+                        <div class="news-title">
+                            ${escapeHtml(getTitle(item))}
+                        </div>
+
+                        <div class="news-meta">
+                            <span>${escapeHtml(getCategory(item))}</span>
+                            <span>•</span>
+                            <span>
+                                ${escapeHtml(
+                                    formatDate(
+                                        item.updatedAt ||
+                                        item.createdAt ||
+                                        item.tarih
+                                    )
+                                )}
+                            </span>
+                        </div>
+                    </div>
+
+                    <span class="news-status status-draft">
+                        Taslak
+                    </span>
+
+                    <div class="news-actions">
+                        <a
+                            class="mini-btn"
+                            href="yeni-haber.html?edit=${encodeURIComponent(id)}"
+                            title="Taslağı düzenle">
+                            ✎
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderCategories(news) {
+        const box = document.getElementById("categoryList");
+
+        const published = news.filter(isPublished);
+        const counts = {};
+
+        published.forEach(function (item) {
+            const category = getCategory(item);
+
+            counts[category] = (counts[category] || 0) + 1;
+        });
+
+        const categories = Object.keys(counts)
+            .map(function (name) {
+                return {
+                    name: name,
+                    count: counts[name]
+                };
+            })
+            .sort(function (a, b) {
+                return b.count - a.count;
+            })
+            .slice(0, 8);
+
+        if (!categories.length) {
+            box.innerHTML =
+                '<div class="empty-panel">Yayınlanmış haber bulunmuyor.</div>';
+            return;
+        }
+
+        const max = categories[0].count || 1;
+
+        box.innerHTML = categories.map(function (item) {
+            const percent = Math.max(
+                5,
+                Math.round((item.count / max) * 100)
+            );
+
+            return `
+                <div class="category-item">
+
+                    <div class="category-name">
+                        ${escapeHtml(item.name)}
+                    </div>
+
+                    <div class="category-track">
+                        <div
+                            class="category-fill"
+                            style="width:${percent}%">
+                        </div>
+                    </div>
+
+                    <div class="category-count">
+                        ${item.count}
+                    </div>
+
+                </div>
+            `;
+        }).join("");
+    }
+
+    function renderPopular(news) {
+        const box = document.getElementById("popularList");
+
+        const popular = news
+            .filter(isPublished)
+            .sort(function (a, b) {
+                return getViews(b) - getViews(a);
+            })
+            .slice(0, 5);
+
+        if (!popular.length) {
+            box.innerHTML =
+                '<div class="empty-panel">Henüz görüntülenme verisi yok.</div>';
+            return;
+        }
+
+        box.innerHTML = popular.map(function (item, index) {
+            return `
+                <a
+                    href="${getNewsUrl(item)}"
+                    target="_blank"
+                    class="popular-item">
+
+                    <div class="popular-rank">
+                        ${index + 1}
+                    </div>
+
+                    <div class="popular-info">
+                        <strong>
+                            ${escapeHtml(getTitle(item))}
+                        </strong>
+
+                        <span>
+                            ${formatNumber(getViews(item))}
+                            görüntülenme
+                        </span>
+                    </div>
+
+                </a>
+            `;
+        }).join("");
+    }
+
+    function updateDate() {
+        const element = document.getElementById("currentDate");
+
+        if (!element) return;
+
+        const now = new Date();
+
+        element.textContent = now.toLocaleDateString(
+            "tr-TR",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+    }
+
+    function loadDashboard() {
+        const news = getNews();
+        const drafts = getDrafts();
+
+        renderStats(news, drafts);
+        renderRecentNews(news);
+        renderDrafts(drafts);
+        renderCategories(news);
+        renderPopular(news);
+        updateDate();
+    }
+
+    function setupMobileMenu() {
+        const sidebar =
+            document.getElementById("panelSidebar");
+
+        const overlay =
+            document.getElementById("panelOverlay");
+
+        const button =
+            document.getElementById("mobilePanelButton");
+
+        if (!sidebar || !overlay || !button) return;
+
+        function openMenu() {
+            sidebar.classList.add("open");
+            overlay.classList.add("show");
+        }
+
+        function closeMenu() {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+        }
+
+        button.addEventListener("click", openMenu);
+        overlay.addEventListener("click", closeMenu);
+
+        sidebar.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                closeMenu();
+            });
+        });
+    }
+
+    function setupRefresh() {
+        const button =
+            document.getElementById("refreshPanel");
+
+        if (!button) return;
+
+        button.addEventListener("click", function () {
+            loadDashboard();
+            showToast("Panel yenilendi.");
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        loadDashboard();
+        setupMobileMenu();
+        setupRefresh();
+    });
+
+})();
+</script>
+
 </body>
 </html>
