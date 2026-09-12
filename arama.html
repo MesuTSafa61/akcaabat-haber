@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Haber Ara | Akçaabat Haber</title>
+
+    <meta
+        name="description"
+        content="Akçaabat Haber üzerinde haber, konu ve gelişmeleri arayın."
+    >
+
+    <meta
+        name="robots"
+        content="index, follow"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1f3a"
+    >
+
+    <link
+        rel="icon"
+        href="/favicon.svg"
+        type="image/svg+xml"
+    >
+
+    <link
+        rel="manifest"
+        href="/site.webmanifest"
+    >
+
+    <style>
+        :root {
+            --navy: #0b1f3a;
+            --navy-2: #102b4f;
+            --red: #d71920;
+            --red-dark: #b51218;
+            --text: #172033;
+            --muted: #667085;
+            --light: #f5f7fa;
+            --white: #ffffff;
+            --border: #e5e7eb;
+            --success: #168a4b;
+            --shadow: 0 16px 45px rgba(11, 31, 58, 0.08);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+            background: #f6f8fb;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .topbar {
+            background: var(--navy);
+            color: rgba(255, 255, 255, 0.84);
+            font-size: 13px;
+        }
+
+        .topbar-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 38px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .topbar a:hover {
+            opacity: 0.7;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            width: min(1180px, calc(100% - 32px));
+            min-height: 78px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .brand-title {
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+        }
+
+        .brand-subtitle {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav a {
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #344054;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--red);
+            background: #fff1f2;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--navy);
+            color: white;
+            font-size: 20px;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        .hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(11, 31, 58, 0.98),
+                    rgba(16, 43, 79, 0.96)
+                );
+            color: white;
+            padding: 58px 20px 72px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            background: rgba(215, 25, 32, 0.15);
+            right: -100px;
+            top: -170px;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            left: -100px;
+            bottom: -130px;
+        }
+
+        .hero-inner {
+            width: min(1000px, calc(100% - 20px));
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffb4b7;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 24px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 10px;
+        }
+
+        .hero h1 {
+            max-width: 760px;
+            font-size: clamp(34px, 5vw, 54px);
+            line-height: 1.08;
+            letter-spacing: -1.7px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            max-width: 720px;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 16px;
+        }
+
+        .breadcrumb {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 18px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .breadcrumb a {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+            color: #98a2b3;
+        }
+
+        .content {
+            width: min(1080px, calc(100% - 32px));
+            margin: 28px auto 70px;
+        }
+
+        .search-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: clamp(22px, 4vw, 38px);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #98a2b3;
+            font-size: 19px;
+            pointer-events: none;
+        }
+
+        .search-input {
+            width: 100%;
+            min-height: 52px;
+            border: 1px solid #d0d5dd;
+            border-radius: 12px;
+            outline: none;
+            padding: 0 15px 0 45px;
+            color: var(--text);
+            font-size: 15px;
+            transition: 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(11, 31, 58, 0.08);
+        }
+
+        .search-button {
+            min-width: 125px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--red);
+            color: white;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .search-button:hover {
+            background: var(--red-dark);
+        }
+
+        .search-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 14px;
+        }
+
+        .result-summary {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .result-summary strong {
+            color: var(--navy);
+        }
+
+        .sort-select {
+            min-height: 38px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+            color: #475467;
+            padding: 0 10px;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .results {
+            margin-top: 22px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .results-header h2 {
+            color: var(--navy);
+            font-size: 21px;
+            letter-spacing: -0.4px;
+        }
+
+        .results-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .result-item {
+            display: grid;
+            grid-template-columns: 220px minmax(0, 1fr);
+            gap: 20px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(11, 31, 58, 0.08);
+        }
+
+        .result-image {
+            width: 100%;
+            height: 145px;
+            border-radius: 11px;
+            overflow: hidden;
+            background:
+                linear-gradient(
+                    135deg,
+                    #e9edf3,
+                    #dfe5ec
+                );
+        }
+
+        .result-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .result-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #98a2b3;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .result-content {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 7px;
+        }
+
+        .result-category {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 9px;
+            border-radius: 7px;
+            background: #fff0f1;
+            color: var(--red);
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .result-date {
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+        .result-title {
+            color: var(--navy);
+            font-size: 19px;
+            line-height: 1.3;
+            margin-bottom: 7px;
+        }
+
+        .result-title:hover {
+            color: var(--red);
+        }
+
+        .result-summary-text {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .result-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+        .empty-state {
+            display: none;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px 25px;
+            text-align: center;
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border-radius: 16px;
+            background: #f1f4f8;
+            color: var(--navy);
+            font-size: 25px;
+        }
+
+        .empty-state h3 {
+            color: var(--navy);
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            max-width: 480px;
+            margin: 0 auto;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .suggestions {
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .suggestions-title {
+            color: var(--navy);
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 11px;
+        }
+
+        .suggestion-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fafbfc;
+            color: #475467;
+            padding: 7px 11px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .suggestion:hover {
+            border-color: #cbd2dc;
+            color: var(--red);
+        }
+
+        .footer {
+            background: var(--navy);
+            color: white;
+            margin-top: 70px;
+        }
+
+        .footer-inner {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 44px 0 28px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 32px;
+        }
+
+        .footer-brand {
+            max-width: 360px;
+        }
+
+        .footer-brand h3 {
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+        }
+
+        .footer-column h4 {
+            font-size: 13px;
+            margin-bottom: 13px;
+        }
+
+        .footer-column a {
+            display: block;
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 32px;
+            padding-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .loading-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .nav {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .result-item {
+                grid-template-columns: 180px minmax(0, 1fr);
+            }
+
+            .result-image {
+                height: 125px;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .topbar-inner {
+                justify-content: center;
+            }
+
+            .topbar > .topbar-inner > span {
+                display: none;
+            }
+
+            .header-inner {
+                min-height: 68px;
+            }
+
+            .brand-logo {
+                width: 40px;
+                height: 40px;
+            }
+
+            .brand-title {
+                font-size: 19px;
+            }
+
+            .brand-subtitle {
+                font-size: 10px;
+            }
+
+            .hero {
+                padding: 48px 16px 58px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .breadcrumb {
+                width: calc(100% - 24px);
+            }
+
+            .content {
+                width: calc(100% - 24px);
+                margin-top: 18px;
+            }
+
+            .search-card {
+                border-radius: 14px;
+                padding: 20px 16px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-button {
+                min-height: 48px;
+            }
+
+            .search-tools {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .sort-select {
+                width: 100%;
+            }
+
+            .results-header {
+                align-items: flex-start;
+            }
+
+            .result-item {
+                grid-template-columns: 1fr;
+                gap: 13px;
+                padding: 12px;
+            }
+
+            .result-image {
+                height: 190px;
+            }
+
+            .result-title {
+                font-size: 18px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+
+            .mobile-nav {
+                position: fixed;
+                inset: 68px 0 0;
+                background: rgba(11, 31, 58, 0.98);
+                z-index: 99;
+                padding: 22px 18px;
+                overflow-y: auto;
+            }
+
+            .mobile-nav.open {
+                display: block;
+            }
+
+            .mobile-nav a {
+                display: block;
+                color: white;
+                padding: 14px 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-weight: 700;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="topbar-inner">
+            <span>
+                Akçaabat ve Trabzon'dan güncel haberler
+            </span>
+
+            <div class="topbar-right">
+                <a href="kunye.html">Künye</a>
+                <a href="iletisim.html">İletişim</a>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-inner">
+
+            <a href="index.html" class="brand">
+                <img
+                    src="favicon.svg"
+                    alt="Akçaabat Haber"
+                    class="brand-logo"
+                >
+
+                <span class="brand-text">
+                    <span class="brand-title">
+                        Akçaabat Haber
+                    </span>
+
+                    <span class="brand-subtitle">
+                        Yerel Haber • Güvenilir Bilgi
+                    </span>
+                </span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Ana Sayfa</a>
+                <a href="haberler.html">Haberler</a>
+                <a href="arama.html" class="active">Ara</a>
+                <a href="hakkimizda.html">Hakkımızda</a>
+                <a href="kunye.html">Künye</a>
+                <a href="iletisim.html">İletişim</a>
+            </nav>
+
+            <button
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                type="button"
+                aria-label="Menüyü aç"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+        </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="haberler.html">Haberler</a>
+        <a href="arama.html">Ara</a>
+        <a href="hakkimizda.html">Hakkımızda</a>
+        <a href="kunye.html">Künye</a>
+        <a href="sorumlu-yayincilik.html">
+            Yayın İlkeleri
+        </a>
+        <a href="iletisim.html">İletişim</a>
+        <a href="reklam.html">Reklam</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="eyebrow">Haber arama</div>
+
+            <h1>
+                Aradığınız haberi bulun.
+            </h1>
+
+            <p>
+                Akçaabat Haber arşivindeki yayınlarda başlık,
+                özet, içerik ve kategori üzerinden arama yapabilirsiniz.
+            </p>
+        </div>
+    </section>
+
+    <div class="breadcrumb">
+        <a href="index.html">Ana Sayfa</a>
+        <span>/</span>
+        <strong>Haber Ara</strong>
+    </div>
+
+    <main class="content">
+
+        <section class="search-card">
+
+            <form
+                class="search-form"
+                id="searchForm"
+            >
+                <div class="search-input-wrap">
+                    <span class="search-icon">⌕</span>
+
+                    <input
+                        type="search"
+                        class="search-input"
+                        id="searchInput"
+                        name="q"
+                        autocomplete="off"
+                        placeholder="Haber, konu veya kelime ara..."
+                        aria-label="Haber ara"
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="search-button"
+                >
+                    Haber Ara
+                </button>
+            </form>
+
+            <div class="search-tools">
+
+                <div
+                    class="result-summary"
+                    id="resultSummary"
+                >
+                    Arama yapmak için bir kelime yazın.
+                </div>
+
+                <select
+                    class="sort-select"
+                    id="sortSelect"
+                    aria-label="Sonuçları sırala"
+                >
+                    <option value="newest">
+                        En yeni
+                    </option>
+
+                    <option value="oldest">
+                        En eski
+                    </option>
+
+                    <option value="popular">
+                        En çok okunan
+                    </option>
+                </select>
+
+            </div>
+
+            <div class="results">
+
+                <div class="results-header">
+                    <h2 id="resultsTitle">
+                        Haberler
+                    </h2>
+                </div>
+
+                <div
+                    class="loading"
+                    id="loading"
+                >
+                    <span class="loading-dot"></span>
+                    Haberler aranıyor...
+                </div>
+
+                <div
+                    class="results-list"
+                    id="resultsList"
+                ></div>
+
+                <div
+                    class="empty-state"
+                    id="emptyState"
+                >
+                    <div class="empty-icon">⌕</div>
+
+                    <h3 id="emptyTitle">
+                        Sonuç bulunamadı
+                    </h3>
+
+                    <p id="emptyText">
+                        Farklı bir kelime veya daha kısa bir arama
+                        ifadesi deneyebilirsiniz.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="suggestions">
+
+                <div class="suggestions-title">
+                    Popüler aramalar
+                </div>
+
+                <div class="suggestion-list">
+                    <button
+                        class="suggestion"
+                        type="button"
+                        data-search="Akçaabat"
+                    >
+                        Akçaabat
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        type="button"
+                        data-search="Trabzon"
+                    >
+                        Trabzon
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        type="button"
+                        data-search="spor"
+                    >
+                        Spor
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        type="button"
+                        data-search="gündem"
+                    >
+                        Gündem
+                    </button>
+
+                    <button
+                        class="suggestion"
+                        type="button"
+                        data-search="son dakika"
+                    >
+                        Son Dakika
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+
+            <div class="footer-grid">
+
+                <div class="footer-brand">
+                    <h3>Akçaabat Haber</h3>
+
+                    <p>
+                        Akçaabat ve Trabzon'dan güncel gelişmeleri
+                        okuyucularına ulaştıran yerel haber platformu.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Kurumsal</h4>
+
+                    <a href="hakkimizda.html">
+                        Hakkımızda
+                    </a>
+
+                    <a href="kunye.html">
+                        Künye
+                    </a>
+
+                    <a href="sorumlu-yayincilik.html">
+                        Yayın İlkeleri
+                    </a>
+
+                    <a href="iletisim.html">
+                        İletişim
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Politikalar</h4>
+
+                    <a href="gizlilik.html">
+                        Gizlilik
+                    </a>
+
+                    <a href="kvkk.html">
+                        KVKK
+                    </a>
+
+                    <a href="cerez-politikasi.html">
+                        Çerez Politikası
+                    </a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Diğer</h4>
+
+                    <a href="reklam.html">
+                        Reklam
+                    </a>
+
+                    <a href="haberler.html">
+                        Haberler
+                    </a>
+
+                    <a href="index.html">
+                        Ana Sayfa
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>
+                    © <span id="currentYear"></span> Akçaabat Haber
+                </span>
+
+                <span>
+                    Tüm hakları saklıdır.
+                </span>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const STORAGE_KEY = "akcaabat_haberler";
+
+            const yearElement =
+                document.getElementById("currentYear");
+
+            if (yearElement) {
+                yearElement.textContent =
+                    new Date().getFullYear();
+            }
+
+            const menuButton =
+                document.getElementById("mobileMenuBtn");
+
+            const mobileNav =
+                document.getElementById("mobileNav");
+
+            if (menuButton && mobileNav) {
+                menuButton.addEventListener(
+                    "click",
+                    function () {
+                        const isOpen =
+                            mobileNav.classList.toggle("open");
+
+                        menuButton.setAttribute(
+                            "aria-expanded",
+                            isOpen ? "true" : "false"
+                        );
+
+                        menuButton.textContent =
+                            isOpen ? "×" : "☰";
+                    }
+                );
+
+                mobileNav
+                    .querySelectorAll("a")
+                    .forEach(function (link) {
+                        link.addEventListener(
+                            "click",
+                            function () {
+                                mobileNav.classList.remove("open");
+
+                                menuButton.setAttribute(
+                                    "aria-expanded",
+                                    "false"
+                                );
+
+                                menuButton.textContent = "☰";
+                            }
+                        );
+                    });
+            }
+
+            const searchForm =
+                document.getElementById("searchForm");
+
+            const searchInput =
+                document.getElementById("searchInput");
+
+            const sortSelect =
+                document.getElementById("sortSelect");
+
+            const resultsList =
+                document.getElementById("resultsList");
+
+            const emptyState =
+                document.getElementById("emptyState");
+
+            const emptyTitle =
+                document.getElementById("emptyTitle");
+
+            const emptyText =
+                document.getElementById("emptyText");
+
+            const resultSummary =
+                document.getElementById("resultSummary");
+
+            const resultsTitle =
+                document.getElementById("resultsTitle");
+
+            const loading =
+                document.getElementById("loading");
+
+            let allNews = [];
+
+            function readNews() {
+                try {
+                    const raw =
+                        localStorage.getItem(STORAGE_KEY);
+
+                    if (!raw) {
+                        return [];
+                    }
+
+                    const parsed = JSON.parse(raw);
+
+                    return Array.isArray(parsed)
+                        ? parsed
+                        : [];
+                } catch (error) {
+                    console.warn(
+                        "Haber verileri okunamadı.",
+                        error
+                    );
+
+                    return [];
+                }
+            }
+
+            function isPublished(item) {
+                const status =
+                    String(
+                        item.status ||
+                        item.durum ||
+                        item.yayinDurumu ||
+                        ""
+                    ).toLowerCase();
+
+                if (
+                    status === "taslak" ||
+                    status === "draft" ||
+                    status === "beklemede"
+                ) {
+                    return false;
+                }
+
+                if (
+                    item.published === false ||
+                    item.yayinlandi === false
+                ) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            function getTitle(item) {
+                return String(
+                    item.title ||
+                    item.baslik ||
+                    item.name ||
+                    "Başlıksız Haber"
+                ).trim();
+            }
+
+            function getSummary(item) {
+                return String(
+                    item.summary ||
+                    item.ozet ||
+                    item.excerpt ||
+                    item.description ||
+                    ""
+                ).trim();
+            }
+
+            function getContent(item) {
+                return String(
+                    item.content ||
+                    item.icerik ||
+                    item.body ||
+                    ""
+                ).trim();
+            }
+
+            function getCategory(item) {
+                return String(
+                    item.category ||
+                    item.kategori ||
+                    "Gündem"
+                ).trim();
+            }
+
+            function getImage(item) {
+                return String(
+                    item.image ||
+                    item.gorsel ||
+                    item.imageUrl ||
+                    item.resim ||
+                    ""
+                ).trim();
+            }
+
+            function getViews(item) {
+                const value =
+                    item.views ??
+                    item.goruntulenme ??
+                    item.viewCount ??
+                    0;
+
+                const number =
+                    Number(value);
+
+                return Number.isFinite(number)
+                    ? number
+                    : 0;
+            }
+
+            function getDate(item) {
+                return (
+                    item.publishedAt ||
+                    item.yayinTarihi ||
+                    item.createdAt ||
+                    item.tarih ||
+                    item.date ||
+                    ""
+                );
+            }
+
+            function getTimestamp(item) {
+                const date =
+                    getDate(item);
+
+                const timestamp =
+                    Date.parse(date);
+
+                if (
+                    Number.isFinite(timestamp)
+                ) {
+                    return timestamp;
+                }
+
+                const numeric =
+                    Number(
+                        item.createdAtTimestamp ||
+                        item.timestamp ||
+                        0
+                    );
+
+                return Number.isFinite(numeric)
+                    ? numeric
+                    : 0;
+            }
+
+            function formatDate(item) {
+                const timestamp =
+                    getTimestamp(item);
+
+                if (!timestamp) {
+                    return "";
+                }
+
+                try {
+                    return new Intl.DateTimeFormat(
+                        "tr-TR",
+                        {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    ).format(
+                        new Date(timestamp)
+                    );
+                } catch (error) {
+                    return "";
+                }
+            }
+
+            function escapeHtml(value) {
+                return String(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function slugify(text) {
+                return String(text)
+                    .toLocaleLowerCase("tr-TR")
+                    .replace(/ğ/g, "g")
+                    .replace(/ü/g, "u")
+                    .replace(/ş/g, "s")
+                    .replace(/ı/g, "i")
+                    .replace(/ö/g, "o")
+                    .replace(/ç/g, "c")
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, "");
+            }
+
+            function getSlug(item) {
+                const stored =
+                    item.slug ||
+                    item.seoSlug ||
+                    item.urlSlug;
+
+                if (stored) {
+                    return String(stored);
+                }
+
+                return slugify(
+                    getTitle(item)
+                );
+            }
+
+            function getArticleUrl(item) {
+                if (
+                    window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber
+                        .getNewsUrl === "function"
+                ) {
+                    return window.AkcaabatHaber
+                        .getNewsUrl(item);
+                }
+
+                return (
+                    "haber-detay.html?slug=" +
+                    encodeURIComponent(
+                        getSlug(item)
+                    )
+                );
+            }
+
+            function normalizeText(value) {
+                return String(value)
+                    .toLocaleLowerCase("tr-TR")
+                    .normalize("NFD")
+                    .replace(
+                        /[\u0300-\u036f]/g,
+                        ""
+                    )
+                    .replace(/ı/g, "i")
+                    .trim();
+            }
+
+            function searchNews(query) {
+                const normalized =
+                    normalizeText(query);
+
+                if (!normalized) {
+                    return [];
+                }
+
+                const terms =
+                    normalized
+                        .split(/\s+/)
+                        .filter(Boolean);
+
+                return allNews.filter(
+                    function (item) {
+                        const searchable =
+                            normalizeText(
+                                [
+                                    getTitle(item),
+                                    getSummary(item),
+                                    getContent(item),
+                                    getCategory(item)
+                                ].join(" ")
+                            );
+
+                        return terms.every(
+                            function (term) {
+                                return searchable.includes(term);
+                            }
+                        );
+                    }
+                );
+            }
+
+            function sortResults(list) {
+                const sorted =
+                    [...list];
+
+                const mode =
+                    sortSelect
+                        ? sortSelect.value
+                        : "newest";
+
+                if (mode === "popular") {
+                    sorted.sort(
+                        function (a, b) {
+                            return (
+                                getViews(b) -
+                                getViews(a)
+                            );
+                        }
+                    );
+
+                    return sorted;
+                }
+
+                sorted.sort(
+                    function (a, b) {
+                        return (
+                            getTimestamp(b) -
+                            getTimestamp(a)
+                        );
+                    }
+                );
+
+                if (mode === "oldest") {
+                    sorted.reverse();
+                }
+
+                return sorted;
+            }
+
+            function renderResults(
+                results,
+                query
+            ) {
+                if (!resultsList) {
+                    return;
+                }
+
+                resultsList.innerHTML = "";
+
+                if (!query) {
+                    if (emptyState) {
+                        emptyState.classList.add(
+                            "show"
+                        );
+                    }
+
+                    if (emptyTitle) {
+                        emptyTitle.textContent =
+                            "Arama yapmaya başlayın";
+                    }
+
+                    if (emptyText) {
+                        emptyText.textContent =
+                            "Yukarıdaki alana bir kelime veya konu yazarak haberleri arayabilirsiniz.";
+                    }
+
+                    if (resultSummary) {
+                        resultSummary.innerHTML =
+                            "Arama yapmak için bir kelime yazın.";
+                    }
+
+                    if (resultsTitle) {
+                        resultsTitle.textContent =
+                            "Haberler";
+                    }
+
+                    return;
+                }
+
+                if (results.length === 0) {
+                    if (emptyState) {
+                        emptyState.classList.add(
+                            "show"
+                        );
+                    }
+
+                    if (emptyTitle) {
+                        emptyTitle.textContent =
+                            "Sonuç bulunamadı";
+                    }
+
+                    if (emptyText) {
+                        emptyText.textContent =
+                            "Farklı bir kelime, daha kısa bir ifade veya başka bir konu deneyebilirsiniz.";
+                    }
+
+                    if (resultSummary) {
+                        resultSummary.innerHTML =
+                            "<strong>" +
+                            escapeHtml(query) +
+                            "</strong> için sonuç bulunamadı.";
+                    }
+
+                    if (resultsTitle) {
+                        resultsTitle.textContent =
+                            "Sonuçlar";
+                    }
+
+                    return;
+                }
+
+                if (emptyState) {
+                    emptyState.classList.remove(
+                        "show"
+                    );
+                }
+
+                if (resultSummary) {
+                    resultSummary.innerHTML =
+                        "<strong>" +
+                        results.length +
+                        "</strong> sonuç bulundu.";
+                }
+
+                if (resultsTitle) {
+                    resultsTitle.textContent =
+                        "Arama Sonuçları";
+                }
+
+                results.forEach(
+                    function (item) {
+                        const article =
+                            document.createElement("article");
+
+                        article.className =
+                            "result-item";
+
+                        const image =
+                            getImage(item);
+
+                        const title =
+                            getTitle(item);
+
+                        const summary =
+                            getSummary(item);
+
+                        const category =
+                            getCategory(item);
+
+                        const date =
+                            formatDate(item);
+
+                        const views =
+                            getViews(item);
+
+                        const url =
+                            getArticleUrl(item);
+
+                        const imageHtml =
+                            image
+                                ? `
+                                    <img
+                                        src="${escapeHtml(image)}"
+                                        alt="${escapeHtml(title)}"
+                                        loading="lazy"
+                                        onerror="this.parentElement.innerHTML='<div class=&quot;result-image-placeholder&quot;>Görsel yüklenemedi</div>'"
+                                    >
+                                `
+                                : `
+                                    <div class="result-image-placeholder">
+                                        Akçaabat Haber
+                                    </div>
+                                `;
+
+                        article.innerHTML = `
+                            <a
+                                href="${escapeHtml(url)}"
+                                class="result-image"
+                                aria-label="${escapeHtml(title)}"
+                            >
+                                ${imageHtml}
+                            </a>
+
+                            <div class="result-content">
+                                <div class="result-meta">
+                                    <span class="result-category">
+                                        ${escapeHtml(category)}
+                                    </span>
+
+                                    ${
+                                        date
+                                            ? `
+                                                <span class="result-date">
+                                                    ${escapeHtml(date)}
+                                                </span>
+                                            `
+                                            : ""
+                                    }
+                                </div>
+
+                                <a
+                                    href="${escapeHtml(url)}"
+                                    class="result-title"
+                                >
+                                    ${escapeHtml(title)}
+                                </a>
+
+                                ${
+                                    summary
+                                        ? `
+                                            <p class="result-summary-text">
+                                                ${escapeHtml(summary)}
+                                            </p>
+                                        `
+                                        : ""
+                                }
+
+                                <div class="result-footer">
+                                    ${
+                                        views > 0
+                                            ? `
+                                                <span>
+                                                    ${views.toLocaleString("tr-TR")} okunma
+                                                </span>
+                                            `
+                                            : ""
+                                    }
+
+                                    <span>
+                                        Haberi oku →
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+
+                        resultsList.appendChild(
+                            article
+                        );
+                    }
+                );
+            }
+
+            function runSearch(
+                updateUrl
+            ) {
+                const query =
+                    searchInput
+                        ? searchInput.value.trim()
+                        : "";
+
+                if (loading) {
+                    loading.classList.add(
+                        "show"
+                    );
+                }
+
+                if (resultsList) {
+                    resultsList.innerHTML = "";
+                }
+
+                if (emptyState) {
+                    emptyState.classList.remove(
+                        "show"
+                    );
+                }
+
+                window.setTimeout(
+                    function () {
+                        const results =
+                            sortResults(
+                                searchNews(query)
+                            );
+
+                        renderResults(
+                            results,
+                            query
+                        );
+
+                        if (loading) {
+                            loading.classList.remove(
+                                "show"
+                            );
+                        }
+
+                        if (
+                            updateUrl &&
+                            window.history &&
+                            window.history.replaceState
+                        ) {
+                            const url =
+                                new URL(
+                                    window.location.href
+                                );
+
+                            if (query) {
+                                url.searchParams.set(
+                                    "q",
+                                    query
+                                );
+                            } else {
+                                url.searchParams.delete(
+                                    "q"
+                                );
+                            }
+
+                            window.history.replaceState(
+                                {},
+                                "",
+                                url
+                            );
+                        }
+                    },
+                    80
+                );
+            }
+
+            allNews =
+                readNews()
+                    .filter(isPublished);
+
+            if (searchForm) {
+                searchForm.addEventListener(
+                    "submit",
+                    function (event) {
+                        event.preventDefault();
+                        runSearch(true);
+                    }
+                );
+            }
+
+            if (sortSelect) {
+                sortSelect.addEventListener(
+                    "change",
+                    function () {
+                        const query =
+                            searchInput
+                                ? searchInput.value.trim()
+                                : "";
+
+                        if (query) {
+                            runSearch(false);
+                        }
+                    }
+                );
+            }
+
+            document
+                .querySelectorAll(
+                    ".suggestion"
+                )
+                .forEach(
+                    function (button) {
+                        button.addEventListener(
+                            "click",
+                            function () {
+                                const value =
+                                    button.getAttribute(
+                                        "data-search"
+                                    ) || "";
+
+                                if (searchInput) {
+                                    searchInput.value =
+                                        value;
+
+                                    searchInput.focus();
+                                }
+
+                                runSearch(true);
+                            }
+                        );
+                    }
+                );
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const initialQuery =
+                params.get("q") || "";
+
+            if (searchInput) {
+                searchInput.value =
+                    initialQuery;
+            }
+
+            if (initialQuery) {
+                runSearch(false);
+            } else {
+                renderResults([], "");
+            }
+        })();
+    </script>
+
+</body>
+</html>
