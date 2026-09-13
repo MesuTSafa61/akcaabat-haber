@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin Girişi | Akçaabat Haber</title>
+
+    <meta
+        name="description"
+        content="Akçaabat Haber yönetim paneli güvenli giriş ekranı"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0b1727"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #07111f 0%,
+                    #0b1727 45%,
+                    #123761 100%
+                );
+
+            color: #172033;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+
+            width: 420px;
+            height: 420px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.035
+                );
+
+            top: -180px;
+            right: -120px;
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+
+            width: 350px;
+            height: 350px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(
+                    215,
+                    25,
+                    32,
+                    0.06
+                );
+
+            bottom: -170px;
+            left: -120px;
+
+            pointer-events: none;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-card {
+            background: #ffffff;
+
+            border-radius: 22px;
+
+            padding: 38px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.28
+                );
+
+            border:
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.2
+                );
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            width: 68px;
+            height: 68px;
+
+            margin: 0 auto 15px;
+
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #d71920,
+                    #ff4a50
+                );
+
+            color: #ffffff;
+
+            font-size: 25px;
+            font-weight: 900;
+
+            box-shadow:
+                0 10px 25px
+                rgba(
+                    215,
+                    25,
+                    32,
+                    0.25
+                );
+        }
+
+        .brand h1 {
+            margin: 0;
+
+            color: #0b1727;
+
+            font-size: 25px;
+
+            line-height: 1.2;
+        }
+
+        .brand p {
+            margin: 8px 0 0;
+
+            color: #718096;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #263247;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap span {
+            position: absolute;
+
+            left: 14px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #8b97a8;
+
+            font-size: 16px;
+
+            pointer-events: none;
+        }
+
+        .input-wrap input {
+            width: 100%;
+
+            height: 50px;
+
+            padding:
+                0 14px 0 43px;
+
+            border:
+                1px solid
+                #dfe5ec;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            color: #172033;
+
+            background: #ffffff;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .input-wrap input:focus {
+            border-color: #1464d2;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(
+                    20,
+                    100,
+                    210,
+                    0.09
+                );
+        }
+
+        .login-button {
+            width: 100%;
+
+            min-height: 52px;
+
+            margin-top: 8px;
+
+            border: 0;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1464d2,
+                    #0d4fa9
+                );
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        .login-button:hover {
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(
+                    20,
+                    100,
+                    210,
+                    0.22
+                );
+        }
+
+        .login-button:disabled {
+            opacity: 0.65;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+        }
+
+        .message {
+            display: none;
+
+            margin-bottom: 17px;
+
+            padding: 12px 13px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            background: #fff0f1;
+
+            color: #b4232a;
+
+            border:
+                1px solid
+                #ffd4d7;
+        }
+
+        .message.success {
+            background: #ecf9f1;
+
+            color: #13733f;
+
+            border:
+                1px solid
+                #ccebd9;
+        }
+
+        .back-link {
+            display: block;
+
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #718096;
+
+            font-size: 12px;
+
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #1464d2;
+        }
+
+        .security-note {
+            margin-top: 22px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                #edf0f4;
+
+            text-align: center;
+
+            color: #8a95a5;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 15px;
+            height: 15px;
+
+            border:
+                2px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.35
+                );
+
+            border-top-color:
+                #ffffff;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+
+            to {
+                transform:
+                    rotate(360deg);
+            }
+
+        }
+
+        @media (max-width: 520px) {
+
+            body {
+                padding: 14px;
+            }
+
+            .login-card {
+                padding: 27px 21px;
+
+                border-radius: 18px;
+            }
+
+            .brand h1 {
+                font-size: 22px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <main class="login-wrapper">
+
+        <section class="login-card">
+
+            <div class="brand">
+
+                <div
+                    class="brand-logo"
+                    aria-hidden="true"
+                >
+                    AH
+                </div>
+
+                <h1>
+                    Akçaabat Haber
+                </h1>
+
+                <p>
+                    Yönetim paneline güvenli giriş
+                </p>
+
+            </div>
+
+
+            <div
+                id="message"
+                class="message"
+                role="alert"
+            ></div>
+
+
+            <form
+                id="loginForm"
+                novalidate
+            >
+
+                <div class="form-group">
+
+                    <label for="email">
+                        E-posta
+                    </label>
+
+                    <div class="input-wrap">
+
+                        <span aria-hidden="true">
+                            ✉
+                        </span>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            autocomplete="username"
+                            placeholder="admin@site.com"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Şifre
+                    </label>
+
+                    <div class="input-wrap">
+
+                        <span aria-hidden="true">
+                            🔒
+                        </span>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="current-password"
+                            placeholder="Şifrenizi girin"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="loginButton"
+                    class="login-button"
+                    type="submit"
+                >
+                    Yönetim Paneline Gir
+                </button>
+
+            </form>
+
+
+            <a
+                class="back-link"
+                href="index.html"
+            >
+                ← Ana sayfaya dön
+            </a>
+
+
+            <div class="security-note">
+                Bu alan yalnızca yetkili Akçaabat Haber
+                yöneticileri içindir.
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="supabase-config.js"></script>
+
+    <script>
+
+        (function () {
+
+            "use strict";
+
+
+            const SUPABASE_CDN =
+                "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+
+            let client = null;
+
+
+            const form =
+                document.getElementById(
+                    "loginForm"
+                );
+
+
+            const emailInput =
+                document.getElementById(
+                    "email"
+                );
+
+
+            const passwordInput =
+                document.getElementById(
+                    "password"
+                );
+
+
+            const button =
+                document.getElementById(
+                    "loginButton"
+                );
+
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            function showMessage(
+                text,
+                type
+            ) {
+
+                message.textContent =
+                    text;
+
+                message.className =
+                    "message show " +
+                    type;
+
+            }
+
+
+            function clearMessage() {
+
+                message.textContent =
+                    "";
+
+                message.className =
+                    "message";
+
+            }
+
+
+            function setLoading(
+                loading
+            ) {
+
+                button.disabled =
+                    loading;
+
+
+                if (loading) {
+
+                    button.innerHTML =
+                        '<span class="loading">' +
+                        '<span class="spinner"></span>' +
+                        'Giriş yapılıyor...' +
+                        '</span>';
+
+                } else {
+
+                    button.textContent =
+                        "Yönetim Paneline Gir";
+
+                }
+
+            }
+
+
+            function loadSupabase() {
+
+                return new Promise(
+                    function (
+                        resolve,
+                        reject
+                    ) {
+
+                        if (
+                            window.supabase
+                        ) {
+
+                            resolve(
+                                window.supabase
+                            );
+
+                            return;
+
+                        }
+
+
+                        const config =
+                            window.AKCAABAT_SUPABASE;
+
+
+                        if (
+                            !config ||
+                            !config.url ||
+                            !config.key
+                        ) {
+
+                            reject(
+                                new Error(
+                                    "Supabase bağlantı ayarları bulunamadı."
+                                )
+                            );
+
+                            return;
+
+                        }
+
+
+                        const script =
+                            document.createElement(
+                                "script"
+                            );
+
+
+                        script.src =
+                            SUPABASE_CDN;
+
+                        script.async =
+                            true;
+
+
+                        script.onload =
+                            function () {
+
+                                if (
+                                    window.supabase
+                                ) {
+
+                                    resolve(
+                                        window.supabase
+                                    );
+
+                                } else {
+
+                                    reject(
+                                        new Error(
+                                            "Supabase kütüphanesi yüklenemedi."
+                                        )
+                                    );
+
+                                }
+
+                            };
+
+
+                        script.onerror =
+                            function () {
+
+                                reject(
+                                    new Error(
+                                        "Supabase bağlantısı kurulamadı."
+                                    )
+                                );
+
+                            };
+
+
+                        document.head.appendChild(
+                            script
+                        );
+
+                    }
+                );
+
+            }
+
+
+            async function initialize() {
+
+                try {
+
+                    const library =
+                        await loadSupabase();
+
+
+                    const config =
+                        window.AKCAABAT_SUPABASE;
+
+
+                    client =
+                        library.createClient(
+                            config.url,
+                            config.key
+                        );
+
+
+                    const result =
+                        await client.auth.getUser();
+
+
+                    if (
+                        result.data &&
+                        result.data.user
+                    ) {
+
+                        window.location.replace(
+                            "admin.html"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Supabase başlatma hatası:",
+                        error
+                    );
+
+                    showMessage(
+                        "Giriş sistemi başlatılamadı. Lütfen supabase-config.js dosyasını kontrol et.",
+                        "error"
+                    );
+
+                }
+
+            }
+
+
+            form.addEventListener(
+                "submit",
+                async function (event) {
+
+                    event.preventDefault();
+
+                    clearMessage();
+
+
+                    const email =
+                        emailInput.value.trim();
+
+
+                    const password =
+                        passwordInput.value;
+
+
+                    if (!email) {
+
+                        showMessage(
+                            "Lütfen e-posta adresinizi girin.",
+                            "error"
+                        );
+
+                        emailInput.focus();
+
+                        return;
+
+                    }
+
+
+                    if (!password) {
+
+                        showMessage(
+                            "Lütfen şifrenizi girin.",
+                            "error"
+                        );
+
+                        passwordInput.focus();
+
+                        return;
+
+                    }
+
+
+                    if (!client) {
+
+                        showMessage(
+                            "Giriş sistemi henüz hazır değil. Sayfayı yenileyip tekrar deneyin.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    setLoading(
+                        true
+                    );
+
+
+                    try {
+
+                        const result =
+                            await client.auth.signInWithPassword(
+                                {
+                                    email:
+                                        email,
+
+                                    password:
+                                        password
+                                }
+                            );
+
+
+                        if (
+                            result.error
+                        ) {
+
+                            console.error(
+                                "Giriş hatası:",
+                                result.error
+                            );
+
+
+                            showMessage(
+                                "E-posta veya şifre hatalı.",
+                                "error"
+                            );
+
+
+                            setLoading(
+                                false
+                            );
+
+                            return;
+
+                        }
+
+
+                        showMessage(
+                            "Giriş başarılı. Yönetim paneli açılıyor...",
+                            "success"
+                        );
+
+
+                        setTimeout(
+                            function () {
+
+                                window.location.replace(
+                                    "admin.html"
+                                );
+
+                            },
+                            500
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Giriş işlemi hatası:",
+                            error
+                        );
+
+
+                        showMessage(
+                            "Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+                            "error"
+                        );
+
+
+                        setLoading(
+                            false
+                        );
+
+                    }
+
+                }
+            );
+
+
+            passwordInput.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key ===
+                        "Enter"
+                    ) {
+
+                        form.requestSubmit();
+
+                    }
+
+                }
+            );
+
+
+            initialize();
+
+        })();
+
+    </script>
+
+</body>
+</html>
