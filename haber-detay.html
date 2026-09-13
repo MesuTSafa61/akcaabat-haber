@@ -1,1615 +1,2241 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Haber Detayı | Akçaabat Haber</title>
-  <meta name="description" content="Akçaabat Haber - Akçaabat ve Trabzon'dan güncel haberler">
-  <meta name="theme-color" content="#071b33">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .article-page {
-      padding: 34px 0 70px;
-      background: #f5f7fa;
-      min-height: 70vh;
-    }
-    .article-breadcrumb {
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-    .article-breadcrumb a {
-      color: #6b7280;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .article-breadcrumb a:hover {
-      color: #b40018;
-    }
-    .article-breadcrumb span {
-      color: #a0a7b0;
-      margin: 0 8px;
-    }
-    .article-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 320px;
-      gap: 28px;
-      align-items: start;
-    }
-    .article-card {
-      background: #fff;
-      border: 1px solid #e6e9ee;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(15,23,42,.06);
-    }
-    .article-head {
-      padding: 32px 34px 24px;
-    }
-    .article-category {
-      display: inline-flex;
-      background: #b40018;
-      color: #fff;
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      margin-bottom: 17px;
-    }
-    .article-breaking {
-      display: inline-flex;
-      margin-left: 7px;
-      background: #071b33;
-      color: #fff;
-      padding: 7px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-    .article-title {
-      margin: 0;
-      color: #101828;
-      font-size: clamp(30px,4vw,48px);
-      line-height: 1.08;
-      letter-spacing: -.035em;
-      font-weight: 900;
-    }
-    .article-summary {
-      margin: 18px 0 0;
-      color: #586273;
-      font-size: 18px;
-      line-height: 1.65;
-    }
-    .article-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 18px;
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid #edf0f3;
-      color: #7a8492;
-      font-size: 13px;
-    }
-    .article-meta-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .article-meta-item strong {
-      color: #46505e;
-    }
-    .article-hero {
-      width: 100%;
-      background: #e9edf2;
-    }
-    .article-hero img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-    }
-    .article-body-wrap {
-      padding: 30px 34px 38px;
-    }
-    .article-share {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-bottom: 28px;
-    }
-    .share-label {
-      color: #667085;
-      font-size: 13px;
-      font-weight: 800;
-    }
-    .share-btn {
-      border: 1px solid #e1e5ea;
-      background: #fff;
-      color: #344054;
-      min-height: 38px;
-      padding: 0 13px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 700;
-      transition: .2s;
-    }
-    .share-btn:hover {
-      border-color: #b40018;
-      color: #b40018;
-      transform: translateY(-1px);
-    }
-    .article-content {
-      color: #293241;
-      font-size: 18px;
-      line-height: 1.9;
-      overflow-wrap: anywhere;
-    }
-    .article-content p {
-      margin: 0 0 22px;
-    }
-    .article-content h2 {
-      color: #101828;
-      font-size: 27px;
-      margin: 34px 0 15px;
-    }
-    .article-content h3 {
-      color: #101828;
-      font-size: 22px;
-      margin: 30px 0 13px;
-    }
-    .article-content strong {
-      color: #101828;
-    }
-    .article-content a {
-      color: #b40018;
-      font-weight: 700;
-    }
-    .article-content ul,
-    .article-content ol {
-      margin-bottom: 24px;
-      padding-left: 24px;
-    }
-    .article-content li {
-      margin-bottom: 9px;
-    }
-    .article-content blockquote {
-      margin: 28px 0;
-      padding: 18px 22px;
-      border-left: 4px solid #b40018;
-      background: #f7f8fa;
-      color: #4b5563;
-      border-radius: 0 10px 10px 0;
-    }
-    .article-content img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      margin: 28px auto;
-      border-radius: 12px;
-    }
-    .article-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 32px;
-      padding-top: 22px;
-      border-top: 1px solid #e9edf1;
-    }
-    .article-tag {
-      padding: 7px 11px;
-      border-radius: 7px;
-      background: #f1f4f7;
-      color: #5d6673;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .article-author {
-      margin-top: 28px;
-      padding: 18px;
-      border: 1px solid #e6e9ee;
-      border-radius: 12px;
-      background: #fafbfc;
-    }
-    .article-author-title {
-      color: #101828;
-      font-size: 14px;
-      font-weight: 800;
-    }
-    .article-author-text {
-      margin-top: 5px;
-      color: #737d8b;
-      font-size: 13px;
-    }
-    .article-sidebar {
-      display: grid;
-      gap: 20px;
-    }
-    .sidebar-box {
-      background: #fff;
-      border: 1px solid #e6e9ee;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 7px 25px rgba(15,23,42,.05);
-    }
-    .sidebar-box-title {
-      margin: 0;
-      padding: 18px;
-      border-bottom: 1px solid #edf0f3;
-      color: #101828;
-      font-size: 17px;
-      font-weight: 900;
-    }
-    .related-item {
-      display: grid;
-      grid-template-columns: 92px minmax(0,1fr);
-      gap: 12px;
-      padding: 14px 16px;
-      border-bottom: 1px solid #edf0f3;
-      text-decoration: none;
-      transition: .2s;
-    }
-    .related-item:last-child {
-      border-bottom: 0;
-    }
-    .related-item:hover {
-      background: #fafbfc;
-    }
-    .related-image {
-      width: 92px;
-      height: 70px;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #e9edf2;
-    }
-    .related-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .related-category {
-      color: #b40018;
-      font-size: 10px;
-      font-weight: 900;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
-    .related-title {
-      color: #202938;
-      font-size: 13px;
-      line-height: 1.4;
-      font-weight: 800;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .popular-item {
-      display: grid;
-      grid-template-columns: 35px minmax(0,1fr);
-      gap: 10px;
-      padding: 15px 16px;
-      border-bottom: 1px solid #edf0f3;
-      cursor: pointer;
-    }
-    .popular-item:last-child {
-      border-bottom: 0;
-    }
-    .popular-number {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #071b33;
-      color: #fff;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 900;
-    }
-    .popular-title {
-      color: #273142;
-      font-size: 13px;
-      line-height: 1.45;
-      font-weight: 800;
-    }
-    .article-not-found {
-      background: #fff;
-      border: 1px solid #e6e9ee;
-      border-radius: 18px;
-      padding: 65px 30px;
-      text-align: center;
-      box-shadow: 0 8px 30px rgba(15,23,42,.05);
-    }
-    .article-not-found-icon {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: #f2f4f7;
-      font-size: 28px;
-    }
-    .article-not-found h1 {
-      margin: 0;
-      color: #101828;
-      font-size: 28px;
-    }
-    .article-not-found p {
-      margin: 12px 0 22px;
-      color: #667085;
-      line-height: 1.6;
-    }
-    .back-home-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 18px;
-      border-radius: 8px;
-      background: #b40018;
-      color: #fff;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 800;
-    }
-    .reading-progress {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 0;
-      height: 3px;
-      z-index: 9999;
-      background: #b40018;
-    }
-    .toast-message {
-      position: fixed;
-      left: 50%;
-      bottom: 25px;
-      z-index: 10000;
-      transform: translate(-50%,20px);
-      opacity: 0;
-      pointer-events: none;
-      padding: 11px 16px;
-      border-radius: 8px;
-      background: #071b33;
-      color: #fff;
-      font-size: 13px;
-      font-weight: 700;
-      transition: .25s;
-    }
-    .toast-message.show {
-      transform: translate(-50%,0);
-      opacity: 1;
-    }
-    @media (max-width:1050px) {
-      .article-layout {
-        grid-template-columns: 1fr;
-      }
-      .article-sidebar {
-        grid-template-columns: repeat(2,minmax(0,1fr));
-      }
-    }
-    @media (max-width:760px) {
-      .article-page {
-        padding: 20px 0 50px;
-      }
-      .article-head {
-        padding: 24px 20px 20px;
-      }
-      .article-title {
-        font-size: 31px;
-      }
-      .article-summary {
-        font-size: 16px;
-      }
-      .article-body-wrap {
-        padding: 24px 20px 30px;
-      }
-      .article-content {
-        font-size: 17px;
-        line-height: 1.82;
-      }
-      .article-sidebar {
-        grid-template-columns: 1fr;
-      }
-      .article-breaking {
-        margin-left: 0;
-        margin-top: 7px;
-      }
-    }
-    @media (max-width:480px) {
-      .article-title {
-        font-size: 27px;
-      }
-      .article-meta {
-        display: grid;
-        gap: 8px;
-      }
-      .article-hero img {
-        aspect-ratio: 4/3;
-      }
-      .article-content {
-        font-size: 16px;
-      }
-      .share-btn {
-        flex: 1;
-      }
-      .related-item {
-        grid-template-columns: 82px minmax(0,1fr);
-      }
-      .related-image {
-        width: 82px;
-        height: 65px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Haber Detayı | Akçaabat Haber</title>
+
+    <meta
+        name="description"
+        content="Akçaabat ve Trabzon'dan güncel haberler."
+    >
+
+    <meta
+        name="robots"
+        content="index, follow"
+    >
+
+    <link
+        rel="canonical"
+        href="https://akcaabathaber.com.tr/haber-detay.html"
+    >
+
+    <meta
+        property="og:type"
+        content="article"
+    >
+
+    <meta
+        property="og:title"
+        content="Akçaabat Haber"
+    >
+
+    <meta
+        property="og:description"
+        content="Akçaabat ve Trabzon'dan güncel haberler."
+    >
+
+    <meta
+        property="og:url"
+        content="https://akcaabathaber.com.tr/haber-detay.html"
+    >
+
+    <meta
+        property="og:site_name"
+        content="Akçaabat Haber"
+    >
+
+    <meta
+        property="og:image"
+        content="https://akcaabathaber.com.tr/assets/default-news.jpg"
+    >
+
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
+
+    <meta
+        name="twitter:title"
+        content="Akçaabat Haber"
+    >
+
+    <meta
+        name="twitter:description"
+        content="Akçaabat ve Trabzon'dan güncel haberler."
+    >
+
+    <meta
+        name="twitter:image"
+        content="https://akcaabathaber.com.tr/assets/default-news.jpg"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css?v=3"
+    >
+
+    <script src="supabase-config.js"></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        defer
+    ></script>
+
+    <script
+        src="script.js?v=3"
+        defer
+    ></script>
+
+    <style>
+        .article-page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 30px 20px 70px;
+        }
+
+        .article-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .article-breadcrumb a {
+            color: #174c92;
+            text-decoration: none;
+        }
+
+        .article-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .article-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .article-main {
+            min-width: 0;
+        }
+
+        .article-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.07);
+            border: 1px solid #ececec;
+        }
+
+        .article-header {
+            padding: 30px 32px 20px;
+        }
+
+        .article-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #174c92;
+            color: #fff;
+            padding: 7px 13px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            margin-bottom: 16px;
+        }
+
+        .article-breaking {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #c8102e;
+            color: #fff;
+            padding: 7px 13px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-left: 7px;
+            margin-bottom: 16px;
+        }
+
+        .article-title {
+            margin: 0;
+            color: #171717;
+            font-size: clamp(30px, 4vw, 48px);
+            line-height: 1.12;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .article-summary {
+            margin: 18px 0 0;
+            color: #5e5e5e;
+            font-size: 18px;
+            line-height: 1.65;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #eeeeee;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .article-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .article-meta-item strong {
+            color: #444;
+        }
+
+        .article-image-wrap {
+            width: 100%;
+            background: #f2f2f2;
+        }
+
+        .article-image {
+            display: block;
+            width: 100%;
+            max-height: 620px;
+            object-fit: cover;
+        }
+
+        .article-image-placeholder {
+            min-height: 330px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(
+                    135deg,
+                    #123d75,
+                    #1e5ca8
+                );
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .article-content {
+            padding: 30px 32px 36px;
+            color: #292929;
+            font-size: 17px;
+            line-height: 1.85;
+            word-break: break-word;
+        }
+
+        .article-content p {
+            margin: 0 0 20px;
+        }
+
+        .article-content h2 {
+            margin: 32px 0 14px;
+            color: #174c92;
+            font-size: 27px;
+            line-height: 1.25;
+        }
+
+        .article-content h3 {
+            margin: 28px 0 12px;
+            color: #222;
+            font-size: 23px;
+            line-height: 1.3;
+        }
+
+        .article-content strong {
+            color: #111;
+        }
+
+        .article-content a {
+            color: #174c92;
+            text-decoration: underline;
+        }
+
+        .article-content img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 24px 0;
+        }
+
+        .article-content blockquote {
+            margin: 25px 0;
+            padding: 18px 22px;
+            border-left: 4px solid #174c92;
+            background: #f5f7fa;
+            border-radius: 0 10px 10px 0;
+            color: #555;
+        }
+
+        .article-share {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0 32px 30px;
+        }
+
+        .article-share-title {
+            width: 100%;
+            margin-bottom: 3px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #555;
+        }
+
+        .share-button {
+            border: 0;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: transform .2s ease, opacity .2s ease;
+        }
+
+        .share-button:hover {
+            transform: translateY(-1px);
+            opacity: .9;
+        }
+
+        .share-copy {
+            background: #333;
+            color: #fff;
+        }
+
+        .share-whatsapp {
+            background: #25d366;
+            color: #fff;
+        }
+
+        .share-facebook {
+            background: #1877f2;
+            color: #fff;
+        }
+
+        .article-sidebar {
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar-box {
+            background: #fff;
+            border: 1px solid #ececec;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 7px 25px rgba(0, 0, 0, .05);
+        }
+
+        .sidebar-title {
+            margin: 0;
+            padding: 17px 19px;
+            color: #fff;
+            background: #174c92;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .sidebar-content {
+            padding: 18px;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 10px 0;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .sidebar-link:last-child {
+            border-bottom: 0;
+        }
+
+        .sidebar-link:hover {
+            color: #174c92;
+        }
+
+        .article-loading,
+        .article-error,
+        .article-not-found {
+            padding: 80px 25px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #ececec;
+            border-radius: 16px;
+        }
+
+        .article-loading h2,
+        .article-error h2,
+        .article-not-found h2 {
+            margin: 0 0 12px;
+            color: #222;
+        }
+
+        .article-loading p,
+        .article-error p,
+        .article-not-found p {
+            margin: 0;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .back-home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 22px;
+            padding: 12px 18px;
+            border-radius: 9px;
+            background: #174c92;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .comments-section {
+            margin-top: 30px;
+            background: #fff;
+            border: 1px solid #ececec;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
+        }
+
+        .comments-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .comments-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #222;
+        }
+
+        .comments-body {
+            padding: 25px 28px 30px;
+        }
+
+        .comment-form {
+            display: grid;
+            gap: 13px;
+            margin-bottom: 30px;
+        }
+
+        .comment-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .comment-input,
+        .comment-textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #dcdcdc;
+            border-radius: 9px;
+            padding: 12px 13px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .comment-input:focus,
+        .comment-textarea:focus {
+            border-color: #174c92;
+            box-shadow: 0 0 0 3px rgba(23, 76, 146, .1);
+        }
+
+        .comment-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .comment-submit {
+            justify-self: start;
+            border: 0;
+            border-radius: 9px;
+            padding: 12px 20px;
+            background: #174c92;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .comment-submit:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .comment-message {
+            display: none;
+            padding: 11px 13px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .comment-message.success {
+            display: block;
+            background: #e9f8ef;
+            color: #1c7040;
+        }
+
+        .comment-message.error {
+            display: block;
+            background: #fff0f0;
+            color: #a32020;
+        }
+
+        .comment-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .comment-item {
+            padding: 17px;
+            border: 1px solid #eeeeee;
+            border-radius: 11px;
+            background: #fafafa;
+        }
+
+        .comment-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .comment-name {
+            font-weight: 800;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .comment-date {
+            color: #999;
+            font-size: 11px;
+        }
+
+        .comment-text {
+            margin: 0;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.65;
+            white-space: pre-wrap;
+        }
+
+        .comments-empty {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .reading-time {
+            color: #888;
+        }
+
+        @media (max-width: 900px) {
+            .article-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .article-sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .article-page {
+                padding: 20px 12px 45px;
+            }
+
+            .article-header {
+                padding: 23px 19px 18px;
+            }
+
+            .article-title {
+                font-size: 31px;
+                letter-spacing: -.5px;
+            }
+
+            .article-summary {
+                font-size: 16px;
+            }
+
+            .article-content {
+                padding: 23px 19px 28px;
+                font-size: 16px;
+                line-height: 1.75;
+            }
+
+            .article-share {
+                padding: 0 19px 24px;
+            }
+
+            .article-breaking {
+                margin-left: 0;
+            }
+
+            .comment-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comments-header {
+                padding: 19px;
+            }
+
+            .comments-body {
+                padding: 20px 19px 24px;
+            }
+
+            .article-meta {
+                gap: 9px;
+            }
+
+            .article-image {
+                max-height: 420px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="reading-progress" id="readingProgress"></div>
-  <div class="top-bar">
-    <div class="container">
-      <div class="top-bar-left">
-        <span>Akçaabat'ın Güncel Haber Kaynağı</span>
-      </div>
-      <div class="top-bar-right">
-        <span id="currentDate"></span>
-      </div>
+
+    <div id="site-header">
+        <!-- Mevcut site header'ı JavaScript ile yüklenebilir -->
     </div>
-  </div>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="index.html" class="brand" aria-label="Akçaabat Haber Ana Sayfa">
-        <span class="brand-mark">AH</span>
-        <span class="brand-text">
-          <strong>AKÇAABAT</strong>
-          <small>HABER</small>
-        </span>
-      </a>
-      <button
-        class="mobile-menu-button"
-        id="mobileMenuButton"
-        type="button"
-        aria-label="Menüyü aç"
-        aria-expanded="false"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </header>
-  <nav class="main-nav" id="mainNav">
-    <div class="container">
-      <div class="nav-inner">
-        <a href="index.html">Ana Sayfa</a>
-        <a href="haberler.html">Tüm Haberler</a>
-        <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
-        <a href="kategori.html?kategori=Trabzon">Trabzon</a>
-        <a href="kategori.html?kategori=Spor">Spor</a>
-        <a href="kategori.html?kategori=Gündem">Gündem</a>
-        <a href="kategori.html?kategori=Ekonomi">Ekonomi</a>
-        <a href="kategori.html?kategori=Yaşam">Yaşam</a>
-        <a href="kategori.html?kategori=Kültür">Kültür</a>
-      </div>
-    </div>
-  </nav>
-  <div class="mobile-overlay" id="mobileOverlay"></div>
-  <main class="article-page">
-    <div class="container">
-      <div class="article-breadcrumb">
-        <a href="index.html">Ana Sayfa</a>
-        <span>/</span>
-        <a href="haberler.html">Haberler</a>
-        <span>/</span>
-        <strong id="breadcrumbCategory">Haber</strong>
-      </div>
-      <div id="articleArea"></div>
-    </div>
-  </main>
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-brand">
-            <span class="brand-mark">AH</span>
-            <strong>AKÇAABAT HABER</strong>
-          </div>
-          <p>
-            Akçaabat ve Trabzon'dan güncel,
-            hızlı ve güvenilir haberler.
-          </p>
-        </div>
-        <div>
-          <h3>Hızlı Menü</h3>
-          <a href="index.html">Ana Sayfa</a>
-          <a href="haberler.html">Haberler</a>
-          <a href="kategori.html?kategori=Akçaabat">Akçaabat</a>
-          <a href="kategori.html?kategori=Trabzon">Trabzon</a>
-        </div>
-        <div>
-          <h3>Kategoriler</h3>
-          <a href="kategori.html?kategori=Spor">Spor</a>
-          <a href="kategori.html?kategori=Gündem">Gündem</a>
-          <a href="kategori.html?kategori=Ekonomi">Ekonomi</a>
-          <a href="kategori.html?kategori=Yaşam">Yaşam</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>
-          © <span id="footerYear"></span> Akçaabat Haber
-        </span>
-        <span>
-          Tüm hakları saklıdır.
-        </span>
-      </div>
-    </div>
-  </footer>
-  <div class="toast-message" id="toastMessage"></div>
-  <script src="script.js"></script>
-  <script>
-    (function () {
-      "use strict";
-      const NEWS_KEY = "akcaabat_haberler";
-      const FALLBACK_IMAGE =
-        "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1400&q=85";
-      const params =
-        new URLSearchParams(window.location.search);
-      const requestedSlug =
-        params.get("slug");
-      const requestedId =
-        params.get("id");
-      const articleArea =
-        document.getElementById("articleArea");
-      const breadcrumbCategory =
-        document.getElementById("breadcrumbCategory");
-      const readingProgress =
-        document.getElementById("readingProgress");
-      const toastMessage =
-        document.getElementById("toastMessage");
-      function escapeHTML(value) {
-        return String(value ?? "")
-          .replace(/&/g,"&amp;")
-          .replace(/</g,"&lt;")
-          .replace(/>/g,"&gt;")
-          .replace(/"/g,"&quot;")
-          .replace(/'/g,"&#039;");
-      }
-      function getNews() {
-        try {
-          const raw =
-            localStorage.getItem(NEWS_KEY);
-          if (!raw) {
-            return [];
-          }
-          const data =
-            JSON.parse(raw);
-          return Array.isArray(data)
-            ? data
-            : [];
-        } catch (error) {
-          console.error(
-            "Haberler okunamadı:",
-            error
-          );
-          return [];
-        }
-      }
-      function saveNews(news) {
-        try {
-          localStorage.setItem(
-            NEWS_KEY,
-            JSON.stringify(news)
-          );
-        } catch (error) {
-          console.warn(
-            "Haberler kaydedilemedi:",
-            error
-          );
-        }
-      }
-      function value(item, keys, fallback = "") {
-        for (const key of keys) {
-          if (
-            item &&
-            item[key] !== undefined &&
-            item[key] !== null &&
-            String(item[key]).trim() !== ""
-          ) {
-            return item[key];
-          }
-        }
-        return fallback;
-      }
-      function getTitle(item) {
-        return value(
-          item,
-          ["title","baslik","name"],
-          "Başlıksız Haber"
-        );
-      }
-      function getSummary(item) {
-        return value(
-          item,
-          ["summary","ozet","spot"],
-          ""
-        );
-      }
-      function getContent(item) {
-        return value(
-          item,
-          ["content","icerik","metin"],
-          ""
-        );
-      }
-      function getCategory(item) {
-        return value(
-          item,
-          ["category","kategori"],
-          "Gündem"
-        );
-      }
-      function getImage(item) {
-        const image =
-          value(
-            item,
-            ["image","gorsel","resim","imageUrl"],
-            FALLBACK_IMAGE
-          );
-        return String(image).trim()
-          ? image
-          : FALLBACK_IMAGE;
-      }
-      function getId(item) {
-        return String(
-          value(
-            item,
-            ["id","haberId"],
-            ""
-          )
-        );
-      }
-      function getDate(item) {
-        return value(
-          item,
-          [
-            "publishedAt",
-            "createdAt",
-            "updatedAt",
-            "date",
-            "tarih"
-          ],
-          ""
-        );
-      }
-      function getViews(item) {
-        return Number(
-          value(
-            item,
-            ["views","goruntulenme"],
-            0
-          )
-        ) || 0;
-      }
-      function getAuthor(item) {
-        return value(
-          item,
-          ["author","yazar","editor"],
-          "Akçaabat Haber"
-        );
-      }
-      function formatDate(valueDate) {
-        if (!valueDate) {
-          return "Tarih belirtilmedi";
-        }
-        const date =
-          new Date(valueDate);
-        if (Number.isNaN(date.getTime())) {
-          return String(valueDate);
-        }
-        return date.toLocaleDateString(
-          "tr-TR",
-          {
-            day:"2-digit",
-            month:"long",
-            year:"numeric"
-          }
-        );
-      }
-      function formatDateTime(valueDate) {
-        if (!valueDate) {
-          return "";
-        }
-        const date =
-          new Date(valueDate);
-        if (Number.isNaN(date.getTime())) {
-          return "";
-        }
-        return date.toLocaleString(
-          "tr-TR",
-          {
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit"
-          }
-        );
-      }
-      function slugify(text) {
-        if (
-          window.AkcaabatHaber &&
-          typeof window.AkcaabatHaber.slugify === "function"
-        ) {
-          return window.AkcaabatHaber.slugify(text);
-        }
-        return String(text || "")
-          .toLowerCase()
-          .replace(/ğ/g,"g")
-          .replace(/ü/g,"u")
-          .replace(/ş/g,"s")
-          .replace(/ı/g,"i")
-          .replace(/ö/g,"o")
-          .replace(/ç/g,"c")
-          .replace(/İ/g,"i")
-          .replace(/[^a-z0-9]+/g,"-")
-          .replace(/^-+|-+$/g,"");
-      }
-      function getSlug(item) {
-        const stored =
-          value(
-            item,
-            ["slug","seoSlug"],
-            ""
-          );
-        if (stored) {
-          return String(stored);
-        }
-        return slugify(
-          getTitle(item)
-        );
-      }
-      function getNewsUrl(item) {
-        const slug =
-          getSlug(item);
-        if (slug) {
-          return (
-            "haber-detay.html?slug=" +
-            encodeURIComponent(slug)
-          );
-        }
-        const id =
-          getId(item);
-        return (
-          "haber-detay.html?id=" +
-          encodeURIComponent(id)
-        );
-      }
-      function findArticle(news) {
-        if (requestedSlug) {
-          const wanted =
-            String(requestedSlug)
-              .trim()
-              .toLowerCase();
-          let found =
-            news.find(function (item) {
-              return (
-                getSlug(item).toLowerCase() ===
-                wanted
-              );
-            });
-          if (found) {
-            return found;
-          }
-        }
-        if (requestedId) {
-          const wantedId =
-            String(requestedId);
-          const found =
-            news.find(function (item) {
-              return getId(item) === wantedId;
-            });
-          if (found) {
-            return found;
-          }
-        }
-        return null;
-      }
-      function makeContentHTML(content) {
-        if (!content) {
-          return `
+
+    <main class="article-page">
+
+        <nav
+            class="article-breadcrumb"
+            aria-label="Sayfa yolu"
+        >
+            <a href="index.html">Ana Sayfa</a>
+
+            <span>›</span>
+
+            <a href="haberler.html">Haberler</a>
+
+            <span>›</span>
+
+            <span id="breadcrumb-title">Haber</span>
+        </nav>
+
+        <div id="article-loading" class="article-loading">
+            <h2>Haber yükleniyor...</h2>
             <p>
-              Bu haber için henüz detaylı içerik
-              girilmemiştir.
+                Haber bilgileri hazırlanıyor. Lütfen bekleyin.
             </p>
-          `;
-        }
-        const text =
-          String(content);
-        if (/<[a-z][\s\S]*>/i.test(text)) {
-          return text;
-        }
-        return text
-          .split(/\n\s*\n/)
-          .map(function (paragraph) {
-            return (
-              "<p>" +
-              escapeHTML(
-                paragraph.trim()
-              ).replace(/\n/g,"<br>") +
-              "</p>"
-            );
-          })
-          .join("");
-      }
-      function showToast(message) {
-        if (!toastMessage) {
-          return;
-        }
-        toastMessage.textContent =
-          message;
-        toastMessage.classList.add(
-          "show"
-        );
-        setTimeout(function () {
-          toastMessage.classList.remove(
-            "show"
-          );
-        },2500);
-      }
-      function increaseViews(article) {
-        const id =
-          getId(article);
-        if (!id) {
-          return;
-        }
-        const news =
-          getNews();
-        const index =
-          news.findIndex(function (item) {
-            return getId(item) === id;
-          });
-        if (index === -1) {
-          return;
-        }
-        const current =
-          getViews(news[index]);
-        news[index].views =
-          current + 1;
-        news[index].goruntulenme =
-          current + 1;
-        saveNews(news);
-        article.views =
-          current + 1;
-      }
-      function renderNotFound() {
-        if (!articleArea) {
-          return;
-        }
-        articleArea.innerHTML = `
-          <div class="article-not-found">
-            <div class="article-not-found-icon">
-              !
-            </div>
-            <h1>Haber Bulunamadı</h1>
+        </div>
+
+        <div
+            id="article-not-found"
+            class="article-not-found"
+            style="display:none;"
+        >
+            <h2>Haber bulunamadı</h2>
+
             <p>
-              Aradığınız haber bulunamadı veya
-              kaldırılmış olabilir.
+                Aradığınız haber kaldırılmış, taslak durumunda olabilir
+                veya bağlantı artık geçerli olmayabilir.
             </p>
+
             <a
-              href="index.html"
-              class="back-home-btn"
+                href="index.html"
+                class="back-home-button"
             >
-              Ana Sayfaya Dön
+                Ana Sayfaya Dön
             </a>
-          </div>
-        `;
-      }
-      function getRelated(news, current) {
-        const currentCategory =
-          getCategory(current);
-        const currentId =
-          getId(current);
-        return news
-          .filter(function (item) {
-            return (
-              getId(item) !== currentId &&
-              (
-                getCategory(item) ===
-                currentCategory
-              )
-            );
-          })
-          .sort(function (a,b) {
-            const dateA =
-              new Date(getDate(a)).getTime() || 0;
-            const dateB =
-              new Date(getDate(b)).getTime() || 0;
-            return dateB - dateA;
-          })
-          .slice(0,5);
-      }
-      function getPopular(news,current) {
-        const currentId =
-          getId(current);
-        return news
-          .filter(function (item) {
-            return getId(item) !== currentId;
-          })
-          .sort(function (a,b) {
-            return (
-              getViews(b) -
-              getViews(a)
-            );
-          })
-          .slice(0,5);
-      }
-      function renderRelated(news,current) {
-        const related =
-          getRelated(news,current);
-        if (!related.length) {
-          return `
-            <section class="sidebar-box">
-              <h2 class="sidebar-box-title">
-                Son Haberler
-              </h2>
-              <div style="padding:18px;color:#667085;">
-                Başka haber bulunamadı.
-              </div>
-            </section>
-          `;
-        }
-        return `
-          <section class="sidebar-box">
-            <h2 class="sidebar-box-title">
-              İlgili Haberler
-            </h2>
-            <div>
-              ${related.map(function (item) {
-                return `
-                  <a
-                    class="related-item"
-                    href="${escapeHTML(
-                      getNewsUrl(item)
-                    )}"
-                  >
-                    <div class="related-image">
-                      <img
-                        src="${escapeHTML(
-                          getImage(item)
-                        )}"
-                        alt="${escapeHTML(
-                          getTitle(item)
-                        )}"
-                        loading="lazy"
-                      >
+        </div>
+
+        <div
+            id="article-error"
+            class="article-error"
+            style="display:none;"
+        >
+            <h2>Bir sorun oluştu</h2>
+
+            <p id="article-error-text">
+                Haber yüklenirken beklenmeyen bir hata oluştu.
+            </p>
+
+            <a
+                href="index.html"
+                class="back-home-button"
+            >
+                Ana Sayfaya Dön
+            </a>
+        </div>
+
+        <div
+            id="article-wrapper"
+            style="display:none;"
+        >
+
+            <div class="article-layout">
+
+                <article class="article-main">
+
+                    <div class="article-card">
+
+                        <header class="article-header">
+
+                            <div>
+                                <span
+                                    id="article-category"
+                                    class="article-category"
+                                >
+                                    Haber
+                                </span>
+
+                                <span
+                                    id="article-breaking"
+                                    class="article-breaking"
+                                    style="display:none;"
+                                >
+                                    SON DAKİKA
+                                </span>
+                            </div>
+
+                            <h1
+                                id="article-title"
+                                class="article-title"
+                            ></h1>
+
+                            <p
+                                id="article-summary"
+                                class="article-summary"
+                            ></p>
+
+                            <div class="article-meta">
+
+                                <span class="article-meta-item">
+                                    <span>📅</span>
+                                    <strong>Tarih:</strong>
+                                    <span id="article-date"></span>
+                                </span>
+
+                                <span class="article-meta-item">
+                                    <span>👁</span>
+                                    <strong>Okunma:</strong>
+                                    <span id="article-views"></span>
+                                </span>
+
+                                <span class="article-meta-item">
+                                    <span>⏱</span>
+                                    <span
+                                        id="article-reading-time"
+                                        class="reading-time"
+                                    ></span>
+                                </span>
+
+                            </div>
+
+                        </header>
+
+                        <div
+                            id="article-image-container"
+                            class="article-image-wrap"
+                        ></div>
+
+                        <div
+                            id="article-content"
+                            class="article-content"
+                        ></div>
+
+                        <div class="article-share">
+
+                            <div class="article-share-title">
+                                Bu haberi paylaş
+                            </div>
+
+                            <button
+                                type="button"
+                                class="share-button share-whatsapp"
+                                id="share-whatsapp"
+                            >
+                                WhatsApp
+                            </button>
+
+                            <button
+                                type="button"
+                                class="share-button share-facebook"
+                                id="share-facebook"
+                            >
+                                Facebook
+                            </button>
+
+                            <button
+                                type="button"
+                                class="share-button share-copy"
+                                id="share-copy"
+                            >
+                                Linki Kopyala
+                            </button>
+
+                        </div>
+
                     </div>
-                    <div>
-                      <div class="related-category">
-                        ${escapeHTML(
-                          getCategory(item)
-                            .toUpperCase()
-                        )}
-                      </div>
-                      <div class="related-title">
-                        ${escapeHTML(
-                          getTitle(item)
-                        )}
-                      </div>
+
+                    <section
+                        class="comments-section"
+                        aria-label="Yorumlar"
+                    >
+
+                        <div class="comments-header">
+                            <h2>
+                                Yorumlar
+                            </h2>
+                        </div>
+
+                        <div class="comments-body">
+
+                            <form
+                                id="comment-form"
+                                class="comment-form"
+                            >
+
+                                <div class="comment-form-grid">
+
+                                    <input
+                                        type="text"
+                                        id="comment-name"
+                                        class="comment-input"
+                                        placeholder="Adınız"
+                                        maxlength="80"
+                                        required
+                                    >
+
+                                    <input
+                                        type="email"
+                                        id="comment-email"
+                                        class="comment-input"
+                                        placeholder="E-posta adresiniz"
+                                        maxlength="160"
+                                        required
+                                    >
+
+                                </div>
+
+                                <textarea
+                                    id="comment-content"
+                                    class="comment-textarea"
+                                    placeholder="Yorumunuzu yazın..."
+                                    maxlength="2000"
+                                    required
+                                ></textarea>
+
+                                <div
+                                    id="comment-message"
+                                    class="comment-message"
+                                ></div>
+
+                                <button
+                                    type="submit"
+                                    id="comment-submit"
+                                    class="comment-submit"
+                                >
+                                    Yorumu Gönder
+                                </button>
+
+                            </form>
+
+                            <div
+                                id="comment-list"
+                                class="comment-list"
+                            >
+                                <div class="comments-empty">
+                                    Yorumlar yükleniyor...
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </article>
+
+                <aside class="article-sidebar">
+
+                    <div class="sidebar-box">
+
+                        <h2 class="sidebar-title">
+                            Akçaabat Haber
+                        </h2>
+
+                        <div class="sidebar-content">
+
+                            <a
+                                href="index.html"
+                                class="sidebar-link"
+                            >
+                                Ana Sayfa
+                            </a>
+
+                            <a
+                                href="haberler.html"
+                                class="sidebar-link"
+                            >
+                                Tüm Haberler
+                            </a>
+
+                            <a
+                                href="kategori.html?slug=akcaabat"
+                                class="sidebar-link"
+                            >
+                                Akçaabat Haberleri
+                            </a>
+
+                            <a
+                                href="kategori.html?slug=trabzon"
+                                class="sidebar-link"
+                            >
+                                Trabzon Haberleri
+                            </a>
+
+                            <a
+                                href="kategori.html?slug=spor"
+                                class="sidebar-link"
+                            >
+                                Spor Haberleri
+                            </a>
+
+                        </div>
+
                     </div>
-                  </a>
-                `;
-              }).join("")}
+
+                    <div class="sidebar-box">
+
+                        <h2 class="sidebar-title">
+                            Son Haberler
+                        </h2>
+
+                        <div
+                            id="sidebar-latest-news"
+                            class="sidebar-content"
+                        >
+                            <div class="comments-empty">
+                                Haberler yükleniyor...
+                            </div>
+                        </div>
+
+                    </div>
+
+                </aside>
+
             </div>
-          </section>
-        `;
-      }
-      function renderPopular(news,current) {
-        const popular =
-          getPopular(news,current);
-        if (!popular.length) {
-          return "";
-        }
-        return `
-          <section class="sidebar-box">
-            <h2 class="sidebar-box-title">
-              Çok Okunanlar
-            </h2>
-            <div>
-              ${popular.map(function (item,index) {
-                return `
-                  <a
-                    class="popular-item"
-                    href="${escapeHTML(
-                      getNewsUrl(item)
-                    )}"
-                    style="
-                      text-decoration:none;
-                      color:inherit;
-                    "
-                  >
-                    <span class="popular-number">
-                      ${String(index + 1).padStart(2,"0")}
-                    </span>
-                    <span>
-                      <span class="related-category">
-                        ${escapeHTML(
-                          getCategory(item)
-                            .toUpperCase()
-                        )}
-                      </span>
-                      <span class="popular-title">
-                        ${escapeHTML(
-                          getTitle(item)
-                        )}
-                      </span>
-                    </span>
-                  </a>
-                `;
-              }).join("")}
-            </div>
-          </section>
-        `;
-      }
-      function renderArticle(article,news) {
-        const title =
-          getTitle(article);
-        const summary =
-          getSummary(article);
-        const category =
-          getCategory(article);
-        const image =
-          getImage(article);
-        const date =
-          getDate(article);
-        const author =
-          getAuthor(article);
-        const views =
-          getViews(article);
-        const breaking =
-          article.breaking === true ||
-          article.breaking === "true";
-        const content =
-          makeContentHTML(
-            getContent(article)
-          );
-        if (breadcrumbCategory) {
-          breadcrumbCategory.textContent =
-            category;
-        }
-        document.title =
-          title +
-          " | Akçaabat Haber";
-        const description =
-          summary ||
-          title;
-        let metaDescription =
-          document.querySelector(
-            'meta[name="description"]'
-          );
-        if (!metaDescription) {
-          metaDescription =
-            document.createElement("meta");
-          metaDescription.name =
-            "description";
-          document.head.appendChild(
-            metaDescription
-          );
-        }
-        metaDescription.content =
-          String(description)
-            .replace(/\s+/g," ")
-            .slice(0,160);
-        articleArea.innerHTML = `
-          <div class="article-layout">
-            <article class="article-card">
-              <div class="article-head">
-                <div>
-                  <span class="article-category">
-                    ${escapeHTML(
-                      category.toUpperCase()
-                    )}
-                  </span>
-                  ${
-                    breaking
-                      ? `
-                        <span class="article-breaking">
-                          SON DAKİKA
-                        </span>
-                      `
-                      : ""
-                  }
-                </div>
-                <h1 class="article-title">
-                  ${escapeHTML(title)}
-                </h1>
-                ${
-                  summary
-                    ? `
-                      <p class="article-summary">
-                        ${escapeHTML(summary)}
-                      </p>
-                    `
-                    : ""
-                }
-                <div class="article-meta">
-                  <span class="article-meta-item">
-                    📅
-                    <strong>
-                      ${escapeHTML(
-                        formatDate(date)
-                      )}
-                    </strong>
-                  </span>
-                  <span class="article-meta-item">
-                    ✍️
-                    <strong>
-                      ${escapeHTML(author)}
-                    </strong>
-                  </span>
-                  <span class="article-meta-item">
-                    👁️
-                    <strong>
-                      ${views} okunma
-                    </strong>
-                  </span>
-                  ${
-                    formatDateTime(date)
-                      ? `
-                        <span class="article-meta-item">
-                          🕒
-                          <strong>
-                            ${escapeHTML(
-                              formatDateTime(date)
-                            )}
-                          </strong>
-                        </span>
-                      `
-                      : ""
-                  }
-                </div>
-              </div>
-              <div class="article-hero">
-                <img
-                  src="${escapeHTML(image)}"
-                  alt="${escapeHTML(title)}"
-                  onerror="
-                    this.onerror=null;
-                    this.src='${FALLBACK_IMAGE}';
-                  "
-                >
-              </div>
-              <div class="article-body-wrap">
-                <div class="article-share">
-                  <span class="share-label">
-                    Haberi paylaş:
-                  </span>
-                  <button
-                    type="button"
-                    class="share-btn"
-                    id="copyLinkButton"
-                  >
-                    🔗 Linki Kopyala
-                  </button>
-                  <button
-                    type="button"
-                    class="share-btn"
-                    id="whatsappButton"
-                  >
-                    WhatsApp
-                  </button>
-                  <button
-                    type="button"
-                    class="share-btn"
-                    id="nativeShareButton"
-                  >
-                    ↗ Paylaş
-                  </button>
-                </div>
-                <div class="article-content">
-                  ${content}
-                </div>
-                <div class="article-tags">
-                  <span class="article-tag">
-                    #${escapeHTML(
-                      slugify(category)
-                    )}
-                  </span>
-                  <span class="article-tag">
-                    #akçaabat
-                  </span>
-                  <span class="article-tag">
-                    #trabzon
-                  </span>
-                  <span class="article-tag">
-                    #haber
-                  </span>
-                </div>
-                <div class="article-author">
-                  <div class="article-author-title">
-                    Akçaabat Haber
-                  </div>
-                  <div class="article-author-text">
-                    Akçaabat ve Trabzon'dan
-                    güncel, hızlı ve güvenilir haberler.
-                  </div>
-                </div>
-              </div>
-            </article>
-            <aside class="article-sidebar">
-              ${renderRelated(
-                news,
-                article
-              )}
-              ${renderPopular(
-                news,
-                article
-              )}
-              <section class="sidebar-box">
-                <h2 class="sidebar-box-title">
-                  Akçaabat Haber
-                </h2>
-                <div style="
-                  padding:18px;
-                  color:#667085;
-                  font-size:14px;
-                  line-height:1.7;
-                ">
-                  Akçaabat ve Trabzon'dan
-                  güncel gelişmeleri takip edin.
-                </div>
-              </section>
-            </aside>
-          </div>
-        `;
-        initializeSharing(
-          article,
-          title
-        );
-      }
-      function initializeSharing(article,title) {
-        const copyButton =
-          document.getElementById(
-            "copyLinkButton"
-          );
-        const whatsappButton =
-          document.getElementById(
-            "whatsappButton"
-          );
-        const nativeShareButton =
-          document.getElementById(
-            "nativeShareButton"
-          );
-        const url =
-          window.location.href;
-        if (copyButton) {
-          copyButton.addEventListener(
-            "click",
-            async function () {
-              try {
-                await navigator.clipboard.writeText(
-                  url
+
+        </div>
+
+    </main>
+
+    <div id="site-footer">
+        <!-- Mevcut site footer'ı -->
+    </div>
+
+    <script>
+        (function () {
+            "use strict";
+
+            let supabaseClient = null;
+            let currentNews = null;
+
+            const DEFAULT_IMAGE =
+                "https://akcaabathaber.com.tr/assets/default-news.jpg";
+
+            function getQueryParameter(name) {
+                const params = new URLSearchParams(
+                    window.location.search
                 );
-                showToast(
-                  "Haber bağlantısı kopyalandı."
-                );
-              } catch (error) {
-                const temp =
-                  document.createElement("input");
-                temp.value =
-                  url;
-                document.body.appendChild(
-                  temp
-                );
-                temp.select();
-                document.execCommand(
-                  "copy"
-                );
-                temp.remove();
-                showToast(
-                  "Haber bağlantısı kopyalandı."
-                );
-              }
+
+                return params.get(name);
             }
-          );
-        }
-        if (whatsappButton) {
-          whatsappButton.addEventListener(
-            "click",
-            function () {
-              const text =
-                title +
-                " - " +
-                url;
-              window.open(
-                "https://wa.me/?text=" +
-                encodeURIComponent(text),
-                "_blank",
-                "noopener,noreferrer"
-              );
-            }
-          );
-        }
-        if (nativeShareButton) {
-          nativeShareButton.addEventListener(
-            "click",
-            async function () {
-              if (
-                navigator.share
-              ) {
-                try {
-                  await navigator.share({
-                    title:title,
-                    text:title,
-                    url:url
-                  });
-                } catch (error) {
-                  return;
+
+            function escapeHtml(value) {
+                if (value === null || value === undefined) {
+                    return "";
                 }
-              } else {
-                try {
-                  await navigator.clipboard.writeText(
+
+                return String(value)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function formatDate(value) {
+                if (!value) {
+                    return "Tarih belirtilmedi";
+                }
+
+                const date = new Date(value);
+
+                if (Number.isNaN(date.getTime())) {
+                    return "Tarih belirtilmedi";
+                }
+
+                return new Intl.DateTimeFormat(
+                    "tr-TR",
+                    {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                ).format(date);
+            }
+
+            function calculateReadingTime(text) {
+                const cleanText = String(text || "")
+                    .replace(/<[^>]*>/g, " ")
+                    .replace(/\s+/g, " ")
+                    .trim();
+
+                if (!cleanText) {
+                    return "1 dk okuma";
+                }
+
+                const words = cleanText
+                    .split(" ")
+                    .filter(Boolean)
+                    .length;
+
+                const minutes = Math.max(
+                    1,
+                    Math.ceil(words / 200)
+                );
+
+                return minutes + " dk okuma";
+            }
+
+            function getCurrentUrl() {
+                return window.location.href;
+            }
+
+            function setMeta(name, content) {
+                if (!content) {
+                    return;
+                }
+
+                let element = document.querySelector(
+                    'meta[name="' + name + '"]'
+                );
+
+                if (!element) {
+                    element = document.createElement("meta");
+                    element.setAttribute("name", name);
+                    document.head.appendChild(element);
+                }
+
+                element.setAttribute("content", content);
+            }
+
+            function setProperty(property, content) {
+                if (!content) {
+                    return;
+                }
+
+                let element = document.querySelector(
+                    'meta[property="' + property + '"]'
+                );
+
+                if (!element) {
+                    element = document.createElement("meta");
+                    element.setAttribute("property", property);
+                    document.head.appendChild(element);
+                }
+
+                element.setAttribute("content", content);
+            }
+
+            function setCanonical(url) {
+                let canonical =
+                    document.querySelector(
+                        'link[rel="canonical"]'
+                    );
+
+                if (!canonical) {
+                    canonical = document.createElement("link");
+                    canonical.setAttribute(
+                        "rel",
+                        "canonical"
+                    );
+                    document.head.appendChild(canonical);
+                }
+
+                canonical.setAttribute("href", url);
+            }
+
+            function updateSeo(news) {
+                const title =
+                    news.title ||
+                    "Akçaabat Haber";
+
+                const description =
+                    news.summary ||
+                    "Akçaabat ve Trabzon'dan güncel haberler.";
+
+                const image =
+                    news.image_url ||
+                    news.image ||
+                    DEFAULT_IMAGE;
+
+                const url =
+                    window.location.origin +
+                    window.location.pathname +
+                    "?slug=" +
+                    encodeURIComponent(news.slug || "");
+
+                document.title =
+                    title +
+                    " | Akçaabat Haber";
+
+                setMeta(
+                    "description",
+                    description.substring(0, 160)
+                );
+
+                setCanonical(url);
+
+                setProperty(
+                    "og:title",
+                    title
+                );
+
+                setProperty(
+                    "og:description",
+                    description
+                );
+
+                setProperty(
+                    "og:url",
                     url
-                  );
-                  showToast(
-                    "Bağlantı kopyalandı."
-                  );
-                } catch (error) {
-                  showToast(
-                    "Paylaşım desteklenmiyor."
-                  );
+                );
+
+                setProperty(
+                    "og:image",
+                    image
+                );
+
+                setProperty(
+                    "og:type",
+                    "article"
+                );
+
+                setProperty(
+                    "twitter:title",
+                    title
+                );
+
+                setProperty(
+                    "twitter:description",
+                    description
+                );
+
+                setProperty(
+                    "twitter:image",
+                    image
+                );
+
+                let existing =
+                    document.getElementById(
+                        "article-jsonld"
+                    );
+
+                if (existing) {
+                    existing.remove();
                 }
-              }
+
+                const schema = {
+                    "@context": "https://schema.org",
+                    "@type": "NewsArticle",
+                    "headline": title,
+                    "description": description,
+                    "image": [image],
+                    "datePublished":
+                        news.published_at ||
+                        news.created_at ||
+                        undefined,
+                    "dateModified":
+                        news.updated_at ||
+                        news.published_at ||
+                        news.created_at ||
+                        undefined,
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": url
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "Akçaabat Haber",
+                        "url":
+                            "https://akcaabathaber.com.tr"
+                    }
+                };
+
+                if (news.author_name) {
+                    schema.author = {
+                        "@type": "Person",
+                        "name": news.author_name
+                    };
+                } else {
+                    schema.author = {
+                        "@type": "Organization",
+                        "name": "Akçaabat Haber"
+                    };
+                }
+
+                const script =
+                    document.createElement("script");
+
+                script.id = "article-jsonld";
+                script.type = "application/ld+json";
+                script.textContent =
+                    JSON.stringify(schema);
+
+                document.head.appendChild(script);
             }
-          );
-        }
-      }
-      function initializeDate() {
-        const dateElement =
-          document.getElementById(
-            "currentDate"
-          );
-        if (dateElement) {
-          dateElement.textContent =
-            new Date().toLocaleDateString(
-              "tr-TR",
-              {
-                weekday:"long",
-                day:"numeric",
-                month:"long",
-                year:"numeric"
-              }
-            );
-        }
-        const year =
-          document.getElementById(
-            "footerYear"
-          );
-        if (year) {
-          year.textContent =
-            new Date().getFullYear();
-        }
-      }
-      function initializeMobileMenu() {
-        const button =
-          document.getElementById(
-            "mobileMenuButton"
-          );
-        const nav =
-          document.getElementById(
-            "mainNav"
-          );
-        const overlay =
-          document.getElementById(
-            "mobileOverlay"
-          );
-        if (!button || !nav) {
-          return;
-        }
-        function closeMenu() {
-          nav.classList.remove(
-            "mobile-open"
-          );
-          button.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-          if (overlay) {
-            overlay.classList.remove(
-              "active"
-            );
-          }
-        }
-        button.addEventListener(
-          "click",
-          function () {
-            const open =
-              nav.classList.toggle(
-                "mobile-open"
-              );
-            button.setAttribute(
-              "aria-expanded",
-              open
-                ? "true"
-                : "false"
-            );
-            if (overlay) {
-              overlay.classList.toggle(
-                "active",
-                open
-              );
+
+            function showElement(id) {
+                const element =
+                    document.getElementById(id);
+
+                if (element) {
+                    element.style.display = "";
+                }
             }
-          }
-        );
-        if (overlay) {
-          overlay.addEventListener(
-            "click",
-            closeMenu
-          );
-        }
-        nav
-          .querySelectorAll("a")
-          .forEach(function (link) {
-            link.addEventListener(
-              "click",
-              closeMenu
-            );
-          });
-      }
-      function initializeReadingProgress() {
-        function update() {
-          if (!readingProgress) {
-            return;
-          }
-          const scrollTop =
-            window.scrollY || 0;
-          const documentHeight =
-            document.documentElement.scrollHeight -
-            window.innerHeight;
-          if (documentHeight <= 0) {
-            readingProgress.style.width =
-              "0%";
-            return;
-          }
-          const percentage =
-            Math.min(
-              100,
-              Math.max(
-                0,
-                (scrollTop / documentHeight) *
-                100
-              )
-            );
-          readingProgress.style.width =
-            percentage + "%";
-        }
-        window.addEventListener(
-          "scroll",
-          update,
-          {
-            passive:true
-          }
-        );
-        update();
-      }
-      function normalizeOldSlugs(news) {
-        let changed = false;
-        const used = new Set();
-        news.forEach(function (item) {
-          if (!item || !getId(item)) {
-            return;
-          }
-          let slug =
-            value(
-              item,
-              ["slug","seoSlug"],
-              ""
-            );
-          if (!slug) {
-            slug =
-              slugify(
-                getTitle(item)
-              );
-            if (slug) {
-              item.slug =
-                slug;
-              changed = true;
+
+            function hideElement(id) {
+                const element =
+                    document.getElementById(id);
+
+                if (element) {
+                    element.style.display = "none";
+                }
             }
-          }
-          if (slug) {
-            let base =
-              slug;
-            let counter = 2;
-            while (
-              used.has(slug)
+
+            function getSupabase() {
+                if (
+                    window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber
+                        .getSupabaseClient ===
+                        "function"
+                ) {
+                    return window.AkcaabatHaber
+                        .getSupabaseClient();
+                }
+
+                if (
+                    window.supabase &&
+                    window.AKCAABAT_SUPABASE
+                ) {
+                    if (!supabaseClient) {
+                        supabaseClient =
+                            window.supabase.createClient(
+                                window
+                                    .AKCAABAT_SUPABASE
+                                    .url,
+                                window
+                                    .AKCAABAT_SUPABASE
+                                    .key
+                            );
+                    }
+
+                    return supabaseClient;
+                }
+
+                return null;
+            }
+
+            function normalizeNews(row) {
+                if (!row) {
+                    return null;
+                }
+
+                const category =
+                    Array.isArray(row.category)
+                        ? row.category[0]
+                        : row.category;
+
+                const author =
+                    Array.isArray(row.author)
+                        ? row.author[0]
+                        : row.author;
+
+                return {
+                    id: row.id,
+                    title: row.title || "",
+                    slug: row.slug || "",
+                    summary: row.summary || "",
+                    content: row.content || "",
+                    category_id:
+                        row.category_id || null,
+                    category_name:
+                        category &&
+                        category.name
+                            ? category.name
+                            : "Genel",
+                    category_slug:
+                        category &&
+                        category.slug
+                            ? category.slug
+                            : "",
+                    image_url:
+                        row.image_url || "",
+                    image:
+                        row.image_url || "",
+                    status:
+                        row.status || "published",
+                    is_breaking:
+                        Boolean(row.is_breaking),
+                    views:
+                        Number(row.views || 0),
+                    author_id:
+                        row.author_id || null,
+                    author_name:
+                        author &&
+                        author.display_name
+                            ? author.display_name
+                            : "",
+                    published_at:
+                        row.published_at ||
+                        row.created_at ||
+                        null,
+                    created_at:
+                        row.created_at || null,
+                    updated_at:
+                        row.updated_at || null
+                };
+            }
+
+            async function findNews() {
+                const slug =
+                    getQueryParameter("slug");
+
+                const id =
+                    getQueryParameter("id");
+
+                const client = getSupabase();
+
+                if (!client) {
+                    throw new Error(
+                        "Supabase bağlantısı kurulamadı."
+                    );
+                }
+
+                let query = client
+                    .from("news")
+                    .select(
+                        `
+                        id,
+                        title,
+                        slug,
+                        summary,
+                        content,
+                        category_id,
+                        image_url,
+                        status,
+                        is_breaking,
+                        views,
+                        author_id,
+                        published_at,
+                        created_at,
+                        updated_at,
+                        category:categories(
+                            id,
+                            name,
+                            slug
+                        )
+                        `
+                    )
+                    .eq(
+                        "status",
+                        "published"
+                    );
+
+                if (slug) {
+                    query = query.eq(
+                        "slug",
+                        slug
+                    );
+                } else if (id) {
+                    query = query.eq(
+                        "id",
+                        id
+                    );
+                } else {
+                    return null;
+                }
+
+                const result =
+                    await query.maybeSingle();
+
+                if (result.error) {
+                    throw result.error;
+                }
+
+                return normalizeNews(
+                    result.data
+                );
+            }
+
+            async function incrementViews(news) {
+                if (!news || !news.id) {
+                    return;
+                }
+
+                const client = getSupabase();
+
+                if (!client) {
+                    return;
+                }
+
+                const currentViews =
+                    Number(news.views || 0);
+
+                const nextViews =
+                    currentViews + 1;
+
+                const result =
+                    await client
+                        .from("news")
+                        .update({
+                            views: nextViews
+                        })
+                        .eq(
+                            "id",
+                            news.id
+                        );
+
+                if (!result.error) {
+                    news.views = nextViews;
+
+                    const viewsElement =
+                        document.getElementById(
+                            "article-views"
+                        );
+
+                    if (viewsElement) {
+                        viewsElement.textContent =
+                            nextViews.toLocaleString(
+                                "tr-TR"
+                            );
+                    }
+                }
+            }
+
+            function renderArticle(news) {
+                currentNews = news;
+
+                hideElement(
+                    "article-loading"
+                );
+
+                hideElement(
+                    "article-not-found"
+                );
+
+                hideElement(
+                    "article-error"
+                );
+
+                showElement(
+                    "article-wrapper"
+                );
+
+                const title =
+                    document.getElementById(
+                        "article-title"
+                    );
+
+                const summary =
+                    document.getElementById(
+                        "article-summary"
+                    );
+
+                const category =
+                    document.getElementById(
+                        "article-category"
+                    );
+
+                const breaking =
+                    document.getElementById(
+                        "article-breaking"
+                    );
+
+                const date =
+                    document.getElementById(
+                        "article-date"
+                    );
+
+                const views =
+                    document.getElementById(
+                        "article-views"
+                    );
+
+                const readingTime =
+                    document.getElementById(
+                        "article-reading-time"
+                    );
+
+                const content =
+                    document.getElementById(
+                        "article-content"
+                    );
+
+                const breadcrumb =
+                    document.getElementById(
+                        "breadcrumb-title"
+                    );
+
+                title.textContent =
+                    news.title;
+
+                summary.textContent =
+                    news.summary || "";
+
+                if (!news.summary) {
+                    summary.style.display =
+                        "none";
+                }
+
+                category.textContent =
+                    news.category_name ||
+                    "Genel";
+
+                if (news.is_breaking) {
+                    breaking.style.display =
+                        "inline-flex";
+                } else {
+                    breaking.style.display =
+                        "none";
+                }
+
+                date.textContent =
+                    formatDate(
+                        news.published_at ||
+                        news.created_at
+                    );
+
+                views.textContent =
+                    Number(
+                        news.views || 0
+                    ).toLocaleString(
+                        "tr-TR"
+                    );
+
+                readingTime.textContent =
+                    calculateReadingTime(
+                        news.content
+                    );
+
+                breadcrumb.textContent =
+                    news.title;
+
+                content.innerHTML =
+                    news.content ||
+                    "<p>Bu haber için içerik bulunmuyor.</p>";
+
+                renderImage(news);
+
+                updateSeo(news);
+
+                document
+                    .getElementById(
+                        "share-whatsapp"
+                    )
+                    .onclick =
+                    shareWhatsApp;
+
+                document
+                    .getElementById(
+                        "share-facebook"
+                    )
+                    .onclick =
+                    shareFacebook;
+
+                document
+                    .getElementById(
+                        "share-copy"
+                    )
+                    .onclick =
+                    copyArticleLink;
+            }
+
+            function renderImage(news) {
+                const container =
+                    document.getElementById(
+                        "article-image-container"
+                    );
+
+                if (!container) {
+                    return;
+                }
+
+                const image =
+                    news.image_url ||
+                    news.image ||
+                    "";
+
+                if (!image) {
+                    container.innerHTML = `
+                        <div class="article-image-placeholder">
+                            Akçaabat Haber
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                const safeImage =
+                    escapeHtml(image);
+
+                const safeAlt =
+                    escapeHtml(news.title);
+
+                container.innerHTML = `
+                    <img
+                        class="article-image"
+                        src="${safeImage}"
+                        alt="${safeAlt}"
+                        loading="eager"
+                        onerror="this.style.display='none';"
+                    >
+                `;
+            }
+
+            async function loadLatestNews() {
+                const container =
+                    document.getElementById(
+                        "sidebar-latest-news"
+                    );
+
+                if (!container) {
+                    return;
+                }
+
+                const client =
+                    getSupabase();
+
+                if (!client) {
+                    return;
+                }
+
+                const result =
+                    await client
+                        .from("news")
+                        .select(
+                            `
+                            id,
+                            title,
+                            slug,
+                            published_at,
+                            created_at,
+                            category:categories(
+                                name,
+                                slug
+                            )
+                            `
+                        )
+                        .eq(
+                            "status",
+                            "published"
+                        )
+                        .order(
+                            "published_at",
+                            {
+                                ascending: false
+                            }
+                        )
+                        .limit(6);
+
+                if (result.error) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Son haberler yüklenemedi.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                const newsList =
+                    result.data || [];
+
+                if (!newsList.length) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Henüz yayınlanmış haber yok.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                container.innerHTML =
+                    newsList
+                        .filter(function (item) {
+                            return !currentNews ||
+                                item.id !==
+                                currentNews.id;
+                        })
+                        .map(function (item) {
+                            const category =
+                                Array.isArray(
+                                    item.category
+                                )
+                                    ? item.category[0]
+                                    : item.category;
+
+                            return `
+                                <a
+                                    class="sidebar-link"
+                                    href="haber-detay.html?slug=${encodeURIComponent(
+                                        item.slug || ""
+                                    )}"
+                                >
+                                    <strong>
+                                        ${escapeHtml(
+                                            item.title
+                                        )}
+                                    </strong>
+                                    <br>
+                                    <small>
+                                        ${
+                                            escapeHtml(
+                                                category &&
+                                                category.name
+                                                    ? category.name
+                                                    : "Genel"
+                                            )
+                                        }
+                                        ·
+                                        ${
+                                            formatDate(
+                                                item.published_at ||
+                                                item.created_at
+                                            )
+                                        }
+                                    </small>
+                                </a>
+                            `;
+                        })
+                        .join("");
+
+                if (!container.innerHTML.trim()) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Başka yayınlanmış haber bulunmuyor.
+                        </div>
+                    `;
+                }
+            }
+
+            async function loadComments() {
+                const container =
+                    document.getElementById(
+                        "comment-list"
+                    );
+
+                if (!container || !currentNews) {
+                    return;
+                }
+
+                const client =
+                    getSupabase();
+
+                if (!client) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Yorum sistemi şu anda kullanılamıyor.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                const result =
+                    await client
+                        .from("comments")
+                        .select(
+                            `
+                            id,
+                            name,
+                            content,
+                            created_at
+                            `
+                        )
+                        .eq(
+                            "news_id",
+                            currentNews.id
+                        )
+                        .eq(
+                            "status",
+                            "approved"
+                        )
+                        .order(
+                            "created_at",
+                            {
+                                ascending: false
+                            }
+                        )
+                        .limit(50);
+
+                if (result.error) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Yorumlar yüklenirken bir hata oluştu.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                const comments =
+                    result.data || [];
+
+                if (!comments.length) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Bu haber için henüz onaylanmış yorum yok.
+                            İlk yorumu siz yapabilirsiniz.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+                container.innerHTML =
+                    comments
+                        .map(function (comment) {
+                            return `
+                                <div class="comment-item">
+                                    <div class="comment-top">
+                                        <span class="comment-name">
+                                            ${escapeHtml(
+                                                comment.name
+                                            )}
+                                        </span>
+
+                                        <span class="comment-date">
+                                            ${formatDate(
+                                                comment.created_at
+                                            )}
+                                        </span>
+                                    </div>
+
+                                    <p class="comment-text">
+                                        ${escapeHtml(
+                                            comment.content
+                                        )}
+                                    </p>
+                                </div>
+                            `;
+                        })
+                        .join("");
+            }
+
+            async function submitComment(event) {
+                event.preventDefault();
+
+                if (!currentNews) {
+                    return;
+                }
+
+                const name =
+                    document
+                        .getElementById(
+                            "comment-name"
+                        )
+                        .value
+                        .trim();
+
+                const email =
+                    document
+                        .getElementById(
+                            "comment-email"
+                        )
+                        .value
+                        .trim();
+
+                const content =
+                    document
+                        .getElementById(
+                            "comment-content"
+                        )
+                        .value
+                        .trim();
+
+                const button =
+                    document.getElementById(
+                        "comment-submit"
+                    );
+
+                const message =
+                    document.getElementById(
+                        "comment-message"
+                    );
+
+                if (!name ||
+                    !email ||
+                    !content
+                ) {
+                    showCommentMessage(
+                        "Lütfen tüm alanları doldurun.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                if (content.length < 3) {
+                    showCommentMessage(
+                        "Yorumunuz çok kısa.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                const client =
+                    getSupabase();
+
+                if (!client) {
+                    showCommentMessage(
+                        "Yorum sistemi kullanılamıyor.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                button.disabled = true;
+                button.textContent =
+                    "Gönderiliyor...";
+
+                const result =
+                    await client
+                        .from("comments")
+                        .insert({
+                            news_id:
+                                currentNews.id,
+                            name: name,
+                            email: email,
+                            content: content,
+                            status: "pending"
+                        });
+
+                button.disabled = false;
+                button.textContent =
+                    "Yorumu Gönder";
+
+                if (result.error) {
+                    console.error(
+                        "Yorum gönderme hatası:",
+                        result.error
+                    );
+
+                    showCommentMessage(
+                        "Yorum gönderilemedi. Lütfen tekrar deneyin.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+                document
+                    .getElementById(
+                        "comment-form"
+                    )
+                    .reset();
+
+                showCommentMessage(
+                    "Yorumunuz gönderildi. Editör onayından sonra yayınlanacaktır.",
+                    "success"
+                );
+            }
+
+            function showCommentMessage(
+                text,
+                type
             ) {
-              slug =
-                base +
-                "-" +
-                counter;
-              counter++;
+                const element =
+                    document.getElementById(
+                        "comment-message"
+                    );
+
+                if (!element) {
+                    return;
+                }
+
+                element.textContent =
+                    text;
+
+                element.className =
+                    "comment-message " +
+                    type;
             }
+
+            async function shareWhatsApp() {
+                const title =
+                    currentNews &&
+                    currentNews.title
+                        ? currentNews.title
+                        : "Akçaabat Haber";
+
+                const text =
+                    title +
+                    " - " +
+                    getCurrentUrl();
+
+                const url =
+                    "https://wa.me/?text=" +
+                    encodeURIComponent(text);
+
+                window.open(
+                    url,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+            }
+
+            function shareFacebook() {
+                const url =
+                    "https://www.facebook.com/sharer/sharer.php?u=" +
+                    encodeURIComponent(
+                        getCurrentUrl()
+                    );
+
+                window.open(
+                    url,
+                    "_blank",
+                    "noopener,noreferrer,width=700,height=500"
+                );
+            }
+
+            async function copyArticleLink() {
+                const url =
+                    getCurrentUrl();
+
+                try {
+                    if (
+                        navigator.clipboard &&
+                        navigator.clipboard.writeText
+                    ) {
+                        await navigator.clipboard
+                            .writeText(url);
+
+                        showTemporaryShareMessage(
+                            "Haber bağlantısı kopyalandı."
+                        );
+
+                        return;
+                    }
+                } catch (error) {
+                    console.warn(
+                        "Clipboard API kullanılamadı.",
+                        error
+                    );
+                }
+
+                const textarea =
+                    document.createElement(
+                        "textarea"
+                    );
+
+                textarea.value = url;
+                textarea.style.position =
+                    "fixed";
+                textarea.style.left =
+                    "-9999px";
+
+                document.body.appendChild(
+                    textarea
+                );
+
+                textarea.select();
+
+                try {
+                    document.execCommand(
+                        "copy"
+                    );
+
+                    showTemporaryShareMessage(
+                        "Haber bağlantısı kopyalandı."
+                    );
+                } catch (error) {
+                    showTemporaryShareMessage(
+                        "Bağlantı kopyalanamadı."
+                    );
+                }
+
+                textarea.remove();
+            }
+
+            function showTemporaryShareMessage(
+                text
+            ) {
+                const button =
+                    document.getElementById(
+                        "share-copy"
+                    );
+
+                if (!button) {
+                    return;
+                }
+
+                const original =
+                    button.textContent;
+
+                button.textContent =
+                    text;
+
+                setTimeout(function () {
+                    button.textContent =
+                        original;
+                }, 1800);
+            }
+
+            async function loadArticle() {
+                try {
+                    const slug =
+                        getQueryParameter(
+                            "slug"
+                        );
+
+                    const id =
+                        getQueryParameter(
+                            "id"
+                        );
+
+                    if (!slug && !id) {
+                        hideElement(
+                            "article-loading"
+                        );
+
+                        showElement(
+                            "article-not-found"
+                        );
+
+                        return;
+                    }
+
+                    const news =
+                        await findNews();
+
+                    if (!news) {
+                        hideElement(
+                            "article-loading"
+                        );
+
+                        showElement(
+                            "article-not-found"
+                        );
+
+                        return;
+                    }
+
+                    renderArticle(news);
+
+                    await Promise.all([
+                        incrementViews(news),
+                        loadComments(),
+                        loadLatestNews()
+                    ]);
+
+                } catch (error) {
+                    console.error(
+                        "Haber yükleme hatası:",
+                        error
+                    );
+
+                    hideElement(
+                        "article-loading"
+                    );
+
+                    const errorText =
+                        document.getElementById(
+                            "article-error-text"
+                        );
+
+                    if (errorText) {
+                        errorText.textContent =
+                            error &&
+                            error.message
+                                ? error.message
+                                : "Haber yüklenirken beklenmeyen bir hata oluştu.";
+                    }
+
+                    showElement(
+                        "article-error"
+                    );
+                }
+            }
+
+            function initialize() {
+                const form =
+                    document.getElementById(
+                        "comment-form"
+                    );
+
+                if (form) {
+                    form.addEventListener(
+                        "submit",
+                        submitComment
+                    );
+                }
+
+                loadArticle();
+            }
+
             if (
-              slug !== item.slug
+                document.readyState ===
+                "loading"
             ) {
-              item.slug =
-                slug;
-              changed = true;
+                document.addEventListener(
+                    "DOMContentLoaded",
+                    initialize
+                );
+            } else {
+                initialize();
             }
-            used.add(slug);
-          }
-        });
-        if (changed) {
-          saveNews(news);
-        }
-        return news;
-      }
-      function initialize() {
-        initializeDate();
-        initializeMobileMenu();
-        initializeReadingProgress();
-        let news =
-          getNews();
-        news =
-          normalizeOldSlugs(news);
-        const article =
-          findArticle(news);
-        if (!article) {
-          renderNotFound();
-          return;
-        }
-        if (
-          article.status &&
-          article.status !== "published"
-        ) {
-          renderNotFound();
-          return;
-        }
-        increaseViews(article);
-        renderArticle(
-          article,
-          news
-        );
-        if (
-          requestedId &&
-          !requestedSlug
-        ) {
-          const canonical =
-            getNewsUrl(article);
-          if (
-            canonical &&
-            canonical !==
-              window.location.pathname +
-              window.location.search
-          ) {
-            try {
-              window.history.replaceState(
-                {},
-                "",
-                canonical
-              );
-            } catch (error) {
-              /* Eski id bağlantısı çalışmaya devam eder. */
-            }
-          }
-        }
-      }
-      if (
-        document.readyState ===
-        "loading"
-      ) {
-        document.addEventListener(
-          "DOMContentLoaded",
-          initialize
-        );
-      } else {
-        initialize();
-      }
-    })();
-  </script>
+
+        })();
+    </script>
+
 </body>
 </html>
