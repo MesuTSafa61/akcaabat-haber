@@ -1,2434 +1,1712 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <meta
-        name="description"
-        content="Akçaabat Haber yeni haber oluşturma ve düzenleme paneli."
-    >
-
-    <meta
-        name="robots"
-        content="noindex,nofollow"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Akçaabat Haber yeni haber oluşturma ve düzenleme paneli.">
+    <meta name="robots" content="noindex,nofollow">
     <title>Yeni Haber | Akçaabat Haber</title>
+    <link rel="stylesheet" href="style.css?v=3">
 
-    <link
-        rel="stylesheet"
-        href="style.css?v=3"
-    >
+    <style>
+        .cloud-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .cloud-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #16a34a;
+            flex: 0 0 auto;
+        }
+
+        .cloud-dot.loading {
+            background: #f59e0b;
+        }
+
+        .cloud-dot.error {
+            background: #dc2626;
+        }
+
+        .admin-image-preview {
+            margin-top: 14px;
+            min-height: 10px;
+        }
+
+        .admin-image-preview img {
+            display: block;
+            width: 100%;
+            max-width: 760px;
+            max-height: 420px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .upload-info {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .upload-progress {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .upload-progress.active {
+            display: block;
+        }
+
+        .upload-progress-bar {
+            height: 7px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 99px;
+            background: #e5e7eb;
+        }
+
+        .upload-progress-inner {
+            width: 100%;
+            height: 100%;
+            animation: uploadPulse 1.2s infinite ease-in-out;
+            background: currentColor;
+        }
+
+        @keyframes uploadPulse {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .admin-form-message {
+            display: none;
+        }
+
+        .admin-form-message.success {
+            display: block;
+        }
+
+        .admin-form-message.error {
+            display: block;
+        }
+
+        .current-image-note {
+            margin-top: 10px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .required-mark {
+            color: #dc2626;
+        }
+
+        @media (max-width: 700px) {
+            .admin-form-actions {
+                flex-direction: column;
+            }
+
+            .admin-form-actions button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body class="admin-page">
 
-    <!-- =====================================================
-         ADMIN HEADER
-         ===================================================== -->
-
-    <header class="admin-header">
-
-        <div class="admin-header-left">
-
-            <button
-                type="button"
-                class="mobile-menu-btn"
-                id="adminMenuBtn"
-                aria-label="Menüyü aç"
-                aria-expanded="false"
-            >
-                ☰
-            </button>
-
-            <a
-                href="index.html"
-                class="admin-logo"
-            >
-                <strong>AKÇAABAT</strong>
-                <span>HABER</span>
-            </a>
-
-        </div>
-
-
-        <div class="admin-header-right">
-
-            <a
-                href="index.html"
-                class="view-site-btn"
-                target="_blank"
-                rel="noopener"
-            >
-                Siteyi Gör
-            </a>
-
-        </div>
-
-    </header>
-
-
-    <!-- =====================================================
-         ADMIN LAYOUT
-         ===================================================== -->
-
-    <div class="admin-layout">
-
-
-        <!-- =================================================
-             SIDEBAR
-             ================================================= -->
-
-        <aside
-            class="admin-sidebar"
-            id="adminSidebar"
+<header class="admin-header">
+    <div class="admin-header-left">
+        <button
+            type="button"
+            class="mobile-menu-btn"
+            id="adminMenuBtn"
+            aria-label="Menüyü aç"
+            aria-expanded="false"
         >
-
-            <div class="sidebar-title">
-                YÖNETİM PANELİ
-            </div>
-
-
-            <nav class="admin-nav">
-
-                <a
-                    href="admin.html"
-                    class="admin-nav-item"
-                >
-                    <span>📊</span>
-                    <span>Dashboard</span>
-                </a>
-
-
-                <a
-                    href="yeni-haber.html"
-                    class="admin-nav-item active"
-                >
-                    <span>➕</span>
-                    <span>Yeni Haber</span>
-                </a>
-
-
-                <a
-                    href="haberler.html"
-                    class="admin-nav-item"
-                >
-                    <span>📰</span>
-                    <span>Haberler</span>
-                </a>
-
-
-                <a
-                    href="taslaklar.html"
-                    class="admin-nav-item"
-                >
-                    <span>📝</span>
-                    <span>Taslaklar</span>
-                </a>
-
-
-                <a
-                    href="kategoriler.html"
-                    class="admin-nav-item"
-                >
-                    <span>📂</span>
-                    <span>Kategoriler</span>
-                </a>
-
-
-                <a
-                    href="yorumlar.html"
-                    class="admin-nav-item"
-                >
-                    <span>💬</span>
-                    <span>Yorumlar</span>
-                </a>
-
-
-                <div class="admin-nav-divider"></div>
-
-
-                <a
-                    href="ayarlar.html"
-                    class="admin-nav-item"
-                >
-                    <span>⚙️</span>
-                    <span>Ayarlar</span>
-                </a>
-
-
-                <a
-                    href="index.html"
-                    class="admin-nav-item"
-                >
-                    <span>🌐</span>
-                    <span>Siteye Git</span>
-                </a>
-
-            </nav>
-
-        </aside>
-
-
-        <!-- =================================================
-             ANA İÇERİK
-             ================================================= -->
-
-        <main class="admin-main">
-
-
-            <!-- =================================================
-                 SAYFA BAŞLIĞI
-                 ================================================= -->
-
-            <section class="admin-page-heading">
-
-                <div>
-
-                    <div class="breadcrumb">
-                        Admin / Yeni Haber
-                    </div>
-
-                    <h1 id="pageTitle">
-                        Yeni Haber
-                    </h1>
-
-                    <p id="pageDescription">
-                        Yeni bir haber oluştur ve yayınla.
-                    </p>
-
-                </div>
-
-
-                <a
-                    href="haberler.html"
-                    class="admin-secondary-btn"
-                >
-                    ← Haberler
-                </a>
-
-            </section>
-
-
-            <!-- =================================================
-                 HABER FORMU
-                 ================================================= -->
-
-            <form
-                id="haberForm"
-                class="admin-form"
-            >
-
-
-                <!-- =================================================
-                     GİZLİ ID
-                     ================================================= -->
-
-                <input
-                    type="hidden"
-                    id="haberId"
-                >
-
-
-                <!-- =================================================
-                     BAŞLIK
-                     ================================================= -->
-
-                <div class="admin-form-group">
-
-                    <label for="haberBaslik">
-                        Haber Başlığı
-                    </label>
-
-                    <input
-                        type="text"
-                        id="haberBaslik"
-                        name="title"
-                        placeholder="Haber başlığını yazın..."
-                        maxlength="180"
-                        autocomplete="off"
-                        required
-                    >
-
-                    <small>
-                        Dikkat çekici, anlaşılır ve haberin içeriğini doğru anlatan bir başlık kullanın.
-                    </small>
-
-                </div>
-
-
-                <!-- =================================================
-                     SEO SLUG ÖNİZLEME
-                     ================================================= -->
-
-                <div class="admin-form-group">
-
-                    <label>
-                        Haber URL'si
-                    </label>
-
-                    <div
-                        id="slugPreview"
-                        style="
-                            padding:12px 14px;
-                            border:1px solid #e5e7eb;
-                            border-radius:10px;
-                            background:#f8fafc;
-                            color:#64748b;
-                            font-size:14px;
-                            word-break:break-word;
-                        "
-                    >
-                        haber-detay.html?slug=haber
-                    </div>
-
-                    <small>
-                        Başlığa göre otomatik SEO uyumlu bağlantı oluşturulur.
-                    </small>
-
-                </div>
-
-
-                <!-- =================================================
-                     ÖZET
-                     ================================================= -->
-
-                <div class="admin-form-group">
-
-                    <label for="haberOzet">
-                        Haber Özeti
-                    </label>
-
-                    <textarea
-                        id="haberOzet"
-                        name="summary"
-                        rows="4"
-                        maxlength="500"
-                        placeholder="Haberin kısa özetini yazın..."
-                    ></textarea>
-
-                    <small>
-                        Haber listelerinde ve paylaşım alanlarında kullanılabilecek kısa özet.
-                    </small>
-
-                </div>
-
-
-                <!-- =================================================
-                     İÇERİK
-                     ================================================= -->
-
-                <div class="admin-form-group">
-
-                    <label for="haberIcerik">
-                        Haber İçeriği
-                    </label>
-
-                    <textarea
-                        id="haberIcerik"
-                        name="content"
-                        rows="14"
-                        placeholder="Haberin detaylarını yazın..."
-                        required
-                    ></textarea>
-
-                    <small>
-                        Haber metninin tamamını buraya yazabilirsiniz.
-                    </small>
-
-                </div>
-
-
-                <!-- =================================================
-                     KATEGORİ + DURUM
-                     ================================================= -->
-
-                <div class="admin-form-row">
-
-
-                    <!-- KATEGORİ -->
-
-                    <div class="admin-form-group">
-
-                        <label for="haberKategori">
-                            Kategori
-                        </label>
-
-                        <select
-                            id="haberKategori"
-                            name="category"
-                            required
-                        >
-
-                            <option value="">
-                                Kategori seçin
-                            </option>
-
-                            <option value="Akçaabat">
-                                Akçaabat
-                            </option>
-
-                            <option value="Trabzon">
-                                Trabzon
-                            </option>
-
-                            <option value="Gündem">
-                                Gündem
-                            </option>
-
-                            <option value="Spor">
-                                Spor
-                            </option>
-
-                            <option value="Ekonomi">
-                                Ekonomi
-                            </option>
-
-                            <option value="Siyaset">
-                                Siyaset
-                            </option>
-
-                            <option value="Magazin">
-                                Magazin
-                            </option>
-
-                            <option value="Sağlık">
-                                Sağlık
-                            </option>
-
-                            <option value="Eğitim">
-                                Eğitim
-                            </option>
-
-                            <option value="Kültür Sanat">
-                                Kültür Sanat
-                            </option>
-
-                            <option value="Yaşam">
-                                Yaşam
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- DURUM -->
-
-                    <div class="admin-form-group">
-
-                        <label for="haberDurum">
-                            Yayın Durumu
-                        </label>
-
-                        <select
-                            id="haberDurum"
-                            name="status"
-                        >
-
-                            <option value="published">
-                                Yayında
-                            </option>
-
-                            <option value="draft">
-                                Taslak
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =================================================
-                     KAPAK GÖRSELİ
-                     ================================================= -->
-
-                <div class="admin-form-group">
-
-                    <label for="haberGorsel">
-                        Haber Görseli
-                    </label>
-
-                    <input
-                        type="file"
-                        id="haberGorsel"
-                        accept="image/jpeg,image/png,image/webp,image/gif"
-                    >
-
-                    <small>
-                        JPG, PNG, WEBP veya GIF görsel yükleyebilirsiniz.
-                    </small>
-
-
-                    <div
-                        id="imagePreview"
-                        class="admin-image-preview"
-                    ></div>
-
-                </div>
-
-
-                <!-- =================================================
-                     SON DAKİKA
-                     ================================================= -->
-
-                <div class="admin-checkbox-group">
-
-                    <label>
-
-                        <input
-                            type="checkbox"
-                            id="haberSonDakika"
-                        >
-
-                        <span>
-                            Bu haberi Son Dakika olarak göster
-                        </span>
-
-                    </label>
-
-                </div>
-
-
-                <!-- =================================================
-                     BUTONLAR
-                     ================================================= -->
-
-                <div class="admin-form-actions">
-
-                    <button
-                        type="button"
-                        class="admin-secondary-btn"
-                        id="taslakBtn"
-                    >
-                        📝 Taslak Kaydet
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="admin-danger-btn"
-                        id="temizleBtn"
-                    >
-                        Temizle
-                    </button>
-
-
-                    <button
-                        type="submit"
-                        class="admin-primary-btn"
-                    >
-                        🚀 Haberi Yayınla
-                    </button>
-
-                </div>
-
-            </form>
-
-
-            <!-- =================================================
-                 FORM MESAJI
-                 ================================================= -->
-
-            <div
-                id="formMessage"
-                class="admin-form-message"
-                role="status"
-                aria-live="polite"
-            ></div>
-
-
-        </main>
-
+            ☰
+        </button>
+
+        <a href="index.html" class="admin-logo">
+            <strong>AKÇAABAT</strong>
+            <span>HABER</span>
+        </a>
     </div>
 
+    <div class="admin-header-right">
+        <span
+            id="adminUserEmail"
+            style="font-size:13px;color:#64748b;margin-right:12px;"
+        ></span>
 
-    <!-- =====================================================
-         JAVASCRIPT
-         ===================================================== -->
+        <button
+            type="button"
+            id="logoutBtn"
+            class="admin-secondary-btn"
+            style="cursor:pointer;"
+        >
+            Çıkış
+        </button>
 
-    <script src="script.js?v=3"></script>
+        <a
+            href="index.html"
+            class="view-site-btn"
+            target="_blank"
+            rel="noopener"
+        >
+            Siteyi Gör
+        </a>
+    </div>
+</header>
 
+<div class="admin-layout">
 
-    <script>
+    <aside class="admin-sidebar" id="adminSidebar">
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
+        <div class="sidebar-title">
+            YÖNETİM PANELİ
+        </div>
 
+        <nav class="admin-nav">
 
-                /* =================================================
-                   ELEMENTLER
-                   ================================================= */
+            <a href="admin.html" class="admin-nav-item">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
 
-                const form =
-                    document.getElementById(
-                        "haberForm"
-                    );
+            <a href="yeni-haber.html" class="admin-nav-item active">
+                <span>➕</span>
+                <span>Yeni Haber</span>
+            </a>
 
-                const titleInput =
-                    document.getElementById(
-                        "haberBaslik"
-                    );
+            <a href="haberler.html" class="admin-nav-item">
+                <span>📰</span>
+                <span>Haberler</span>
+            </a>
 
-                const summaryInput =
-                    document.getElementById(
-                        "haberOzet"
-                    );
+            <a href="taslaklar.html" class="admin-nav-item">
+                <span>📝</span>
+                <span>Taslaklar</span>
+            </a>
 
-                const contentInput =
-                    document.getElementById(
-                        "haberIcerik"
-                    );
+            <a href="kategoriler.html" class="admin-nav-item">
+                <span>📂</span>
+                <span>Kategoriler</span>
+            </a>
 
-                const categoryInput =
-                    document.getElementById(
-                        "haberKategori"
-                    );
+            <a href="yorumlar.html" class="admin-nav-item">
+                <span>💬</span>
+                <span>Yorumlar</span>
+            </a>
 
-                const statusInput =
-                    document.getElementById(
-                        "haberDurum"
-                    );
+            <div class="admin-nav-divider"></div>
 
-                const imageInput =
-                    document.getElementById(
-                        "haberGorsel"
-                    );
+            <a href="ayarlar.html" class="admin-nav-item">
+                <span>⚙️</span>
+                <span>Ayarlar</span>
+            </a>
 
-                const breakingInput =
-                    document.getElementById(
-                        "haberSonDakika"
-                    );
+            <a href="index.html" class="admin-nav-item">
+                <span>🌐</span>
+                <span>Siteye Git</span>
+            </a>
 
-                const idInput =
-                    document.getElementById(
-                        "haberId"
-                    );
+        </nav>
+    </aside>
 
-                const preview =
-                    document.getElementById(
-                        "imagePreview"
-                    );
+    <main class="admin-main">
 
-                const message =
-                    document.getElementById(
-                        "formMessage"
-                    );
+        <section class="admin-page-heading">
 
-                const pageTitle =
-                    document.getElementById(
-                        "pageTitle"
-                    );
+            <div>
+                <div class="breadcrumb">
+                    Admin / Yeni Haber
+                </div>
 
-                const pageDescription =
-                    document.getElementById(
-                        "pageDescription"
-                    );
+                <h1 id="pageTitle">
+                    Yeni Haber
+                </h1>
 
-                const slugPreview =
-                    document.getElementById(
-                        "slugPreview"
-                    );
+                <p id="pageDescription">
+                    Yeni bir haber oluştur ve yayınla.
+                </p>
+            </div>
 
-                const publishButton =
-                    form.querySelector(
-                        'button[type="submit"]'
-                    );
+            <a href="haberler.html" class="admin-secondary-btn">
+                ← Haberler
+            </a>
 
+        </section>
 
-                /* =================================================
-                   URL PARAMETRELERİ
-                   ================================================= */
+        <div class="cloud-status" id="cloudStatus">
+            <span class="cloud-dot loading" id="cloudDot"></span>
+            <span id="cloudStatusText">
+                Supabase bağlantısı kontrol ediliyor...
+            </span>
+        </div>
 
-                const params =
-                    new URLSearchParams(
-                        window.location.search
-                    );
+        <form id="haberForm" class="admin-form">
 
-                const draftId =
-                    params.get("draft");
+            <input type="hidden" id="haberId">
 
-                const editId =
-                    params.get("edit");
+            <div class="admin-form-group">
 
+                <label for="haberBaslik">
+                    Haber Başlığı <span class="required-mark">*</span>
+                </label>
 
-                /* =================================================
-                   LOCAL STORAGE
-                   ================================================= */
+                <input
+                    type="text"
+                    id="haberBaslik"
+                    name="title"
+                    placeholder="Haber başlığını yazın..."
+                    maxlength="180"
+                    autocomplete="off"
+                    required
+                >
 
-                function getDrafts() {
+                <small>
+                    Dikkat çekici, anlaşılır ve haberin içeriğini doğru anlatan bir başlık kullanın.
+                </small>
 
-                    try {
+            </div>
 
-                        const data =
-                            JSON.parse(
-                                localStorage.getItem(
-                                    "akcaabat_taslaklar"
-                                ) || "[]"
-                            );
+            <div class="admin-form-group">
 
-                        return Array.isArray(
-                            data
-                        )
-                            ? data
-                            : [];
+                <label>
+                    Haber URL'si
+                </label>
 
-                    } catch (error) {
+                <div
+                    id="slugPreview"
+                    style="
+                        padding:12px 14px;
+                        border:1px solid #e5e7eb;
+                        border-radius:10px;
+                        background:#f8fafc;
+                        color:#64748b;
+                        font-size:14px;
+                        word-break:break-word;
+                    "
+                >
+                    haber-detay.html?slug=haber
+                </div>
 
-                        console.error(
-                            "Taslaklar okunamadı:",
-                            error
+                <small>
+                    Başlığa göre otomatik SEO uyumlu bağlantı oluşturulur.
+                </small>
+
+            </div>
+
+            <div class="admin-form-group">
+
+                <label for="haberOzet">
+                    Haber Özeti
+                </label>
+
+                <textarea
+                    id="haberOzet"
+                    name="summary"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Haberin kısa özetini yazın..."
+                ></textarea>
+
+                <small>
+                    Haber listelerinde ve paylaşım alanlarında kullanılabilecek kısa özet.
+                </small>
+
+            </div>
+
+            <div class="admin-form-group">
+
+                <label for="haberIcerik">
+                    Haber İçeriği <span class="required-mark">*</span>
+                </label>
+
+                <textarea
+                    id="haberIcerik"
+                    name="content"
+                    rows="16"
+                    placeholder="Haberin detaylarını yazın..."
+                    required
+                ></textarea>
+
+                <small>
+                    Haber metninin tamamını buraya yazabilirsiniz.
+                </small>
+
+            </div>
+
+            <div class="admin-form-row">
+
+                <div class="admin-form-group">
+
+                    <label for="haberKategori">
+                        Kategori <span class="required-mark">*</span>
+                    </label>
+
+                    <select
+                        id="haberKategori"
+                        name="category"
+                        required
+                    >
+                        <option value="">
+                            Kategoriler yükleniyor...
+                        </option>
+                    </select>
+
+                </div>
+
+                <div class="admin-form-group">
+
+                    <label for="haberDurum">
+                        Yayın Durumu
+                    </label>
+
+                    <select
+                        id="haberDurum"
+                        name="status"
+                    >
+                        <option value="published">
+                            Yayında
+                        </option>
+
+                        <option value="draft">
+                            Taslak
+                        </option>
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="admin-form-group">
+
+                <label for="haberGorsel">
+                    Haber Görseli
+                </label>
+
+                <input
+                    type="file"
+                    id="haberGorsel"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                >
+
+                <small>
+                    JPG, PNG, WEBP veya GIF. Maksimum 10 MB.
+                </small>
+
+                <div class="upload-info" id="uploadInfo">
+                    Görsel seçtiğinizde Supabase Storage'a yüklenir.
+                </div>
+
+                <div
+                    class="upload-progress"
+                    id="uploadProgress"
+                >
+                    <div class="upload-progress-bar">
+                        <div class="upload-progress-inner"></div>
+                    </div>
+
+                    <small>
+                        Görsel yükleniyor, lütfen bekleyin...
+                    </small>
+                </div>
+
+                <div
+                    id="imagePreview"
+                    class="admin-image-preview"
+                ></div>
+
+            </div>
+
+            <div class="admin-checkbox-group">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        id="haberSonDakika"
+                    >
+
+                    <span>
+                        Bu haberi Son Dakika olarak göster
+                    </span>
+
+                </label>
+
+            </div>
+
+            <div class="admin-form-actions">
+
+                <button
+                    type="button"
+                    class="admin-secondary-btn"
+                    id="taslakBtn"
+                >
+                    📝 Taslak Kaydet
+                </button>
+
+                <button
+                    type="button"
+                    class="admin-danger-btn"
+                    id="temizleBtn"
+                >
+                    Temizle
+                </button>
+
+                <button
+                    type="submit"
+                    class="admin-primary-btn"
+                    id="publishButton"
+                >
+                    🚀 Haberi Yayınla
+                </button>
+
+            </div>
+
+        </form>
+
+        <div
+            id="formMessage"
+            class="admin-form-message"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </main>
+</div>
+
+<script src="supabase-config.js"></script>
+<script src="script.js?v=3"></script>
+
+<script>
+(function () {
+    "use strict";
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const form = document.getElementById("haberForm");
+        const titleInput = document.getElementById("haberBaslik");
+        const summaryInput = document.getElementById("haberOzet");
+        const contentInput = document.getElementById("haberIcerik");
+        const categoryInput = document.getElementById("haberKategori");
+        const statusInput = document.getElementById("haberDurum");
+        const imageInput = document.getElementById("haberGorsel");
+        const breakingInput = document.getElementById("haberSonDakika");
+        const idInput = document.getElementById("haberId");
+        const preview = document.getElementById("imagePreview");
+        const message = document.getElementById("formMessage");
+        const pageTitle = document.getElementById("pageTitle");
+        const pageDescription = document.getElementById("pageDescription");
+        const slugPreview = document.getElementById("slugPreview");
+        const publishButton = document.getElementById("publishButton");
+        const taslakButton = document.getElementById("taslakBtn");
+        const cloudStatus = document.getElementById("cloudStatus");
+        const cloudDot = document.getElementById("cloudDot");
+        const cloudStatusText = document.getElementById("cloudStatusText");
+        const adminUserEmail = document.getElementById("adminUserEmail");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const uploadInfo = document.getElementById("uploadInfo");
+        const uploadProgress = document.getElementById("uploadProgress");
+
+        const params = new URLSearchParams(window.location.search);
+        const draftId = params.get("draft");
+        const editId = params.get("edit");
+
+        let supabaseClient = null;
+        let currentUser = null;
+        let currentProfile = null;
+        let currentNews = null;
+        let currentImageUrl = "";
+        let categories = [];
+        let newsList = [];
+        let autoSaveTimer = null;
+        let isSaving = false;
+
+        function setCloudStatus(text, type) {
+            cloudStatusText.textContent = text;
+            cloudDot.className = "cloud-dot";
+
+            if (type === "loading") {
+                cloudDot.classList.add("loading");
+            }
+
+            if (type === "error") {
+                cloudDot.classList.add("error");
+            }
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = "admin-form-message " + type;
+            message.style.display = "block";
+
+            clearTimeout(showMessage.timer);
+
+            showMessage.timer = setTimeout(function () {
+                message.style.display = "none";
+            }, 5000);
+        }
+
+        function escapeHTML(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function slugify(value) {
+            if (
+                window.AkcaabatHaber &&
+                typeof window.AkcaabatHaber.slugify === "function"
+            ) {
+                return window.AkcaabatHaber.slugify(value);
+            }
+
+            return String(value || "")
+                .toLocaleLowerCase("tr-TR")
+                .replace(/ğ/g, "g")
+                .replace(/ü/g, "u")
+                .replace(/ş/g, "s")
+                .replace(/ı/g, "i")
+                .replace(/ö/g, "o")
+                .replace(/ç/g, "c")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        }
+
+        async function waitForSupabase() {
+            for (let i = 0; i < 100; i++) {
+
+                if (
+                    window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber.getSupabaseClient === "function"
+                ) {
+                    const client =
+                        window.AkcaabatHaber.getSupabaseClient();
+
+                    if (client) {
+                        return client;
+                    }
+                }
+
+                await new Promise(function (resolve) {
+                    setTimeout(resolve, 100);
+                });
+            }
+
+            return null;
+        }
+
+        async function getAuthenticatedUser(client) {
+            const result =
+                await client.auth.getUser();
+
+            if (result.error) {
+                throw result.error;
+            }
+
+            return result.data.user;
+        }
+
+        async function checkAccess() {
+            supabaseClient = await waitForSupabase();
+
+            if (!supabaseClient) {
+                setCloudStatus(
+                    "Supabase bağlantısı kurulamadı.",
+                    "error"
+                );
+
+                throw new Error(
+                    "Supabase istemcisi bulunamadı."
+                );
+            }
+
+            currentUser =
+                await getAuthenticatedUser(
+                    supabaseClient
+                );
+
+            if (!currentUser) {
+                window.location.href =
+                    "admin-giris.html";
+
+                return false;
+            }
+
+            adminUserEmail.textContent =
+                currentUser.email || "";
+
+            const profileResult =
+                await supabaseClient
+                    .from("profiles")
+                    .select("id,display_name,role")
+                    .eq("id", currentUser.id)
+                    .maybeSingle();
+
+            if (profileResult.error) {
+                throw profileResult.error;
+            }
+
+            currentProfile =
+                profileResult.data;
+
+            if (
+                !currentProfile ||
+                !["admin", "editor"].includes(
+                    currentProfile.role
+                )
+            ) {
+                await supabaseClient.auth.signOut();
+
+                window.location.href =
+                    "admin-giris.html";
+
+                return false;
+            }
+
+            setCloudStatus(
+                "Supabase bağlantısı aktif.",
+                "success"
+            );
+
+            return true;
+        }
+
+        async function loadCategories() {
+            const result =
+                await supabaseClient
+                    .from("categories")
+                    .select("id,name,slug,sort_order,is_active")
+                    .eq("is_active", true)
+                    .order("sort_order", {
+                        ascending: true
+                    })
+                    .order("name", {
+                        ascending: true
+                    });
+
+            if (result.error) {
+                throw result.error;
+            }
+
+            categories =
+                Array.isArray(result.data)
+                    ? result.data
+                    : [];
+
+            categoryInput.innerHTML =
+                '<option value="">Kategori seçin</option>';
+
+            categories.forEach(function (category) {
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    category.id;
+
+                option.textContent =
+                    category.name;
+
+                categoryInput.appendChild(
+                    option
+                );
+            });
+        }
+
+        async function loadNewsList() {
+            const result =
+                await supabaseClient
+                    .from("news")
+                    .select("id,title,slug,status")
+                    .order("created_at", {
+                        ascending: false
+                    });
+
+            if (result.error) {
+                throw result.error;
+            }
+
+            newsList =
+                Array.isArray(result.data)
+                    ? result.data
+                    : [];
+        }
+
+        function createUniqueSlugLocal(title, currentId) {
+            const base =
+                slugify(title) || "haber";
+
+            let slug = base;
+            let counter = 2;
+
+            const used =
+                newsList
+                    .filter(function (item) {
+                        return String(item.id) !==
+                            String(currentId || "");
+                    })
+                    .map(function (item) {
+                        return String(
+                            item.slug || ""
                         );
+                    });
 
-                        return [];
+            while (used.includes(slug)) {
+                slug =
+                    base +
+                    "-" +
+                    counter;
 
-                    }
+                counter++;
+            }
 
+            return slug;
+        }
+
+        async function createUniqueSlug(title, currentId) {
+            const base =
+                slugify(title) || "haber";
+
+            let slug = base;
+            let counter = 2;
+
+            while (true) {
+                const result =
+                    await supabaseClient
+                        .from("news")
+                        .select("id")
+                        .eq("slug", slug)
+                        .limit(1);
+
+                if (result.error) {
+                    throw result.error;
                 }
 
+                const existing =
+                    result.data &&
+                    result.data.length
+                        ? result.data[0]
+                        : null;
 
-                function getNews() {
-
-                    try {
-
-                        const data =
-                            JSON.parse(
-                                localStorage.getItem(
-                                    "akcaabat_haberler"
-                                ) || "[]"
-                            );
-
-                        return Array.isArray(
-                            data
-                        )
-                            ? data
-                            : [];
-
-                    } catch (error) {
-
-                        console.error(
-                            "Haberler okunamadı:",
-                            error
-                        );
-
-                        return [];
-
-                    }
-
-                }
-
-
-                function saveDrafts(
-                    items
+                if (
+                    !existing ||
+                    String(existing.id) ===
+                        String(currentId || "")
                 ) {
-
-                    localStorage.setItem(
-                        "akcaabat_taslaklar",
-                        JSON.stringify(
-                            items
-                        )
-                    );
-
-                }
-
-
-                function saveNews(
-                    items
-                ) {
-
-                    localStorage.setItem(
-                        "akcaabat_haberler",
-                        JSON.stringify(
-                            items
-                        )
-                    );
-
-                }
-
-
-                /* =================================================
-                   ID OLUŞTUR
-                   ================================================= */
-
-                function createId(
-                    prefix
-                ) {
-
-                    return (
-                        prefix +
-                        "_" +
-                        Date.now() +
-                        "_" +
-                        Math.random()
-                            .toString(36)
-                            .substring(
-                                2,
-                                9
-                            )
-                    );
-
-                }
-
-
-                /* =================================================
-                   HTML GÜVENLİK
-                   ================================================= */
-
-                function escapeHTML(
-                    value
-                ) {
-
-                    return String(
-                        value ?? ""
-                    )
-                        .replace(
-                            /&/g,
-                            "&amp;"
-                        )
-                        .replace(
-                            /</g,
-                            "&lt;"
-                        )
-                        .replace(
-                            />/g,
-                            "&gt;"
-                        )
-                        .replace(
-                            /"/g,
-                            "&quot;"
-                        )
-                        .replace(
-                            /'/g,
-                            "&#039;"
-                        );
-
-                }
-
-
-                /* =================================================
-                   SLUG OLUŞTUR
-                   ================================================= */
-
-                function slugify(
-                    value
-                ) {
-
-                    if (
-                        window.AkcaabatHaber &&
-                        typeof window.AkcaabatHaber.slugify ===
-                            "function"
-                    ) {
-
-                        return window.AkcaabatHaber.slugify(
-                            value
-                        );
-
-                    }
-
-
-                    return String(
-                        value || ""
-                    )
-                        .toLocaleLowerCase(
-                            "tr-TR"
-                        )
-                        .replace(
-                            /ğ/g,
-                            "g"
-                        )
-                        .replace(
-                            /ü/g,
-                            "u"
-                        )
-                        .replace(
-                            /ş/g,
-                            "s"
-                        )
-                        .replace(
-                            /ı/g,
-                            "i"
-                        )
-                        .replace(
-                            /ö/g,
-                            "o"
-                        )
-                        .replace(
-                            /ç/g,
-                            "c"
-                        )
-                        .normalize(
-                            "NFD"
-                        )
-                        .replace(
-                            /[\u0300-\u036f]/g,
-                            ""
-                        )
-                        .replace(
-                            /[^a-z0-9]+/g,
-                            "-"
-                        )
-                        .replace(
-                            /^-+|-+$/g,
-                            "");
-
-                }
-
-
-                /* =================================================
-                   BENZERSİZ SLUG
-                   ================================================= */
-
-                function createUniqueSlug(
-                    title,
-                    newsList,
-                    currentId
-                ) {
-
-                    if (
-                        window.AkcaabatHaber &&
-                        typeof window.AkcaabatHaber
-                            .createUniqueSlug ===
-                            "function"
-                    ) {
-
-                        return window.AkcaabatHaber
-                            .createUniqueSlug(
-                                title,
-                                newsList,
-                                currentId
-                            );
-
-                    }
-
-
-                    const base =
-                        slugify(
-                            title
-                        ) ||
-                        "haber";
-
-
-                    let slug =
-                        base;
-
-                    let counter =
-                        2;
-
-
-                    const used =
-                        newsList
-                            .filter(
-                                function (
-                                    item
-                                ) {
-
-                                    return String(
-                                        item.id
-                                    ) !==
-                                    String(
-                                        currentId
-                                    );
-
-                                }
-                            )
-                            .map(
-                                function (
-                                    item
-                                ) {
-
-                                    return String(
-                                        item.slug ||
-                                        item.seoSlug ||
-                                        ""
-                                    );
-
-                                }
-                            );
-
-
-                    while (
-                        used.includes(
-                            slug
-                        )
-                    ) {
-
-                        slug =
-                            base +
-                            "-" +
-                            counter;
-
-                        counter++;
-
-                    }
-
-
                     return slug;
-
                 }
 
+                slug =
+                    base +
+                    "-" +
+                    counter;
 
-                /* =================================================
-                   SLUG ÖNİZLEME
-                   ================================================= */
+                counter++;
 
-                function updateSlugPreview() {
+                if (counter > 1000) {
+                    throw new Error(
+                        "Benzersiz haber URL'si oluşturulamadı."
+                    );
+                }
+            }
+        }
 
-                    const title =
-                        titleInput.value.trim();
+        function updateSlugPreview(slugValue) {
+            let slug =
+                slugValue ||
+                slugify(titleInput.value);
 
+            if (!slug) {
+                slug = "haber";
+            }
 
-                    const news =
-                        getNews();
+            slugPreview.textContent =
+                "haber-detay.html?slug=" +
+                slug;
+        }
 
+        function showImagePreview(url) {
+            if (!url) {
+                preview.innerHTML = "";
+                return;
+            }
 
-                    const currentId =
-                        idInput.value ||
-                        editId ||
-                        "";
+            preview.innerHTML =
+                '<img src="' +
+                escapeHTML(url) +
+                '" alt="Haber görseli">';
 
+            currentImageUrl = url;
+        }
 
-                    let slug =
-                        slugify(
-                            title
-                        );
+        function readLocalPreview(file) {
+            if (!file) {
+                return;
+            }
 
+            const reader =
+                new FileReader();
 
-                    if (
-                        title
-                    ) {
+            reader.onload =
+                function (event) {
+                    preview.innerHTML =
+                        '<img src="' +
+                        escapeHTML(
+                            event.target.result
+                        ) +
+                        '" alt="Görsel önizleme">';
 
-                        /*
-                         * Düzenleme sırasında mevcut
-                         * haberin kendi slug'ını koru.
-                         */
+                    uploadInfo.textContent =
+                        "Yeni görsel seçildi. Kaydettiğinizde Supabase Storage'a yüklenecek.";
+                };
 
-                        const current =
-                            news.find(
-                                function (
-                                    item
-                                ) {
+            reader.readAsDataURL(file);
+        }
 
-                                    return String(
-                                        item.id
-                                    ) ===
-                                    String(
-                                        currentId
-                                    );
+        async function uploadImage(file, newsId) {
+            if (!file) {
+                return currentImageUrl || "";
+            }
 
-                                }
-                            );
+            if (!file.type.startsWith("image/")) {
+                throw new Error(
+                    "Lütfen geçerli bir görsel seçin."
+                );
+            }
 
+            if (file.size > 10 * 1024 * 1024) {
+                throw new Error(
+                    "Görsel boyutu 10 MB'dan küçük olmalıdır."
+                );
+            }
 
-                        if (
-                            current &&
-                            current.slug &&
-                            String(
-                                current.title
-                            ).trim() ===
-                            title
-                        ) {
+            const extension =
+                (
+                    file.name.split(".").pop() ||
+                    "jpg"
+                )
+                    .toLowerCase()
+                    .replace(
+                        /[^a-z0-9]/g,
+                        ""
+                    ) || "jpg";
 
-                            slug =
-                                current.slug;
+            const safeId =
+                newsId ||
+                crypto.randomUUID();
 
-                        } else {
+            const filePath =
+                currentUser.id +
+                "/" +
+                safeId +
+                "-" +
+                Date.now() +
+                "." +
+                extension;
 
-                            slug =
-                                createUniqueSlug(
-                                    title,
-                                    news,
-                                    currentId
-                                );
+            uploadProgress.classList.add(
+                "active"
+            );
 
+            uploadInfo.textContent =
+                "Görsel Supabase Storage'a yükleniyor...";
+
+            const uploadResult =
+                await supabaseClient
+                    .storage
+                    .from("news-images")
+                    .upload(
+                        filePath,
+                        file,
+                        {
+                            cacheControl: "31536000",
+                            contentType:
+                                file.type,
+                            upsert: false
                         }
-
-                    }
-
-
-                    if (!slug) {
-                        slug = "haber";
-                    }
-
-
-                    slugPreview.textContent =
-                        "haber-detay.html?slug=" +
-                        slug;
-
-                }
-
-
-                /* =================================================
-                   MESAJ
-                   ================================================= */
-
-                function showMessage(
-                    text,
-                    type = "success"
-                ) {
-
-                    message.textContent =
-                        text;
-
-                    message.className =
-                        "admin-form-message " +
-                        type;
-
-                    message.style.display =
-                        "block";
-
-
-                    clearTimeout(
-                        showMessage.timer
                     );
 
+            uploadProgress.classList.remove(
+                "active"
+            );
 
-                    showMessage.timer =
-                        setTimeout(
-                            function () {
+            if (uploadResult.error) {
+                throw uploadResult.error;
+            }
 
-                                message.style.display =
-                                    "none";
+            const publicResult =
+                supabaseClient
+                    .storage
+                    .from("news-images")
+                    .getPublicUrl(
+                        uploadResult.data.path
+                    );
 
-                            },
-                            4000
-                        );
+            const publicUrl =
+                publicResult &&
+                publicResult.data
+                    ? publicResult.data.publicUrl
+                    : "";
 
-                }
+            if (!publicUrl) {
+                throw new Error(
+                    "Görsel URL'si oluşturulamadı."
+                );
+            }
 
+            currentImageUrl =
+                publicUrl;
 
-                /* =================================================
-                   GÖRSEL ÖNİZLEME
-                   ================================================= */
+            uploadInfo.textContent =
+                "Görsel başarıyla Supabase Storage'a yüklendi.";
 
-                imageInput.addEventListener(
-                    "change",
-                    function () {
+            return publicUrl;
+        }
 
-                        const file =
-                            this.files &&
-                            this.files[0];
+        async function loadExistingNews(id) {
+            const result =
+                await supabaseClient
+                    .from("news")
+                    .select(
+                        "id,title,slug,summary,content,category_id,image_url,status,is_breaking,views,author_id,published_at,created_at,updated_at"
+                    )
+                    .eq("id", id)
+                    .maybeSingle();
 
+            if (result.error) {
+                throw result.error;
+            }
 
-                        if (!file) {
-                            return;
-                        }
+            return result.data;
+        }
 
+        function fillForm(item) {
+            if (!item) {
+                return;
+            }
 
-                        if (
-                            !file.type.startsWith(
-                                "image/"
-                            )
-                        ) {
+            currentNews =
+                item;
 
-                            showMessage(
-                                "Lütfen geçerli bir görsel seçin.",
-                                "error"
-                            );
+            idInput.value =
+                item.id || "";
 
-                            this.value =
-                                "";
+            titleInput.value =
+                item.title || "";
 
-                            return;
+            summaryInput.value =
+                item.summary || "";
 
-                        }
+            contentInput.value =
+                item.content || "";
 
+            categoryInput.value =
+                item.category_id || "";
 
-                        const maxSize =
-                            10 *
-                            1024 *
-                            1024;
+            statusInput.value =
+                item.status === "draft"
+                    ? "draft"
+                    : "published";
 
+            breakingInput.checked =
+                item.is_breaking === true;
 
-                        if (
-                            file.size >
-                            maxSize
-                        ) {
+            currentImageUrl =
+                item.image_url || "";
 
-                            showMessage(
-                                "Görsel boyutu 10 MB'dan küçük olmalıdır.",
-                                "error"
-                            );
-
-                            this.value =
-                                "";
-
-                            return;
-
-                        }
-
-
-                        const reader =
-                            new FileReader();
-
-
-                        reader.onload =
-                            function (
-                                event
-                            ) {
-
-                                preview.innerHTML =
-                                    "<img " +
-                                    'src="' +
-                                    escapeHTML(
-                                        event.target.result
-                                    ) +
-                                    '" ' +
-                                    'alt="Görsel önizleme">';
-
-                            };
-
-
-                        reader.readAsDataURL(
-                            file
-                        );
-
-                    }
+            if (currentImageUrl) {
+                showImagePreview(
+                    currentImageUrl
                 );
 
-
-                /* =================================================
-                   FORMU DOLDUR
-                   ================================================= */
-
-                function fillForm(
-                    item
-                ) {
-
-                    if (!item) {
-                        return;
-                    }
-
-
-                    idInput.value =
-                        item.id ||
-                        "";
-
-
-                    titleInput.value =
-                        item.title ||
-                        item.baslik ||
-                        "";
-
-
-                    summaryInput.value =
-                        item.summary ||
-                        item.ozet ||
-                        "";
-
-
-                    contentInput.value =
-                        item.content ||
-                        item.icerik ||
-                        "";
-
-
-                    categoryInput.value =
-                        item.category ||
-                        item.kategori ||
-                        "";
-
-
-                    statusInput.value =
-                        item.status ||
-                        "published";
-
-
-                    breakingInput.checked =
-                        item.breaking === true ||
-                        item.isBreaking === true;
-
-
-                    if (
-                        item.image
-                    ) {
-
-                        preview.innerHTML =
-                            "<img " +
-                            'src="' +
-                            escapeHTML(
-                                item.image
-                            ) +
-                            '" ' +
-                            'alt="Haber görseli">';
-
-                    }
-
-
-                    updateSlugPreview();
-
-                }
-
-
-                /* =================================================
-                   TASLAK DÜZENLE
-                   ================================================= */
-
-                if (
-                    draftId
-                ) {
-
-                    const drafts =
-                        getDrafts();
-
-
-                    const draft =
-                        drafts.find(
-                            function (
-                                item
-                            ) {
-
-                                return String(
-                                    item.id
-                                ) ===
-                                String(
-                                    draftId
-                                );
-
-                            }
-                        );
-
-
-                    if (
-                        draft
-                    ) {
-
-                        fillForm(
-                            draft
-                        );
-
-
-                        pageTitle.textContent =
-                            "Taslağı Düzenle";
-
-
-                        pageDescription.textContent =
-                            "Kaydedilmiş taslağı düzenleyin.";
-
-
-                        publishButton.textContent =
-                            "🚀 Haberi Yayınla";
-
-
-                        statusInput.value =
-                            "published";
-
-                    }
-
-                }
-
-
-                /* =================================================
-                   YAYINDAKİ HABERİ DÜZENLE
-                   ================================================= */
-
-                if (
-                    editId
-                ) {
-
-                    const news =
-                        getNews();
-
-
-                    const item =
-                        news.find(
-                            function (
-                                haber
-                            ) {
-
-                                return String(
-                                    haber.id
-                                ) ===
-                                String(
-                                    editId
-                                );
-
-                            }
-                        );
-
-
-                    if (
-                        item
-                    ) {
-
-                        fillForm(
-                            item
-                        );
-
-
-                        pageTitle.textContent =
-                            "Haberi Düzenle";
-
-
-                        pageDescription.textContent =
-                            "Yayındaki haberin bilgilerini güncelleyin.";
-
-
-                        publishButton.textContent =
-                            "💾 Değişiklikleri Kaydet";
-
-                    }
-
-                }
-
-
-                /* =================================================
-                   BAŞLIK DEĞİŞİNCE SLUG
-                   ================================================= */
-
-                titleInput.addEventListener(
-                    "input",
-                    function () {
-
-                        updateSlugPreview();
-
-                    }
-                );
-
-
-                /* =================================================
-                   FORM VERİLERİNİ TOPLA
-                   ================================================= */
-
-                function getFormData() {
-
-                    return {
-
-                        title:
-                            titleInput.value.trim(),
-
-                        summary:
-                            summaryInput.value.trim(),
-
-                        content:
-                            contentInput.value.trim(),
-
-                        category:
-                            categoryInput.value,
-
-                        status:
-                            statusInput.value,
-
-                        breaking:
-                            breakingInput.checked
-
-                    };
-
-                }
-
-
-                /* =================================================
-                   GÖRSELİ AL
-                   ================================================= */
-
-                function getCurrentImage() {
-
-                    const image =
-                        preview.querySelector(
-                            "img"
-                        );
-
-
-                    if (
-                        image &&
-                        image.src
-                    ) {
-
-                        return image.src;
-
-                    }
-
-
-                    return "";
-
-                }
-
-
-                /* =================================================
-                   TASLAK SLUG
-                   ================================================= */
-
-                function getDraftSlug(
-                    title,
-                    id
-                ) {
-
-                    const drafts =
-                        getDrafts();
-
-
-                    const existing =
-                        drafts.find(
-                            function (
-                                item
-                            ) {
-
-                                return String(
-                                    item.id
-                                ) ===
-                                String(
-                                    id
-                                );
-
-                            }
-                        );
-
-
-                    if (
-                        existing &&
-                        existing.slug
-                    ) {
-
-                        return existing.slug;
-
-                    }
-
-
-                    return createUniqueSlug(
-                        title,
-                        getNews(),
+                uploadInfo.textContent =
+                    "Mevcut haber görseli kullanılıyor.";
+            }
+
+            updateSlugPreview(
+                item.slug ||
+                slugify(item.title)
+            );
+        }
+
+        async function loadPageData() {
+            if (draftId || editId) {
+                const id =
+                    draftId ||
+                    editId;
+
+                const item =
+                    await loadExistingNews(
                         id
                     );
 
+                if (!item) {
+                    showMessage(
+                        "Düzenlenecek haber bulunamadı.",
+                        "error"
+                    );
+
+                    return;
                 }
 
-
-                /* =================================================
-                   TASLAK KAYDET
-                   ================================================= */
-
-                document
-                    .getElementById(
-                        "taslakBtn"
-                    )
-                    .addEventListener(
-                        "click",
-                        function () {
-
-                            const data =
-                                getFormData();
-
-
-                            if (
-                                !data.title
-                            ) {
-
-                                showMessage(
-                                    "Taslak için en azından başlık girin.",
-                                    "error"
-                                );
-
-                                titleInput.focus();
-
-                                return;
-
-                            }
-
-
-                            const drafts =
-                                getDrafts();
-
-
-                            const currentId =
-                                idInput.value ||
-                                createId(
-                                    "draft"
-                                );
-
-
-                            const existingIndex =
-                                drafts.findIndex(
-                                    function (
-                                        item
-                                    ) {
-
-                                        return String(
-                                            item.id
-                                        ) ===
-                                        String(
-                                            currentId
-                                        );
-
-                                    }
-                                );
-
-
-                            const old =
-                                existingIndex !==
-                                -1
-                                    ? drafts[
-                                        existingIndex
-                                    ]
-                                    : null;
-
-
-                            const slug =
-                                getDraftSlug(
-                                    data.title,
-                                    currentId
-                                );
-
-
-                            const now =
-                                new Date()
-                                    .toISOString();
-
-
-                            const draftData = {
-
-                                id:
-                                    currentId,
-
-                                title:
-                                    data.title,
-
-                                summary:
-                                    data.summary,
-
-                                content:
-                                    data.content,
-
-                                category:
-                                    data.category,
-
-                                status:
-                                    "draft",
-
-                                breaking:
-                                    data.breaking,
-
-                                image:
-                                    getCurrentImage(),
-
-                                slug:
-                                    slug,
-
-                                seoSlug:
-                                    slug,
-
-                                views:
-                                    old &&
-                                    Number(
-                                        old.views
-                                    ) || 0,
-
-                                createdAt:
-                                    old &&
-                                    old.createdAt
-                                        ? old.createdAt
-                                        : now,
-
-                                updatedAt:
-                                    now
-
-                            };
-
-
-                            if (
-                                existingIndex !==
-                                -1
-                            ) {
-
-                                drafts[
-                                    existingIndex
-                                ] =
-                                    draftData;
-
-                            } else {
-
-                                drafts.unshift(
-                                    draftData
-                                );
-
-                            }
-
-
-                            saveDrafts(
-                                drafts
-                            );
-
-
-                            idInput.value =
-                                currentId;
-
-
-                            updateSlugPreview();
-
-
-                            showMessage(
-                                "Taslak başarıyla kaydedildi."
-                            );
-
-                        }
-                    );
-
-
-                /* =================================================
-                   HABER YAYINLA / GÜNCELLE
-                   ================================================= */
-
-                form.addEventListener(
-                    "submit",
-                    function (
-                        event
-                    ) {
-
-                        event.preventDefault();
-
-
-                        const data =
-                            getFormData();
-
-
-                        if (
-                            !data.title
-                        ) {
-
-                            showMessage(
-                                "Haber başlığı boş bırakılamaz.",
-                                "error"
-                            );
-
-                            titleInput.focus();
-
-                            return;
-
-                        }
-
-
-                        if (
-                            !data.content
-                        ) {
-
-                            showMessage(
-                                "Haber içeriği boş bırakılamaz.",
-                                "error"
-                            );
-
-                            contentInput.focus();
-
-                            return;
-
-                        }
-
-
-                        if (
-                            !data.category
-                        ) {
-
-                            showMessage(
-                                "Lütfen kategori seçin.",
-                                "error"
-                            );
-
-                            categoryInput.focus();
-
-                            return;
-
-                        }
-
-
-                        const news =
-                            getNews();
-
-
-                        const currentId =
-                            idInput.value;
-
-
-                        const now =
-                            new Date()
-                                .toISOString();
-
-
-                        /* =========================================
-                           MEVCUT HABERİ GÜNCELLE
-                           ========================================= */
-
-                        if (
-                            editId
-                        ) {
-
-                            const index =
-                                news.findIndex(
-                                    function (
-                                        item
-                                    ) {
-
-                                        return String(
-                                            item.id
-                                        ) ===
-                                        String(
-                                            editId
-                                        );
-
-                                    }
-                                );
-
-
-                            if (
-                                index !==
-                                -1
-                            ) {
-
-                                const old =
-                                    news[
-                                        index
-                                    ];
-
-
-                                let slug =
-                                    old.slug ||
-                                    old.seoSlug ||
-                                    "";
-
-
-                                /*
-                                 * Başlık değiştiyse
-                                 * yeni slug üret.
-                                 */
-
-                                if (
-                                    !slug ||
-                                    String(
-                                        old.title ||
-                                        ""
-                                    ).trim() !==
-                                    data.title
-                                ) {
-
-                                    slug =
-                                        createUniqueSlug(
-                                            data.title,
-                                            news,
-                                            old.id
-                                        );
-
-                                }
-
-
-                                news[
-                                    index
-                                ] = {
-
-                                    ...old,
-
-                                    id:
-                                        old.id,
-
-                                    title:
-                                        data.title,
-
-                                    summary:
-                                        data.summary,
-
-                                    content:
-                                        data.content,
-
-                                    category:
-                                        data.category,
-
-                                    status:
-                                        "published",
-
-                                    breaking:
-                                        data.breaking,
-
-                                    image:
-                                        getCurrentImage() ||
-                                        old.image ||
-                                        "",
-
-                                    slug:
-                                        slug,
-
-                                    seoSlug:
-                                        slug,
-
-                                    updatedAt:
-                                        now,
-
-                                    publishedAt:
-                                        old.publishedAt ||
-                                        now
-
-                                };
-
-
-                                saveNews(
-                                    news
-                                );
-
-
-                                /*
-                                 * Aynı ID'li taslağı kaldır.
-                                 */
-
-                                const drafts =
-                                    getDrafts();
-
-
-                                const cleanDrafts =
-                                    drafts.filter(
-                                        function (
-                                            draft
-                                        ) {
-
-                                            return String(
-                                                draft.id
-                                            ) !==
-                                            String(
-                                                editId
-                                            );
-
-                                        }
-                                    );
-
-
-                                saveDrafts(
-                                    cleanDrafts
-                                );
-
-
-                                showMessage(
-                                    "Haber başarıyla güncellendi."
-                                );
-
-
-                                setTimeout(
-                                    function () {
-
-                                        window.location.href =
-                                            "haberler.html";
-
-                                    },
-                                    900
-                                );
-
-
-                                return;
-
-                            }
-
-                        }
-
-
-                        /* =========================================
-                           YENİ HABER OLUŞTUR
-                           ========================================= */
-
-                        const newId =
-                            currentId ||
-                            createId(
-                                "news"
-                            );
-
-
-                        const slug =
-                            createUniqueSlug(
-                                data.title,
-                                news,
-                                newId
-                            );
-
-
-                        const newNews = {
-
-                            id:
-                                newId,
-
-                            title:
-                                data.title,
-
-                            summary:
-                                data.summary,
-
-                            content:
-                                data.content,
-
-                            category:
-                                data.category,
-
-                            status:
-                                "published",
-
-                            breaking:
-                                data.breaking,
-
-                            image:
-                                getCurrentImage(),
-
-                            slug:
-                                slug,
-
-                            seoSlug:
-                                slug,
-
-                            views:
-                                0,
-
-                            goruntulenme:
-                                0,
-
-                            publishedAt:
-                                now,
-
-                            createdAt:
-                                now,
-
-                            updatedAt:
-                                now
-
-                        };
-
-
-                        news.unshift(
-                            newNews
-                        );
-
-
-                        saveNews(
-                            news
-                        );
-
-
-                        /* =========================================
-                           TASLAKTAN GELDİYSE TASLAĞI SİL
-                           ========================================= */
-
-                        if (
-                            draftId
-                        ) {
-
-                            const drafts =
-                                getDrafts();
-
-
-                            const remaining =
-                                drafts.filter(
-                                    function (
-                                        draft
-                                    ) {
-
-                                        return String(
-                                            draft.id
-                                        ) !==
-                                        String(
-                                            draftId
-                                        );
-
-                                    }
-                                );
-
-
-                            saveDrafts(
-                                remaining
-                            );
-
-                        }
-
-
-                        showMessage(
-                            "Haber başarıyla yayınlandı."
-                        );
-
-
-                        setTimeout(
-                            function () {
-
-                                window.location.href =
-                                    "haberler.html";
-
-                            },
-                            900
-                        );
-
-                    }
+                fillForm(item);
+
+                if (draftId) {
+                    pageTitle.textContent =
+                        "Taslağı Düzenle";
+
+                    pageDescription.textContent =
+                        "Kaydedilmiş taslağı düzenleyin.";
+
+                    publishButton.textContent =
+                        "🚀 Haberi Yayınla";
+
+                    statusInput.value =
+                        "published";
+                }
+
+                if (editId) {
+                    pageTitle.textContent =
+                        "Haberi Düzenle";
+
+                    pageDescription.textContent =
+                        "Haber bilgilerini güncelleyin.";
+
+                    publishButton.textContent =
+                        "💾 Değişiklikleri Kaydet";
+                }
+            }
+
+            updateSlugPreview(
+                currentNews
+                    ? currentNews.slug
+                    : ""
+            );
+        }
+
+        function getFormData() {
+            return {
+                title:
+                    titleInput.value.trim(),
+
+                summary:
+                    summaryInput.value.trim(),
+
+                content:
+                    contentInput.value.trim(),
+
+                categoryId:
+                    categoryInput.value,
+
+                status:
+                    statusInput.value,
+
+                breaking:
+                    breakingInput.checked
+            };
+        }
+
+        async function saveNews(statusOverride) {
+            if (isSaving) {
+                return;
+            }
+
+            const data =
+                getFormData();
+
+            if (!data.title) {
+                showMessage(
+                    "Haber başlığı boş bırakılamaz.",
+                    "error"
                 );
 
+                titleInput.focus();
+                return;
+            }
 
-                /* =================================================
-                   TEMİZLE
-                   ================================================= */
+            if (
+                statusOverride !== "draft" &&
+                !data.content
+            ) {
+                showMessage(
+                    "Haber içeriği boş bırakılamaz.",
+                    "error"
+                );
 
-                document
-                    .getElementById(
-                        "temizleBtn"
-                    )
-                    .addEventListener(
-                        "click",
-                        function () {
+                contentInput.focus();
+                return;
+            }
 
-                            const confirmed =
-                                confirm(
-                                    "Formdaki tüm bilgiler temizlensin mi?"
-                                );
+            if (
+                !data.categoryId
+            ) {
+                showMessage(
+                    "Lütfen kategori seçin.",
+                    "error"
+                );
 
+                categoryInput.focus();
+                return;
+            }
 
-                            if (
-                                !confirmed
-                            ) {
-                                return;
-                            }
+            isSaving = true;
 
+            const originalPublishText =
+                publishButton.textContent;
 
-                            form.reset();
+            const originalDraftText =
+                taslakButton.textContent;
 
+            publishButton.disabled =
+                true;
 
-                            idInput.value =
-                                "";
+            taslakButton.disabled =
+                true;
 
+            try {
+                const id =
+                    idInput.value ||
+                    currentNews?.id ||
+                    "";
 
-                            preview.innerHTML =
-                                "";
-
-
-                            statusInput.value =
-                                "published";
-
-
-                            updateSlugPreview();
-
-
-                            showMessage(
-                                "Form temizlendi."
-                            );
-
-                        }
-                    );
-
-
-                /* =================================================
-                   ADMIN MOBİL MENÜ
-                   ================================================= */
-
-                const adminMenuBtn =
-                    document.getElementById(
-                        "adminMenuBtn"
-                    );
-
-                const adminSidebar =
-                    document.getElementById(
-                        "adminSidebar"
-                    );
-
+                let slug =
+                    currentNews?.slug ||
+                    "";
 
                 if (
-                    adminMenuBtn &&
-                    adminSidebar
+                    !slug ||
+                    !currentNews ||
+                    currentNews.title !==
+                        data.title
                 ) {
-
-                    adminMenuBtn.addEventListener(
-                        "click",
-                        function () {
-
-                            const isOpen =
-                                adminSidebar.classList.contains(
-                                    "active"
-                                ) ||
-                                adminSidebar.classList.contains(
-                                    "open"
-                                );
-
-
-                            adminSidebar.classList.toggle(
-                                "active"
-                            );
-
-                            adminSidebar.classList.toggle(
-                                "open"
-                            );
-
-
-                            adminMenuBtn.setAttribute(
-                                "aria-expanded",
-                                String(
-                                    !isOpen
-                                )
-                            );
-
-                        }
-                    );
-
-
-                    adminSidebar
-                        .querySelectorAll(
-                            "a"
-                        )
-                        .forEach(
-                            function (
-                                link
-                            ) {
-
-                                link.addEventListener(
-                                    "click",
-                                    function () {
-
-                                        adminSidebar.classList.remove(
-                                            "active"
-                                        );
-
-                                        adminSidebar.classList.remove(
-                                            "open"
-                                        );
-
-                                        adminMenuBtn.setAttribute(
-                                            "aria-expanded",
-                                            "false"
-                                        );
-
-                                    }
-                                );
-
-                            }
+                    slug =
+                        await createUniqueSlug(
+                            data.title,
+                            id
                         );
-
                 }
 
-
-                /* =================================================
-                   OTOMATİK TASLAK
-                   ================================================= */
-
-                let autoSaveTimer;
-
-
-                function autoSaveDraft() {
-
-                    const title =
-                        titleInput.value.trim();
-
-
-                    const content =
-                        contentInput.value.trim();
-
-
-                    if (
-                        !title &&
-                        !content
-                    ) {
-                        return;
-                    }
-
-
-                    /*
-                     * Düzenleme sayfasında mevcut
-                     * yayındaki haberi otomatik olarak
-                     * taslağa çevirmiyoruz.
-                     */
-
-                    if (
-                        editId
-                    ) {
-                        return;
-                    }
-
-
-                    const data =
-                        getFormData();
-
-
-                    const drafts =
-                        getDrafts();
-
-
-                    const autoId =
-                        idInput.value ||
-                        createId(
-                            "draft"
-                        );
-
-
-                    idInput.value =
-                        autoId;
-
-
-                    const index =
-                        drafts.findIndex(
-                            function (
-                                item
-                            ) {
-
-                                return String(
-                                    item.id
-                                ) ===
-                                String(
-                                    autoId
-                                );
-
-                            }
-                        );
-
-
-                    const old =
-                        index !== -1
-                            ? drafts[
-                                index
-                            ]
-                            : null;
-
-
-                    const slug =
-                        getDraftSlug(
-                            data.title,
-                            autoId
-                        );
-
-
-                    const item = {
-
-                        id:
-                            autoId,
-
-                        title:
-                            data.title,
-
-                        summary:
-                            data.summary,
-
-                        content:
-                            data.content,
-
-                        category:
-                            data.category,
-
-                        status:
-                            "draft",
-
-                        breaking:
-                            data.breaking,
-
-                        image:
-                            getCurrentImage(),
-
-                        slug:
-                            slug,
-
-                        seoSlug:
-                            slug,
-
-                        createdAt:
-                            old &&
-                            old.createdAt
-                                ? old.createdAt
-                                : new Date()
-                                    .toISOString(),
-
-                        updatedAt:
-                            new Date()
-                                .toISOString()
-
-                    };
-
-
-                    if (
-                        index !==
-                        -1
-                    ) {
-
-                        drafts[
-                            index
-                        ] = {
-
-                            ...drafts[
-                                index
-                            ],
-
-                            ...item
-
-                        };
-
-                    } else {
-
-                        drafts.unshift(
-                            item
-                        );
-
-                    }
-
-
-                    saveDrafts(
-                        drafts
-                    );
-
-                }
-
-
-                /* =================================================
-                   OTOMATİK TASLAK DİNLEYİCİLERİ
-                   ================================================= */
-
-                [
-                    titleInput,
-                    summaryInput,
-                    contentInput,
-                    categoryInput,
-                    breakingInput
-                ].forEach(
-                    function (
-                        element
-                    ) {
-
-                        const eventName =
-                            element.type ===
-                                "checkbox" ||
-                            element.tagName ===
-                                "SELECT"
-                                ? "change"
-                                : "input";
-
-
-                        element.addEventListener(
-                            eventName,
-                            function () {
-
-                                clearTimeout(
-                                    autoSaveTimer
-                                );
-
-
-                                if (
-                                    element ===
-                                    titleInput
-                                ) {
-
-                                    updateSlugPreview();
-
-                                }
-
-
-                                autoSaveTimer =
-                                    setTimeout(
-                                        autoSaveDraft,
-                                        3000
-                                    );
-
-                            }
-                        );
-
-                    }
+                updateSlugPreview(
+                    slug
                 );
 
+                let imageUrl =
+                    currentImageUrl ||
+                    currentNews?.image_url ||
+                    "";
 
-                /* =================================================
-                   İLK SLUG ÖNİZLEMESİ
-                   ================================================= */
+                const selectedFile =
+                    imageInput.files &&
+                    imageInput.files[0];
 
-                updateSlugPreview();
+                if (selectedFile) {
+                    imageUrl =
+                        await uploadImage(
+                            selectedFile,
+                            id ||
+                                crypto.randomUUID()
+                        );
+                }
 
+                const finalStatus =
+                    statusOverride ||
+                    data.status ||
+                    "published";
+
+                const now =
+                    new Date().toISOString();
+
+                const payload = {
+                    title:
+                        data.title,
+
+                    slug:
+                        slug,
+
+                    summary:
+                        data.summary,
+
+                    content:
+                        data.content,
+
+                    category_id:
+                        data.categoryId,
+
+                    image_url:
+                        imageUrl || null,
+
+                    status:
+                        finalStatus,
+
+                    is_breaking:
+                        data.breaking,
+
+                    author_id:
+                        currentUser.id,
+
+                    updated_at:
+                        now
+                };
+
+                if (
+                    finalStatus ===
+                    "published"
+                ) {
+                    payload.published_at =
+                        currentNews &&
+                        currentNews.published_at
+                            ? currentNews.published_at
+                            : now;
+                } else {
+                    payload.published_at =
+                        currentNews?.published_at ||
+                        null;
+                }
+
+                let result;
+
+                if (id) {
+                    result =
+                        await supabaseClient
+                            .from("news")
+                            .update(payload)
+                            .eq("id", id)
+                            .select()
+                            .single();
+                } else {
+                    result =
+                        await supabaseClient
+                            .from("news")
+                            .insert(payload)
+                            .select()
+                            .single();
+                }
+
+                if (result.error) {
+                    throw result.error;
+                }
+
+                const saved =
+                    result.data;
+
+                currentNews =
+                    saved;
+
+                idInput.value =
+                    saved.id;
+
+                currentImageUrl =
+                    saved.image_url ||
+                    "";
+
+                if (
+                    finalStatus ===
+                    "draft"
+                ) {
+                    showMessage(
+                        "Taslak başarıyla Supabase'e kaydedildi.",
+                        "success"
+                    );
+
+                    setTimeout(
+                        function () {
+                            window.location.href =
+                                "taslaklar.html";
+                        },
+                        900
+                    );
+
+                    return;
+                }
+
+                showMessage(
+                    "Haber başarıyla yayınlandı.",
+                    "success"
+                );
+
+                setTimeout(
+                    function () {
+                        window.location.href =
+                            "haberler.html";
+                    },
+                    900
+                );
+
+            } catch (error) {
+                console.error(
+                    "Haber kaydetme hatası:",
+                    error
+                );
+
+                uploadProgress.classList.remove(
+                    "active"
+                );
+
+                showMessage(
+                    "Haber kaydedilemedi: " +
+                    (
+                        error.message ||
+                        "Bilinmeyen hata."
+                    ),
+                    "error"
+                );
+            } finally {
+                isSaving = false;
+
+                publishButton.disabled =
+                    false;
+
+                taslakButton.disabled =
+                    false;
+
+                publishButton.textContent =
+                    originalPublishText;
+
+                taslakButton.textContent =
+                    originalDraftText;
+            }
+        }
+
+        titleInput.addEventListener(
+            "input",
+            function () {
+                updateSlugPreview(
+                    slugify(
+                        titleInput.value
+                    )
+                );
+
+                scheduleAutoSave();
             }
         );
 
-    </script>
+        [
+            summaryInput,
+            contentInput,
+            categoryInput,
+            breakingInput
+        ].forEach(function (element) {
+            element.addEventListener(
+                element.type === "checkbox" ||
+                    element.tagName === "SELECT"
+                    ? "change"
+                    : "input",
+                function () {
+                    scheduleAutoSave();
+                }
+            );
+        });
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+                const file =
+                    this.files &&
+                    this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                if (
+                    !file.type.startsWith(
+                        "image/"
+                    )
+                ) {
+                    showMessage(
+                        "Lütfen geçerli bir görsel seçin.",
+                        "error"
+                    );
+
+                    this.value = "";
+                    return;
+                }
+
+                if (
+                    file.size >
+                    10 * 1024 * 1024
+                ) {
+                    showMessage(
+                        "Görsel boyutu 10 MB'dan küçük olmalıdır.",
+                        "error"
+                    );
+
+                    this.value = "";
+                    return;
+                }
+
+                readLocalPreview(
+                    file
+                );
+            }
+        );
+
+        taslakButton.addEventListener(
+            "click",
+            function () {
+                saveNews("draft");
+            }
+        );
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+                event.preventDefault();
+
+                saveNews(
+                    statusInput.value ===
+                        "draft"
+                        ? "published"
+                        : "published"
+                );
+            }
+        );
+
+        document
+            .getElementById("temizleBtn")
+            .addEventListener(
+                "click",
+                function () {
+                    const confirmed =
+                        confirm(
+                            "Formdaki tüm bilgiler temizlensin mi?"
+                        );
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    form.reset();
+
+                    idInput.value = "";
+
+                    currentNews = null;
+                    currentImageUrl = "";
+
+                    preview.innerHTML = "";
+
+                    uploadInfo.textContent =
+                        "Görsel seçtiğinizde Supabase Storage'a yüklenir.";
+
+                    statusInput.value =
+                        "published";
+
+                    categoryInput.value =
+                        "";
+
+                    updateSlugPreview();
+
+                    showMessage(
+                        "Form temizlendi.",
+                        "success"
+                    );
+                }
+            );
+
+        function scheduleAutoSave() {
+            clearTimeout(
+                autoSaveTimer
+            );
+
+            if (
+                editId ||
+                draftId
+            ) {
+                return;
+            }
+
+            autoSaveTimer =
+                setTimeout(
+                    function () {
+                        const title =
+                            titleInput.value.trim();
+
+                        const content =
+                            contentInput.value.trim();
+
+                        if (
+                            !title &&
+                            !content
+                        ) {
+                            return;
+                        }
+
+                        saveNews(
+                            "draft"
+                        );
+                    },
+                    8000
+                );
+        }
+
+        logoutBtn.addEventListener(
+            "click",
+            async function () {
+                const confirmed =
+                    confirm(
+                        "Admin panelinden çıkış yapmak istiyor musunuz?"
+                    );
+
+                if (!confirmed) {
+                    return;
+                }
+
+                try {
+                    if (
+                        supabaseClient
+                    ) {
+                        await supabaseClient
+                            .auth
+                            .signOut();
+                    }
+                } catch (error) {
+                    console.error(
+                        error
+                    );
+                }
+
+                window.location.href =
+                    "admin-giris.html";
+            }
+        );
+
+        const adminMenuBtn =
+            document.getElementById(
+                "adminMenuBtn"
+            );
+
+        const adminSidebar =
+            document.getElementById(
+                "adminSidebar"
+            );
+
+        if (
+            adminMenuBtn &&
+            adminSidebar
+        ) {
+            adminMenuBtn.addEventListener(
+                "click",
+                function () {
+                    const isOpen =
+                        adminSidebar.classList.contains(
+                            "active"
+                        ) ||
+                        adminSidebar.classList.contains(
+                            "open"
+                        );
+
+                    adminSidebar.classList.toggle(
+                        "active"
+                    );
+
+                    adminSidebar.classList.toggle(
+                        "open"
+                    );
+
+                    adminMenuBtn.setAttribute(
+                        "aria-expanded",
+                        String(!isOpen)
+                    );
+                }
+            );
+
+            adminSidebar
+                .querySelectorAll("a")
+                .forEach(function (link) {
+                    link.addEventListener(
+                        "click",
+                        function () {
+                            adminSidebar.classList.remove(
+                                "active"
+                            );
+
+                            adminSidebar.classList.remove(
+                                "open"
+                            );
+
+                            adminMenuBtn.setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
+                        }
+                    );
+                });
+        }
+
+        async function init() {
+            try {
+                setCloudStatus(
+                    "Supabase bağlantısı kuruluyor...",
+                    "loading"
+                );
+
+                const allowed =
+                    await checkAccess();
+
+                if (!allowed) {
+                    return;
+                }
+
+                await loadCategories();
+
+                await loadNewsList();
+
+                await loadPageData();
+
+                setCloudStatus(
+                    "Supabase bağlantısı aktif • PostgreSQL hazır.",
+                    "success"
+                );
+
+            } catch (error) {
+                console.error(
+                    "Yeni haber başlatma hatası:",
+                    error
+                );
+
+                setCloudStatus(
+                    "Bağlantı veya yetki hatası oluştu.",
+                    "error"
+                );
+
+                showMessage(
+                    "Sayfa hazırlanamadı: " +
+                    (
+                        error.message ||
+                        "Bilinmeyen hata."
+                    ),
+                    "error"
+                );
+            }
+        }
+
+        init();
+
+    });
+})();
+</script>
 
 </body>
-
 </html>
