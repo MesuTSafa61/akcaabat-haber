@@ -1,7 +1,7 @@
 /* =========================================================
    AKÇAABAT HABER
    ANA JAVASCRIPT
-   SÜRÜM: SEO SLUG SİSTEMİ
+   SÜRÜM: SUPABASE CMS + SEO SLUG SİSTEMİ
    ========================================================= */
 
 (function () {
@@ -17,6 +17,247 @@
 
     const FALLBACK_IMAGE =
         "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80";
+
+    const SUPABASE_CDN =
+        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+    let supabaseClient = null;
+    let supabaseLoading = null;
+    let cloudRefreshStarted = false;
+
+
+    /* =========================================================
+       SUPABASE
+       ========================================================= */
+
+    function getSupabaseConfig() {
+
+        return window.AKCAABAT_SUPABASE || null;
+
+    }
+
+
+    function isCloudConfigured() {
+
+        const config =
+            getSupabaseConfig();
+
+        return !!(
+            config &&
+            config.url &&
+            config.key
+        );
+
+    }
+
+
+    function loadSupabaseLibrary() {
+
+        if (window.supabase) {
+            return Promise.resolve(
+                window.supabase
+            );
+        }
+
+        if (supabaseLoading) {
+            return supabaseLoading;
+        }
+
+        supabaseLoading =
+            new Promise(
+                function (resolve, reject) {
+
+                    const existing =
+                        document.querySelector(
+                            'script[data-akcaabat-supabase]'
+                        );
+
+                    if (existing) {
+
+                        existing.addEventListener(
+                            "load",
+                            function () {
+
+                                if (window.supabase) {
+                                    resolve(
+                                        window.supabase
+                                    );
+                                } else {
+                                    reject(
+                                        new Error(
+                                            "Supabase kütüphanesi yüklenemedi."
+                                        )
+                                    );
+                                }
+
+                            }
+                        );
+
+                        existing.addEventListener(
+                            "error",
+                            function () {
+
+                                reject(
+                                    new Error(
+                                        "Supabase CDN bağlantısı başarısız."
+                                    )
+                                );
+
+                            }
+                        );
+
+                        return;
+
+                    }
+
+
+                    const script =
+                        document.createElement(
+                            "script"
+                        );
+
+                    script.src =
+                        SUPABASE_CDN;
+
+                    script.async =
+                        true;
+
+                    script.dataset.akcaabatSupabase =
+                        "true";
+
+
+                    script.onload =
+                        function () {
+
+                            if (window.supabase) {
+
+                                resolve(
+                                    window.supabase
+                                );
+
+                            } else {
+
+                                reject(
+                                    new Error(
+                                        "Supabase nesnesi bulunamadı."
+                                    )
+                                );
+
+                            }
+
+                        };
+
+
+                    script.onerror =
+                        function () {
+
+                            reject(
+                                new Error(
+                                    "Supabase kütüphanesi yüklenemedi."
+                                )
+                            );
+
+                        };
+
+
+                    document.head.appendChild(
+                        script
+                    );
+
+                }
+            );
+
+        return supabaseLoading;
+
+    }
+
+
+    async function getSupabaseClient() {
+
+        if (supabaseClient) {
+            return supabaseClient;
+        }
+
+        if (!isCloudConfigured()) {
+            return null;
+        }
+
+        try {
+
+            const library =
+                await loadSupabaseLibrary();
+
+            const config =
+                getSupabaseConfig();
+
+            supabaseClient =
+                library.createClient(
+                    config.url,
+                    config.key
+                );
+
+            return supabaseClient;
+
+        } catch (error) {
+
+            console.error(
+                "Supabase bağlantı hatası:",
+                error
+            );
+
+            return null;
+
+        }
+
+    }
+
+
+    async function getCurrentUser() {
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            return null;
+        }
+
+        try {
+
+            const result =
+                await client.auth.getUser();
+
+            if (
+                result.error ||
+                !result.data ||
+                !result.data.user
+            ) {
+                return null;
+            }
+
+            return result.data.user;
+
+        } catch (error) {
+
+            console.error(
+                "Kullanıcı bilgisi alınamadı:",
+                error
+            );
+
+            return null;
+
+        }
+
+    }
+
+
+    async function isAuthenticated() {
+
+        const user =
+            await getCurrentUser();
+
+        return !!user;
+
+    }
 
 
     /* =========================================================
@@ -250,6 +491,319 @@
 
 
     /* =========================================================
+       DB SATIRI → ESKİ SİSTEM HABER NESNESİ
+       ========================================================= */
+
+    function normalizeNewsRow(row) {
+
+        if (!row) {
+            return null;
+        }
+
+        const category =
+            row.categories &&
+            row.categories.name
+                ? row.categories.name
+                : (
+                    row.category ||
+                    "Genel"
+                );
+
+
+        return {
+
+            id:
+                row.id ||
+                "",
+
+            title:
+                row.title ||
+                "",
+
+            slug:
+                row.slug ||
+                slugify(row.title),
+
+            summary:
+                row.summary ||
+                "",
+
+            content:
+                row.content ||
+                "",
+
+            category:
+                category,
+
+            categoryId:
+                row.category_id ||
+                "",
+
+            image:
+                row.image_url ||
+                FALLBACK_IMAGE,
+
+            views:
+                Number(row.views) || 0,
+
+            breaking:
+                !!row.is_breaking,
+
+            status:
+                row.status ||
+                "published",
+
+            publishedAt:
+                row.published_at ||
+                "",
+
+            createdAt:
+                row.created_at ||
+                "",
+
+            updatedAt:
+                row.updated_at ||
+                "",
+
+            authorId:
+                row.author_id ||
+                ""
+
+        };
+
+    }
+
+
+    /* =========================================================
+       HABER NESNESİ → DB SATIRI
+       ========================================================= */
+
+    function newsToDatabase(item, categoryId) {
+
+        if (!item) {
+            return null;
+        }
+
+        const status =
+            item.status === "draft"
+                ? "draft"
+                : item.status === "archived"
+                    ? "archived"
+                    : "published";
+
+
+        return {
+
+            id:
+                isUuid(item.id)
+                    ? item.id
+                    : undefined,
+
+            title:
+                getTitle(item),
+
+            slug:
+                item.slug ||
+                slugify(
+                    getTitle(item)
+                ),
+
+            summary:
+                getSummary(item),
+
+            content:
+                getContent(item),
+
+            category_id:
+                categoryId ||
+                item.categoryId ||
+                null,
+
+            image_url:
+                getImage(item),
+
+            status:
+                status,
+
+            is_breaking:
+                isBreaking(item),
+
+            views:
+                getViews(item),
+
+            published_at:
+                status === "published"
+                    ? (
+                        item.publishedAt ||
+                        nowIso()
+                    )
+                    : null
+
+        };
+
+    }
+
+
+    function isUuid(value) {
+
+        if (!value) {
+            return false;
+        }
+
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+            .test(
+                String(value)
+            );
+
+    }
+
+
+    /* =========================================================
+       KATEGORİ
+       ========================================================= */
+
+    async function findCategoryId(categoryName) {
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            return null;
+        }
+
+        const name =
+            String(
+                categoryName ||
+                "Genel"
+            ).trim();
+
+
+        try {
+
+            const result =
+                await client
+                    .from("categories")
+                    .select(
+                        "id,name,slug"
+                    )
+                    .eq(
+                        "name",
+                        name
+                    )
+                    .maybeSingle();
+
+
+            if (
+                !result.error &&
+                result.data
+            ) {
+
+                return result.data.id;
+
+            }
+
+
+            const slug =
+                slugify(name);
+
+
+            if (slug) {
+
+                const bySlug =
+                    await client
+                        .from("categories")
+                        .select(
+                            "id,name,slug"
+                        )
+                        .eq(
+                            "slug",
+                            slug
+                        )
+                        .maybeSingle();
+
+
+                if (
+                    !bySlug.error &&
+                    bySlug.data
+                ) {
+
+                    return bySlug.data.id;
+
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Kategori alınamadı:",
+                error
+            );
+
+        }
+
+        return null;
+
+    }
+
+
+    async function loadCategories() {
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            return [];
+        }
+
+        try {
+
+            const result =
+                await client
+                    .from("categories")
+                    .select(
+                        "id,name,slug,description,sort_order,is_active"
+                    )
+                    .eq(
+                        "is_active",
+                        true
+                    )
+                    .order(
+                        "sort_order",
+                        {
+                            ascending: true
+                        }
+                    );
+
+
+            if (result.error) {
+
+                console.error(
+                    "Kategoriler alınamadı:",
+                    result.error
+                );
+
+                return [];
+
+            }
+
+            return result.data || [];
+
+        } catch (error) {
+
+            console.error(
+                "Kategori bağlantı hatası:",
+                error
+            );
+
+            return [];
+
+        }
+
+    }
+
+
+    /* =========================================================
        TARİH
        ========================================================= */
 
@@ -331,7 +885,6 @@
             .toLowerCase()
             .trim()
 
-            /* Türkçe karakterler */
             .replace(/ğ/g, "g")
             .replace(/ü/g, "u")
             .replace(/ş/g, "s")
@@ -339,7 +892,6 @@
             .replace(/ö/g, "o")
             .replace(/ç/g, "c")
 
-            /* Türkçe büyük harf ihtimali */
             .replace(/Ğ/g, "g")
             .replace(/Ü/g, "u")
             .replace(/Ş/g, "s")
@@ -348,17 +900,24 @@
             .replace(/Ö/g, "o")
             .replace(/Ç/g, "c")
 
-            /* Noktalama */
-            .replace(/[^a-z0-9\s-]/g, "")
+            .replace(
+                /[^a-z0-9\s-]/g,
+                ""
+            )
 
-            /* Boşluk */
-            .replace(/\s+/g, "-")
+            .replace(
+                /\s+/g,
+                "-"
+            )
 
-            /* Fazla tire */
-            .replace(/-+/g, "-")
+            .replace(
+                /-+/g,
+                "-"
+            )
 
-            /* Baş / son tire */
-            .replace(/^-+|-+$/g, "");
+            .replace(
+                /^-+|-+$/g,
+                "");
 
     }
 
@@ -377,26 +936,35 @@
             slugify(title) ||
             "haber";
 
-        let slug = base;
+        let slug =
+            base;
 
-        let counter = 2;
+        let counter =
+            2;
+
 
         while (
-            newsList.some(function (item) {
+            newsList.some(
+                function (item) {
 
-                const itemId =
-                    getNewsId(item);
+                    const itemId =
+                        getNewsId(item);
 
-                return (
-                    String(itemId) !==
-                        String(currentId || "") &&
-                    String(item.slug || "")
-                        .toLowerCase() ===
+                    return (
+                        String(itemId) !==
+                            String(
+                                currentId || ""
+                            ) &&
+                        String(
+                            item.slug || ""
+                        )
+                            .toLowerCase() ===
                         String(slug)
                             .toLowerCase()
-                );
+                    );
 
-            })
+                }
+            )
         ) {
 
             slug =
@@ -441,8 +1009,8 @@
                         String(
                             item.slug || ""
                         )
-                        .trim()
-                        .toLowerCase() ===
+                            .trim()
+                            .toLowerCase() ===
                         normalized
                     );
 
@@ -450,6 +1018,75 @@
             ) ||
             null
         );
+
+    }
+
+
+    async function findNewsBySlugAsync(slug) {
+
+        if (!slug) {
+            return null;
+        }
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+
+            return findNewsBySlug(
+                slug
+            );
+
+        }
+
+        try {
+
+            const result =
+                await client
+                    .from("news")
+                    .select(
+                        "*,categories(id,name,slug)"
+                    )
+                    .eq(
+                        "slug",
+                        String(slug)
+                            .trim()
+                            .toLowerCase()
+                    )
+                    .eq(
+                        "status",
+                        "published"
+                    )
+                    .maybeSingle();
+
+
+            if (
+                result.error ||
+                !result.data
+            ) {
+
+                return findNewsBySlug(
+                    slug
+                );
+
+            }
+
+            return normalizeNewsRow(
+                result.data
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Haber aranamadı:",
+                error
+            );
+
+            return findNewsBySlug(
+                slug
+            );
+
+        }
 
     }
 
@@ -472,24 +1109,576 @@
             return "haber-detay.html";
         }
 
-        /*
-         * GitHub Pages uyumlu güvenli URL.
-         *
-         * Şimdilik:
-         * haber-detay.html?slug=...
-         *
-         * Daha sonra gerçek rewrite sistemine
-         * geçtiğimizde:
-         *
-         * /spor/haber-basligi
-         *
-         * şekline çevireceğiz.
-         */
-
         return (
             "haber-detay.html?slug=" +
             encodeURIComponent(slug)
         );
+
+    }
+
+
+    /* =========================================================
+       SUPABASE HABERLERİ GETİR
+       ========================================================= */
+
+    async function fetchNewsFromSupabase(
+        options
+    ) {
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            return [];
+        }
+
+        const settings =
+            options || {};
+
+        try {
+
+            let query =
+                client
+                    .from("news")
+                    .select(
+                        "*,categories(id,name,slug)"
+                    );
+
+
+            if (
+                settings.includeAll !== true
+            ) {
+
+                query =
+                    query.eq(
+                        "status",
+                        "published"
+                    );
+
+            }
+
+
+            query =
+                query.order(
+                    "published_at",
+                    {
+                        ascending: false,
+                        nullsFirst: false
+                    }
+                );
+
+
+            const result =
+                await query;
+
+
+            if (result.error) {
+
+                console.error(
+                    "Supabase haberleri alınamadı:",
+                    result.error
+                );
+
+                return [];
+
+            }
+
+
+            return (
+                result.data || []
+            ).map(
+                normalizeNewsRow
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Haber listesi bağlantı hatası:",
+                error
+            );
+
+            return [];
+
+        }
+
+    }
+
+
+    async function refreshNewsFromSupabase(
+        options
+    ) {
+
+        const cloudNews =
+            await fetchNewsFromSupabase(
+                options
+            );
+
+
+        if (!cloudNews.length) {
+
+            /*
+             * Veritabanında gerçekten hiç haber
+             * yoksa boş listeyi cache'lemek yerine
+             * mevcut local veriyi koruyoruz.
+             */
+
+            return [];
+
+        }
+
+
+        writeStorage(
+            NEWS_KEY,
+            cloudNews
+        );
+
+
+        initNewsCounters();
+
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "akcaabat:news-updated",
+                {
+                    detail: {
+                        news: cloudNews
+                    }
+                }
+            )
+        );
+
+
+        return cloudNews;
+
+    }
+
+
+    function startCloudNewsRefresh() {
+
+        if (cloudRefreshStarted) {
+            return;
+        }
+
+        if (!isCloudConfigured()) {
+            return;
+        }
+
+        cloudRefreshStarted =
+            true;
+
+
+        refreshNewsFromSupabase()
+            .catch(
+                function (error) {
+
+                    console.warn(
+                        "Arka plan haber yenilemesi başarısız:",
+                        error
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =========================================================
+       SUPABASE HABER KAYDET
+       ========================================================= */
+
+    async function upsertNewsToSupabase(
+        item
+    ) {
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+
+            return {
+                success: false,
+                reason: "supabase_unavailable"
+            };
+
+        }
+
+
+        const user =
+            await getCurrentUser();
+
+        if (!user) {
+
+            return {
+                success: false,
+                reason: "not_authenticated"
+            };
+
+        }
+
+
+        try {
+
+            const categoryId =
+                item.categoryId ||
+                await findCategoryId(
+                    getCategory(item)
+                );
+
+
+            const row =
+                newsToDatabase(
+                    item,
+                    categoryId
+                );
+
+
+            if (!row) {
+
+                return {
+                    success: false,
+                    reason: "invalid_data"
+                };
+
+            }
+
+
+            row.author_id =
+                user.id;
+
+
+            if (!row.id) {
+                delete row.id;
+            }
+
+
+            const result =
+                await client
+                    .from("news")
+                    .upsert(
+                        row,
+                        {
+                            onConflict:
+                                "id"
+                        }
+                    )
+                    .select(
+                        "*,categories(id,name,slug)"
+                    )
+                    .single();
+
+
+            if (result.error) {
+
+                console.error(
+                    "Supabase haber kayıt hatası:",
+                    result.error
+                );
+
+                return {
+                    success: false,
+                    reason: "database_error",
+                    error: result.error
+                };
+
+            }
+
+
+            const normalized =
+                normalizeNewsRow(
+                    result.data
+                );
+
+
+            updateLocalNewsCache(
+                normalized
+            );
+
+
+            return {
+                success: true,
+                data: normalized
+            };
+
+        } catch (error) {
+
+            console.error(
+                "Supabase haber kayıt istisnası:",
+                error
+            );
+
+            return {
+                success: false,
+                reason: "exception",
+                error: error
+            };
+
+        }
+
+    }
+
+
+    function updateLocalNewsCache(
+        item
+    ) {
+
+        if (!item) {
+            return;
+        }
+
+        const news =
+            readStorage(
+                NEWS_KEY
+            );
+
+
+        const index =
+            news.findIndex(
+                function (existing) {
+
+                    return (
+                        String(
+                            getNewsId(existing)
+                        ) ===
+                        String(
+                            getNewsId(item)
+                        )
+                    );
+
+                }
+            );
+
+
+        if (index >= 0) {
+
+            news[index] =
+                item;
+
+        } else {
+
+            news.unshift(
+                item
+            );
+
+        }
+
+
+        writeStorage(
+            NEWS_KEY,
+            news
+        );
+
+
+        initNewsCounters();
+
+    }
+
+
+    /* =========================================================
+       TASLAK SUPABASE
+       ========================================================= */
+
+    async function saveDraftToSupabase(
+        item
+    ) {
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+
+            return {
+                success: false,
+                reason: "supabase_unavailable"
+            };
+
+        }
+
+
+        const user =
+            await getCurrentUser();
+
+        if (!user) {
+
+            return {
+                success: false,
+                reason: "not_authenticated"
+            };
+
+        }
+
+
+        try {
+
+            const categoryId =
+                item.categoryId ||
+                await findCategoryId(
+                    getCategory(item)
+                );
+
+
+            const row =
+                newsToDatabase(
+                    item,
+                    categoryId
+                );
+
+
+            if (!row) {
+
+                return {
+                    success: false
+                };
+
+            }
+
+
+            row.author_id =
+                user.id;
+
+            row.status =
+                "draft";
+
+            row.published_at =
+                null;
+
+
+            if (!row.id) {
+                delete row.id;
+            }
+
+
+            const result =
+                await client
+                    .from("news")
+                    .upsert(
+                        row,
+                        {
+                            onConflict:
+                                "id"
+                        }
+                    )
+                    .select(
+                        "*,categories(id,name,slug)"
+                    )
+                    .single();
+
+
+            if (result.error) {
+
+                console.error(
+                    "Supabase taslak kayıt hatası:",
+                    result.error
+                );
+
+                return {
+                    success: false,
+                    error: result.error
+                };
+
+            }
+
+
+            return {
+                success: true,
+                data:
+                    normalizeNewsRow(
+                        result.data
+                    )
+            };
+
+        } catch (error) {
+
+            console.error(
+                "Supabase taslak istisnası:",
+                error
+            );
+
+            return {
+                success: false,
+                error: error
+            };
+
+        }
+
+    }
+
+
+    /* =========================================================
+       HABER GÖRÜNTÜLENME SAYISI
+       ========================================================= */
+
+    async function incrementNewsViews(
+        id
+    ) {
+
+        if (!id) {
+            return false;
+        }
+
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            return false;
+        }
+
+
+        try {
+
+            const current =
+                await client
+                    .from("news")
+                    .select(
+                        "views"
+                    )
+                    .eq(
+                        "id",
+                        id
+                    )
+                    .maybeSingle();
+
+
+            if (
+                current.error ||
+                !current.data
+            ) {
+                return false;
+            }
+
+
+            const nextViews =
+                Number(
+                    current.data.views
+                ) + 1;
+
+
+            const result =
+                await client
+                    .from("news")
+                    .update(
+                        {
+                            views:
+                                nextViews
+                        }
+                    )
+                    .eq(
+                        "id",
+                        id
+                    );
+
+
+            return !result.error;
+
+        } catch (error) {
+
+            console.error(
+                "Görüntülenme güncellenemedi:",
+                error
+            );
+
+            return false;
+
+        }
 
     }
 
@@ -511,6 +1700,8 @@
 
         readNews:
             function () {
+
+                startCloudNewsRefresh();
 
                 return readStorage(
                     NEWS_KEY
@@ -562,6 +1753,9 @@
         findNewsBySlug:
             findNewsBySlug,
 
+        findNewsBySlugAsync:
+            findNewsBySlugAsync,
+
         getNewsUrl:
             getNewsUrl,
 
@@ -584,7 +1778,52 @@
             getViews,
 
         getNewsId:
-            getNewsId
+            getNewsId,
+
+        getDate:
+            getDate,
+
+        formatDate:
+            formatDate,
+
+        formatDateTime:
+            formatDateTime,
+
+        isBreaking:
+            isBreaking,
+
+        slugify:
+            slugify,
+
+        getSupabaseClient:
+            getSupabaseClient,
+
+        isCloudConfigured:
+            isCloudConfigured,
+
+        getCurrentUser:
+            getCurrentUser,
+
+        isAuthenticated:
+            isAuthenticated,
+
+        loadCategories:
+            loadCategories,
+
+        fetchNewsFromSupabase:
+            fetchNewsFromSupabase,
+
+        refreshNewsFromSupabase:
+            refreshNewsFromSupabase,
+
+        upsertNewsToSupabase:
+            upsertNewsToSupabase,
+
+        saveDraftToSupabase:
+            saveDraftToSupabase,
+
+        incrementNewsViews:
+            incrementNewsViews
 
     };
 
@@ -663,6 +1902,7 @@
             return;
         }
 
+
         input.addEventListener(
             "change",
             function () {
@@ -671,9 +1911,11 @@
                     input.files &&
                     input.files[0];
 
+
                 if (!file) {
                     return;
                 }
+
 
                 if (
                     !file.type.startsWith(
@@ -691,8 +1933,10 @@
 
                 }
 
+
                 const reader =
                     new FileReader();
+
 
                 reader.onload =
                     function (event) {
@@ -704,6 +1948,7 @@
                             "block";
 
                     };
+
 
                 reader.readAsDataURL(
                     file
@@ -997,6 +2242,7 @@
                 return FALLBACK_IMAGE;
             }
 
+
             if (
                 imageInput.type ===
                 "file"
@@ -1006,6 +2252,7 @@
                     document.querySelector(
                         "[data-image-preview]"
                     );
+
 
                 if (
                     preview &&
@@ -1019,9 +2266,11 @@
 
                 }
 
+
                 return FALLBACK_IMAGE;
 
             }
+
 
             return (
                 imageInput.value ||
@@ -1078,14 +2327,17 @@
             const editId =
                 getEditId();
 
+
             if (!editId) {
                 return null;
             }
+
 
             const news =
                 readStorage(
                     NEWS_KEY
                 );
+
 
             return (
                 news.find(
@@ -1150,13 +2402,6 @@
                     NEWS_KEY
                 );
 
-
-            /*
-             * Mevcut haber düzenleniyorsa
-             * eski slug'ı korumuyoruz.
-             *
-             * Başlık değişirse URL de değişsin.
-             */
 
             const slug =
                 createUniqueSlug(
@@ -1326,29 +2571,12 @@
 
 
         /* -----------------------------------------------------
-           YAYINLA
+           LOCAL HABER KAYDET
            ----------------------------------------------------- */
 
-        function savePublishedNews() {
-
-            const existing =
-                findExistingNews();
-
-            const data =
-                collectData(
-                    existing,
-                    "published"
-                );
-
-
-            if (
-                !validateData(data)
-            ) {
-
-                return false;
-
-            }
-
+        function saveLocalPublishedNews(
+            data
+        ) {
 
             const news =
                 readStorage(
@@ -1390,12 +2618,52 @@
             }
 
 
+            return writeStorage(
+                NEWS_KEY,
+                news
+            );
+
+        }
+
+
+        /* -----------------------------------------------------
+           YAYINLA
+           ----------------------------------------------------- */
+
+        async function savePublishedNews() {
+
+            const existing =
+                findExistingNews();
+
+
+            const data =
+                collectData(
+                    existing,
+                    "published"
+                );
+
+
             if (
-                !writeStorage(
-                    NEWS_KEY,
-                    news
-                )
+                !validateData(data)
             ) {
+
+                return false;
+
+            }
+
+
+            /*
+             * Önce local cache.
+             * Böylece mevcut sayfalar bozulmaz.
+             */
+
+            const localSaved =
+                saveLocalPublishedNews(
+                    data
+                );
+
+
+            if (!localSaved) {
 
                 alert(
                     "Haber kaydedilemedi. Tarayıcı depolama alanını kontrol et."
@@ -1411,6 +2679,42 @@
             );
 
 
+            /*
+             * Supabase'e giriş yapılmışsa
+             * gerçek veritabanına da gönder.
+             */
+
+            if (isCloudConfigured()) {
+
+                const cloud =
+                    await upsertNewsToSupabase(
+                        data
+                    );
+
+
+                if (
+                    cloud.success &&
+                    cloud.data
+                ) {
+
+                    updateLocalNewsCache(
+                        cloud.data
+                    );
+
+                } else if (
+                    cloud.reason ===
+                    "not_authenticated"
+                ) {
+
+                    console.warn(
+                        "Supabase: Admin girişi yapılmadığı için haber yalnızca yerel kaydedildi."
+                    );
+
+                }
+
+            }
+
+
             return true;
 
         }
@@ -1420,7 +2724,7 @@
            TASLAK KAYDET
            ----------------------------------------------------- */
 
-        function saveDraft() {
+        async function saveDraft() {
 
             const existing =
                 findExistingNews();
@@ -1545,7 +2849,10 @@
                         : nowIso(),
 
                 updatedAt:
-                    nowIso()
+                    nowIso(),
+
+                status:
+                    "draft"
 
             };
 
@@ -1595,6 +2902,31 @@
                 );
 
                 return false;
+
+            }
+
+
+            /*
+             * Supabase taslak kaydı.
+             */
+
+            if (isCloudConfigured()) {
+
+                const cloud =
+                    await saveDraftToSupabase(
+                        draft
+                    );
+
+
+                if (
+                    cloud.success
+                ) {
+
+                    console.log(
+                        "Taslak Supabase'e kaydedildi."
+                    );
+
+                }
 
             }
 
@@ -1654,13 +2986,13 @@
 
             publishButton.addEventListener(
                 "click",
-                function (event) {
+                async function (event) {
 
                     event.preventDefault();
 
 
                     const saved =
-                        savePublishedNews();
+                        await savePublishedNews();
 
 
                     if (!saved) {
@@ -1690,11 +3022,11 @@
 
             draftButton.addEventListener(
                 "click",
-                function (event) {
+                async function (event) {
 
                     event.preventDefault();
 
-                    saveDraft();
+                    await saveDraft();
 
                 }
             );
@@ -1825,7 +3157,8 @@
         }
 
 
-        let timer = null;
+        let timer =
+            null;
 
 
         function saveTemporary() {
@@ -2533,6 +3866,48 @@
 
 
     /* =========================================================
+       SUPABASE OTOMATİK BAŞLATMA
+       ========================================================= */
+
+    function initSupabaseBackground() {
+
+        if (!isCloudConfigured()) {
+            return;
+        }
+
+
+        /*
+         * Supabase kütüphanesini arka planda yükle.
+         * Sayfanın açılmasını bekletmez.
+         */
+
+        getSupabaseClient()
+            .then(
+                function (client) {
+
+                    if (!client) {
+                        return;
+                    }
+
+                    startCloudNewsRefresh();
+
+                }
+            )
+            .catch(
+                function (error) {
+
+                    console.warn(
+                        "Supabase arka plan başlatma hatası:",
+                        error
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =========================================================
        BAŞLANGIÇ
        ========================================================= */
 
@@ -2561,6 +3936,8 @@
         initNewsCounters();
 
         initEscapeKey();
+
+        initSupabaseBackground();
 
     }
 
