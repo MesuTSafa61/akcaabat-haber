@@ -1,62 +1,57 @@
+/* =========================================================
+   AKÇAABAT HABER
+   SUPABASE - AUTH SERVİSİ
+   ========================================================= */
+
 (function () {
     "use strict";
 
-    const SUPABASE_URL =
-        "https://wokgvwffbootbhqxfttm.supabase.co";
-
-    const SUPABASE_KEY =
-        window.SUPABASE_PUBLISHABLE_KEY || "";
-
     if (!window.supabase) {
         console.error(
-            "Supabase JS yüklenmedi."
+            "Supabase kütüphanesi yüklenmedi."
         );
         return;
     }
 
-    if (!SUPABASE_KEY) {
+    if (!window.AKCAABAT_SUPABASE) {
         console.error(
-            "Supabase publishable key bulunamadı."
+            "supabase-config.js yüklenmedi."
         );
         return;
     }
+
+    const config =
+        window.AKCAABAT_SUPABASE;
 
     const client =
         window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
+            config.url,
+            config.key
         );
 
     async function getSession() {
+        const result =
+            await client.auth.getSession();
 
-        const {
-            data,
-            error
-        } = await client.auth.getSession();
-
-        if (error) {
-            throw error;
+        if (result.error) {
+            throw result.error;
         }
 
-        return data.session || null;
+        return result.data.session;
     }
 
     async function getCurrentUser() {
+        const result =
+            await client.auth.getUser();
 
-        const {
-            data,
-            error
-        } = await client.auth.getUser();
-
-        if (error) {
+        if (result.error) {
             return null;
         }
 
-        return data.user || null;
+        return result.data.user || null;
     }
 
     async function getCurrentProfile() {
-
         const user =
             await getCurrentUser();
 
@@ -64,29 +59,23 @@
             return null;
         }
 
-        const {
-            data,
-            error
-        } = await client
-            .from("profiles")
-            .select(
-                "id, display_name, role, created_at, updated_at"
-            )
-            .eq(
-                "id",
-                user.id
-            )
-            .maybeSingle();
+        const result =
+            await client
+                .from("profiles")
+                .select(
+                    "id, display_name, role"
+                )
+                .eq("id", user.id)
+                .maybeSingle();
 
-        if (error) {
-            throw error;
+        if (result.error) {
+            throw result.error;
         }
 
-        return data;
+        return result.data;
     }
 
     async function isStaff() {
-
         const profile =
             await getCurrentProfile();
 
@@ -101,20 +90,19 @@
     }
 
     async function isAdmin() {
-
         const profile =
             await getCurrentProfile();
 
-        return !!(
-            profile &&
-            profile.role === "admin"
-        );
+        if (!profile) {
+            return false;
+        }
+
+        return profile.role === "admin";
     }
 
     async function requireStaff(
         redirect = "admin-giris.html"
     ) {
-
         const session =
             await getSession();
 
@@ -122,28 +110,27 @@
             window.location.href =
                 redirect;
 
-            return null;
+            return false;
         }
 
-        const allowed =
+        const staff =
             await isStaff();
 
-        if (!allowed) {
+        if (!staff) {
             await signOut();
 
             window.location.href =
                 redirect;
 
-            return null;
+            return false;
         }
 
-        return session;
+        return true;
     }
 
     async function requireAdmin(
         redirect = "admin-giris.html"
     ) {
-
         const session =
             await getSession();
 
@@ -151,72 +138,50 @@
             window.location.href =
                 redirect;
 
-            return null;
+            return false;
         }
 
-        const allowed =
+        const admin =
             await isAdmin();
 
-        if (!allowed) {
+        if (!admin) {
+            await signOut();
+
             window.location.href =
                 redirect;
 
-            return null;
+            return false;
         }
 
-        return session;
+        return true;
     }
 
     async function signIn(
         email,
         password
     ) {
+        const result =
+            await client.auth.signInWithPassword({
+                email:
+                    String(email || "")
+                        .trim(),
+                password:
+                    String(password || "")
+            });
 
-        email =
-            String(
-                email || ""
-            ).trim();
-
-        password =
-            String(
-                password || ""
-            );
-
-        if (!email) {
-            throw new Error(
-                "E-posta adresi gerekli."
-            );
+        if (result.error) {
+            throw result.error;
         }
 
-        if (!password) {
-            throw new Error(
-                "Şifre gerekli."
-            );
-        }
-
-        const {
-            data,
-            error
-        } = await client.auth.signInWithPassword({
-            email,
-            password
-        });
-
-        if (error) {
-            throw error;
-        }
-
-        return data;
+        return result.data;
     }
 
     async function signOut() {
+        const result =
+            await client.auth.signOut();
 
-        const {
-            error
-        } = await client.auth.signOut();
-
-        if (error) {
-            throw error;
+        if (result.error) {
+            throw result.error;
         }
 
         return true;
@@ -225,16 +190,27 @@
     function onAuthStateChange(
         callback
     ) {
-
         return client.auth.onAuthStateChange(
-            callback
+            function (
+                event,
+                session
+            ) {
+                if (
+                    typeof callback ===
+                    "function"
+                ) {
+                    callback(
+                        event,
+                        session
+                    );
+                }
+            }
         );
     }
 
     async function redirectIfAuthenticated(
         target = "admin.html"
     ) {
-
         const session =
             await getSession();
 
@@ -242,10 +218,10 @@
             return false;
         }
 
-        const allowed =
+        const staff =
             await isStaff();
 
-        if (!allowed) {
+        if (!staff) {
             await signOut();
             return false;
         }
