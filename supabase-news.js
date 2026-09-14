@@ -1,89 +1,99 @@
 /* =========================================================
    AKÇAABAT HABER
-   SUPABASE HABER SERVİSİ
+   SUPABASE - HABER SERVİSİ
    ========================================================= */
 
 (function () {
     "use strict";
 
-    const SUPABASE_URL =
-        "https://wokgvwffbootbhqxfttm.supabase.co";
-
-    /*
-     * BURAYA SUPABASE PUBLISHABLE / ANON KEY GELECEK.
-     * Service role / secret key kesinlikle kullanılmayacak.
-     */
-    const SUPABASE_KEY =
-        window.SUPABASE_PUBLISHABLE_KEY || "";
-
     if (!window.supabase) {
-        console.error(
-            "Supabase JS yüklenmedi."
-        );
+        console.error("Supabase kütüphanesi yüklenmedi.");
         return;
     }
 
-    if (!SUPABASE_KEY) {
-        console.error(
-            "Supabase publishable key bulunamadı."
-        );
+    if (!window.AKCAABAT_SUPABASE) {
+        console.error("supabase-config.js yüklenmedi.");
         return;
     }
 
-    const client =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
+    const config = window.AKCAABAT_SUPABASE;
+
+    const client = window.supabase.createClient(
+        config.url,
+        config.key
+    );
+
+    function cleanData(data) {
+        return data || {};
+    }
 
     async function getNews(options = {}) {
-
         let query = client
             .from("news")
             .select(`
-                *,
+                id,
+                title,
+                slug,
+                summary,
+                content,
+                category_id,
+                image_url,
+                status,
+                is_breaking,
+                views,
+                author_id,
+                published_at,
+                created_at,
+                updated_at,
                 categories (
                     id,
                     name,
                     slug
                 )
-            `)
-            .order(
-                "published_at",
-                {
-                    ascending: false,
-                    nullsFirst: false
-                }
-            );
+            `);
 
         if (options.status) {
-            query = query.eq(
-                "status",
-                options.status
-            );
+            query = query.eq("status", options.status);
         }
 
-        if (options.categoryId) {
-            query = query.eq(
-                "category_id",
-                options.categoryId
-            );
+        if (options.category_id) {
+            query = query.eq("category_id", options.category_id);
         }
 
-        if (
-            Number.isInteger(
-                options.limit
-            )
-        ) {
-            query = query.limit(
-                options.limit
-            );
+        if (options.category) {
+            query = query.eq("categories.slug", options.category);
         }
 
-        const { data, error } =
-            await query;
+        if (options.breaking === true) {
+            query = query.eq("is_breaking", true);
+        }
+
+        if (options.search) {
+            const search = String(options.search).trim();
+
+            if (search) {
+                query = query.or(
+                    `title.ilike.%${search}%,summary.ilike.%${search}%`
+                );
+            }
+        }
+
+        query = query.order(
+            options.orderBy || "created_at",
+            {
+                ascending:
+                    options.ascending === true
+            }
+        );
+
+        if (options.limit) {
+            query = query.limit(Number(options.limit));
+        }
+
+        const { data, error } = await query;
 
         if (error) {
+            console.error("Haberler alınamadı:", error);
             throw error;
         }
 
@@ -91,26 +101,38 @@
     }
 
     async function getNewsById(id) {
-
         if (!id) {
-            return null;
+            throw new Error("Haber ID gerekli.");
         }
 
-        const { data, error } =
-            await client
-                .from("news")
-                .select(`
-                    *,
-                    categories (
-                        id,
-                        name,
-                        slug
-                    )
-                `)
-                .eq("id", id)
-                .maybeSingle();
+        const { data, error } = await client
+            .from("news")
+            .select(`
+                id,
+                title,
+                slug,
+                summary,
+                content,
+                category_id,
+                image_url,
+                status,
+                is_breaking,
+                views,
+                author_id,
+                published_at,
+                created_at,
+                updated_at,
+                categories (
+                    id,
+                    name,
+                    slug
+                )
+            `)
+            .eq("id", id)
+            .maybeSingle();
 
         if (error) {
+            console.error("Haber alınamadı:", error);
             throw error;
         }
 
@@ -118,26 +140,38 @@
     }
 
     async function getNewsBySlug(slug) {
-
         if (!slug) {
-            return null;
+            throw new Error("Haber slug gerekli.");
         }
 
-        const { data, error } =
-            await client
-                .from("news")
-                .select(`
-                    *,
-                    categories (
-                        id,
-                        name,
-                        slug
-                    )
-                `)
-                .eq("slug", slug)
-                .maybeSingle();
+        const { data, error } = await client
+            .from("news")
+            .select(`
+                id,
+                title,
+                slug,
+                summary,
+                content,
+                category_id,
+                image_url,
+                status,
+                is_breaking,
+                views,
+                author_id,
+                published_at,
+                created_at,
+                updated_at,
+                categories (
+                    id,
+                    name,
+                    slug
+                )
+            `)
+            .eq("slug", slug)
+            .maybeSingle();
 
         if (error) {
+            console.error("Haber alınamadı:", error);
             throw error;
         }
 
@@ -145,124 +179,38 @@
     }
 
     async function createNews(news) {
+        const payload = cleanData(news);
 
-        const payload = {
-            title:
-                String(
-                    news.title || ""
-                ).trim(),
-
-            slug:
-                String(
-                    news.slug || ""
-                ).trim(),
-
-            summary:
-                news.summary || null,
-
-            content:
-                news.content || "",
-
-            category_id:
-                news.category_id || null,
-
-            image_url:
-                news.image_url || null,
-
-            status:
-                news.status || "draft",
-
-            is_breaking:
-                !!news.is_breaking,
-
-            views:
-                0,
-
-            author_id:
-                news.author_id || null,
-
-            published_at:
-                news.status === "published"
-                    ? (
-                        news.published_at ||
-                        new Date().toISOString()
-                    )
-                    : null
-        };
-
-        const { data, error } =
-            await client
-                .from("news")
-                .insert(payload)
-                .select()
-                .single();
+        const { data, error } = await client
+            .from("news")
+            .insert(payload)
+            .select()
+            .single();
 
         if (error) {
+            console.error("Haber oluşturulamadı:", error);
             throw error;
         }
 
         return data;
     }
 
-    async function updateNews(
-        id,
-        news
-    ) {
-
+    async function updateNews(id, news) {
         if (!id) {
-            throw new Error(
-                "Haber ID gerekli."
-            );
+            throw new Error("Haber ID gerekli.");
         }
 
-        const payload = {
-            title:
-                String(
-                    news.title || ""
-                ).trim(),
+        const payload = cleanData(news);
 
-            slug:
-                String(
-                    news.slug || ""
-                ).trim(),
-
-            summary:
-                news.summary || null,
-
-            content:
-                news.content || "",
-
-            category_id:
-                news.category_id || null,
-
-            image_url:
-                news.image_url || null,
-
-            status:
-                news.status || "draft",
-
-            is_breaking:
-                !!news.is_breaking
-        };
-
-        if (
-            news.status ===
-            "published"
-        ) {
-            payload.published_at =
-                news.published_at ||
-                new Date().toISOString();
-        }
-
-        const { data, error } =
-            await client
-                .from("news")
-                .update(payload)
-                .eq("id", id)
-                .select()
-                .single();
+        const { data, error } = await client
+            .from("news")
+            .update(payload)
+            .eq("id", id)
+            .select()
+            .single();
 
         if (error) {
+            console.error("Haber güncellenemedi:", error);
             throw error;
         }
 
@@ -270,29 +218,22 @@
     }
 
     async function publishNews(id) {
-
         if (!id) {
-            throw new Error(
-                "Haber ID gerekli."
-            );
+            throw new Error("Haber ID gerekli.");
         }
 
-        const { data, error } =
-            await client
-                .from("news")
-                .update({
-                    status:
-                        "published",
-
-                    published_at:
-                        new Date()
-                            .toISOString()
-                })
-                .eq("id", id)
-                .select()
-                .single();
+        const { data, error } = await client
+            .from("news")
+            .update({
+                status: "published",
+                published_at: new Date().toISOString()
+            })
+            .eq("id", id)
+            .select()
+            .single();
 
         if (error) {
+            console.error("Haber yayınlanamadı:", error);
             throw error;
         }
 
@@ -300,25 +241,21 @@
     }
 
     async function archiveNews(id) {
-
         if (!id) {
-            throw new Error(
-                "Haber ID gerekli."
-            );
+            throw new Error("Haber ID gerekli.");
         }
 
-        const { data, error } =
-            await client
-                .from("news")
-                .update({
-                    status:
-                        "archived"
-                })
-                .eq("id", id)
-                .select()
-                .single();
+        const { data, error } = await client
+            .from("news")
+            .update({
+                status: "archived"
+            })
+            .eq("id", id)
+            .select()
+            .single();
 
         if (error) {
+            console.error("Haber arşivlenemedi:", error);
             throw error;
         }
 
@@ -326,20 +263,17 @@
     }
 
     async function deleteNews(id) {
-
         if (!id) {
-            throw new Error(
-                "Haber ID gerekli."
-            );
+            throw new Error("Haber ID gerekli.");
         }
 
-        const { error } =
-            await client
-                .from("news")
-                .delete()
-                .eq("id", id);
+        const { error } = await client
+            .from("news")
+            .delete()
+            .eq("id", id);
 
         if (error) {
+            console.error("Haber silinemedi:", error);
             throw error;
         }
 
@@ -347,28 +281,23 @@
     }
 
     async function incrementViews(id) {
-
         if (!id) {
-            return null;
+            throw new Error("Haber ID gerekli.");
         }
 
-        const { data, error } =
-            await client
-                .rpc(
-                    "increment_news_views",
-                    {
-                        news_id:
-                            id
-                    }
-                );
+        const { data, error } = await client.rpc(
+            "increment_news_views",
+            {
+                news_id: id
+            }
+        );
 
         if (error) {
             console.error(
-                "Görüntülenme artırma hatası:",
+                "Haber görüntülenme sayısı artırılamadı:",
                 error
             );
-
-            return null;
+            throw error;
         }
 
         return data;
