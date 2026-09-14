@@ -1462,5 +1462,274 @@ start
 <script src="supabase-categories.js"></script>
 <script src="admin-supabase.js"></script>
 
+<script>
+(function () {
+    "use strict";
+
+    async function startAdmin() {
+        const authScreen =
+            document.getElementById("authScreen");
+
+        const adminApp =
+            document.getElementById("adminApp");
+
+        try {
+            if (!window.AkcaabatAdminData) {
+                throw new Error(
+                    "Admin veri servisi yüklenemedi."
+                );
+            }
+
+            const access =
+                await window.AkcaabatAdminData.checkAccess();
+
+            if (!access) {
+                return;
+            }
+
+            const auth =
+                window.AkcaabatAuth;
+
+            const user =
+                await auth.getCurrentUser();
+
+            const profile =
+                await auth.getCurrentProfile();
+
+            if (!user || !profile) {
+                throw new Error(
+                    "Yönetici profili bulunamadı."
+                );
+            }
+
+            window.AkcaabatAdminUser = user;
+            window.AkcaabatAdminProfile = profile;
+
+            if (authScreen) {
+                authScreen.style.display = "none";
+            }
+
+            if (adminApp) {
+                adminApp.style.display = "";
+            }
+
+            const news =
+                await window.AkcaabatAdminData
+                    .getDashboardNews();
+
+            const categories =
+                await window.AkcaabatAdminData
+                    .getDashboardCategories();
+
+            window.adminNews = news;
+            window.adminCategories = categories;
+
+            renderAdminData(
+                news,
+                categories,
+                profile
+            );
+
+        } catch (error) {
+            console.error(
+                "Admin panel başlatılamadı:",
+                error
+            );
+
+            if (authScreen) {
+                authScreen.style.display = "flex";
+            }
+
+            if (adminApp) {
+                adminApp.style.display = "none";
+            }
+
+            const message =
+                error && error.message
+                    ? error.message
+                    : "Yönetim paneli yüklenemedi.";
+
+            const errorBox =
+                document.getElementById(
+                    "authError"
+                );
+
+            if (errorBox) {
+                errorBox.textContent = message;
+                errorBox.style.display = "block";
+            }
+        }
+    }
+
+    function renderAdminData(
+        news,
+        categories,
+        profile
+    ) {
+        /*
+         * Mevcut admin tasarımındaki
+         * render fonksiyonları varsa
+         * onları kullan.
+         */
+
+        if (
+            typeof window.renderDashboard ===
+            "function"
+        ) {
+            window.renderDashboard(
+                news,
+                categories,
+                profile
+            );
+            return;
+        }
+
+        updateBasicStats(news);
+
+        if (
+            typeof window.renderLatestNews ===
+            "function"
+        ) {
+            window.renderLatestNews(news);
+        }
+
+        if (
+            typeof window.renderDrafts ===
+            "function"
+        ) {
+            window.renderDrafts(news);
+        }
+
+        if (
+            typeof window.renderCategories ===
+            "function"
+        ) {
+            window.renderCategories(
+                news,
+                categories
+            );
+        }
+
+        if (
+            typeof window.renderPopularNews ===
+            "function"
+        ) {
+            window.renderPopularNews(news);
+        }
+    }
+
+    function updateBasicStats(news) {
+        const list =
+            Array.isArray(news)
+                ? news
+                : [];
+
+        const published =
+            list.filter(function (item) {
+                return item.status === "published";
+            }).length;
+
+        const drafts =
+            list.filter(function (item) {
+                return item.status === "draft";
+            }).length;
+
+        const archived =
+            list.filter(function (item) {
+                return item.status === "archived";
+            }).length;
+
+        const views =
+            list.reduce(function (
+                total,
+                item
+            ) {
+                return total +
+                    Number(item.views || 0);
+            }, 0);
+
+        setStat(
+            [
+                "totalNews",
+                "newsCount",
+                "statNews",
+                "total-news"
+            ],
+            list.length
+        );
+
+        setStat(
+            [
+                "publishedNews",
+                "publishedCount",
+                "statPublished",
+                "published-news"
+            ],
+            published
+        );
+
+        setStat(
+            [
+                "draftNews",
+                "draftCount",
+                "statDraft",
+                "draft-news"
+            ],
+            drafts
+        );
+
+        setStat(
+            [
+                "totalViews",
+                "viewsCount",
+                "statViews",
+                "total-views"
+            ],
+            views
+        );
+
+        setStat(
+            [
+                "archivedNews",
+                "archivedCount",
+                "statArchived",
+                "archived-news"
+            ],
+            archived
+        );
+    }
+
+    function setStat(ids, value) {
+        ids.forEach(function (id) {
+            const element =
+                document.getElementById(id);
+
+            if (element) {
+                element.textContent =
+                    Number(value).toLocaleString(
+                        "tr-TR"
+                    );
+            }
+        });
+    }
+
+    window.startAkcaabatAdmin =
+        startAdmin;
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            startAdmin
+        );
+    } else {
+        startAdmin();
+    }
+
+})();
+</script>
+
 </body>
 </html>
