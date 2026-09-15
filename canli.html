@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canlı Servisler | Akçaabat Haber</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <main>
+    <p><a href="index.html">← Ana sayfa</a></p>
+    <h1>Canlı Servisler</h1>
+    <section><h2>Akçaabat canlı kameralar</h2><div id="akcaabat-cameras">Kameralar yükleniyor…</div></section>
+    <section><h2>Trabzon canlı kameralar</h2><div id="trabzon-cameras">Kameralar yükleniyor…</div></section>
+    <section><h2>Trafik durumu</h2><p id="traffic-status">Trafik verisi yükleniyor…</p><div id="traffic-map"></div></section>
+  </main>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function () {
+    "use strict";
+    const safeHttps = (value) => {
+      try { const url = new URL(value); return url.protocol === "https:" ? url : null; } catch (_) { return null; }
+    };
+    const escape = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    })[char]);
+    function cameraCard(camera) {
+      const source = safeHttps(camera.source_url);
+      const embed = safeHttps(camera.embed_url);
+      const stream = safeHttps(camera.stream_url);
+      const wrapper = document.createElement("article");
+      wrapper.innerHTML = "<h3>" + escape(camera.name) + "</h3><p>" +
+        escape(camera.location || camera.district || camera.city) + "</p><p>Kaynak: </p>";
+      const sourceLink = document.createElement("a");
+      sourceLink.href = source.href; sourceLink.target = "_blank"; sourceLink.rel = "noopener noreferrer";
+      sourceLink.textContent = camera.source_name; wrapper.lastElementChild.appendChild(sourceLink);
+      if (embed && source && embed.hostname === source.hostname) {
+        const frame = document.createElement("iframe");
+        frame.src = embed.href; frame.title = camera.name; frame.loading = "lazy";
+        frame.sandbox = "allow-scripts allow-same-origin allow-presentation";
+        frame.style.width = "100%"; frame.style.minHeight = "260px";
+        frame.addEventListener("error", () => { frame.replaceWith(document.createTextNode("Kaynak kullanılamıyor.")); });
+        wrapper.appendChild(frame);
+      } else if (stream && source && stream.hostname === source.hostname) {
+        const video = document.createElement("video");
+        video.src = stream.href; video.controls = true; video.muted = true; video.playsInline = true;
+        video.style.width = "100%"; video.addEventListener("error", () => { video.replaceWith(document.createTextNode("Kamera çevrimdışı.")); });
+        wrapper.appendChild(video);
+      } else {
+        wrapper.appendChild(document.createTextNode("Kaynak kullanılamıyor."));
+      }
+      return wrapper;
+    }
+    function renderCameras(cameras) {
+      ["Akçaabat", "Trabzon"].forEach((city) => {
+        const container = document.getElementById(city === "Akçaabat" ? "akcaabat-cameras" : "trabzon-cameras");
+        const items = cameras.filter((camera) => camera.city === city);
+        container.replaceChildren();
+        if (!items.length) { container.textContent = "Şu anda doğrulanmış aktif kamera bulunmuyor."; return; }
+        items.forEach((camera) => container.appendChild(cameraCard(camera)));
+      });
+    }
+    async function init() {
+      if (!window.supabase || !window.AKCAABAT_SUPABASE) throw new Error();
+      const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+      const [cameraResult, trafficResult] = await Promise.all([
+        client.from("live_cameras").select("*").eq("is_active", true).order("city").order("sort_order"),
+        client.from("live_service_settings").select("value").eq("key", "traffic").maybeSingle()
+      ]);
+      if (cameraResult.error) throw cameraResult.error;
+      renderCameras(cameraResult.data || []);
+      const config = trafficResult.data && trafficResult.data.value || {};
+      const status = document.getElementById("traffic-status");
+      const mapUrl = safeHttps(config.public_map_url);
+      if (!config.enabled || !mapUrl) { status.textContent = "Trafik verisine şu anda ulaşılamıyor."; return; }
+      status.textContent = "Sağlayıcı: " + String(config.provider || "bilinmiyor") + ". Son güncelleme sağlayıcı tarafından belirlenir.";
+      const frame = document.createElement("iframe");
+      frame.src = mapUrl.href; frame.title = "Akçaabat ve Trabzon trafik durumu"; frame.loading = "lazy";
+      frame.sandbox = "allow-scripts allow-same-origin"; frame.style.width = "100%"; frame.style.minHeight = "360px";
+      document.getElementById("traffic-map").appendChild(frame);
+    }
+    init().catch(() => {
+      ["akcaabat-cameras", "trabzon-cameras"].forEach((id) => document.getElementById(id).textContent = "Kamera verisine şu anda ulaşılamıyor.");
+      document.getElementById("traffic-status").textContent = "Trafik verisine şu anda ulaşılamıyor.";
+    });
+  })();
+  </script>
+</body>
+</html>
