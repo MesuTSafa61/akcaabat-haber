@@ -4,13 +4,17 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v1";
+const CACHE_NAME = "akcaabat-haber-v2";
 
 const STATIC_FILES = [
   "/",
   "/index.html",
   "/haberler.html",
   "/haber-detay.html",
+  "/offline.html",
+  "/style.css",
+  "/script.js",
+  "/supabase-config.js",
   "/favicon.svg",
   "/site.webmanifest"
 ];
@@ -72,7 +76,7 @@ self.addEventListener("fetch", event => {
         })
         .catch(() => {
           if (event.request.mode === "navigate") {
-            return caches.match("/index.html");
+            return caches.match("/offline.html");
           }
 
           return new Response(

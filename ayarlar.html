@@ -1533,13 +1533,12 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
+<script src="supabase-config.js"></script>
 <script src="script.js"></script>
 
 <script>
 (function () {
     "use strict";
-
-    const STORAGE_KEY = "akcaabat_ayarlar";
 
     const DEFAULT_SETTINGS = {
         siteTitle: "Akçaabat Haber",
@@ -1570,6 +1569,29 @@
     const $ = function (selector) {
         return document.querySelector(selector);
     };
+
+    let client = null;
+
+    async function requireEditor() {
+        client = client || await window.AkcaabatHaber.getSupabaseClient();
+        if (!client) {
+            throw new Error("Supabase bağlantısı kurulamadı.");
+        }
+        const userResult = await client.auth.getUser();
+        if (!userResult.data.user) {
+            window.location.href = "admin-giris.html";
+            return false;
+        }
+        const profileResult = await client.from("profiles")
+            .select("role").eq("id", userResult.data.user.id).maybeSingle();
+        if (profileResult.error || !profileResult.data ||
+            !["admin", "editor"].includes(profileResult.data.role)) {
+            await client.auth.signOut();
+            window.location.href = "admin-giris.html";
+            return false;
+        }
+        return true;
+    }
 
     function showToast(message, type) {
         const container = $("#toastContainer");
@@ -1610,17 +1632,28 @@
         }
     }
 
-    function getSettings() {
-        const stored = readJson(STORAGE_KEY, {});
-
-        return Object.assign({}, DEFAULT_SETTINGS, stored);
+    async function getSettings() {
+        if (!await requireEditor()) {
+            return null;
+        }
+        const result = await client.from("site_settings")
+            .select("value").eq("key", "site").maybeSingle();
+        if (result.error) {
+            throw result.error;
+        }
+        return Object.assign({}, DEFAULT_SETTINGS,
+            result.data && result.data.value ? result.data.value : {});
     }
 
-    function saveSettings(settings) {
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(settings)
-        );
+    async function saveSettings(settings) {
+        if (!await requireEditor()) {
+            return;
+        }
+        const result = await client.from("site_settings")
+            .upsert({ key: "site", value: settings });
+        if (result.error) {
+            throw result.error;
+        }
     }
 
     function setValue(id, value) {
@@ -1653,15 +1686,19 @@
         return element.value;
     }
 
-    function loadSettings() {
-        const settings = getSettings();
+    async function loadSettings() {
+        const settings = await getSettings();
+
+        if (!settings) {
+            return;
+        }
 
         Object.keys(DEFAULT_SETTINGS).forEach(function (key) {
             setValue(key, settings[key]);
         });
 
         updateSaveStatus("Ayarlar yüklendi.", true);
-        updateSystemStats();
+        await updateSystemStats();
     }
 
     function collectSettings() {
@@ -1690,7 +1727,7 @@
         }
     }
 
-    function saveAllSettings() {
+    async function saveAllSettings() {
         const settings = collectSettings();
 
         if (!settings.siteTitle.trim()) {
@@ -1698,7 +1735,14 @@
             return;
         }
 
-        saveSettings(settings);
+        try {
+            await saveSettings(settings);
+        } catch (error) {
+            console.error(error);
+            updateSaveStatus("Ayarlar kaydedilemedi.", false);
+            showToast("Ayarlar kaydedilemedi.", "error");
+            return;
+        }
 
         updateSaveStatus(
             "Ayarlar başarıyla kaydedildi.",
@@ -1711,7 +1755,7 @@
         );
     }
 
-    function resetSettings() {
+    async function resetSettings() {
         const confirmed = confirm(
             "Tüm site ayarları varsayılan değerlere döndürülsün mü?"
         );
@@ -1720,8 +1764,8 @@
             return;
         }
 
-        saveSettings(DEFAULT_SETTINGS);
-        loadSettings();
+        await saveSettings(DEFAULT_SETTINGS);
+        await loadSettings();
 
         showToast(
             "Ayarlar varsayılan değerlere döndürüldü.",
@@ -1769,7 +1813,7 @@
 
         const reader = new FileReader();
 
-        reader.onload = function (event) {
+        reader.onload = async function (event) {
             try {
                 const imported = JSON.parse(
                     event.target.result
@@ -1789,8 +1833,8 @@
                     imported
                 );
 
-                saveSettings(merged);
-                loadSettings();
+                await saveSettings(merged);
+                await loadSettings();
 
                 showToast(
                     "Ayarlar başarıyla içe aktarıldı.",
@@ -1815,42 +1859,31 @@
         reader.readAsText(file);
     }
 
-    function updateSystemStats() {
-        const news = readJson(
-            "akcaabat_haberler",
-            []
-        );
-
-        const drafts = readJson(
-            "akcaabat_taslaklar",
-            []
-        );
-
-        const comments = readJson(
-            "akcaabat_yorumlar",
-            []
-        );
+    async function updateSystemStats() {
+        client = client || await window.AkcaabatHaber.getSupabaseClient();
+        if (!client) {
+            return;
+        }
+        const results = await Promise.all([
+            client.from("news").select("id", { count: "exact", head: true }).eq("status", "published"),
+            client.from("news").select("id", { count: "exact", head: true }).eq("status", "draft"),
+            client.from("comments").select("id", { count: "exact", head: true }).eq("status", "pending")
+        ]);
 
         const newsCount = $("#newsCount");
         const draftCount = $("#draftCount");
         const commentCount = $("#commentCount");
 
         if (newsCount) {
-            newsCount.textContent = Array.isArray(news)
-                ? news.length
-                : 0;
+            newsCount.textContent = results[0].count || 0;
         }
 
         if (draftCount) {
-            draftCount.textContent = Array.isArray(drafts)
-                ? drafts.length
-                : 0;
+            draftCount.textContent = results[1].count || 0;
         }
 
         if (commentCount) {
-            commentCount.textContent = Array.isArray(comments)
-                ? comments.length
-                : 0;
+            commentCount.textContent = results[2].count || 0;
         }
     }
 
@@ -1923,14 +1956,21 @@
         if (saveButton) {
             saveButton.addEventListener(
                 "click",
-                saveAllSettings
+                function () {
+                    saveAllSettings();
+                }
             );
         }
 
         if (resetButton) {
             resetButton.addEventListener(
                 "click",
-                resetSettings
+                function () {
+                    resetSettings().catch(function (error) {
+                        console.error(error);
+                        showToast("Ayarlar sıfırlanamadı.", "error");
+                    });
+                }
             );
         }
 
@@ -1954,13 +1994,13 @@
         if (reloadButton) {
             reloadButton.addEventListener(
                 "click",
-                function () {
-                    loadSettings();
-
-                    showToast(
-                        "Ayarlar yeniden yüklendi.",
-                        "success"
-                    );
+                async function () {
+                    try {
+                        await loadSettings();
+                        showToast("Ayarlar yeniden yüklendi.", "success");
+                    } catch (error) {
+                        showToast("Ayarlar yenilenemedi.", "error");
+                    }
                 }
             );
         }
@@ -1998,8 +2038,13 @@
 
     document.addEventListener(
         "DOMContentLoaded",
-        function () {
-            loadSettings();
+        async function () {
+            try {
+                await loadSettings();
+            } catch (error) {
+                console.error(error);
+                showToast("Ayarlar yüklenemedi.", "error");
+            }
             setupSidebar();
             setupEvents();
             setupChangeTracking();

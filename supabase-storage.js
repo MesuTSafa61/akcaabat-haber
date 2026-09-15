@@ -104,7 +104,7 @@
                 .replace(
                     /[^a-zA-Z0-9_-]/g,
                     ""
-                );
+                ) || "news";
 
         const path =
             safeFolder +

@@ -1302,6 +1302,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="supabase-config.js"></script>
 <script src="script.js"></script>
 
 <script>
@@ -1309,10 +1310,9 @@
 
     "use strict";
 
-    const STORAGE_KEY = "akcaabat_yorumlar";
-
     let comments = [];
     let selectedCommentId = null;
+    let client = null;
 
     const $ = function (selector) {
         return document.querySelector(selector);
@@ -1331,19 +1331,6 @@
             return fallback;
 
         }
-
-    }
-
-    function createId() {
-
-        return (
-            "comment_" +
-            Date.now() +
-            "_" +
-            Math.random()
-                .toString(36)
-                .substring(2, 8)
-        );
 
     }
 
@@ -1408,7 +1395,7 @@
 
         return {
 
-            id: item.id || item.commentId || createId(),
+            id: item.id || item.commentId || "",
 
             author:
                 item.author ||
@@ -1430,6 +1417,7 @@
 
             newsTitle:
                 item.newsTitle ||
+                (item.news && item.news.title) ||
                 item.haberBasligi ||
                 item.title ||
                 "Haber",
@@ -1450,49 +1438,48 @@
                 item.createdAt ||
                 item.date ||
                 item.tarih ||
-                new Date().toISOString()
+                item.created_at || new Date().toISOString()
 
         };
 
     }
 
-    function loadComments() {
+    async function loadComments() {
+        client = await window.AkcaabatHaber.getSupabaseClient();
 
-        const raw = localStorage.getItem(STORAGE_KEY);
-
-        if (!raw) {
-
-            comments = [];
-
-            saveComments();
-
-            return;
-
+        if (!client) {
+            throw new Error("Supabase bağlantısı kurulamadı.");
         }
 
-        const parsed = safeParse(raw, []);
-
-        if (!Array.isArray(parsed)) {
-
-            comments = [];
-
+        const userResult = await client.auth.getUser();
+        if (!userResult.data.user) {
+            window.location.href = "admin-giris.html";
             return;
-
         }
 
-        comments = parsed.map(normalizeComment);
+        const profileResult = await client
+            .from("profiles")
+            .select("role")
+            .eq("id", userResult.data.user.id)
+            .maybeSingle();
 
-        saveComments();
+        if (profileResult.error || !profileResult.data ||
+            !["admin", "editor"].includes(profileResult.data.role)) {
+            await client.auth.signOut();
+            window.location.href = "admin-giris.html";
+            return;
+        }
 
-    }
+        const result = await client
+            .from("comments")
+            .select("id,name,email,content,status,created_at,news:news_id(title)")
+            .order("created_at", { ascending: false });
 
-    function saveComments() {
+        if (result.error) {
+            throw result.error;
+        }
 
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(comments)
-        );
-
+        comments = (result.data || []).map(normalizeComment);
     }
 
     function updateStats() {
@@ -1709,7 +1696,7 @@
 
     }
 
-    function approveComment(id) {
+    async function approveComment(id) {
 
         const comment = getComment(id);
 
@@ -1717,9 +1704,17 @@
             return;
         }
 
-        comment.status = "approved";
+        const result = await client
+            .from("comments")
+            .update({ status: "approved" })
+            .eq("id", id);
 
-        saveComments();
+        if (result.error) {
+            showToast("Yorum güncellenemedi.", "error");
+            return;
+        }
+
+        comment.status = "approved";
         renderComments();
 
         showToast(
@@ -1729,7 +1724,7 @@
 
     }
 
-    function rejectComment(id) {
+    async function rejectComment(id) {
 
         const comment = getComment(id);
 
@@ -1737,9 +1732,17 @@
             return;
         }
 
-        comment.status = "rejected";
+        const result = await client
+            .from("comments")
+            .update({ status: "rejected" })
+            .eq("id", id);
 
-        saveComments();
+        if (result.error) {
+            showToast("Yorum güncellenemedi.", "error");
+            return;
+        }
+
+        comment.status = "rejected";
         renderComments();
 
         showToast(
@@ -1802,7 +1805,7 @@
 
     }
 
-    function deleteComment() {
+    async function deleteComment() {
 
         if (!selectedCommentId) {
             return;
@@ -1815,11 +1818,19 @@
             return;
         }
 
+        const result = await client
+            .from("comments")
+            .delete()
+            .eq("id", selectedCommentId);
+
+        if (result.error) {
+            showToast("Yorum silinemedi.", "error");
+            return;
+        }
+
         comments = comments.filter(function (item) {
             return item.id !== selectedCommentId;
         });
-
-        saveComments();
 
         closeDeleteModal();
 
@@ -1832,7 +1843,7 @@
 
     }
 
-    function deleteAllRejected() {
+    async function deleteAllRejected() {
 
         const rejectedCount =
             comments.filter(function (item) {
@@ -1858,11 +1869,19 @@
             return;
         }
 
+        const result = await client
+            .from("comments")
+            .delete()
+            .eq("status", "rejected");
+
+        if (result.error) {
+            showToast("Yorumlar silinemedi.", "error");
+            return;
+        }
+
         comments = comments.filter(function (item) {
             return item.status !== "rejected";
         });
-
-        saveComments();
 
         renderComments();
 
@@ -1873,7 +1892,7 @@
 
     }
 
-    function handleAction(event) {
+    async function handleAction(event) {
 
         const button =
             event.target.closest(
@@ -1902,11 +1921,11 @@
         }
 
         if (action === "approve") {
-            approveComment(id);
+            await approveComment(id);
         }
 
         if (action === "reject") {
-            rejectComment(id);
+            await rejectComment(id);
         }
 
         if (action === "delete") {
@@ -2024,7 +2043,12 @@
         $("#confirmDelete")
             .addEventListener(
                 "click",
-                deleteComment
+                function () {
+                    deleteComment().catch(function (error) {
+                        console.error(error);
+                        showToast("Yorum silinemedi.", "error");
+                    });
+                }
             );
 
         $("#viewModal")
@@ -2071,9 +2095,14 @@
 
     }
 
-    function init() {
+    async function init() {
 
-        loadComments();
+        try {
+            await loadComments();
+        } catch (error) {
+            console.error(error);
+            showToast("Yorumlar yüklenemedi.", "error");
+        }
 
         renderComments();
 
@@ -2084,7 +2113,12 @@
         $("#commentList")
             .addEventListener(
                 "click",
-                handleAction
+                function (event) {
+                    Promise.resolve(handleAction(event)).catch(function (error) {
+                        console.error(error);
+                        showToast("Yorum işlemi tamamlanamadı.", "error");
+                    });
+                }
             );
 
         $("#commentSearch")
@@ -2102,15 +2136,14 @@
         $("#refreshComments")
             .addEventListener(
                 "click",
-                function () {
-
-                    loadComments();
-                    renderComments();
-
-                    showToast(
-                        "Yorum listesi yenilendi.",
-                        "success"
-                    );
+                async function () {
+                    try {
+                        await loadComments();
+                        renderComments();
+                        showToast("Yorum listesi yenilendi.", "success");
+                    } catch (error) {
+                        showToast("Yorum listesi yenilenemedi.", "error");
+                    }
 
                 }
             );
@@ -2118,7 +2151,12 @@
         $("#deleteAllRejected")
             .addEventListener(
                 "click",
-                deleteAllRejected
+                function () {
+                    deleteAllRejected().catch(function (error) {
+                        console.error(error);
+                        showToast("Yorumlar silinemedi.", "error");
+                    });
+                }
             );
 
     }

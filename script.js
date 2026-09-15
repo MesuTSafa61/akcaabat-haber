@@ -1625,47 +1625,13 @@
 
         try {
 
-            const current =
-                await client
-                    .from("news")
-                    .select(
-                        "views"
-                    )
-                    .eq(
-                        "id",
-                        id
-                    )
-                    .maybeSingle();
-
-
-            if (
-                current.error ||
-                !current.data
-            ) {
-                return false;
-            }
-
-
-            const nextViews =
-                Number(
-                    current.data.views
-                ) + 1;
-
-
             const result =
-                await client
-                    .from("news")
-                    .update(
-                        {
-                            views:
-                                nextViews
-                        }
-                    )
-                    .eq(
-                        "id",
-                        id
-                    );
-
+                await client.rpc(
+                    "increment_news_views",
+                    {
+                        news_id: id
+                    }
+                );
 
             return !result.error;
 

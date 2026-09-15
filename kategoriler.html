@@ -1217,14 +1217,12 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="supabase-config.js"></script>
 <script src="script.js"></script>
 
 <script>
 (function () {
     "use strict";
-
-    const STORAGE_KEY = "akcaabat_kategoriler";
-    const NEWS_KEY = "akcaabat_haberler";
 
     const DEFAULT_CATEGORIES = [
         "Gündem",
@@ -1243,6 +1241,7 @@
     let categories = [];
     let editingId = null;
     let deletingId = null;
+    let client = null;
 
     const $ = function (selector) {
         return document.querySelector(selector);
@@ -1255,12 +1254,6 @@
         } catch (error) {
             return fallback;
         }
-    }
-
-    function readNews() {
-        const raw = localStorage.getItem(NEWS_KEY);
-        const data = safeParse(raw, []);
-        return Array.isArray(data) ? data : [];
     }
 
     function makeSlug(text) {
@@ -1302,13 +1295,6 @@
         });
     }
 
-    function saveCategories() {
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(categories)
-        );
-    }
-
     function normalizeCategory(item) {
         if (typeof item === "string") {
             return {
@@ -1329,33 +1315,35 @@
         };
     }
 
-    function loadCategories() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-
-        if (!raw) {
-            categories = DEFAULT_CATEGORIES.map(function (name) {
-                return {
-                    id: createId(),
-                    name: name,
-                    slug: makeSlug(name),
-                    status: "active",
-                    createdAt: new Date().toISOString()
-                };
-            });
-
-            saveCategories();
+    async function loadCategories() {
+        client = await window.AkcaabatHaber.getSupabaseClient();
+        if (!client) {
+            throw new Error("Supabase bağlantısı kurulamadı.");
+        }
+        const userResult = await client.auth.getUser();
+        if (!userResult.data.user) {
+            window.location.href = "admin-giris.html";
             return;
         }
-
-        const parsed = safeParse(raw, []);
-
-        if (!Array.isArray(parsed)) {
-            categories = [];
+        const profileResult = await client.from("profiles")
+            .select("role").eq("id", userResult.data.user.id).maybeSingle();
+        if (profileResult.error || !profileResult.data ||
+            !["admin", "editor"].includes(profileResult.data.role)) {
+            await client.auth.signOut();
+            window.location.href = "admin-giris.html";
             return;
         }
-
-        categories = parsed.map(normalizeCategory);
-        saveCategories();
+        const result = await client.from("categories")
+            .select("id,name,slug,is_active,created_at,updated_at,news(count)")
+            .order("sort_order", { ascending: true }).order("name", { ascending: true });
+        if (result.error) {
+            throw result.error;
+        }
+        categories = (result.data || []).map(function (item) {
+            item.status = item.is_active ? "active" : "passive";
+            item.newsCount = item.news && item.news[0] ? item.news[0].count : 0;
+            return normalizeCategory(item);
+        });
     }
 
     function getCategoryNameFromNews(news) {
@@ -1372,22 +1360,13 @@
     }
 
     function getNewsCount(category) {
-        const news = readNews();
-
-        return news.filter(function (item) {
-            const newsCategory = getCategoryNameFromNews(item);
-
-            return newsCategory.toLocaleLowerCase("tr-TR") ===
-                String(category.name).toLocaleLowerCase("tr-TR");
-        }).length;
+        return Number(category.newsCount || 0);
     }
 
     function getTotalCategorizedNews() {
-        const news = readNews();
-
-        return news.filter(function (item) {
-            return getCategoryNameFromNews(item) !== "";
-        }).length;
+        return categories.reduce(function (total, category) {
+            return total + getNewsCount(category);
+        }, 0);
     }
 
     function updateStats() {
@@ -1561,7 +1540,7 @@
         $("#categoryModal").classList.remove("show");
     }
 
-    function saveCategory(event) {
+    async function saveCategory(event) {
         event.preventDefault();
 
         const name = String($("#categoryName").value || "").trim();
@@ -1602,32 +1581,38 @@
                 return;
             }
 
-            category.name = name;
-            category.slug = makeSlug(name);
-            category.status = status;
-            category.updatedAt = new Date().toISOString();
+            const result = await client.from("categories")
+                .update({ name: name, slug: makeSlug(name), is_active: status === "active" })
+                .eq("id", editingId).select().single();
+            if (result.error) {
+                throw result.error;
+            }
+            Object.assign(category, normalizeCategory(Object.assign(result.data, {
+                status: result.data.is_active ? "active" : "passive"
+            })));
 
             showToast("Kategori güncellendi.", "success");
 
         } else {
 
-            categories.push({
-                id: createId(),
-                name: name,
-                slug: makeSlug(name),
-                status: status,
-                createdAt: new Date().toISOString()
-            });
+            const result = await client.from("categories")
+                .insert({ name: name, slug: makeSlug(name), is_active: status === "active" })
+                .select().single();
+            if (result.error) {
+                throw result.error;
+            }
+            categories.push(normalizeCategory(Object.assign(result.data, {
+                status: result.data.is_active ? "active" : "passive"
+            })));
 
             showToast("Yeni kategori oluşturuldu.", "success");
         }
 
-        saveCategories();
         closeCategoryModal();
         renderCategories();
     }
 
-    function toggleCategory(id) {
+    async function toggleCategory(id) {
         const category = categories.find(function (item) {
             return item.id === id;
         });
@@ -1636,14 +1621,14 @@
             return;
         }
 
-        category.status =
-            category.status === "active"
-                ? "passive"
-                : "active";
-
-        category.updatedAt = new Date().toISOString();
-
-        saveCategories();
+        const active = category.status !== "active";
+        const result = await client.from("categories")
+            .update({ is_active: active }).eq("id", id);
+        if (result.error) {
+            showToast("Kategori güncellenemedi.", "error");
+            return;
+        }
+        category.status = active ? "active" : "passive";
         renderCategories();
 
         showToast(
@@ -1672,7 +1657,7 @@
         $("#deleteModal").classList.remove("show");
     }
 
-    function deleteCategory() {
+    async function deleteCategory() {
         if (!deletingId) {
             return;
         }
@@ -1686,21 +1671,26 @@
             return;
         }
 
+        const result = await client.from("categories")
+            .delete().eq("id", deletingId);
+        if (result.error) {
+            showToast("Kategori silinemedi.", "error");
+            return;
+        }
         categories = categories.filter(function (item) {
             return item.id !== deletingId;
         });
 
-        saveCategories();
         closeDeleteModal();
         renderCategories();
 
         showToast(
-            '"' + category.name + '" kategorisi silindi.",
+            category.name + " kategorisi silindi.",
             "success"
         );
     }
 
-    function resetCategories() {
+    async function resetCategories() {
         const confirmed = window.confirm(
             "Varsayılan kategoriler yüklenecek. Mevcut kategori listeniz değiştirilecek. Devam etmek istiyor musunuz?"
         );
@@ -1709,17 +1699,16 @@
             return;
         }
 
-        categories = DEFAULT_CATEGORIES.map(function (name) {
-            return {
-                id: createId(),
-                name: name,
-                slug: makeSlug(name),
-                status: "active",
-                createdAt: new Date().toISOString()
-            };
+        const rows = DEFAULT_CATEGORIES.map(function (name) {
+            return { name: name, slug: makeSlug(name), is_active: true };
         });
-
-        saveCategories();
+        const result = await client.from("categories")
+            .upsert(rows, { onConflict: "slug", ignoreDuplicates: true });
+        if (result.error) {
+            showToast("Varsayılan kategoriler eklenemedi.", "error");
+            return;
+        }
+        await loadCategories();
         renderCategories();
 
         showToast(
@@ -1749,7 +1738,7 @@
         }, 2600);
     }
 
-    function handleTableClick(event) {
+    async function handleTableClick(event) {
         const button = event.target.closest("button[data-action]");
 
         if (!button) {
@@ -1772,7 +1761,7 @@
         }
 
         if (action === "toggle") {
-            toggleCategory(id);
+            await toggleCategory(id);
         }
 
         if (action === "delete") {
@@ -1830,7 +1819,12 @@
 
         $("#categoryForm").addEventListener(
             "submit",
-            saveCategory
+            function (event) {
+                saveCategory(event).catch(function (error) {
+                    console.error(error);
+                    showToast("Kategori kaydedilemedi.", "error");
+                });
+            }
         );
 
         $("#closeDeleteModal").addEventListener(
@@ -1845,7 +1839,12 @@
 
         $("#confirmDelete").addEventListener(
             "click",
-            deleteCategory
+            function () {
+                deleteCategory().catch(function (error) {
+                    console.error(error);
+                    showToast("Kategori silinemedi.", "error");
+                });
+            }
         );
 
         $("#categoryModal").addEventListener(
@@ -1876,9 +1875,14 @@
         });
     }
 
-    function init() {
+    async function init() {
 
-        loadCategories();
+        try {
+            await loadCategories();
+        } catch (error) {
+            console.error(error);
+            showToast("Kategoriler yüklenemedi.", "error");
+        }
 
         renderCategories();
 
@@ -1893,12 +1897,22 @@
 
         $("#categoryTableBody").addEventListener(
             "click",
-            handleTableClick
+            function (event) {
+                Promise.resolve(handleTableClick(event)).catch(function (error) {
+                    console.error(error);
+                    showToast("Kategori işlemi tamamlanamadı.", "error");
+                });
+            }
         );
 
         $("#resetCategories").addEventListener(
             "click",
-            resetCategories
+            function () {
+                resetCategories().catch(function (error) {
+                    console.error(error);
+                    showToast("Varsayılan kategoriler eklenemedi.", "error");
+                });
+            }
         );
     }
 

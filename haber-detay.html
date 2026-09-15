@@ -996,6 +996,23 @@
                     .replace(/'/g, "&#039;");
             }
 
+            function formatArticleContent(value) {
+                const text = String(value || "").trim();
+
+                if (!text) {
+                    return "<p>Bu haber için içerik bulunmuyor.</p>";
+                }
+
+                return text
+                    .split(/\n{2,}/)
+                    .map(function (paragraph) {
+                        return "<p>" +
+                            escapeHtml(paragraph).replace(/\n/g, "<br>") +
+                            "</p>";
+                    })
+                    .join("");
+            }
+
             function formatDate(value) {
                 if (!value) {
                     return "Tarih belirtilmedi";
@@ -1424,25 +1441,17 @@
                     return;
                 }
 
-                const currentViews =
-                    Number(news.views || 0);
-
-                const nextViews =
-                    currentViews + 1;
-
                 const result =
-                    await client
-                        .from("news")
-                        .update({
-                            views: nextViews
-                        })
-                        .eq(
-                            "id",
-                            news.id
-                        );
+                    await client.rpc(
+                        "increment_news_views",
+                        {
+                            news_id: news.id
+                        }
+                    );
 
                 if (!result.error) {
-                    news.views = nextViews;
+                    news.views =
+                        Number(news.views || 0) + 1;
 
                     const viewsElement =
                         document.getElementById(
@@ -1451,7 +1460,7 @@
 
                     if (viewsElement) {
                         viewsElement.textContent =
-                            nextViews.toLocaleString(
+                            news.views.toLocaleString(
                                 "tr-TR"
                             );
                     }
@@ -1567,8 +1576,7 @@
                     news.title;
 
                 content.innerHTML =
-                    news.content ||
-                    "<p>Bu haber için içerik bulunmuyor.</p>";
+                    formatArticleContent(news.content);
 
                 renderImage(news);
 
