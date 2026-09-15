@@ -521,6 +521,19 @@
 
     </section>
 
+    <!-- PROFESYONEL MANŞET GEZGİNİ -->
+    <section class="headline-deck" aria-label="Günün manşetleri">
+      <div class="headline-deck-top">
+        <div><span class="section-kicker">MANŞET</span><strong>Günün Haberleri</strong></div>
+        <div class="headline-controls">
+          <button type="button" id="headlinePrev" aria-label="Önceki manşet">‹</button>
+          <span id="headlineCounter">1 / 1</span>
+          <button type="button" id="headlineNext" aria-label="Sonraki manşet">›</button>
+        </div>
+      </div>
+      <div class="headline-track" id="headlineTrack" role="tablist" aria-label="Manşet seçimi"></div>
+    </section>
+
 
     <!-- =========================
          KATEGORİ KISAYOLLARI
@@ -1903,129 +1916,61 @@
            MANŞET
         ========================== */
 
-        function renderHero(
-          news
-        ) {
+        let headlineItems = [];
+        let headlineIndex = 0;
+        let headlineTimer = null;
 
-          const hero =
-            news[0];
+        function showHeadline(index) {
+          if (!headlineItems.length) return;
+          headlineIndex = (index + headlineItems.length) % headlineItems.length;
+          const hero = headlineItems[headlineIndex];
+          const heroImage = document.getElementById("heroImage");
+          const heroBreaking = document.getElementById("heroBreaking");
+          if (heroImage) { heroImage.src = imageValue(hero); heroImage.alt = titleValue(hero); }
+          setText("heroTitle", titleValue(hero));
+          setText("heroSummary", summaryValue(hero));
+          setText("heroCategory", categoryValue(hero).toUpperCase());
+          setText("heroDate", formatDate(dateValue(hero)));
+          if (heroBreaking) heroBreaking.hidden = !(hero.breaking === true || hero.breaking === "true");
+          const heroElement = document.getElementById("heroNews");
+          if (heroElement) { heroElement.onclick = function(){ openNews(hero); }; heroElement.style.cursor = "pointer"; }
+          const counter = document.getElementById("headlineCounter");
+          if (counter) counter.textContent = (headlineIndex + 1) + " / " + headlineItems.length;
+          document.querySelectorAll(".headline-tab").forEach(function(tab, i){
+            tab.classList.toggle("is-active", i === headlineIndex);
+            tab.setAttribute("aria-selected", i === headlineIndex ? "true" : "false");
+          });
+        }
 
-
-          if (!hero) {
-            return;
+        function restartHeadlineTimer() {
+          if (headlineTimer) clearInterval(headlineTimer);
+          if (headlineItems.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            headlineTimer = setInterval(function(){ showHeadline(headlineIndex + 1); }, 6500);
           }
+        }
 
-
-          const heroImage =
-            document.getElementById(
-              "heroImage"
-            );
-
-
-          const heroTitle =
-            document.getElementById(
-              "heroTitle"
-            );
-
-
-          const heroSummary =
-            document.getElementById(
-              "heroSummary"
-            );
-
-
-          const heroCategory =
-            document.getElementById(
-              "heroCategory"
-            );
-
-
-          const heroDate =
-            document.getElementById(
-              "heroDate"
-            );
-
-
-          const heroBreaking =
-            document.getElementById(
-              "heroBreaking"
-            );
-
-
-          if (heroImage) {
-
-            heroImage.src =
-              imageValue(hero);
-
-
-            heroImage.alt =
-              titleValue(hero);
-
+        function renderHero(news) {
+          headlineItems = news.slice(0, Math.min(10, news.length));
+          if (!headlineItems.length) return;
+          const track = document.getElementById("headlineTrack");
+          if (track) {
+            track.innerHTML = headlineItems.map(function(item, i){
+              return `<button class="headline-tab" type="button" role="tab" aria-selected="${i===0?'true':'false'}" data-headline-index="${i}">
+                <span class="headline-number">${String(i+1).padStart(2,'0')}</span>
+                <img src="${escapeHtml(imageValue(item))}" alt="" loading="lazy">
+                <span class="headline-tab-copy"><small>${escapeHtml(categoryValue(item).toUpperCase())}</small><b>${escapeHtml(titleValue(item))}</b></span>
+              </button>`;
+            }).join("");
+            track.querySelectorAll(".headline-tab").forEach(function(tab){
+              tab.addEventListener("click", function(){ showHeadline(Number(tab.dataset.headlineIndex)); restartHeadlineTimer(); });
+            });
           }
-
-
-          setText(
-            "heroTitle",
-            titleValue(hero)
-          );
-
-
-          setText(
-            "heroSummary",
-            summaryValue(hero)
-          );
-
-
-          setText(
-            "heroCategory",
-            categoryValue(
-              hero
-            ).toUpperCase()
-          );
-
-
-          setText(
-            "heroDate",
-            formatDate(
-              dateValue(hero)
-            )
-          );
-
-
-          if (heroBreaking) {
-
-            const isBreaking =
-              hero.breaking === true ||
-              hero.breaking === "true";
-
-
-            heroBreaking.hidden =
-              !isBreaking;
-
-          }
-
-
-          const heroElement =
-            document.getElementById(
-              "heroNews"
-            );
-
-
-          if (heroElement) {
-
-            heroElement.onclick =
-              function () {
-
-                openNews(hero);
-
-              };
-
-
-            heroElement.style.cursor =
-              "pointer";
-
-          }
-
+          const prev = document.getElementById("headlinePrev");
+          const next = document.getElementById("headlineNext");
+          if (prev) prev.onclick = function(){ showHeadline(headlineIndex - 1); restartHeadlineTimer(); };
+          if (next) next.onclick = function(){ showHeadline(headlineIndex + 1); restartHeadlineTimer(); };
+          showHeadline(0);
+          restartHeadlineTimer();
         }
 
 
