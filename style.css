@@ -3937,3 +3937,234 @@ input:focus-visible {
   }
 
 }
+
+/* =========================================================
+   AKÇAABAT HABER
+   ANA SAYFA RENK DÜZELTMESİ
+   ESKİ LACİVERT + BEYAZ + KIRMIZI
+   ========================================================= */
+
+:root {
+  --portal-bordo: var(--red);
+  --portal-bordo-dark: var(--navy);
+  --portal-line: var(--line);
+}
+
+/* Manşet */
+.home-headline-heading span {
+  color: var(--red);
+}
+
+.home-headline-heading h1 {
+  color: var(--navy);
+}
+
+.home-headline-controls button {
+  color: var(--navy);
+  border-color: var(--line);
+}
+
+.home-headline-controls button:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+.main-headline-stage {
+  background: var(--navy);
+}
+
+.main-headline-placeholder {
+  background:
+    linear-gradient(
+      135deg,
+      var(--navy),
+      var(--navy-3)
+    );
+}
+
+.main-headline-category {
+  background: var(--navy);
+}
+
+.main-headline-breaking {
+  background: var(--red);
+}
+
+/* Manşet numaraları */
+.headline-navigation-title {
+  background: var(--navy);
+}
+
+.headline-nav-number:hover {
+  background: #f3f5f7;
+  color: var(--red);
+}
+
+.headline-nav-number.active {
+  background: var(--red);
+  color: #fff;
+}
+
+.headline-nav-number.active::before {
+  border-bottom-color: var(--red);
+}
+
+/* Servisler */
+.home-service {
+  border-color: var(--line);
+}
+
+.home-service small,
+.home-service > span {
+  color: var(--red);
+}
+
+.home-service strong {
+  color: var(--navy);
+}
+
+/* Bölüm başlıkları */
+.home-section-title {
+  border-bottom-color: var(--navy);
+}
+
+.home-section-title > div > span,
+.home-section-title > a {
+  color: var(--red);
+}
+
+.home-section-title h2 {
+  color: var(--navy);
+}
+
+/* Son haberler */
+.home-latest-list {
+  border-color: var(--line);
+}
+
+.home-latest-item {
+  border-bottom-color: var(--line);
+}
+
+.home-latest-meta span {
+  color: var(--red);
+}
+
+/* Resim yoksa */
+.home-image-placeholder {
+  background: #e9edf2;
+  color: #7b8796;
+}
+
+/* Kategori kartları */
+.home-category-image > span {
+  background: var(--red);
+}
+
+/* Sidebar */
+.home-side-box,
+.home-match,
+.home-live {
+  border-color: var(--line);
+}
+
+.home-side-heading {
+  border-bottom-color: var(--navy);
+}
+
+.home-side-heading span {
+  color: var(--red);
+}
+
+.home-side-heading h2 {
+  color: var(--navy);
+}
+
+/* Çok okunanlar */
+.home-popular-item {
+  border-bottom-color: var(--line);
+}
+
+.home-popular-item > strong {
+  color: #d8dde4;
+}
+
+.home-popular-item:hover > strong,
+.home-popular-item span {
+  color: var(--red);
+}
+
+/* Maç merkezi */
+.home-match {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+
+.home-match-head small {
+  color: #ff7d83;
+}
+
+.home-match-button {
+  background: var(--red);
+}
+
+/* Canlı servisler */
+.home-live-head {
+  color: var(--red);
+}
+
+.home-live > a {
+  border-top-color: var(--line);
+}
+
+.home-live > a:hover {
+  color: var(--red);
+}
+
+/* Alt kategori alanı */
+.home-more-grid a {
+  background: var(--navy);
+}
+
+.home-more-grid a:nth-child(even) {
+  background: var(--navy-2);
+}
+
+/* Haber sitesi görünümünü biraz daha keskin tut */
+.home-service,
+.home-latest-list,
+.home-side-box,
+.home-match,
+.home-live,
+.headline-navigation {
+  border-radius: 4px;
+}
+
+/* Trabzonspor alanında bordo-mavi sadece kategori vurgusu */
+.trabzonspor-section .home-section-title {
+  border-bottom-color: #6f1738;
+}
+
+.trabzonspor-section .home-section-title > div > span {
+  color: #1f7bc1;
+}
+
+/* Mobil */
+@media (max-width: 600px) {
+  .home-headline-section {
+    background: #fff;
+  }
+
+  .main-headline-stage {
+    background: var(--navy);
+  }
+
+  .headline-navigation-title {
+    background: var(--navy);
+  }
+
+  .headline-nav-number.active {
+    background: var(--red);
+  }
+}
