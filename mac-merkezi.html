@@ -800,6 +800,7 @@
         </div>
     </footer>
 </div>
+<script src="supabase-config.js"></script>
 <script>
 (function () {
     "use strict";
@@ -810,6 +811,7 @@
         sebat: "04bfa175-c483-4b3c-8f79-6a59e2af1392"
     };
     let supabaseClient = null;
+    let realtimeChannel = null;
     const carousels = {
         trabzonspor: {
             element: document.getElementById("tsCarousel"),
@@ -1555,6 +1557,43 @@
                 Object.keys(groups).join(" · ");
         }
     }
+    function subscribeToMatchUpdates() {
+        const teamKeys = Object.keys(TEAM_IDS);
+        realtimeChannel =
+            supabaseClient
+                .channel("match-center-updates")
+                .on(
+                    "postgres_changes",
+                    {
+                        event: "*",
+                        schema: "public",
+                        table: "sports_matches"
+                    },
+                    function (payload) {
+                        const match =
+                            payload.new && payload.new.team_id
+                                ? payload.new
+                                : payload.old;
+                        const teamKey =
+                            teamKeys.find(function (key) {
+                                return match &&
+                                    match.team_id === TEAM_IDS[key];
+                            });
+                        if (teamKey) {
+                            loadTeamMatches(
+                                teamKey,
+                                TEAM_IDS[teamKey]
+                            ).catch(function (error) {
+                                console.error(
+                                    "Canlı maç güncellemesi alınamadı:",
+                                    error
+                                );
+                            });
+                        }
+                    }
+                )
+                .subscribe();
+    }
     async function initialize() {
         document.getElementById("footerYear").textContent =
             new Date().getFullYear();
@@ -1596,6 +1635,7 @@
             status.textContent =
                 "Supabase bağlantısı aktif";
             status.classList.add("ok");
+            subscribeToMatchUpdates();
         } catch (error) {
             console.error(
                 "Maç merkezi yükleme hatası:",
@@ -1628,8 +1668,12 @@
     } else {
         initialize();
     }
+    window.addEventListener("pagehide", function () {
+        if (supabaseClient && realtimeChannel) {
+            supabaseClient.removeChannel(realtimeChannel);
+        }
+    });
 })();
 </script>
-<script src="supabase-config.js"></script>
 </body>
 </html>

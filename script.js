@@ -2878,21 +2878,8 @@
 
             if (isCloudConfigured()) {
 
-                const cloud =
-                    await saveDraftToSupabase(
-                        draft
-                    );
+                await saveDraftToSupabase(draft);
 
-
-                if (
-                    cloud.success
-                ) {
-
-                    console.log(
-                        "Taslak Supabase'e kaydedildi."
-                    );
-
-                }
 
             }
 
@@ -3904,6 +3891,19 @@
         initEscapeKey();
 
         initSupabaseBackground();
+
+        if (
+            "serviceWorker" in navigator &&
+            window.isSecureContext
+        ) {
+            navigator.serviceWorker.register("/sw.js")
+                .catch(function (error) {
+                    console.warn(
+                        "Çevrimdışı destek başlatılamadı:",
+                        error
+                    );
+                });
+        }
 
     }
 
