@@ -2,11 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Haber Detayı | Akçaabat Haber</title>
 
@@ -15,25 +11,15 @@
         content="Akçaabat ve Trabzon'dan güncel haberler."
     >
 
-    <meta
-        name="robots"
-        content="index, follow"
-    >
+    <meta name="robots" content="index, follow">
 
     <link
         rel="canonical"
         href="https://akcaabathaber.com.tr/haber-detay.html"
     >
 
-    <meta
-        property="og:type"
-        content="article"
-    >
-
-    <meta
-        property="og:title"
-        content="Akçaabat Haber"
-    >
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Akçaabat Haber">
 
     <meta
         property="og:description"
@@ -75,53 +61,42 @@
         content="https://akcaabathaber.com.tr/assets/default-news.jpg"
     >
 
-    <link
-        rel="stylesheet"
-        href="style.css?v=3"
-    >
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="portal-shell.css">
 
     <script src="supabase-config.js"></script>
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-        defer
-    ></script>
-
-    <script
-        src="script.js?v=3"
-        defer
-    ></script>
+    <script src="script.js?v=4" defer></script>
 
     <style>
         .article-page {
-            max-width: 1180px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 30px 20px 70px;
+            padding: 28px 20px 60px;
         }
 
         .article-breadcrumb {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
             flex-wrap: wrap;
-            margin-bottom: 22px;
-            color: #777;
-            font-size: 14px;
+            margin-bottom: 18px;
+            color: #7b8491;
+            font-size: 12px;
         }
 
         .article-breadcrumb a {
             color: #174c92;
-            text-decoration: none;
+            font-weight: 700;
         }
 
         .article-breadcrumb a:hover {
-            text-decoration: underline;
+            color: #d71920;
         }
 
         .article-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) 320px;
-            gap: 30px;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 24px;
             align-items: start;
         }
 
@@ -131,86 +106,86 @@
 
         .article-card {
             background: #fff;
-            border-radius: 16px;
+            border: 1px solid #e3e7ec;
+            border-radius: 7px;
             overflow: hidden;
-            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.07);
-            border: 1px solid #ececec;
+            box-shadow: 0 4px 18px rgba(7, 26, 51, .06);
         }
 
         .article-header {
-            padding: 30px 32px 20px;
+            padding: 28px 30px 22px;
         }
 
         .article-category {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            background: #174c92;
+            min-height: 27px;
+            padding: 0 10px;
+            margin-bottom: 14px;
+            border-radius: 3px;
+            background: #071a33;
             color: #fff;
-            padding: 7px 13px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: .3px;
-            margin-bottom: 16px;
+            letter-spacing: .05em;
         }
 
         .article-breaking {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            background: #c8102e;
+            min-height: 27px;
+            padding: 0 10px;
+            margin: 0 0 14px 5px;
+            border-radius: 3px;
+            background: #d71920;
             color: #fff;
-            padding: 7px 13px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 800;
-            margin-left: 7px;
-            margin-bottom: 16px;
+            font-size: 10px;
+            font-weight: 900;
         }
 
         .article-title {
             margin: 0;
-            color: #171717;
-            font-size: clamp(30px, 4vw, 48px);
-            line-height: 1.12;
-            font-weight: 800;
-            letter-spacing: -1px;
+            color: #071a33;
+            font-size: clamp(31px, 4vw, 48px);
+            line-height: 1.1;
+            font-weight: 950;
+            letter-spacing: -.035em;
         }
 
         .article-summary {
-            margin: 18px 0 0;
-            color: #5e5e5e;
-            font-size: 18px;
-            line-height: 1.65;
+            margin: 17px 0 0;
+            color: #556274;
+            font-size: 17px;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .article-meta {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 22px;
-            padding-top: 18px;
-            border-top: 1px solid #eeeeee;
-            color: #777;
-            font-size: 13px;
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 17px;
+            border-top: 1px solid #e7eaee;
+            color: #7a8492;
+            font-size: 11px;
         }
 
         .article-meta-item {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 5px;
         }
 
         .article-meta-item strong {
-            color: #444;
+            color: #344054;
         }
 
         .article-image-wrap {
             width: 100%;
-            background: #f2f2f2;
+            background: #edf0f4;
         }
 
         .article-image {
@@ -221,24 +196,24 @@
         }
 
         .article-image-placeholder {
-            min-height: 330px;
+            min-height: 360px;
             display: flex;
             align-items: center;
             justify-content: center;
             background:
                 linear-gradient(
                     135deg,
-                    #123d75,
-                    #1e5ca8
+                    #071a33,
+                    #10345f
                 );
             color: #fff;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 23px;
+            font-weight: 900;
         }
 
         .article-content {
-            padding: 30px 32px 36px;
-            color: #292929;
+            padding: 29px 30px 35px;
+            color: #263244;
             font-size: 17px;
             line-height: 1.85;
             word-break: break-word;
@@ -249,126 +224,120 @@
         }
 
         .article-content h2 {
-            margin: 32px 0 14px;
-            color: #174c92;
-            font-size: 27px;
+            margin: 30px 0 13px;
+            color: #071a33;
+            font-size: 26px;
             line-height: 1.25;
         }
 
         .article-content h3 {
-            margin: 28px 0 12px;
-            color: #222;
-            font-size: 23px;
-            line-height: 1.3;
-        }
-
-        .article-content strong {
-            color: #111;
+            margin: 26px 0 11px;
+            color: #071a33;
+            font-size: 21px;
         }
 
         .article-content a {
-            color: #174c92;
+            color: #1261a8;
             text-decoration: underline;
         }
 
         .article-content img {
-            display: block;
             width: 100%;
             height: auto;
-            border-radius: 12px;
-            margin: 24px 0;
+            margin: 23px 0;
+            border-radius: 5px;
         }
 
         .article-content blockquote {
             margin: 25px 0;
-            padding: 18px 22px;
-            border-left: 4px solid #174c92;
-            background: #f5f7fa;
-            border-radius: 0 10px 10px 0;
-            color: #555;
+            padding: 18px 21px;
+            border-left: 4px solid #d71920;
+            background: #f4f6f8;
+            color: #4d5968;
+        }
+
+        #article-source {
+            margin: 0 30px 25px;
+            font-size: 11px;
+        }
+
+        #article-source a {
+            color: #697386;
         }
 
         .article-share {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-            padding: 0 32px 30px;
+            gap: 8px;
+            padding: 0 30px 30px;
         }
 
         .article-share-title {
             width: 100%;
             margin-bottom: 3px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #555;
+            color: #697386;
+            font-size: 11px;
+            font-weight: 800;
         }
 
         .share-button {
+            min-height: 38px;
+            padding: 0 13px;
             border: 0;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
-            font-weight: 700;
-            transition: transform .2s ease, opacity .2s ease;
-        }
-
-        .share-button:hover {
-            transform: translateY(-1px);
-            opacity: .9;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 850;
         }
 
         .share-copy {
-            background: #333;
-            color: #fff;
+            background: #263244;
         }
 
         .share-whatsapp {
-            background: #25d366;
-            color: #fff;
+            background: #168b48;
         }
 
         .share-facebook {
-            background: #1877f2;
-            color: #fff;
+            background: #1769aa;
         }
 
         .article-sidebar {
             position: sticky;
-            top: 20px;
+            top: 145px;
         }
 
         .sidebar-box {
-            background: #fff;
-            border: 1px solid #ececec;
-            border-radius: 15px;
             overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 7px 25px rgba(0, 0, 0, .05);
+            margin-bottom: 15px;
+            background: #fff;
+            border: 1px solid #e3e7ec;
+            border-radius: 6px;
         }
 
         .sidebar-title {
             margin: 0;
-            padding: 17px 19px;
+            padding: 14px 16px;
+            border-bottom: 3px solid #d71920;
+            background: #071a33;
             color: #fff;
-            background: #174c92;
-            font-size: 16px;
-            font-weight: 800;
+            font-size: 15px;
+            font-weight: 900;
         }
 
         .sidebar-content {
-            padding: 18px;
+            padding: 7px 15px;
         }
 
         .sidebar-link {
             display: block;
-            padding: 10px 0;
-            color: #333;
-            text-decoration: none;
-            border-bottom: 1px solid #eeeeee;
-            font-size: 14px;
-            line-height: 1.5;
+            padding: 11px 0;
+            color: #263244;
+            border-bottom: 1px solid #e7eaee;
+            font-size: 12px;
+            line-height: 1.45;
         }
 
         .sidebar-link:last-child {
@@ -376,155 +345,159 @@
         }
 
         .sidebar-link:hover {
-            color: #174c92;
+            color: #d71920;
+        }
+
+        .sidebar-link strong {
+            font-weight: 850;
+        }
+
+        .sidebar-link small {
+            color: #8a94a3;
+            font-size: 9px;
         }
 
         .article-loading,
         .article-error,
         .article-not-found {
-            padding: 80px 25px;
+            padding: 75px 25px;
             text-align: center;
             background: #fff;
-            border: 1px solid #ececec;
-            border-radius: 16px;
+            border: 1px solid #e3e7ec;
+            border-radius: 7px;
         }
 
         .article-loading h2,
         .article-error h2,
         .article-not-found h2 {
-            margin: 0 0 12px;
-            color: #222;
+            margin: 0 0 10px;
+            color: #071a33;
+            font-size: 27px;
         }
 
         .article-loading p,
         .article-error p,
         .article-not-found p {
-            margin: 0;
-            color: #777;
+            margin: 0 auto;
+            max-width: 550px;
+            color: #697386;
             line-height: 1.6;
         }
 
         .back-home-button {
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 22px;
-            padding: 12px 18px;
-            border-radius: 9px;
-            background: #174c92;
+            margin-top: 20px;
+            padding: 11px 17px;
+            border-radius: 4px;
+            background: #071a33;
             color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
+            font-weight: 800;
+            font-size: 12px;
         }
 
         .comments-section {
-            margin-top: 30px;
-            background: #fff;
-            border: 1px solid #ececec;
-            border-radius: 16px;
+            margin-top: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, .05);
+            background: #fff;
+            border: 1px solid #e3e7ec;
+            border-radius: 7px;
         }
 
         .comments-header {
-            padding: 22px 28px;
-            border-bottom: 1px solid #eeeeee;
+            padding: 17px 22px;
+            border-bottom: 2px solid #071a33;
         }
 
         .comments-header h2 {
             margin: 0;
-            font-size: 22px;
-            color: #222;
+            color: #071a33;
+            font-size: 20px;
         }
 
         .comments-body {
-            padding: 25px 28px 30px;
+            padding: 22px;
         }
 
         .comment-form {
             display: grid;
-            gap: 13px;
-            margin-bottom: 30px;
+            gap: 11px;
+            margin-bottom: 25px;
         }
 
         .comment-form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 13px;
+            gap: 10px;
         }
 
         .comment-input,
         .comment-textarea {
             width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #dcdcdc;
-            border-radius: 9px;
-            padding: 12px 13px;
+            border: 1px solid #d6dce4;
+            border-radius: 4px;
+            padding: 11px 12px;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 12px;
             outline: none;
-            transition: border-color .2s ease, box-shadow .2s ease;
         }
 
         .comment-input:focus,
         .comment-textarea:focus {
-            border-color: #174c92;
-            box-shadow: 0 0 0 3px rgba(23, 76, 146, .1);
+            border-color: #1261a8;
+            box-shadow: 0 0 0 3px rgba(18,97,168,.08);
         }
 
         .comment-textarea {
-            min-height: 120px;
+            min-height: 110px;
             resize: vertical;
         }
 
         .comment-submit {
             justify-self: start;
+            min-height: 39px;
+            padding: 0 17px;
             border: 0;
-            border-radius: 9px;
-            padding: 12px 20px;
-            background: #174c92;
+            border-radius: 4px;
+            background: #d71920;
             color: #fff;
             cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
+            font-size: 11px;
+            font-weight: 850;
         }
 
         .comment-submit:disabled {
             opacity: .6;
-            cursor: not-allowed;
         }
 
         .comment-message {
             display: none;
-            padding: 11px 13px;
-            border-radius: 8px;
-            font-size: 13px;
-            line-height: 1.5;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 11px;
         }
 
         .comment-message.success {
             display: block;
             background: #e9f8ef;
-            color: #1c7040;
+            color: #17663a;
         }
 
         .comment-message.error {
             display: block;
-            background: #fff0f0;
-            color: #a32020;
+            background: #fff0f1;
+            color: #b3151c;
         }
 
         .comment-list {
             display: grid;
-            gap: 16px;
+            gap: 10px;
         }
 
         .comment-item {
-            padding: 17px;
-            border: 1px solid #eeeeee;
-            border-radius: 11px;
-            background: #fafafa;
+            padding: 14px;
+            border: 1px solid #e6e9ed;
+            border-radius: 5px;
+            background: #fafbfc;
         }
 
         .comment-top {
@@ -532,37 +505,37 @@
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .comment-name {
-            font-weight: 800;
-            color: #333;
-            font-size: 14px;
+            color: #071a33;
+            font-size: 12px;
+            font-weight: 850;
         }
 
         .comment-date {
-            color: #999;
-            font-size: 11px;
+            color: #98a2b3;
+            font-size: 9px;
         }
 
         .comment-text {
             margin: 0;
-            color: #555;
-            font-size: 14px;
-            line-height: 1.65;
+            color: #556274;
+            font-size: 12px;
+            line-height: 1.6;
             white-space: pre-wrap;
         }
 
         .comments-empty {
-            color: #888;
-            font-size: 14px;
+            padding: 12px;
+            color: #8993a1;
             text-align: center;
-            padding: 15px;
+            font-size: 11px;
         }
 
         .reading-time {
-            color: #888;
+            color: #8993a1;
         }
 
         @media (max-width: 900px) {
@@ -577,88 +550,65 @@
 
         @media (max-width: 650px) {
             .article-page {
-                padding: 20px 12px 45px;
+                padding: 18px 10px 40px;
             }
 
             .article-header {
-                padding: 23px 19px 18px;
+                padding: 21px 17px 17px;
             }
 
             .article-title {
-                font-size: 31px;
-                letter-spacing: -.5px;
+                font-size: 30px;
             }
 
             .article-summary {
-                font-size: 16px;
+                font-size: 15px;
             }
 
             .article-content {
-                padding: 23px 19px 28px;
+                padding: 21px 17px 27px;
                 font-size: 16px;
                 line-height: 1.75;
             }
 
             .article-share {
-                padding: 0 19px 24px;
+                padding: 0 17px 23px;
             }
 
-            .article-breaking {
-                margin-left: 0;
+            #article-source {
+                margin: 0 17px 22px;
             }
 
             .comment-form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .comments-header {
-                padding: 19px;
-            }
-
+            .comments-header,
             .comments-body {
-                padding: 20px 19px 24px;
-            }
-
-            .article-meta {
-                gap: 9px;
-            }
-
-            .article-image {
-                max-height: 420px;
+                padding-left: 17px;
+                padding-right: 17px;
             }
         }
     </style>
-  <link rel="stylesheet" href="portal-shell.css">
 </head>
 
 <body>
 
-    <div id="site-header">
-        <!-- Mevcut site header'ı JavaScript ile yüklenebilir -->
-    </div>
+    <div id="site-header"></div>
 
     <main class="article-page">
 
-        <nav
-            class="article-breadcrumb"
-            aria-label="Sayfa yolu"
-        >
+        <nav class="article-breadcrumb" aria-label="Sayfa yolu">
             <a href="index.html">Ana Sayfa</a>
-
             <span>›</span>
-
             <a href="haberler.html">Haberler</a>
-
             <span>›</span>
-
             <span id="breadcrumb-title">Haber</span>
         </nav>
 
         <div id="article-loading" class="article-loading">
             <h2>Haber yükleniyor...</h2>
-            <p>
-                Haber bilgileri hazırlanıyor. Lütfen bekleyin.
-            </p>
+            <p>Haber bilgileri hazırlanıyor.</p>
         </div>
 
         <div
@@ -669,14 +619,11 @@
             <h2>Haber bulunamadı</h2>
 
             <p>
-                Aradığınız haber kaldırılmış, taslak durumunda olabilir
+                Aradığınız haber kaldırılmış, taslak durumunda
                 veya bağlantı artık geçerli olmayabilir.
             </p>
 
-            <a
-                href="index.html"
-                class="back-home-button"
-            >
+            <a href="index.html" class="back-home-button">
                 Ana Sayfaya Dön
             </a>
         </div>
@@ -686,24 +633,18 @@
             class="article-error"
             style="display:none;"
         >
-            <h2>Bir sorun oluştu</h2>
+            <h2>Haber yüklenemedi</h2>
 
             <p id="article-error-text">
-                Haber yüklenirken beklenmeyen bir hata oluştu.
+                Haber yüklenirken beklenmeyen bir sorun oluştu.
             </p>
 
-            <a
-                href="index.html"
-                class="back-home-button"
-            >
+            <a href="index.html" class="back-home-button">
                 Ana Sayfaya Dön
             </a>
         </div>
 
-        <div
-            id="article-wrapper"
-            style="display:none;"
-        >
+        <div id="article-wrapper" style="display:none;">
 
             <div class="article-layout">
 
@@ -743,23 +684,17 @@
                             <div class="article-meta">
 
                                 <span class="article-meta-item">
-                                    <span>📅</span>
                                     <strong>Tarih:</strong>
                                     <span id="article-date"></span>
                                 </span>
 
                                 <span class="article-meta-item">
-                                    <span>👁</span>
                                     <strong>Okunma:</strong>
                                     <span id="article-views"></span>
                                 </span>
 
                                 <span class="article-meta-item">
-                                    <span>⏱</span>
-                                    <span
-                                        id="article-reading-time"
-                                        class="reading-time"
-                                    ></span>
+                                    <span id="article-reading-time"></span>
                                 </span>
 
                             </div>
@@ -812,15 +747,10 @@
 
                     </div>
 
-                    <section
-                        class="comments-section"
-                        aria-label="Yorumlar"
-                    >
+                    <section class="comments-section">
 
                         <div class="comments-header">
-                            <h2>
-                                Yorumlar
-                            </h2>
+                            <h2>Yorumlar</h2>
                         </div>
 
                         <div class="comments-body">
@@ -900,17 +830,11 @@
 
                         <div class="sidebar-content">
 
-                            <a
-                                href="index.html"
-                                class="sidebar-link"
-                            >
+                            <a href="index.html" class="sidebar-link">
                                 Ana Sayfa
                             </a>
 
-                            <a
-                                href="haberler.html"
-                                class="sidebar-link"
-                            >
+                            <a href="haberler.html" class="sidebar-link">
                                 Tüm Haberler
                             </a>
 
@@ -964,426 +888,334 @@
 
     </main>
 
-    <div id="site-footer">
-        <!-- Mevcut site footer'ı -->
-    </div>
+    <div id="site-footer"></div>
 
     <script>
-        (function () {
-            "use strict";
+    (function () {
+        "use strict";
 
-            let supabaseClient = null;
-            let currentNews = null;
+        let supabaseClient = null;
+        let currentNews = null;
 
-            const DEFAULT_IMAGE =
-                "https://akcaabathaber.com.tr/assets/default-news.jpg";
+        const DEFAULT_IMAGE =
+            "https://akcaabathaber.com.tr/assets/default-news.jpg";
 
-            function getQueryParameter(name) {
-                const params = new URLSearchParams(
-                    window.location.search
-                );
 
-                return params.get(name);
+        function getQueryParameter(name) {
+            return new URLSearchParams(
+                window.location.search
+            ).get(name);
+        }
+
+
+        function escapeHtml(value) {
+            if (value === null || value === undefined) {
+                return "";
             }
 
-            function escapeHtml(value) {
-                if (value === null || value === undefined) {
-                    return "";
-                }
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
-                return String(value)
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
+
+        function formatArticleContent(value) {
+            const text = String(value || "").trim();
+
+            if (!text) {
+                return "<p>Bu haber için içerik bulunmuyor.</p>";
             }
 
-            function formatArticleContent(value) {
-                const text = String(value || "").trim();
+            return text
+                .split(/\n{2,}/)
+                .map(function (paragraph) {
+                    return (
+                        "<p>" +
+                        escapeHtml(paragraph)
+                            .replace(/\n/g, "<br>") +
+                        "</p>"
+                    );
+                })
+                .join("");
+        }
 
-                if (!text) {
-                    return "<p>Bu haber için içerik bulunmuyor.</p>";
-                }
 
-                return text
-                    .split(/\n{2,}/)
-                    .map(function (paragraph) {
-                        return "<p>" +
-                            escapeHtml(paragraph).replace(/\n/g, "<br>") +
-                            "</p>";
-                    })
-                    .join("");
+        function formatDate(value) {
+            if (!value) {
+                return "Tarih belirtilmedi";
             }
 
-            function formatDate(value) {
-                if (!value) {
-                    return "Tarih belirtilmedi";
-                }
+            const date = new Date(value);
 
-                const date = new Date(value);
-
-                if (Number.isNaN(date.getTime())) {
-                    return "Tarih belirtilmedi";
-                }
-
-                return new Intl.DateTimeFormat(
-                    "tr-TR",
-                    {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
-                ).format(date);
+            if (Number.isNaN(date.getTime())) {
+                return "Tarih belirtilmedi";
             }
 
-            function calculateReadingTime(text) {
-                const cleanText = String(text || "")
-                    .replace(/<[^>]*>/g, " ")
-                    .replace(/\s+/g, " ")
-                    .trim();
-
-                if (!cleanText) {
-                    return "1 dk okuma";
+            return new Intl.DateTimeFormat(
+                "tr-TR",
+                {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
                 }
+            ).format(date);
+        }
 
-                const words = cleanText
-                    .split(" ")
-                    .filter(Boolean)
-                    .length;
 
-                const minutes = Math.max(
+        function calculateReadingTime(text) {
+            const cleanText = String(text || "")
+                .replace(/<[^>]*>/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+
+            const words = cleanText
+                ? cleanText.split(" ").filter(Boolean).length
+                : 0;
+
+            return (
+                Math.max(
                     1,
                     Math.ceil(words / 200)
-                );
+                ) +
+                " dk okuma"
+            );
+        }
 
-                return minutes + " dk okuma";
-            }
 
-            function getCurrentUrl() {
-                return window.location.href;
-            }
+        /*
+         * KRİTİK DÜZELTME
+         *
+         * script.js içindeki getSupabaseClient async olduğu için
+         * burada mutlaka await kullanıyoruz.
+         */
+        async function getSupabase() {
 
-            function setMeta(name, content) {
-                if (!content) {
-                    return;
-                }
-
-                let element = document.querySelector(
-                    'meta[name="' + name + '"]'
-                );
-
-                if (!element) {
-                    element = document.createElement("meta");
-                    element.setAttribute("name", name);
-                    document.head.appendChild(element);
-                }
-
-                element.setAttribute("content", content);
-            }
-
-            function setProperty(property, content) {
-                if (!content) {
-                    return;
-                }
-
-                let element = document.querySelector(
-                    'meta[property="' + property + '"]'
-                );
-
-                if (!element) {
-                    element = document.createElement("meta");
-                    element.setAttribute("property", property);
-                    document.head.appendChild(element);
-                }
-
-                element.setAttribute("content", content);
-            }
-
-            function setCanonical(url) {
-                let canonical =
-                    document.querySelector(
-                        'link[rel="canonical"]'
-                    );
-
-                if (!canonical) {
-                    canonical = document.createElement("link");
-                    canonical.setAttribute(
-                        "rel",
-                        "canonical"
-                    );
-                    document.head.appendChild(canonical);
-                }
-
-                canonical.setAttribute("href", url);
-            }
-
-            function updateSeo(news) {
-                const title =
-                    news.title ||
-                    "Akçaabat Haber";
-
-                const description =
-                    news.summary ||
-                    "Akçaabat ve Trabzon'dan güncel haberler.";
-
-                const image =
-                    news.image_url ||
-                    news.image ||
-                    DEFAULT_IMAGE;
-
-                const url =
-                    window.location.origin +
-                    window.location.pathname +
-                    "?slug=" +
-                    encodeURIComponent(news.slug || "");
-
-                document.title =
-                    title +
-                    " | Akçaabat Haber";
-
-                setMeta(
-                    "description",
-                    description.substring(0, 160)
-                );
-
-                setCanonical(url);
-
-                setProperty(
-                    "og:title",
-                    title
-                );
-
-                setProperty(
-                    "og:description",
-                    description
-                );
-
-                setProperty(
-                    "og:url",
-                    url
-                );
-
-                setProperty(
-                    "og:image",
-                    image
-                );
-
-                setProperty(
-                    "og:type",
-                    "article"
-                );
-
-                setProperty(
-                    "twitter:title",
-                    title
-                );
-
-                setProperty(
-                    "twitter:description",
-                    description
-                );
-
-                setProperty(
-                    "twitter:image",
-                    image
-                );
-
-                let existing =
-                    document.getElementById(
-                        "article-jsonld"
-                    );
-
-                if (existing) {
-                    existing.remove();
-                }
-
-                const schema = {
-                    "@context": "https://schema.org",
-                    "@type": "NewsArticle",
-                    "headline": title,
-                    "description": description,
-                    "image": [image],
-                    "datePublished":
-                        news.published_at ||
-                        news.created_at ||
-                        undefined,
-                    "dateModified":
-                        news.updated_at ||
-                        news.published_at ||
-                        news.created_at ||
-                        undefined,
-                    "mainEntityOfPage": {
-                        "@type": "WebPage",
-                        "@id": url
-                    },
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "Akçaabat Haber",
-                        "url":
-                            "https://akcaabathaber.com.tr"
-                    }
-                };
-
-                if (news.author_name) {
-                    schema.author = {
-                        "@type": "Person",
-                        "name": news.author_name
-                    };
-                } else {
-                    schema.author = {
-                        "@type": "Organization",
-                        "name": "Akçaabat Haber"
-                    };
-                }
-
-                const script =
-                    document.createElement("script");
-
-                script.id = "article-jsonld";
-                script.type = "application/ld+json";
-                script.textContent =
-                    JSON.stringify(schema);
-
-                document.head.appendChild(script);
-            }
-
-            function showElement(id) {
-                const element =
-                    document.getElementById(id);
-
-                if (element) {
-                    element.style.display = "";
-                }
-            }
-
-            function hideElement(id) {
-                const element =
-                    document.getElementById(id);
-
-                if (element) {
-                    element.style.display = "none";
-                }
-            }
-
-            function getSupabase() {
-                if (
-                    window.AkcaabatHaber &&
-                    typeof window.AkcaabatHaber
-                        .getSupabaseClient ===
-                        "function"
-                ) {
-                    return window.AkcaabatHaber
+            if (
+                window.AkcaabatHaber &&
+                typeof window.AkcaabatHaber
+                    .getSupabaseClient === "function"
+            ) {
+                const client =
+                    await window.AkcaabatHaber
                         .getSupabaseClient();
-                }
 
                 if (
-                    window.supabase &&
-                    window.AKCAABAT_SUPABASE
+                    client &&
+                    typeof client.from === "function"
                 ) {
-                    if (!supabaseClient) {
-                        supabaseClient =
-                            window.supabase.createClient(
-                                window
-                                    .AKCAABAT_SUPABASE
-                                    .url,
-                                window
-                                    .AKCAABAT_SUPABASE
-                                    .key
-                            );
-                    }
+                    return client;
+                }
+            }
 
-                    return supabaseClient;
+
+            if (
+                window.supabase &&
+                typeof window.supabase.createClient ===
+                    "function" &&
+                window.AKCAABAT_SUPABASE
+            ) {
+                if (!supabaseClient) {
+                    supabaseClient =
+                        window.supabase.createClient(
+                            window.AKCAABAT_SUPABASE.url,
+                            window.AKCAABAT_SUPABASE.key
+                        );
                 }
 
+                return supabaseClient;
+            }
+
+
+            throw new Error(
+                "Supabase bağlantısı kurulamadı."
+            );
+        }
+
+
+        function normalizeNews(row) {
+
+            if (!row) {
                 return null;
             }
 
-            function normalizeNews(row) {
-                if (!row) {
-                    return null;
-                }
+            const category =
+                Array.isArray(row.categories)
+                    ? row.categories[0]
+                    : (
+                        row.categories ||
+                        row.category ||
+                        null
+                    );
 
-                const category =
-                    Array.isArray(row.category)
-                        ? row.category[0]
-                        : row.category;
+            return {
+                id: row.id,
+                title: row.title || "",
+                slug: row.slug || "",
+                summary: row.summary || "",
+                content: row.content || "",
 
-                const author =
-                    Array.isArray(row.author)
-                        ? row.author[0]
-                        : row.author;
+                category_id:
+                    row.category_id || null,
 
-                return {
-                    id: row.id,
-                    title: row.title || "",
-                    slug: row.slug || "",
-                    summary: row.summary || "",
-                    content: row.content || "",
-                    category_id:
-                        row.category_id || null,
-                    category_name:
-                        category &&
-                        category.name
-                            ? category.name
-                            : "Genel",
-                    category_slug:
-                        category &&
-                        category.slug
-                            ? category.slug
-                            : "",
-                    image_url:
-                        row.image_url || "",
-                    image:
-                        row.image_url || "",
-                    status:
-                        row.status || "published",
-                    is_breaking:
-                        Boolean(row.is_breaking),
-                    views:
-                        Number(row.views || 0),
-                    author_id:
-                        row.author_id || null,
-                    author_name:
-                        author &&
-                        author.display_name
-                            ? author.display_name
-                            : "",
-                    published_at:
-                        row.published_at ||
-                        row.created_at ||
-                        null,
-                    created_at:
-                        row.created_at || null,
-                    updated_at:
-                        row.updated_at || null,
-                    origin_type:
-                        row.origin_type || "manual",
-                    source_name:
-                        row.source_name || "",
-                    source_url:
-                        row.source_url || ""
-                };
+                category_name:
+                    category && category.name
+                        ? category.name
+                        : "Genel",
+
+                category_slug:
+                    category && category.slug
+                        ? category.slug
+                        : "",
+
+                image_url:
+                    row.image_url || "",
+
+                status:
+                    row.status || "published",
+
+                is_breaking:
+                    Boolean(row.is_breaking),
+
+                views:
+                    Number(row.views || 0),
+
+                author_id:
+                    row.author_id || null,
+
+                published_at:
+                    row.published_at ||
+                    row.created_at ||
+                    null,
+
+                created_at:
+                    row.created_at || null,
+
+                updated_at:
+                    row.updated_at || null,
+
+                origin_type:
+                    row.origin_type || "manual",
+
+                source_name:
+                    row.source_name || "",
+
+                source_url:
+                    row.source_url || ""
+            };
+        }
+
+
+        async function findNews() {
+
+            const slug =
+                getQueryParameter("slug");
+
+            const id =
+                getQueryParameter("id");
+
+            if (!slug && !id) {
+                return null;
             }
 
-            async function findNews() {
-                const slug =
-                    getQueryParameter("slug");
 
-                const id =
-                    getQueryParameter("id");
+            /*
+             * Önce mevcut ortak script.js API'sini kullan.
+             * Böylece DB şeması tek noktadan yönetilir.
+             */
+            if (
+                slug &&
+                window.AkcaabatHaber &&
+                typeof window.AkcaabatHaber
+                    .findNewsBySlugAsync === "function"
+            ) {
+                try {
+                    const sharedNews =
+                        await window.AkcaabatHaber
+                            .findNewsBySlugAsync(slug);
 
-                const client = getSupabase();
+                    if (sharedNews) {
+                        return {
+                            id: sharedNews.id,
+                            title:
+                                sharedNews.title || "",
+                            slug:
+                                sharedNews.slug || slug,
+                            summary:
+                                sharedNews.summary || "",
+                            content:
+                                sharedNews.content || "",
 
-                if (!client) {
-                    throw new Error(
-                        "Supabase bağlantısı kurulamadı."
+                            category_name:
+                                sharedNews.category ||
+                                "Genel",
+
+                            category_slug:
+                                "",
+
+                            image_url:
+                                sharedNews.image || "",
+
+                            status:
+                                sharedNews.status ||
+                                "published",
+
+                            is_breaking:
+                                Boolean(
+                                    sharedNews.breaking
+                                ),
+
+                            views:
+                                Number(
+                                    sharedNews.views || 0
+                                ),
+
+                            published_at:
+                                sharedNews.publishedAt ||
+                                sharedNews.createdAt ||
+                                null,
+
+                            created_at:
+                                sharedNews.createdAt ||
+                                null,
+
+                            updated_at:
+                                sharedNews.updatedAt ||
+                                null,
+
+                            origin_type:
+                                sharedNews.originType ||
+                                "manual",
+
+                            source_name:
+                                sharedNews.sourceName ||
+                                "",
+
+                            source_url:
+                                sharedNews.sourceUrl ||
+                                ""
+                        };
+                    }
+
+                } catch (error) {
+                    console.warn(
+                        "Ortak haber API sorgusu başarısız:",
+                        error
                     );
                 }
+            }
 
-                let query = client
+
+            const client =
+                await getSupabase();
+
+
+            let query =
+                client
                     .from("news")
                     .select(
                         `
@@ -1404,7 +1236,7 @@
                         origin_type,
                         source_name,
                         source_url,
-                        category:categories(
+                        categories (
                             id,
                             name,
                             slug
@@ -1416,351 +1248,549 @@
                         "published"
                     );
 
-                if (slug) {
-                    query = query.eq(
+
+            if (slug) {
+                query =
+                    query.eq(
                         "slug",
                         slug
                     );
-                } else if (id) {
-                    query = query.eq(
+            } else {
+                query =
+                    query.eq(
                         "id",
                         id
                     );
-                } else {
-                    return null;
-                }
-
-                const result =
-                    await query.maybeSingle();
-
-                if (result.error) {
-                    throw result.error;
-                }
-
-                return normalizeNews(
-                    result.data
-                );
             }
 
-            async function incrementViews(news) {
-                if (!news || !news.id) {
-                    return;
-                }
 
-                const client = getSupabase();
+            const result =
+                await query.maybeSingle();
 
-                if (!client) {
-                    return;
-                }
 
-                const result =
+            if (result.error) {
+                throw result.error;
+            }
+
+
+            return normalizeNews(
+                result.data
+            );
+        }
+
+
+        async function incrementViews(news) {
+
+            if (!news || !news.id) {
+                return;
+            }
+
+
+            try {
+
+                if (
+                    window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber
+                        .incrementNewsViews ===
+                        "function"
+                ) {
+                    await window.AkcaabatHaber
+                        .incrementNewsViews(
+                            news.id
+                        );
+
+                } else {
+
+                    const client =
+                        await getSupabase();
+
                     await client.rpc(
                         "increment_news_views",
                         {
                             news_id: news.id
                         }
                     );
-
-                if (!result.error) {
-                    news.views =
-                        Number(news.views || 0) + 1;
-
-                    const viewsElement =
-                        document.getElementById(
-                            "article-views"
-                        );
-
-                    if (viewsElement) {
-                        viewsElement.textContent =
-                            news.views.toLocaleString(
-                                "tr-TR"
-                            );
-                    }
                 }
-            }
 
-            function renderArticle(news) {
-                currentNews = news;
 
-                hideElement(
-                    "article-loading"
-                );
+                news.views =
+                    Number(news.views || 0) + 1;
 
-                hideElement(
-                    "article-not-found"
-                );
 
-                hideElement(
-                    "article-error"
-                );
-
-                showElement(
-                    "article-wrapper"
-                );
-
-                const title =
-                    document.getElementById(
-                        "article-title"
-                    );
-
-                const summary =
-                    document.getElementById(
-                        "article-summary"
-                    );
-
-                const category =
-                    document.getElementById(
-                        "article-category"
-                    );
-
-                const breaking =
-                    document.getElementById(
-                        "article-breaking"
-                    );
-
-                const date =
-                    document.getElementById(
-                        "article-date"
-                    );
-
-                const views =
+                const element =
                     document.getElementById(
                         "article-views"
                     );
 
-                const readingTime =
-                    document.getElementById(
-                        "article-reading-time"
-                    );
 
-                const content =
-                    document.getElementById(
-                        "article-content"
-                    );
-
-                const breadcrumb =
-                    document.getElementById(
-                        "breadcrumb-title"
-                    );
-
-                const source =
-                    document.getElementById(
-                        "article-source"
-                    );
-
-                title.textContent =
-                    news.title;
-
-                summary.textContent =
-                    news.summary || "";
-
-                if (!news.summary) {
-                    summary.style.display =
-                        "none";
+                if (element) {
+                    element.textContent =
+                        news.views.toLocaleString(
+                            "tr-TR"
+                        );
                 }
 
-                category.textContent =
-                    news.category_name ||
-                    "Genel";
+            } catch (error) {
+                console.warn(
+                    "Görüntülenme sayısı artırılamadı:",
+                    error
+                );
+            }
+        }
 
-                if (news.is_breaking) {
-                    breaking.style.display =
-                        "inline-flex";
-                } else {
-                    breaking.style.display =
-                        "none";
-                }
 
-                date.textContent =
-                    formatDate(
-                        news.published_at ||
-                        news.created_at
-                    );
+        function renderImage(news) {
 
-                views.textContent =
-                    Number(
-                        news.views || 0
-                    ).toLocaleString(
-                        "tr-TR"
-                    );
+            const container =
+                document.getElementById(
+                    "article-image-container"
+                );
 
-                readingTime.textContent =
-                    calculateReadingTime(
-                        news.content
-                    );
 
-                breadcrumb.textContent =
-                    news.title;
-
-                content.innerHTML =
-                    formatArticleContent(news.content);
-
-                source.replaceChildren();
-                if (
-                    news.origin_type === "automated" &&
-                    news.source_name &&
-                    /^https:\/\//i.test(news.source_url)
-                ) {
-                    const link =
-                        document.createElement("a");
-                    link.href = news.source_url;
-                    link.target = "_blank";
-                    link.rel = "noopener noreferrer";
-                    link.textContent =
-                        "Kaynak: " + news.source_name;
-                    source.appendChild(link);
-                }
-
-                renderImage(news);
-
-                updateSeo(news);
-
-                document
-                    .getElementById(
-                        "share-whatsapp"
-                    )
-                    .onclick =
-                    shareWhatsApp;
-
-                document
-                    .getElementById(
-                        "share-facebook"
-                    )
-                    .onclick =
-                    shareFacebook;
-
-                document
-                    .getElementById(
-                        "share-copy"
-                    )
-                    .onclick =
-                    copyArticleLink;
+            if (!container) {
+                return;
             }
 
-            function renderImage(news) {
-                const container =
-                    document.getElementById(
-                        "article-image-container"
-                    );
 
-                if (!container) {
-                    return;
-                }
+            const image =
+                news.image_url || "";
 
-                const image =
-                    news.image_url ||
-                    news.image ||
-                    "";
 
-                if (!image) {
-                    container.innerHTML = `
-                        <div class="article-image-placeholder">
-                            Akçaabat Haber
-                        </div>
-                    `;
-
-                    return;
-                }
-
-                const safeImage =
-                    escapeHtml(image);
-
-                const safeAlt =
-                    escapeHtml(news.title);
-
+            if (!image) {
                 container.innerHTML = `
-                    <img
-                        class="article-image"
-                        src="${safeImage}"
-                        alt="${safeAlt}"
-                        loading="eager"
-                        onerror="this.style.display='none';"
-                    >
+                    <div class="article-image-placeholder">
+                        Akçaabat Haber
+                    </div>
                 `;
+
+                return;
             }
 
-            async function loadLatestNews() {
-                const container =
-                    document.getElementById(
-                        "sidebar-latest-news"
+
+            container.innerHTML = `
+                <img
+                    class="article-image"
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(news.title)}"
+                    loading="eager"
+                >
+            `;
+
+
+            const img =
+                container.querySelector("img");
+
+
+            if (img) {
+                img.addEventListener(
+                    "error",
+                    function () {
+                        container.innerHTML = `
+                            <div class="article-image-placeholder">
+                                Akçaabat Haber
+                            </div>
+                        `;
+                    }
+                );
+            }
+        }
+
+
+        function renderArticle(news) {
+
+            currentNews = news;
+
+
+            document.getElementById(
+                "article-loading"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "article-not-found"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "article-error"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "article-wrapper"
+            ).style.display = "";
+
+
+            document.getElementById(
+                "article-title"
+            ).textContent =
+                news.title;
+
+
+            const summary =
+                document.getElementById(
+                    "article-summary"
+                );
+
+
+            if (news.summary) {
+                summary.textContent =
+                    news.summary;
+
+                summary.style.display = "";
+            } else {
+                summary.style.display =
+                    "none";
+            }
+
+
+            document.getElementById(
+                "article-category"
+            ).textContent =
+                news.category_name ||
+                "Genel";
+
+
+            document.getElementById(
+                "article-breaking"
+            ).style.display =
+                news.is_breaking
+                    ? "inline-flex"
+                    : "none";
+
+
+            document.getElementById(
+                "article-date"
+            ).textContent =
+                formatDate(
+                    news.published_at ||
+                    news.created_at
+                );
+
+
+            document.getElementById(
+                "article-views"
+            ).textContent =
+                Number(
+                    news.views || 0
+                ).toLocaleString(
+                    "tr-TR"
+                );
+
+
+            document.getElementById(
+                "article-reading-time"
+            ).textContent =
+                calculateReadingTime(
+                    news.content
+                );
+
+
+            document.getElementById(
+                "breadcrumb-title"
+            ).textContent =
+                news.title;
+
+
+            document.getElementById(
+                "article-content"
+            ).innerHTML =
+                formatArticleContent(
+                    news.content
+                );
+
+
+            const source =
+                document.getElementById(
+                    "article-source"
+                );
+
+
+            source.replaceChildren();
+
+
+            if (
+                news.origin_type ===
+                    "automated" &&
+                news.source_name &&
+                /^https:\/\//i.test(
+                    news.source_url
+                )
+            ) {
+                const link =
+                    document.createElement("a");
+
+                link.href =
+                    news.source_url;
+
+                link.target =
+                    "_blank";
+
+                link.rel =
+                    "noopener noreferrer";
+
+                link.textContent =
+                    "Kaynak: " +
+                    news.source_name;
+
+                source.appendChild(
+                    link
+                );
+            }
+
+
+            renderImage(news);
+            updateSeo(news);
+
+
+            document.getElementById(
+                "share-whatsapp"
+            ).onclick =
+                shareWhatsApp;
+
+
+            document.getElementById(
+                "share-facebook"
+            ).onclick =
+                shareFacebook;
+
+
+            document.getElementById(
+                "share-copy"
+            ).onclick =
+                copyArticleLink;
+        }
+
+
+        function updateSeo(news) {
+
+            const title =
+                news.title ||
+                "Akçaabat Haber";
+
+
+            const description =
+                news.summary ||
+                "Akçaabat ve Trabzon'dan güncel haberler.";
+
+
+            const image =
+                news.image_url ||
+                DEFAULT_IMAGE;
+
+
+            const url =
+                window.location.origin +
+                window.location.pathname +
+                "?slug=" +
+                encodeURIComponent(
+                    news.slug || ""
+                );
+
+
+            document.title =
+                title +
+                " | Akçaabat Haber";
+
+
+            const descriptionMeta =
+                document.querySelector(
+                    'meta[name="description"]'
+                );
+
+
+            if (descriptionMeta) {
+                descriptionMeta.content =
+                    description.substring(
+                        0,
+                        160
                     );
+            }
 
-                if (!container) {
-                    return;
+
+            const canonical =
+                document.querySelector(
+                    'link[rel="canonical"]'
+                );
+
+
+            if (canonical) {
+                canonical.href = url;
+            }
+
+
+            const properties = {
+                "og:title":
+                    title,
+
+                "og:description":
+                    description,
+
+                "og:url":
+                    url,
+
+                "og:image":
+                    image
+            };
+
+
+            Object.keys(properties)
+                .forEach(function (property) {
+
+                    const meta =
+                        document.querySelector(
+                            'meta[property="' +
+                            property +
+                            '"]'
+                        );
+
+
+                    if (meta) {
+                        meta.content =
+                            properties[property];
+                    }
+
+                });
+        }
+
+
+        async function loadLatestNews() {
+
+            const container =
+                document.getElementById(
+                    "sidebar-latest-news"
+                );
+
+
+            try {
+
+                let list = [];
+
+
+                if (
+                    window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber
+                        .fetchNewsFromSupabase ===
+                        "function"
+                ) {
+                    list =
+                        await window.AkcaabatHaber
+                            .fetchNewsFromSupabase();
                 }
 
-                const client =
-                    getSupabase();
 
-                if (!client) {
-                    return;
-                }
+                if (!list || !list.length) {
 
-                const result =
-                    await client
-                        .from("news")
-                        .select(
-                            `
-                            id,
-                            title,
-                            slug,
-                            published_at,
-                            created_at,
-                            category:categories(
-                                name,
-                                slug
+                    const client =
+                        await getSupabase();
+
+
+                    const result =
+                        await client
+                            .from("news")
+                            .select(
+                                `
+                                id,
+                                title,
+                                slug,
+                                published_at,
+                                created_at,
+                                categories (
+                                    name,
+                                    slug
+                                )
+                                `
                             )
-                            `
-                        )
-                        .eq(
-                            "status",
-                            "published"
-                        )
-                        .order(
-                            "published_at",
-                            {
-                                ascending: false
-                            }
-                        )
-                        .limit(6);
+                            .eq(
+                                "status",
+                                "published"
+                            )
+                            .order(
+                                "published_at",
+                                {
+                                    ascending:
+                                        false
+                                }
+                            )
+                            .limit(7);
 
-                if (result.error) {
+
+                    if (result.error) {
+                        throw result.error;
+                    }
+
+
+                    list =
+                        (result.data || [])
+                            .map(function (row) {
+
+                                const category =
+                                    Array.isArray(
+                                        row.categories
+                                    )
+                                        ? row.categories[0]
+                                        : row.categories;
+
+
+                                return {
+                                    id:
+                                        row.id,
+
+                                    title:
+                                        row.title,
+
+                                    slug:
+                                        row.slug,
+
+                                    category:
+                                        category &&
+                                        category.name
+                                            ? category.name
+                                            : "Genel",
+
+                                    publishedAt:
+                                        row.published_at ||
+                                        row.created_at
+                                };
+
+                            });
+                }
+
+
+                const filtered =
+                    list
+                        .filter(function (item) {
+                            return (
+                                !currentNews ||
+                                item.id !==
+                                    currentNews.id
+                            );
+                        })
+                        .slice(0, 6);
+
+
+                if (!filtered.length) {
+
                     container.innerHTML = `
                         <div class="comments-empty">
-                            Son haberler yüklenemedi.
+                            Başka yayınlanmış haber bulunmuyor.
                         </div>
                     `;
 
                     return;
                 }
 
-                const newsList =
-                    result.data || [];
-
-                if (!newsList.length) {
-                    container.innerHTML = `
-                        <div class="comments-empty">
-                            Henüz yayınlanmış haber yok.
-                        </div>
-                    `;
-
-                    return;
-                }
 
                 container.innerHTML =
-                    newsList
-                        .filter(function (item) {
-                            return !currentNews ||
-                                item.id !==
-                                currentNews.id;
-                        })
+                    filtered
                         .map(function (item) {
-                            const category =
-                                Array.isArray(
-                                    item.category
-                                )
-                                    ? item.category[0]
-                                    : item.category;
+
+                            const date =
+                                item.publishedAt ||
+                                item.published_at ||
+                                item.createdAt ||
+                                item.created_at;
+
 
                             return `
                                 <a
@@ -1774,60 +1804,64 @@
                                             item.title
                                         )}
                                     </strong>
+
                                     <br>
+
                                     <small>
-                                        ${
-                                            escapeHtml(
-                                                category &&
-                                                category.name
-                                                    ? category.name
-                                                    : "Genel"
-                                            )
-                                        }
+                                        ${escapeHtml(
+                                            item.category ||
+                                            "Genel"
+                                        )}
                                         ·
-                                        ${
+                                        ${escapeHtml(
                                             formatDate(
-                                                item.published_at ||
-                                                item.created_at
+                                                date
                                             )
-                                        }
+                                        )}
                                     </small>
                                 </a>
                             `;
+
                         })
                         .join("");
 
-                if (!container.innerHTML.trim()) {
-                    container.innerHTML = `
-                        <div class="comments-empty">
-                            Başka yayınlanmış haber bulunmuyor.
-                        </div>
-                    `;
-                }
+            } catch (error) {
+
+                console.warn(
+                    "Son haberler alınamadı:",
+                    error
+                );
+
+
+                container.innerHTML = `
+                    <div class="comments-empty">
+                        Son haberler yüklenemedi.
+                    </div>
+                `;
+            }
+        }
+
+
+        async function loadComments() {
+
+            const container =
+                document.getElementById(
+                    "comment-list"
+                );
+
+
+            if (!container ||
+                !currentNews
+            ) {
+                return;
             }
 
-            async function loadComments() {
-                const container =
-                    document.getElementById(
-                        "comment-list"
-                    );
 
-                if (!container || !currentNews) {
-                    return;
-                }
+            try {
 
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
-                if (!client) {
-                    container.innerHTML = `
-                        <div class="comments-empty">
-                            Yorum sistemi şu anda kullanılamıyor.
-                        </div>
-                    `;
-
-                    return;
-                }
 
                 const result =
                     await client
@@ -1851,25 +1885,24 @@
                         .order(
                             "created_at",
                             {
-                                ascending: false
+                                ascending:
+                                    false
                             }
                         )
                         .limit(50);
 
-                if (result.error) {
-                    container.innerHTML = `
-                        <div class="comments-empty">
-                            Yorumlar yüklenirken bir hata oluştu.
-                        </div>
-                    `;
 
-                    return;
+                if (result.error) {
+                    throw result.error;
                 }
+
 
                 const comments =
                     result.data || [];
 
+
                 if (!comments.length) {
+
                     container.innerHTML = `
                         <div class="comments-empty">
                             Bu haber için henüz onaylanmış yorum yok.
@@ -1880,12 +1913,15 @@
                     return;
                 }
 
+
                 container.innerHTML =
                     comments
                         .map(function (comment) {
                             return `
                                 <div class="comment-item">
+
                                     <div class="comment-top">
+
                                         <span class="comment-name">
                                             ${escapeHtml(
                                                 comment.name
@@ -1893,100 +1929,98 @@
                                         </span>
 
                                         <span class="comment-date">
-                                            ${formatDate(
-                                                comment.created_at
+                                            ${escapeHtml(
+                                                formatDate(
+                                                    comment.created_at
+                                                )
                                             )}
                                         </span>
+
                                     </div>
 
-                                    <p class="comment-text">
-                                        ${escapeHtml(
-                                            comment.content
-                                        )}
-                                    </p>
+                                    <p class="comment-text">${escapeHtml(
+                                        comment.content
+                                    )}</p>
+
                                 </div>
                             `;
                         })
                         .join("");
+
+            } catch (error) {
+
+                console.warn(
+                    "Yorumlar yüklenemedi:",
+                    error
+                );
+
+
+                container.innerHTML = `
+                    <div class="comments-empty">
+                        Yorumlar şu anda yüklenemiyor.
+                    </div>
+                `;
+            }
+        }
+
+
+        async function submitComment(event) {
+
+            event.preventDefault();
+
+
+            if (!currentNews) {
+                return;
             }
 
-            async function submitComment(event) {
-                event.preventDefault();
 
-                if (!currentNews) {
-                    return;
-                }
+            const name =
+                document.getElementById(
+                    "comment-name"
+                ).value.trim();
 
-                const name =
-                    document
-                        .getElementById(
-                            "comment-name"
-                        )
-                        .value
-                        .trim();
 
-                const email =
-                    document
-                        .getElementById(
-                            "comment-email"
-                        )
-                        .value
-                        .trim();
+            const email =
+                document.getElementById(
+                    "comment-email"
+                ).value.trim();
 
-                const content =
-                    document
-                        .getElementById(
-                            "comment-content"
-                        )
-                        .value
-                        .trim();
 
-                const button =
-                    document.getElementById(
-                        "comment-submit"
-                    );
+            const content =
+                document.getElementById(
+                    "comment-content"
+                ).value.trim();
 
-                const message =
-                    document.getElementById(
-                        "comment-message"
-                    );
 
-                if (!name ||
-                    !email ||
-                    !content
-                ) {
-                    showCommentMessage(
-                        "Lütfen tüm alanları doldurun.",
-                        "error"
-                    );
+            const button =
+                document.getElementById(
+                    "comment-submit"
+                );
 
-                    return;
-                }
 
-                if (content.length < 3) {
-                    showCommentMessage(
-                        "Yorumunuz çok kısa.",
-                        "error"
-                    );
+            if (!name ||
+                !email ||
+                !content
+            ) {
+                showCommentMessage(
+                    "Lütfen tüm alanları doldurun.",
+                    "error"
+                );
 
-                    return;
-                }
+                return;
+            }
+
+
+            try {
 
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
-                if (!client) {
-                    showCommentMessage(
-                        "Yorum sistemi kullanılamıyor.",
-                        "error"
-                    );
-
-                    return;
-                }
 
                 button.disabled = true;
                 button.textContent =
                     "Gönderiliyor...";
+
 
                 const result =
                     await client
@@ -1994,290 +2028,322 @@
                         .insert({
                             news_id:
                                 currentNews.id,
-                            name: name,
-                            email: email,
-                            content: content,
-                            status: "pending"
+
+                            name:
+                                name,
+
+                            email:
+                                email,
+
+                            content:
+                                content,
+
+                            status:
+                                "pending"
                         });
 
-                button.disabled = false;
-                button.textContent =
-                    "Yorumu Gönder";
 
                 if (result.error) {
-                    console.error(
-                        "Yorum gönderme hatası:",
-                        result.error
-                    );
-
-                    showCommentMessage(
-                        "Yorum gönderilemedi. Lütfen tekrar deneyin.",
-                        "error"
-                    );
-
-                    return;
+                    throw result.error;
                 }
 
-                document
-                    .getElementById(
-                        "comment-form"
-                    )
-                    .reset();
+
+                document.getElementById(
+                    "comment-form"
+                ).reset();
+
 
                 showCommentMessage(
                     "Yorumunuz gönderildi. Editör onayından sonra yayınlanacaktır.",
                     "success"
                 );
+
+            } catch (error) {
+
+                console.error(
+                    "Yorum gönderme hatası:",
+                    error
+                );
+
+
+                showCommentMessage(
+                    "Yorum gönderilemedi. Lütfen tekrar deneyin.",
+                    "error"
+                );
+
+            } finally {
+
+                button.disabled = false;
+                button.textContent =
+                    "Yorumu Gönder";
             }
+        }
 
-            function showCommentMessage(
-                text,
-                type
-            ) {
-                const element =
-                    document.getElementById(
-                        "comment-message"
-                    );
 
-                if (!element) {
-                    return;
-                }
+        function showCommentMessage(
+            text,
+            type
+        ) {
 
-                element.textContent =
-                    text;
+            const element =
+                document.getElementById(
+                    "comment-message"
+                );
 
-                element.className =
-                    "comment-message " +
-                    type;
-            }
 
-            async function shareWhatsApp() {
-                const title =
-                    currentNews &&
-                    currentNews.title
-                        ? currentNews.title
-                        : "Akçaabat Haber";
+            element.textContent =
+                text;
 
-                const text =
+
+            element.className =
+                "comment-message " +
+                type;
+        }
+
+
+        function shareWhatsApp() {
+
+            const title =
+                currentNews &&
+                currentNews.title
+                    ? currentNews.title
+                    : "Akçaabat Haber";
+
+
+            const url =
+                "https://wa.me/?text=" +
+                encodeURIComponent(
                     title +
                     " - " +
-                    getCurrentUrl();
-
-                const url =
-                    "https://wa.me/?text=" +
-                    encodeURIComponent(text);
-
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer"
+                    window.location.href
                 );
-            }
 
-            function shareFacebook() {
-                const url =
-                    "https://www.facebook.com/sharer/sharer.php?u=" +
-                    encodeURIComponent(
-                        getCurrentUrl()
+
+            window.open(
+                url,
+                "_blank",
+                "noopener,noreferrer"
+            );
+        }
+
+
+        function shareFacebook() {
+
+            const url =
+                "https://www.facebook.com/sharer/sharer.php?u=" +
+                encodeURIComponent(
+                    window.location.href
+                );
+
+
+            window.open(
+                url,
+                "_blank",
+                "noopener,noreferrer,width=700,height=500"
+            );
+        }
+
+
+        async function copyArticleLink() {
+
+            const button =
+                document.getElementById(
+                    "share-copy"
+                );
+
+
+            const original =
+                button.textContent;
+
+
+            try {
+
+                await navigator.clipboard
+                    .writeText(
+                        window.location.href
                     );
 
-                window.open(
-                    url,
-                    "_blank",
-                    "noopener,noreferrer,width=700,height=500"
-                );
-            }
 
-            async function copyArticleLink() {
-                const url =
-                    getCurrentUrl();
+                button.textContent =
+                    "Kopyalandı";
 
-                try {
-                    if (
-                        navigator.clipboard &&
-                        navigator.clipboard.writeText
-                    ) {
-                        await navigator.clipboard
-                            .writeText(url);
-
-                        showTemporaryShareMessage(
-                            "Haber bağlantısı kopyalandı."
-                        );
-
-                        return;
-                    }
-                } catch (error) {
-                    console.warn(
-                        "Clipboard API kullanılamadı.",
-                        error
-                    );
-                }
+            } catch (error) {
 
                 const textarea =
                     document.createElement(
                         "textarea"
                     );
 
-                textarea.value = url;
-                textarea.style.position =
-                    "fixed";
-                textarea.style.left =
-                    "-9999px";
+
+                textarea.value =
+                    window.location.href;
+
 
                 document.body.appendChild(
                     textarea
                 );
 
+
                 textarea.select();
 
-                try {
-                    document.execCommand(
-                        "copy"
-                    );
 
-                    showTemporaryShareMessage(
-                        "Haber bağlantısı kopyalandı."
-                    );
-                } catch (error) {
-                    showTemporaryShareMessage(
-                        "Bağlantı kopyalanamadı."
-                    );
-                }
+                document.execCommand(
+                    "copy"
+                );
+
 
                 textarea.remove();
+
+
+                button.textContent =
+                    "Kopyalandı";
             }
 
-            function showTemporaryShareMessage(
-                text
-            ) {
-                const button =
-                    document.getElementById(
-                        "share-copy"
+
+            setTimeout(function () {
+                button.textContent =
+                    original;
+            }, 1600);
+        }
+
+
+        async function loadArticle() {
+
+            try {
+
+                const slug =
+                    getQueryParameter(
+                        "slug"
                     );
 
-                if (!button) {
+
+                const id =
+                    getQueryParameter(
+                        "id"
+                    );
+
+
+                if (!slug && !id) {
+
+                    document.getElementById(
+                        "article-loading"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "article-not-found"
+                    ).style.display =
+                        "";
+
                     return;
                 }
 
-                const original =
-                    button.textContent;
 
-                button.textContent =
-                    text;
+                const news =
+                    await findNews();
 
-                setTimeout(function () {
-                    button.textContent =
-                        original;
-                }, 1800);
-            }
 
-            async function loadArticle() {
-                try {
-                    const slug =
-                        getQueryParameter(
-                            "slug"
-                        );
+                if (!news) {
 
-                    const id =
-                        getQueryParameter(
-                            "id"
-                        );
-
-                    if (!slug && !id) {
-                        hideElement(
-                            "article-loading"
-                        );
-
-                        showElement(
-                            "article-not-found"
-                        );
-
-                        return;
-                    }
-
-                    const news =
-                        await findNews();
-
-                    if (!news) {
-                        hideElement(
-                            "article-loading"
-                        );
-
-                        showElement(
-                            "article-not-found"
-                        );
-
-                        return;
-                    }
-
-                    renderArticle(news);
-
-                    await Promise.all([
-                        incrementViews(news),
-                        loadComments(),
-                        loadLatestNews()
-                    ]);
-
-                } catch (error) {
-                    console.error(
-                        "Haber yükleme hatası:",
-                        error
-                    );
-
-                    hideElement(
-                        "article-loading"
-                    );
-
-                    const errorText =
-                        document.getElementById(
-                            "article-error-text"
-                        );
-
-                    if (errorText) {
-                        errorText.textContent =
-                            error &&
-                            error.message
-                                ? error.message
-                                : "Haber yüklenirken beklenmeyen bir hata oluştu.";
-                    }
-
-                    showElement(
-                        "article-error"
-                    );
-                }
-            }
-
-            function initialize() {
-                const form =
                     document.getElementById(
-                        "comment-form"
-                    );
+                        "article-loading"
+                    ).style.display =
+                        "none";
 
-                if (form) {
-                    form.addEventListener(
-                        "submit",
-                        submitComment
-                    );
+
+                    document.getElementById(
+                        "article-not-found"
+                    ).style.display =
+                        "";
+
+                    return;
                 }
 
-                loadArticle();
-            }
 
-            if (
-                document.readyState ===
-                "loading"
-            ) {
-                document.addEventListener(
-                    "DOMContentLoaded",
-                    initialize
+                renderArticle(
+                    news
                 );
-            } else {
-                initialize();
+
+
+                await Promise.allSettled([
+                    incrementViews(news),
+                    loadComments(),
+                    loadLatestNews()
+                ]);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Haber yükleme hatası:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "article-loading"
+                ).style.display =
+                    "none";
+
+
+                const errorText =
+                    document.getElementById(
+                        "article-error-text"
+                    );
+
+
+                errorText.textContent =
+                    error &&
+                    error.message
+                        ? error.message
+                        : "Haber yüklenirken beklenmeyen bir sorun oluştu.";
+
+
+                document.getElementById(
+                    "article-error"
+                ).style.display =
+                    "";
+            }
+        }
+
+
+        function initialize() {
+
+            const form =
+                document.getElementById(
+                    "comment-form"
+                );
+
+
+            if (form) {
+                form.addEventListener(
+                    "submit",
+                    submitComment
+                );
             }
 
-        })();
+
+            loadArticle();
+        }
+
+
+        if (
+            document.readyState ===
+            "loading"
+        ) {
+            document.addEventListener(
+                "DOMContentLoaded",
+                initialize
+            );
+        } else {
+            initialize();
+        }
+
+    })();
     </script>
 
-  <script src="portal-shell.js" defer></script>
+    <script src="portal-shell.js?v=4" defer></script>
+
 </body>
 </html>
