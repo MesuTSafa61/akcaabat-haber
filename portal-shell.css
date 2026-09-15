@@ -1,7 +1,1352 @@
-/* Akçaabat Haber unified public shell */
-:root{--ah-navy:#0b1830;--ah-navy2:#132746;--ah-red:#e31b23;--ah-ink:#111827;--ah-muted:#667085;--ah-line:#e5e7eb;--ah-bg:#f5f7fa;--ah-white:#fff;--ah-max:1240px}
-body.portal-unified{margin:0;background:var(--ah-bg);color:var(--ah-ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
-body.portal-unified>header:not(.ah-shell),body.portal-unified>nav:not(.ah-nav),body.portal-unified>footer:not(.ah-footer){display:none!important}
-.ah-shell *,.ah-footer *{box-sizing:border-box}.ah-wrap{width:min(var(--ah-max),calc(100% - 32px));margin:auto}.ah-top{background:#071120;color:#d9e1ec;font-size:12px}.ah-top .ah-wrap{height:34px;display:flex;align-items:center;justify-content:space-between;gap:20px}.ah-top-right{display:flex;gap:15px;align-items:center}.ah-main{background:#fff;border-bottom:1px solid var(--ah-line)}.ah-main .ah-wrap{min-height:92px;display:flex;align-items:center;justify-content:space-between;gap:28px}.ah-brand{display:flex;align-items:center;gap:11px;color:var(--ah-navy);text-decoration:none}.ah-mark{width:52px;height:52px;border-radius:10px;background:var(--ah-red);display:grid;place-items:center;color:#fff;font-weight:950;font-size:20px;letter-spacing:-1px}.ah-brand-copy{display:grid;line-height:.95}.ah-brand-copy strong{font-size:25px;letter-spacing:-1.2px}.ah-brand-copy span{font-size:19px;color:var(--ah-red);font-weight:900;letter-spacing:2.2px;margin-top:5px}.ah-services{display:flex;align-items:center;gap:8px}.ah-service{padding:9px 12px;border:1px solid var(--ah-line);border-radius:8px;color:var(--ah-navy);text-decoration:none;font-size:12px;font-weight:800;background:#fff}.ah-service:hover{border-color:#b9c2cf;background:#f8fafc}.ah-nav{background:var(--ah-navy);position:relative;z-index:50}.ah-nav .ah-wrap{display:flex;align-items:center;min-height:48px;gap:2px}.ah-nav a{color:#fff;text-decoration:none;font-size:13px;font-weight:800;padding:16px 12px;white-space:nowrap}.ah-nav a:hover,.ah-nav a:focus-visible{background:rgba(255,255,255,.09)}.ah-nav .ah-live{margin-left:auto;background:var(--ah-red)}.ah-menu{display:none;border:0;background:transparent;color:#fff;font-size:24px;padding:8px 4px}.ah-breaking{background:#fff;border-bottom:1px solid var(--ah-line)}.ah-breaking .ah-wrap{height:42px;display:flex;align-items:center;overflow:hidden}.ah-breaking-label{height:100%;display:flex;align-items:center;background:var(--ah-red);color:#fff;font-size:11px;font-weight:950;padding:0 14px;white-space:nowrap}.ah-breaking-text{padding:0 15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#344054;font-size:12px;font-weight:700}.ah-footer{margin-top:48px;background:#081425;color:#cbd5e1}.ah-footer-top{padding:44px 0 34px;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:38px}.ah-footer h3{color:#fff;font-size:13px;margin:0 0 14px;text-transform:uppercase;letter-spacing:.05em}.ah-footer a{display:block;color:#cbd5e1;text-decoration:none;font-size:13px;padding:5px 0}.ah-footer a:hover{color:#fff}.ah-footer p{font-size:13px;line-height:1.65;color:#94a3b8;max-width:360px}.ah-footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding:17px 0;font-size:11px;color:#94a3b8}.ah-footer .ah-brand{color:#fff;margin-bottom:14px}.ah-footer .ah-mark{width:44px;height:44px;font-size:17px}.ah-footer .ah-brand-copy strong{font-size:21px}.ah-footer .ah-brand-copy span{font-size:15px}.portal-unified main{max-width:var(--ah-max);margin-left:auto;margin-right:auto}.portal-unified img{max-width:100%}
-@media(max-width:900px){.ah-wrap{width:min(100% - 24px,var(--ah-max))}.ah-main .ah-wrap{min-height:74px}.ah-mark{width:44px;height:44px}.ah-brand-copy strong{font-size:21px}.ah-brand-copy span{font-size:15px}.ah-services{display:none}.ah-menu{display:block;margin-left:auto}.ah-nav .ah-wrap{min-height:44px;flex-wrap:wrap}.ah-nav a{display:none;width:100%;padding:12px 4px}.ah-nav.is-open a{display:block}.ah-nav .ah-menu{display:block}.ah-nav .ah-live{margin-left:0}.ah-footer-top{grid-template-columns:1fr 1fr}.ah-top-right span:first-child{display:none}}
-@media(max-width:560px){.ah-top .ah-wrap{height:30px}.ah-top{font-size:10px}.ah-main .ah-wrap{min-height:66px}.ah-mark{width:40px;height:40px;border-radius:8px}.ah-brand-copy strong{font-size:19px}.ah-brand-copy span{font-size:13px}.ah-breaking .ah-wrap{width:100%;height:38px}.ah-breaking-label{padding:0 10px}.ah-breaking-text{font-size:11px;padding:0 10px}.ah-footer-top{grid-template-columns:1fr;gap:22px;padding:34px 0 26px}.ah-footer{margin-top:34px}.portal-unified main{width:100%}}
+/* =========================================================
+   AKÇAABAT HABER
+   ORTAK PORTAL SHELL
+   Bordo + Beyaz Profesyonel Haber Portalı
+   ========================================================= */
+
+:root {
+    --ah-bordo: #6f1028;
+    --ah-bordo-dark: #500a1b;
+    --ah-bordo-deep: #3b0714;
+    --ah-bordo-soft: #8d1838;
+    --ah-red: #d71920;
+
+    --ah-white: #ffffff;
+    --ah-bg: #f4f4f5;
+    --ah-bg-soft: #fafafa;
+
+    --ah-ink: #151515;
+    --ah-text: #292929;
+    --ah-muted: #727272;
+
+    --ah-line: #e5e5e5;
+    --ah-line-dark: #d6d6d6;
+
+    --ah-max: 1280px;
+
+    --ah-shadow:
+        0 4px 16px rgba(0, 0, 0, .055);
+}
+
+
+/* =========================================================
+   GENEL
+   ========================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.portal-unified {
+    margin: 0;
+
+    background:
+        var(--ah-bg);
+
+    color:
+        var(--ah-ink);
+
+    font-family:
+        Arial,
+        Helvetica,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+    text-rendering:
+        optimizeLegibility;
+}
+
+
+body.portal-unified > header:not(.ah-shell),
+body.portal-unified > nav:not(.ah-nav),
+body.portal-unified > footer:not(.ah-footer) {
+    display: none !important;
+}
+
+
+.ah-shell *,
+.ah-footer *,
+.ah-nav * {
+    box-sizing: border-box;
+}
+
+
+.ah-wrap {
+    width:
+        min(
+            var(--ah-max),
+            calc(100% - 30px)
+        );
+
+    margin:
+        0 auto;
+}
+
+
+.portal-unified img {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   EN ÜST BİLGİ ŞERİDİ
+   ========================================================= */
+
+.ah-top {
+    background:
+        var(--ah-bordo-deep);
+
+    color:
+        rgba(255, 255, 255, .88);
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .09);
+
+    font-size:
+        11px;
+
+    font-weight:
+        600;
+}
+
+
+.ah-top .ah-wrap {
+    min-height:
+        32px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+}
+
+
+.ah-top-left {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+}
+
+
+.ah-top-right {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        17px;
+}
+
+
+.ah-top-right span,
+.ah-top-left span {
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   ANA HEADER
+   ========================================================= */
+
+.ah-main {
+    position:
+        relative;
+
+    z-index:
+        60;
+
+    background:
+        var(--ah-white);
+
+    border-bottom:
+        1px solid var(--ah-line);
+}
+
+
+.ah-main .ah-wrap {
+    min-height:
+        84px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        26px;
+}
+
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.ah-brand {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    flex-shrink:
+        0;
+
+    color:
+        var(--ah-bordo);
+
+    text-decoration:
+        none;
+}
+
+
+.ah-mark {
+    width:
+        49px;
+
+    height:
+        49px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    background:
+        var(--ah-bordo);
+
+    color:
+        var(--ah-white);
+
+    border-radius:
+        4px;
+
+    font-size:
+        18px;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -1px;
+
+    box-shadow:
+        0 3px 9px rgba(111, 16, 40, .17);
+}
+
+
+.ah-brand-copy {
+    display:
+        grid;
+
+    line-height:
+        .92;
+}
+
+
+.ah-brand-copy strong {
+    color:
+        var(--ah-bordo-dark);
+
+    font-size:
+        24px;
+
+    line-height:
+        1;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -1.2px;
+}
+
+
+.ah-brand-copy span {
+    margin-top:
+        5px;
+
+    color:
+        var(--ah-bordo);
+
+    font-size:
+        16px;
+
+    line-height:
+        1;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        3px;
+}
+
+
+/* =========================================================
+   HEADER SERVİS BUTONLARI
+   ========================================================= */
+
+.ah-services {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        6px;
+}
+
+
+.ah-service {
+    min-height:
+        35px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0 11px;
+
+    background:
+        var(--ah-white);
+
+    border:
+        1px solid var(--ah-line);
+
+    border-radius:
+        3px;
+
+    color:
+        #383838;
+
+    text-decoration:
+        none;
+
+    font-size:
+        10px;
+
+    line-height:
+        1;
+
+    font-weight:
+        800;
+
+    transition:
+        .18s ease;
+}
+
+
+.ah-service:hover {
+    background:
+        var(--ah-bordo);
+
+    border-color:
+        var(--ah-bordo);
+
+    color:
+        var(--ah-white);
+}
+
+
+/* =========================================================
+   ANA NAVİGASYON
+   ========================================================= */
+
+.ah-nav {
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        100;
+
+    background:
+        var(--ah-bordo);
+
+    border-bottom:
+        3px solid var(--ah-bordo-dark);
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, .08);
+}
+
+
+.ah-nav .ah-wrap {
+    min-height:
+        45px;
+
+    display:
+        flex;
+
+    align-items:
+        stretch;
+
+    gap:
+        0;
+}
+
+
+.ah-nav a {
+    position:
+        relative;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0 11px;
+
+    color:
+        var(--ah-white);
+
+    text-decoration:
+        none;
+
+    white-space:
+        nowrap;
+
+    font-size:
+        11px;
+
+    line-height:
+        1;
+
+    font-weight:
+        850;
+
+    transition:
+        background .15s ease;
+}
+
+
+.ah-nav a:hover,
+.ah-nav a:focus-visible,
+.ah-nav a.active {
+    background:
+        var(--ah-bordo-dark);
+}
+
+
+.ah-nav a.active::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        10px;
+
+    right:
+        10px;
+
+    bottom:
+        0;
+
+    height:
+        3px;
+
+    background:
+        var(--ah-white);
+}
+
+
+.ah-nav .ah-live {
+    margin-left:
+        auto;
+
+    background:
+        var(--ah-red);
+
+    font-weight:
+        900;
+}
+
+
+.ah-nav .ah-live:hover {
+    background:
+        #b90e14;
+}
+
+
+/* =========================================================
+   MOBİL MENÜ BUTONU
+   ========================================================= */
+
+.ah-menu {
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    margin-left:
+        auto;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--ah-white);
+
+    cursor:
+        pointer;
+
+    font-size:
+        22px;
+}
+
+
+/* =========================================================
+   SON DAKİKA BANDI
+   ========================================================= */
+
+.ah-breaking {
+    background:
+        var(--ah-white);
+
+    border-bottom:
+        1px solid var(--ah-line);
+
+    box-shadow:
+        0 2px 7px rgba(0, 0, 0, .025);
+}
+
+
+.ah-breaking .ah-wrap {
+    min-height:
+        39px;
+
+    display:
+        flex;
+
+    align-items:
+        stretch;
+
+    overflow:
+        hidden;
+}
+
+
+.ah-breaking-label {
+    position:
+        relative;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    flex-shrink:
+        0;
+
+    padding:
+        0 14px;
+
+    background:
+        var(--ah-red);
+
+    color:
+        var(--ah-white);
+
+    font-size:
+        10px;
+
+    line-height:
+        1;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        .03em;
+
+    white-space:
+        nowrap;
+}
+
+
+.ah-breaking-label::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    right:
+        -6px;
+
+    width:
+        12px;
+
+    height:
+        12px;
+
+    background:
+        var(--ah-red);
+
+    transform:
+        translateY(-50%) rotate(45deg);
+}
+
+
+.ah-breaking-text {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    min-width:
+        0;
+
+    padding:
+        0 18px;
+
+    overflow:
+        hidden;
+
+    color:
+        #292929;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+
+    font-size:
+        11px;
+
+    line-height:
+        1;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   SAYFA İÇERİĞİ
+   ========================================================= */
+
+.portal-unified main {
+    max-width:
+        var(--ah-max);
+
+    margin-left:
+        auto;
+
+    margin-right:
+        auto;
+}
+
+
+/* =========================================================
+   ORTAK BÖLÜM BAŞLIKLARI
+   ========================================================= */
+
+.portal-unified .section-title,
+.portal-unified .portal-section-title {
+    position:
+        relative;
+
+    margin:
+        0 0 15px;
+
+    padding:
+        0 0 9px;
+
+    border-bottom:
+        2px solid var(--ah-line);
+
+    color:
+        var(--ah-bordo-dark);
+
+    font-size:
+        20px;
+
+    line-height:
+        1.15;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -.5px;
+}
+
+
+.portal-unified .section-title::after,
+.portal-unified .portal-section-title::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    bottom:
+        -2px;
+
+    width:
+        65px;
+
+    height:
+        3px;
+
+    background:
+        var(--ah-bordo);
+}
+
+
+/* =========================================================
+   ORTAK HABER KARTLARI
+   ========================================================= */
+
+.portal-unified .news-card,
+.portal-unified .card {
+    background:
+        var(--ah-white);
+
+    border:
+        1px solid var(--ah-line);
+
+    border-radius:
+        3px;
+
+    overflow:
+        hidden;
+
+    box-shadow:
+        none;
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease;
+}
+
+
+.portal-unified .news-card:hover,
+.portal-unified .card:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(--ah-shadow);
+}
+
+
+.portal-unified .news-card h2,
+.portal-unified .news-card h3,
+.portal-unified .card h2,
+.portal-unified .card h3 {
+    color:
+        #171717;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        -.35px;
+}
+
+
+/* =========================================================
+   LINKLER
+   ========================================================= */
+
+.portal-unified a {
+    text-decoration:
+        none;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.ah-footer {
+    margin-top:
+        48px;
+
+    background:
+        var(--ah-bordo-deep);
+
+    color:
+        rgba(255, 255, 255, .82);
+
+    border-top:
+        5px solid var(--ah-bordo);
+}
+
+
+.ah-footer-top {
+    padding:
+        42px 0 32px;
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1.6fr 1fr 1fr 1fr;
+
+    gap:
+        36px;
+}
+
+
+.ah-footer h3 {
+    position:
+        relative;
+
+    margin:
+        0 0 14px;
+
+    padding-bottom:
+        9px;
+
+    color:
+        var(--ah-white);
+
+    font-size:
+        12px;
+
+    line-height:
+        1;
+
+    font-weight:
+        900;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .04em;
+}
+
+
+.ah-footer h3::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    bottom:
+        0;
+
+    width:
+        30px;
+
+    height:
+        2px;
+
+    background:
+        #b52c4e;
+}
+
+
+.ah-footer a {
+    display:
+        block;
+
+    padding:
+        4px 0;
+
+    color:
+        rgba(255, 255, 255, .72);
+
+    text-decoration:
+        none;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
+}
+
+
+.ah-footer a:hover {
+    color:
+        var(--ah-white);
+}
+
+
+.ah-footer p {
+    max-width:
+        365px;
+
+    margin:
+        10px 0;
+
+    color:
+        rgba(255, 255, 255, .62);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.65;
+}
+
+
+.ah-footer .ah-brand {
+    margin-bottom:
+        14px;
+
+    color:
+        var(--ah-white);
+}
+
+
+.ah-footer .ah-mark {
+    width:
+        43px;
+
+    height:
+        43px;
+
+    background:
+        #8d1838;
+
+    color:
+        var(--ah-white);
+
+    font-size:
+        16px;
+}
+
+
+.ah-footer .ah-brand-copy strong {
+    color:
+        var(--ah-white);
+
+    font-size:
+        20px;
+}
+
+
+.ah-footer .ah-brand-copy span {
+    color:
+        #dba1af;
+
+    font-size:
+        13px;
+
+    letter-spacing:
+        2.6px;
+}
+
+
+.ah-footer-bottom {
+    padding:
+        15px 0;
+
+    border-top:
+        1px solid rgba(255, 255, 255, .1);
+
+    color:
+        rgba(255, 255, 255, .5);
+
+    font-size:
+        10px;
+
+    line-height:
+        1.5;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .ah-services {
+        gap:
+            4px;
+    }
+
+
+    .ah-service {
+        padding:
+            0 8px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ah-nav a {
+        padding:
+            0 8px;
+
+        font-size:
+            10px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBİL
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .ah-wrap {
+        width:
+            min(
+                calc(100% - 22px),
+                var(--ah-max)
+            );
+    }
+
+
+    .ah-main .ah-wrap {
+        min-height:
+            69px;
+    }
+
+
+    .ah-mark {
+        width:
+            42px;
+
+        height:
+            42px;
+
+        font-size:
+            16px;
+    }
+
+
+    .ah-brand-copy strong {
+        font-size:
+            20px;
+    }
+
+
+    .ah-brand-copy span {
+        font-size:
+            13px;
+
+        letter-spacing:
+            2.5px;
+    }
+
+
+    .ah-services {
+        display:
+            none;
+    }
+
+
+    .ah-nav .ah-wrap {
+        min-height:
+            43px;
+
+        display:
+            flex;
+
+        flex-wrap:
+            wrap;
+
+        align-items:
+            center;
+    }
+
+
+    .ah-menu {
+        display:
+            flex;
+    }
+
+
+    .ah-nav a {
+        display:
+            none;
+
+        width:
+            100%;
+
+        min-height:
+            41px;
+
+        justify-content:
+            flex-start;
+
+        padding:
+            0 9px;
+
+        border-top:
+            1px solid rgba(255, 255, 255, .08);
+
+        font-size:
+            11px;
+    }
+
+
+    .ah-nav.is-open a {
+        display:
+            flex;
+    }
+
+
+    .ah-nav .ah-live {
+        margin-left:
+            0;
+    }
+
+
+    .ah-nav a.active::after {
+        display:
+            none;
+    }
+
+
+    .ah-footer-top {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:
+            28px;
+    }
+
+
+    .ah-top-right span:first-child {
+        display:
+            none;
+    }
+
+}
+
+
+/* =========================================================
+   TELEFON
+   ========================================================= */
+
+@media (max-width: 560px) {
+
+    .ah-top {
+        font-size:
+            9px;
+    }
+
+
+    .ah-top .ah-wrap {
+        min-height:
+            28px;
+    }
+
+
+    .ah-top-left {
+        gap:
+            7px;
+    }
+
+
+    .ah-top-right {
+        gap:
+            8px;
+    }
+
+
+    .ah-main .ah-wrap {
+        min-height:
+            62px;
+    }
+
+
+    .ah-mark {
+        width:
+            38px;
+
+        height:
+            38px;
+
+        border-radius:
+            3px;
+
+        font-size:
+            14px;
+    }
+
+
+    .ah-brand-copy strong {
+        font-size:
+            18px;
+
+        letter-spacing:
+            -.7px;
+    }
+
+
+    .ah-brand-copy span {
+        margin-top:
+            4px;
+
+        font-size:
+            11px;
+
+        letter-spacing:
+            2.2px;
+    }
+
+
+    .ah-breaking .ah-wrap {
+        width:
+            100%;
+
+        min-height:
+            36px;
+    }
+
+
+    .ah-breaking-label {
+        padding:
+            0 10px;
+
+        font-size:
+            9px;
+    }
+
+
+    .ah-breaking-text {
+        padding:
+            0 12px;
+
+        font-size:
+            10px;
+    }
+
+
+    .ah-footer {
+        margin-top:
+            34px;
+    }
+
+
+    .ah-footer-top {
+        grid-template-columns:
+            1fr;
+
+        gap:
+            22px;
+
+        padding:
+            32px 0 25px;
+    }
+
+
+    .portal-unified main {
+        width:
+            100%;
+    }
+
+}
+
+
+/* =========================================================
+   ÇOK KÜÇÜK TELEFON
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .ah-wrap {
+        width:
+            calc(100% - 16px);
+    }
+
+
+    .ah-brand-copy strong {
+        font-size:
+            16px;
+    }
+
+
+    .ah-brand-copy span {
+        font-size:
+            10px;
+    }
+
+
+    .ah-mark {
+        width:
+            36px;
+
+        height:
+            36px;
+    }
+
+}
