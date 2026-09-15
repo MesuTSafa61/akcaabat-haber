@@ -775,6 +775,8 @@
                             class="article-content"
                         ></div>
 
+                        <p id="article-source"></p>
+
                         <div class="article-share">
 
                             <div class="article-share-title">
@@ -1355,7 +1357,13 @@
                     created_at:
                         row.created_at || null,
                     updated_at:
-                        row.updated_at || null
+                        row.updated_at || null,
+                    origin_type:
+                        row.origin_type || "manual",
+                    source_name:
+                        row.source_name || "",
+                    source_url:
+                        row.source_url || ""
                 };
             }
 
@@ -1392,6 +1400,9 @@
                         published_at,
                         created_at,
                         updated_at,
+                        origin_type,
+                        source_name,
+                        source_url,
                         category:categories(
                             id,
                             name,
@@ -1531,6 +1542,11 @@
                         "breadcrumb-title"
                     );
 
+                const source =
+                    document.getElementById(
+                        "article-source"
+                    );
+
                 title.textContent =
                     news.title;
 
@@ -1577,6 +1593,22 @@
 
                 content.innerHTML =
                     formatArticleContent(news.content);
+
+                source.replaceChildren();
+                if (
+                    news.origin_type === "automated" &&
+                    news.source_name &&
+                    /^https:\/\//i.test(news.source_url)
+                ) {
+                    const link =
+                        document.createElement("a");
+                    link.href = news.source_url;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.textContent =
+                        "Kaynak: " + news.source_name;
+                    source.appendChild(link);
+                }
 
                 renderImage(news);
 

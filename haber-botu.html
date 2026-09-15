@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Haber Botu | Akçaabat Haber Yönetim</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <main>
+    <p><a href="admin-panel.html">← Yönetim paneline dön</a></p>
+    <h1>Haber Botu</h1>
+    <p id="status" role="status">Yükleniyor…</p>
+
+    <section>
+      <h2>Bot ayarları</h2>
+      <form id="settingsForm">
+        <label><input id="enabled" type="checkbox"> Bot aktif</label>
+        <label>Yayın modu
+          <select id="mode"><option value="draft">Taslak</option><option value="auto_publish">Otomatik yayın</option></select>
+        </label>
+        <label>Anahtar kelimeler (JSON)
+          <textarea id="keywords" rows="8" required></textarea>
+        </label>
+        <button type="submit">Ayarları kaydet</button>
+        <button id="scan" type="button">Şimdi tara</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Kaynak ekle</h2>
+      <p>Yalnızca kullanımına izin verilmiş RSS veya API uç noktası ekleyin. Bot tam haber metni ya da görsel kopyalamaz.</p>
+      <form id="sourceForm">
+        <label>Ad <input id="sourceName" required maxlength="120"></label>
+        <label>RSS/API URL <input id="feedUrl" type="url" required pattern="https://.*"></label>
+        <label>Tür <select id="sourceType"><option value="rss">RSS / Atom</option><option value="api">JSON API</option></select></label>
+        <label>Alan <select id="sourceCategory"><option value="akcaabat">Akçaabat</option><option value="trabzon">Trabzon</option><option value="trabzonspor">Trabzonspor</option></select></label>
+        <label>Güven seviyesi <input id="trustLevel" type="number" min="1" max="5" value="3"></label>
+        <label><input id="sourceActive" type="checkbox" checked> Aktif</label>
+        <label><input id="autoPublish" type="checkbox"> Bu kaynak otomatik yayınlayabilir</label>
+        <label><input id="remoteImage" type="checkbox"> Kaynak uzaktan görsel kullanımına izin veriyor</label>
+        <button type="submit">Kaynak ekle</button>
+      </form>
+      <div id="sources"></div>
+    </section>
+
+    <section>
+      <h2>Son çalışmalar</h2>
+      <div id="runs"></div>
+    </section>
+  </main>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function () {
+    "use strict";
+    let client;
+    const byId = (id) => document.getElementById(id);
+    const status = (message, error) => {
+      const element = byId("status");
+      element.textContent = message;
+      element.style.color = error ? "#b91c1c" : "";
+    };
+    const escape = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    })[char]);
+
+    async function requireStaff() {
+      const { data: userData, error } = await client.auth.getUser();
+      if (error || !userData.user) return false;
+      const { data: profile } = await client.from("profiles")
+        .select("role,is_active").eq("id", userData.user.id).maybeSingle();
+      return Boolean(profile && profile.is_active && ["admin", "editor"].includes(profile.role));
+    }
+
+    async function load() {
+      const [settingsResult, sourcesResult, runsResult] = await Promise.all([
+        client.from("news_bot_settings").select("*").eq("id", true).single(),
+        client.from("news_sources").select("*").order("created_at", { ascending: false }),
+        client.from("news_bot_runs").select("*").order("started_at", { ascending: false }).limit(10)
+      ]);
+      if (settingsResult.error || sourcesResult.error || runsResult.error) throw new Error("Bot verileri okunamadı.");
+      byId("enabled").checked = settingsResult.data.is_enabled;
+      byId("mode").value = settingsResult.data.default_mode;
+      byId("keywords").value = JSON.stringify(settingsResult.data.keywords, null, 2);
+      byId("sources").innerHTML = sourcesResult.data.length
+        ? "<ul>" + sourcesResult.data.map((source) =>
+          "<li><strong>" + escape(source.name) + "</strong> — " + escape(source.feed_url) +
+          " [" + escape(source.category) + "] " + (source.is_active ? "aktif" : "pasif") +
+          " <button data-toggle-source=\"" + source.id + "\" data-active=\"" + source.is_active + "\">" +
+          (source.is_active ? "Kapat" : "Aç") + "</button>" +
+          " <button data-delete-source=\"" + source.id + "\">Sil</button></li>"
+        ).join("") + "</ul>" : "<p>Henüz kaynak eklenmedi.</p>";
+      byId("runs").innerHTML = runsResult.data.length
+        ? "<ul>" + runsResult.data.map((run) =>
+          "<li>" + escape(run.started_at) + " — " + escape(run.status) +
+          " | bulunan: " + run.found_count + ", taslak: " + run.draft_count +
+          ", yayın: " + run.published_count + ", tekrar: " + run.duplicate_count +
+          (run.error_summary ? " | " + escape(run.error_summary) : "") + "</li>"
+        ).join("") + "</ul>" : "<p>Henüz çalışma kaydı yok.</p>";
+    }
+
+    byId("settingsForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        const keywords = JSON.parse(byId("keywords").value);
+        const { error } = await client.from("news_bot_settings").update({
+          is_enabled: byId("enabled").checked, default_mode: byId("mode").value,
+          keywords, updated_at: new Date().toISOString()
+        }).eq("id", true);
+        if (error) throw error;
+        status("Bot ayarları kaydedildi.");
+      } catch (error) { status("Ayarlar kaydedilemedi: geçerli JSON kullanın.", true); }
+    });
+
+    byId("sourceForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        const { error } = await client.from("news_sources").insert({
+          name: byId("sourceName").value.trim(), feed_url: byId("feedUrl").value.trim(),
+          source_type: byId("sourceType").value, category: byId("sourceCategory").value,
+          trust_level: Number(byId("trustLevel").value), is_active: byId("sourceActive").checked,
+          auto_publish: byId("autoPublish").checked, allow_remote_image: byId("remoteImage").checked
+        });
+        if (error) throw error;
+        event.target.reset(); byId("sourceActive").checked = true; byId("trustLevel").value = 3;
+        status("Kaynak eklendi."); await load();
+      } catch (error) { status("Kaynak eklenemedi.", true); }
+    });
+
+    byId("sources").addEventListener("click", async (event) => {
+      const toggleId = event.target.dataset.toggleSource;
+      if (toggleId) {
+        const { error } = await client.from("news_sources").update({
+          is_active: event.target.dataset.active !== "true"
+        }).eq("id", toggleId);
+        if (error) status("Kaynak güncellenemedi.", true); else { status("Kaynak güncellendi."); await load(); }
+        return;
+      }
+      const id = event.target.dataset.deleteSource;
+      if (!id || !window.confirm("Bu kaynak silinsin mi?")) return;
+      const { error } = await client.from("news_sources").delete().eq("id", id);
+      if (error) status("Kaynak silinemedi.", true); else { status("Kaynak silindi."); await load(); }
+    });
+
+    byId("scan").addEventListener("click", async () => {
+      try {
+        status("Tarama başlatılıyor…");
+        const { data: sessionData } = await client.auth.getSession();
+        const response = await fetch(window.AKCAABAT_SUPABASE.url + "/functions/v1/news-bot", {
+          method: "POST", headers: { Authorization: "Bearer " + sessionData.session.access_token }
+        });
+        if (!response.ok) throw new Error();
+        status("Tarama tamamlandı."); await load();
+      } catch (error) { status("Tarama başlatılamadı.", true); }
+    });
+
+    async function init() {
+      if (!window.AKCAABAT_SUPABASE || !window.supabase) throw new Error("Bağlantı ayarları yüklenemedi.");
+      client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+      if (!await requireStaff()) { window.location.replace("admin-giris.html"); return; }
+      await load(); status("Haber botu hazır.");
+    }
+    init().catch(() => status("Haber botu açılamadı.", true));
+  })();
+  </script>
+</body>
+</html>
