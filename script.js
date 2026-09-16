@@ -1,16 +1,15 @@
 /* =========================================================
    AKÇAABAT HABER
    ANA JAVASCRIPT
-   SÜRÜM: SUPABASE CMS + SEO SLUG SİSTEMİ
+   SUPABASE CMS + SEO + MANŞET SİSTEMİ
    ========================================================= */
 
 (function () {
-
     "use strict";
 
-    /* =========================================================
-       STORAGE ANAHTARLARI
-       ========================================================= */
+    /* =====================================================
+       AYARLAR
+       ===================================================== */
 
     const NEWS_KEY = "akcaabat_haberler";
     const DRAFT_KEY = "akcaabat_taslaklar";
@@ -26,154 +25,98 @@
     let cloudRefreshStarted = false;
 
 
-    /* =========================================================
+    /* =====================================================
        SUPABASE
-       ========================================================= */
+       ===================================================== */
 
     function getSupabaseConfig() {
-
         return window.AKCAABAT_SUPABASE || null;
-
     }
 
 
     function isCloudConfigured() {
-
-        const config =
-            getSupabaseConfig();
+        const config = getSupabaseConfig();
 
         return !!(
             config &&
             config.url &&
-            config.key
+            (config.key || config.anonKey)
         );
-
     }
 
 
     function loadSupabaseLibrary() {
-
         if (window.supabase) {
-            return Promise.resolve(
-                window.supabase
-            );
+            return Promise.resolve(window.supabase);
         }
 
         if (supabaseLoading) {
             return supabaseLoading;
         }
 
-        supabaseLoading =
-            new Promise(
-                function (resolve, reject) {
-
-                    const existing =
-                        document.querySelector(
-                            'script[data-akcaabat-supabase]'
-                        );
-
-                    if (existing) {
-
-                        existing.addEventListener(
-                            "load",
-                            function () {
-
-                                if (window.supabase) {
-                                    resolve(
-                                        window.supabase
-                                    );
-                                } else {
-                                    reject(
-                                        new Error(
-                                            "Supabase kütüphanesi yüklenemedi."
-                                        )
-                                    );
-                                }
-
-                            }
-                        );
-
-                        existing.addEventListener(
-                            "error",
-                            function () {
-
-                                reject(
-                                    new Error(
-                                        "Supabase CDN bağlantısı başarısız."
-                                    )
-                                );
-
-                            }
-                        );
-
-                        return;
-
-                    }
-
-
-                    const script =
-                        document.createElement(
-                            "script"
-                        );
-
-                    script.src =
-                        SUPABASE_CDN;
-
-                    script.async =
-                        true;
-
-                    script.dataset.akcaabatSupabase =
-                        "true";
-
-
-                    script.onload =
-                        function () {
-
-                            if (window.supabase) {
-
-                                resolve(
-                                    window.supabase
-                                );
-
-                            } else {
-
-                                reject(
-                                    new Error(
-                                        "Supabase nesnesi bulunamadı."
-                                    )
-                                );
-
-                            }
-
-                        };
-
-
-                    script.onerror =
-                        function () {
-
-                            reject(
-                                new Error(
-                                    "Supabase kütüphanesi yüklenemedi."
-                                )
-                            );
-
-                        };
-
-
-                    document.head.appendChild(
-                        script
-                    );
-
-                }
+        supabaseLoading = new Promise(function (resolve, reject) {
+            const existing = document.querySelector(
+                "script[data-akcaabat-supabase]"
             );
 
-        return supabaseLoading;
+            if (existing) {
+                existing.addEventListener("load", function () {
+                    if (window.supabase) {
+                        resolve(window.supabase);
+                    } else {
+                        reject(
+                            new Error(
+                                "Supabase kütüphanesi yüklenemedi."
+                            )
+                        );
+                    }
+                });
 
+                existing.addEventListener("error", function () {
+                    reject(
+                        new Error(
+                            "Supabase CDN bağlantısı başarısız."
+                        )
+                    );
+                });
+
+                return;
+            }
+
+            const script = document.createElement("script");
+
+            script.src = SUPABASE_CDN;
+            script.async = true;
+            script.dataset.akcaabatSupabase = "true";
+
+            script.onload = function () {
+                if (window.supabase) {
+                    resolve(window.supabase);
+                } else {
+                    reject(
+                        new Error(
+                            "Supabase nesnesi bulunamadı."
+                        )
+                    );
+                }
+            };
+
+            script.onerror = function () {
+                reject(
+                    new Error(
+                        "Supabase kütüphanesi yüklenemedi."
+                    )
+                );
+            };
+
+            document.head.appendChild(script);
+        });
+
+        return supabaseLoading;
     }
 
 
     async function getSupabaseClient() {
-
         if (supabaseClient) {
             return supabaseClient;
         }
@@ -183,46 +126,35 @@
         }
 
         try {
+            const library = await loadSupabaseLibrary();
+            const config = getSupabaseConfig();
 
-            const library =
-                await loadSupabaseLibrary();
-
-            const config =
-                getSupabaseConfig();
-
-            supabaseClient =
-                library.createClient(
-                    config.url,
-                    config.key
-                );
+            supabaseClient = library.createClient(
+                config.url,
+                config.key || config.anonKey
+            );
 
             return supabaseClient;
 
         } catch (error) {
-
             console.error(
                 "Supabase bağlantı hatası:",
                 error
             );
 
             return null;
-
         }
-
     }
 
 
     async function getCurrentUser() {
-
-        const client =
-            await getSupabaseClient();
+        const client = await getSupabaseClient();
 
         if (!client) {
             return null;
         }
 
         try {
-
             const result =
                 await client.auth.getUser();
 
@@ -237,37 +169,27 @@
             return result.data.user;
 
         } catch (error) {
-
             console.error(
                 "Kullanıcı bilgisi alınamadı:",
                 error
             );
 
             return null;
-
         }
-
     }
 
 
     async function isAuthenticated() {
-
-        const user =
-            await getCurrentUser();
-
-        return !!user;
-
+        return !!(await getCurrentUser());
     }
 
 
-    /* =========================================================
+    /* =====================================================
        STORAGE
-       ========================================================= */
+       ===================================================== */
 
     function readStorage(key) {
-
         try {
-
             const value =
                 localStorage.getItem(key);
 
@@ -283,23 +205,18 @@
                 : [];
 
         } catch (error) {
-
             console.error(
                 "Storage okuma hatası:",
                 error
             );
 
             return [];
-
         }
-
     }
 
 
     function writeStorage(key, data) {
-
         try {
-
             localStorage.setItem(
                 key,
                 JSON.stringify(data)
@@ -308,25 +225,21 @@
             return true;
 
         } catch (error) {
-
             console.error(
                 "Storage yazma hatası:",
                 error
             );
 
             return false;
-
         }
-
     }
 
 
-    /* =========================================================
-       ID
-       ========================================================= */
+    /* =====================================================
+       YARDIMCI FONKSİYONLAR
+       ===================================================== */
 
     function createId(prefix) {
-
         const random =
             Math.random()
                 .toString(36)
@@ -343,16 +256,10 @@
             "-" +
             random
         );
-
     }
 
 
-    /* =========================================================
-       HTML GÜVENLİĞİ
-       ========================================================= */
-
     function escapeHtml(value) {
-
         if (
             value === null ||
             value === undefined
@@ -366,76 +273,95 @@
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
 
-    /* =========================================================
+    function nowIso() {
+        return new Date().toISOString();
+    }
+
+
+    function isUuid(value) {
+        if (!value) {
+            return false;
+        }
+
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+            .test(String(value));
+    }
+
+
+    /* =====================================================
        HABER ALANLARI
-       ========================================================= */
+       ===================================================== */
 
     function getTitle(item) {
-
         return (
-            item.title ||
-            item.baslik ||
+            item?.title ||
+            item?.baslik ||
             ""
         );
-
     }
 
 
     function getSummary(item) {
-
         return (
-            item.summary ||
-            item.ozet ||
+            item?.summary ||
+            item?.ozet ||
             ""
         );
-
     }
 
 
     function getContent(item) {
-
         return (
-            item.content ||
-            item.icerik ||
+            item?.content ||
+            item?.icerik ||
             ""
         );
-
     }
 
 
     function getCategory(item) {
+        if (
+            item?.categories &&
+            item.categories.name
+        ) {
+            return item.categories.name;
+        }
+
+        if (
+            item?.category &&
+            typeof item.category === "object" &&
+            item.category.name
+        ) {
+            return item.category.name;
+        }
 
         return (
-            item.category ||
-            item.kategori ||
+            item?.category ||
+            item?.kategori ||
             "Genel"
         );
-
     }
 
 
     function getImage(item) {
-
         return (
-            item.image ||
-            item.gorsel ||
-            item.resim ||
-            FALLBACK_IMAGE
+            item?.image_url ||
+            item?.image ||
+            item?.gorsel ||
+            item?.resim ||
+            ""
         );
-
     }
 
 
     function getViews(item) {
-
         const value =
-            item.views !== undefined
+            item?.views !== undefined
                 ? item.views
-                : item.goruntulenme;
+                : item?.goruntulenme;
 
         const number =
             Number(value);
@@ -443,59 +369,91 @@
         return Number.isFinite(number)
             ? number
             : 0;
-
     }
 
 
     function getNewsId(item) {
-
         return (
-            item.id ||
-            item.newsId ||
-            item.haberId ||
+            item?.id ||
+            item?.newsId ||
+            item?.haberId ||
             ""
         );
-
     }
 
 
     function getDate(item) {
-
         return (
-            item.publishedAt ||
-            item.createdAt ||
-            item.updatedAt ||
+            item?.published_at ||
+            item?.publishedAt ||
+            item?.created_at ||
+            item?.createdAt ||
+            item?.updated_at ||
+            item?.updatedAt ||
             ""
         );
-
     }
 
 
     function isBreaking(item) {
+        return (
+            item?.is_breaking === true ||
+            item?.breaking === true ||
+            item?.breaking === "true" ||
+            item?.breaking === 1 ||
+            item?.breaking === "1"
+        );
+    }
+
+
+    function isHeadline(item) {
+        if (!item) {
+            return false;
+        }
+
+        const selected =
+            item.is_headline === true ||
+            item.is_headline === 1 ||
+            item.is_headline === "1" ||
+            item.is_headline === "true";
+
+        const order =
+            Number(item.headline_order);
 
         return (
-            item.breaking === true ||
-            item.breaking === "true" ||
-            item.breaking === 1 ||
-            item.breaking === "1"
+            selected &&
+            Number.isInteger(order) &&
+            order >= 1 &&
+            order <= 10 &&
+            (
+                !item.status ||
+                item.status === "published"
+            )
         );
-
     }
 
 
-    function nowIso() {
+    function getHeadlineOrder(item) {
+        const value =
+            Number(item?.headline_order);
 
-        return new Date().toISOString();
+        if (
+            !Number.isInteger(value) ||
+            value < 1 ||
+            value > 10
+        ) {
+            return null;
+        }
 
+        return value;
     }
 
 
-    /* =========================================================
-       DB SATIRI → ESKİ SİSTEM HABER NESNESİ
-       ========================================================= */
+    /* =====================================================
+       DB → HABER NESNESİ
+       ===================================================== */
 
     function normalizeNewsRow(row) {
-
         if (!row) {
             return null;
         }
@@ -509,77 +467,108 @@
                     "Genel"
                 );
 
+        const headlineOrder =
+            row.headline_order === null ||
+            row.headline_order === undefined
+                ? null
+                : Number(row.headline_order);
+
+        const validHeadlineOrder =
+            Number.isInteger(headlineOrder) &&
+            headlineOrder >= 1 &&
+            headlineOrder <= 10
+                ? headlineOrder
+                : null;
+
+        const headline =
+            row.status === "published" &&
+            row.is_headline === true &&
+            validHeadlineOrder !== null;
 
         return {
-
             id:
-                row.id ||
-                "",
+                row.id || "",
 
             title:
-                row.title ||
-                "",
+                row.title || "",
 
             slug:
                 row.slug ||
                 slugify(row.title),
 
             summary:
-                row.summary ||
-                "",
+                row.summary || "",
 
             content:
-                row.content ||
-                "",
+                row.content || "",
 
             category:
                 category,
 
             categoryId:
-                row.category_id ||
-                "",
+                row.category_id || "",
+
+            category_id:
+                row.category_id || null,
 
             image:
-                row.image_url ||
-                FALLBACK_IMAGE,
+                row.image_url || "",
+
+            image_url:
+                row.image_url || "",
 
             views:
                 Number(row.views) || 0,
 
             breaking:
-                !!row.is_breaking,
+                row.is_breaking === true,
+
+            is_breaking:
+                row.is_breaking === true,
+
+            is_headline:
+                headline,
+
+            headline_order:
+                headline
+                    ? validHeadlineOrder
+                    : null,
 
             status:
-                row.status ||
-                "published",
+                row.status || "published",
 
             publishedAt:
-                row.published_at ||
-                "",
+                row.published_at || "",
+
+            published_at:
+                row.published_at || "",
 
             createdAt:
-                row.created_at ||
-                "",
+                row.created_at || "",
+
+            created_at:
+                row.created_at || "",
 
             updatedAt:
-                row.updated_at ||
-                "",
+                row.updated_at || "",
+
+            updated_at:
+                row.updated_at || "",
 
             authorId:
-                row.author_id ||
-                ""
+                row.author_id || "",
 
+            author_id:
+                row.author_id || null
         };
-
     }
 
 
-    /* =========================================================
-       HABER NESNESİ → DB SATIRI
-       ========================================================= */
+    /* =====================================================
+       HABER NESNESİ → DB
+       ===================================================== */
 
     function newsToDatabase(item, categoryId) {
-
         if (!item) {
             return null;
         }
@@ -591,9 +580,18 @@
                     ? "archived"
                     : "published";
 
+        const requestedHeadline =
+            status === "published" &&
+            item.is_headline === true;
+
+        const order =
+            getHeadlineOrder(item);
+
+        const headline =
+            requestedHeadline &&
+            order !== null;
 
         return {
-
             id:
                 isUuid(item.id)
                     ? item.id
@@ -617,10 +615,11 @@
             category_id:
                 categoryId ||
                 item.categoryId ||
+                item.category_id ||
                 null,
 
             image_url:
-                getImage(item),
+                getImage(item) || null,
 
             status:
                 status,
@@ -628,42 +627,34 @@
             is_breaking:
                 isBreaking(item),
 
+            is_headline:
+                headline,
+
+            headline_order:
+                headline
+                    ? order
+                    : null,
+
             views:
                 getViews(item),
 
             published_at:
                 status === "published"
                     ? (
+                        item.published_at ||
                         item.publishedAt ||
                         nowIso()
                     )
                     : null
-
         };
-
     }
 
 
-    function isUuid(value) {
-
-        if (!value) {
-            return false;
-        }
-
-        return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-            .test(
-                String(value)
-            );
-
-    }
-
-
-    /* =========================================================
-       KATEGORİ
-       ========================================================= */
+    /* =====================================================
+       KATEGORİLER
+       ===================================================== */
 
     async function findCategoryId(categoryName) {
-
         const client =
             await getSupabaseClient();
 
@@ -677,78 +668,54 @@
                 "Genel"
             ).trim();
 
-
         try {
-
-            const result =
+            let result =
                 await client
                     .from("categories")
-                    .select(
-                        "id,name,slug"
-                    )
-                    .eq(
-                        "name",
-                        name
-                    )
+                    .select("id,name,slug")
+                    .eq("name", name)
                     .maybeSingle();
-
 
             if (
                 !result.error &&
                 result.data
             ) {
-
                 return result.data.id;
-
             }
-
 
             const slug =
                 slugify(name);
 
+            if (!slug) {
+                return null;
+            }
 
-            if (slug) {
+            result =
+                await client
+                    .from("categories")
+                    .select("id,name,slug")
+                    .eq("slug", slug)
+                    .maybeSingle();
 
-                const bySlug =
-                    await client
-                        .from("categories")
-                        .select(
-                            "id,name,slug"
-                        )
-                        .eq(
-                            "slug",
-                            slug
-                        )
-                        .maybeSingle();
-
-
-                if (
-                    !bySlug.error &&
-                    bySlug.data
-                ) {
-
-                    return bySlug.data.id;
-
-                }
-
+            if (
+                !result.error &&
+                result.data
+            ) {
+                return result.data.id;
             }
 
         } catch (error) {
-
             console.error(
                 "Kategori alınamadı:",
                 error
             );
-
         }
 
         return null;
-
     }
 
 
     async function loadCategories() {
-
         const client =
             await getSupabaseClient();
 
@@ -757,7 +724,6 @@
         }
 
         try {
-
             const result =
                 await client
                     .from("categories")
@@ -773,42 +739,41 @@
                         {
                             ascending: true
                         }
+                    )
+                    .order(
+                        "name",
+                        {
+                            ascending: true
+                        }
                     );
 
-
             if (result.error) {
-
                 console.error(
                     "Kategoriler alınamadı:",
                     result.error
                 );
 
                 return [];
-
             }
 
             return result.data || [];
 
         } catch (error) {
-
             console.error(
                 "Kategori bağlantı hatası:",
                 error
             );
 
             return [];
-
         }
-
     }
 
 
-    /* =========================================================
+    /* =====================================================
        TARİH
-       ========================================================= */
+       ===================================================== */
 
     function formatDate(value) {
-
         if (!value) {
             return "-";
         }
@@ -832,12 +797,10 @@
                 year: "numeric"
             }
         );
-
     }
 
 
     function formatDateTime(value) {
-
         if (!value) {
             return "-";
         }
@@ -853,140 +816,103 @@
             return "-";
         }
 
-        return (
-            date.toLocaleDateString(
-                "tr-TR",
-                {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric"
-                }
-            ) +
-            " " +
-            date.toLocaleTimeString(
-                "tr-TR",
-                {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            )
+        return date.toLocaleString(
+            "tr-TR",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
         );
-
     }
 
 
-    /* =========================================================
+    /* =====================================================
        SEO SLUG
-       ========================================================= */
+       ===================================================== */
 
     function slugify(text) {
-
         return String(text || "")
-            .toLowerCase()
+            .toLocaleLowerCase("tr-TR")
             .trim()
-
             .replace(/ğ/g, "g")
             .replace(/ü/g, "u")
             .replace(/ş/g, "s")
             .replace(/ı/g, "i")
             .replace(/ö/g, "o")
             .replace(/ç/g, "c")
-
-            .replace(/Ğ/g, "g")
-            .replace(/Ü/g, "u")
-            .replace(/Ş/g, "s")
-            .replace(/İ/g, "i")
-            .replace(/I/g, "i")
-            .replace(/Ö/g, "o")
-            .replace(/Ç/g, "c")
-
+            .replace(/â/g, "a")
+            .replace(/î/g, "i")
+            .replace(/û/g, "u")
             .replace(
                 /[^a-z0-9\s-]/g,
                 ""
             )
-
             .replace(
                 /\s+/g,
                 "-"
             )
-
             .replace(
                 /-+/g,
                 "-"
             )
-
             .replace(
                 /^-+|-+$/g,
-                "");
-
+                ""
+            );
     }
 
-
-    /* =========================================================
-       BENZERSİZ SLUG
-       ========================================================= */
 
     function createUniqueSlug(
         title,
         newsList,
         currentId
     ) {
-
         const base =
             slugify(title) ||
             "haber";
 
-        let slug =
-            base;
-
-        let counter =
-            2;
-
+        let slug = base;
+        let counter = 2;
 
         while (
-            newsList.some(
+            (newsList || []).some(
                 function (item) {
-
-                    const itemId =
-                        getNewsId(item);
-
                     return (
-                        String(itemId) !==
-                            String(
-                                currentId || ""
-                            ) &&
+                        String(
+                            getNewsId(item)
+                        ) !==
+                        String(
+                            currentId || ""
+                        ) &&
                         String(
                             item.slug || ""
-                        )
-                            .toLowerCase() ===
+                        ).toLowerCase() ===
                         String(slug)
                             .toLowerCase()
                     );
-
                 }
             )
         ) {
-
             slug =
                 base +
                 "-" +
                 counter;
 
             counter++;
-
         }
 
         return slug;
-
     }
 
 
-    /* =========================================================
-       SLUG'DAN HABER BUL
-       ========================================================= */
+    /* =====================================================
+       HABER BUL
+       ===================================================== */
 
     function findNewsBySlug(slug) {
-
         if (!slug) {
             return null;
         }
@@ -1004,7 +930,6 @@
         return (
             news.find(
                 function (item) {
-
                     return (
                         String(
                             item.slug || ""
@@ -1013,17 +938,14 @@
                             .toLowerCase() ===
                         normalized
                     );
-
                 }
             ) ||
             null
         );
-
     }
 
 
     async function findNewsBySlugAsync(slug) {
-
         if (!slug) {
             return null;
         }
@@ -1032,15 +954,10 @@
             await getSupabaseClient();
 
         if (!client) {
-
-            return findNewsBySlug(
-                slug
-            );
-
+            return findNewsBySlug(slug);
         }
 
         try {
-
             const result =
                 await client
                     .from("news")
@@ -1059,16 +976,13 @@
                     )
                     .maybeSingle();
 
-
             if (
                 result.error ||
                 !result.data
             ) {
-
                 return findNewsBySlug(
                     slug
                 );
-
             }
 
             return normalizeNewsRow(
@@ -1076,27 +990,17 @@
             );
 
         } catch (error) {
-
             console.error(
                 "Haber aranamadı:",
                 error
             );
 
-            return findNewsBySlug(
-                slug
-            );
-
+            return findNewsBySlug(slug);
         }
-
     }
 
 
-    /* =========================================================
-       HABER URL
-       ========================================================= */
-
     function getNewsUrl(item) {
-
         const slug =
             item &&
             item.slug
@@ -1113,18 +1017,16 @@
             "haber-detay.html?slug=" +
             encodeURIComponent(slug)
         );
-
     }
 
 
-    /* =========================================================
-       SUPABASE HABERLERİ GETİR
-       ========================================================= */
+    /* =====================================================
+       SUPABASE HABERLER
+       ===================================================== */
 
     async function fetchNewsFromSupabase(
         options
     ) {
-
         const client =
             await getSupabaseClient();
 
@@ -1136,105 +1038,161 @@
             options || {};
 
         try {
-
             let query =
                 client
                     .from("news")
-                    .select(
-                        "*,categories(id,name,slug)"
-                    );
-
+                    .select(`
+                        id,
+                        title,
+                        slug,
+                        summary,
+                        content,
+                        category_id,
+                        image_url,
+                        status,
+                        is_breaking,
+                        is_headline,
+                        headline_order,
+                        views,
+                        author_id,
+                        published_at,
+                        created_at,
+                        updated_at,
+                        categories (
+                            id,
+                            name,
+                            slug
+                        )
+                    `);
 
             if (
                 settings.includeAll !== true
             ) {
-
                 query =
                     query.eq(
                         "status",
                         "published"
                     );
-
             }
 
+            if (
+                settings.headline === true
+            ) {
+                query =
+                    query
+                        .eq(
+                            "status",
+                            "published"
+                        )
+                        .eq(
+                            "is_headline",
+                            true
+                        )
+                        .not(
+                            "headline_order",
+                            "is",
+                            null
+                        )
+                        .order(
+                            "headline_order",
+                            {
+                                ascending: true
+                            }
+                        )
+                        .limit(10);
 
-            query =
-                query.order(
-                    "published_at",
-                    {
-                        ascending: false,
-                        nullsFirst: false
-                    }
-                );
+            } else {
+                query =
+                    query.order(
+                        "published_at",
+                        {
+                            ascending: false,
+                            nullsFirst: false
+                        }
+                    );
+            }
 
+            if (settings.limit) {
+                query =
+                    query.limit(
+                        Number(
+                            settings.limit
+                        )
+                    );
+            }
 
             const result =
                 await query;
 
-
             if (result.error) {
-
                 console.error(
                     "Supabase haberleri alınamadı:",
                     result.error
                 );
 
                 return [];
-
             }
-
 
             return (
                 result.data || []
-            ).map(
-                normalizeNewsRow
-            );
+            )
+                .map(normalizeNewsRow)
+                .filter(Boolean);
 
         } catch (error) {
-
             console.error(
                 "Haber listesi bağlantı hatası:",
                 error
             );
 
             return [];
-
         }
+    }
 
+
+    async function getHeadlines() {
+        const rows =
+            await fetchNewsFromSupabase({
+                headline: true,
+                limit: 10
+            });
+
+        return rows
+            .filter(isHeadline)
+            .sort(
+                function (a, b) {
+                    return (
+                        getHeadlineOrder(a) -
+                        getHeadlineOrder(b)
+                    );
+                }
+            )
+            .slice(0, 10);
     }
 
 
     async function refreshNewsFromSupabase(
         options
     ) {
-
         const cloudNews =
             await fetchNewsFromSupabase(
                 options
             );
 
-
+        /*
+         * Supabase gerçekten boş dönerse
+         * eski cache'i yanlışlıkla silmiyoruz.
+         */
         if (!cloudNews.length) {
-
-            /*
-             * Veritabanında gerçekten hiç haber
-             * yoksa boş listeyi cache'lemek yerine
-             * mevcut local veriyi koruyoruz.
-             */
-
             return [];
-
         }
-
 
         writeStorage(
             NEWS_KEY,
             cloudNews
         );
 
-
         initNewsCounters();
-
 
         document.dispatchEvent(
             new CustomEvent(
@@ -1247,14 +1205,11 @@
             )
         );
 
-
         return cloudNews;
-
     }
 
 
     function startCloudNewsRefresh() {
-
         if (cloudRefreshStarted) {
             return;
         }
@@ -1263,67 +1218,97 @@
             return;
         }
 
-        cloudRefreshStarted =
-            true;
-
+        cloudRefreshStarted = true;
 
         refreshNewsFromSupabase()
             .catch(
                 function (error) {
-
                     console.warn(
                         "Arka plan haber yenilemesi başarısız:",
                         error
                     );
-
                 }
             );
-
     }
 
 
-    /* =========================================================
+    /* =====================================================
+       LOCAL CACHE
+       ===================================================== */
+
+    function updateLocalNewsCache(item) {
+        if (!item) {
+            return;
+        }
+
+        const news =
+            readStorage(
+                NEWS_KEY
+            );
+
+        const index =
+            news.findIndex(
+                function (existing) {
+                    return (
+                        String(
+                            getNewsId(existing)
+                        ) ===
+                        String(
+                            getNewsId(item)
+                        )
+                    );
+                }
+            );
+
+        if (index >= 0) {
+            news[index] = item;
+        } else {
+            news.unshift(item);
+        }
+
+        writeStorage(
+            NEWS_KEY,
+            news
+        );
+
+        initNewsCounters();
+    }
+
+
+    /* =====================================================
        SUPABASE HABER KAYDET
-       ========================================================= */
+       ===================================================== */
 
-    async function upsertNewsToSupabase(
-        item
-    ) {
-
+    async function upsertNewsToSupabase(item) {
         const client =
             await getSupabaseClient();
 
         if (!client) {
-
             return {
                 success: false,
-                reason: "supabase_unavailable"
+                reason:
+                    "supabase_unavailable"
             };
-
         }
-
 
         const user =
             await getCurrentUser();
 
         if (!user) {
-
             return {
                 success: false,
-                reason: "not_authenticated"
+                reason:
+                    "not_authenticated"
             };
-
         }
 
-
         try {
-
             const categoryId =
                 item.categoryId ||
+                item.category_id ||
                 await findCategoryId(
                     getCategory(item)
                 );
-
 
             const row =
                 newsToDatabase(
@@ -1331,25 +1316,20 @@
                     categoryId
                 );
 
-
             if (!row) {
-
                 return {
                     success: false,
-                    reason: "invalid_data"
+                    reason:
+                        "invalid_data"
                 };
-
             }
-
 
             row.author_id =
                 user.id;
 
-
             if (!row.id) {
                 delete row.id;
             }
-
 
             const result =
                 await client
@@ -1366,9 +1346,7 @@
                     )
                     .single();
 
-
             if (result.error) {
-
                 console.error(
                     "Supabase haber kayıt hatası:",
                     result.error
@@ -1376,23 +1354,21 @@
 
                 return {
                     success: false,
-                    reason: "database_error",
-                    error: result.error
+                    reason:
+                        "database_error",
+                    error:
+                        result.error
                 };
-
             }
-
 
             const normalized =
                 normalizeNewsRow(
                     result.data
                 );
 
-
             updateLocalNewsCache(
                 normalized
             );
-
 
             return {
                 success: true,
@@ -1400,7 +1376,6 @@
             };
 
         } catch (error) {
-
             console.error(
                 "Supabase haber kayıt istisnası:",
                 error
@@ -1408,129 +1383,66 @@
 
             return {
                 success: false,
-                reason: "exception",
-                error: error
+                reason:
+                    "exception",
+                error:
+                    error
             };
-
         }
-
     }
 
 
-    function updateLocalNewsCache(
-        item
-    ) {
+    /* =====================================================
+       TASLAK
+       ===================================================== */
 
-        if (!item) {
-            return;
-        }
-
-        const news =
-            readStorage(
-                NEWS_KEY
-            );
-
-
-        const index =
-            news.findIndex(
-                function (existing) {
-
-                    return (
-                        String(
-                            getNewsId(existing)
-                        ) ===
-                        String(
-                            getNewsId(item)
-                        )
-                    );
-
-                }
-            );
-
-
-        if (index >= 0) {
-
-            news[index] =
-                item;
-
-        } else {
-
-            news.unshift(
-                item
-            );
-
-        }
-
-
-        writeStorage(
-            NEWS_KEY,
-            news
-        );
-
-
-        initNewsCounters();
-
-    }
-
-
-    /* =========================================================
-       TASLAK SUPABASE
-       ========================================================= */
-
-    async function saveDraftToSupabase(
-        item
-    ) {
-
+    async function saveDraftToSupabase(item) {
         const client =
             await getSupabaseClient();
 
         if (!client) {
-
             return {
                 success: false,
-                reason: "supabase_unavailable"
+                reason:
+                    "supabase_unavailable"
             };
-
         }
-
 
         const user =
             await getCurrentUser();
 
         if (!user) {
-
             return {
                 success: false,
-                reason: "not_authenticated"
+                reason:
+                    "not_authenticated"
             };
-
         }
 
-
         try {
-
             const categoryId =
                 item.categoryId ||
+                item.category_id ||
                 await findCategoryId(
                     getCategory(item)
                 );
 
-
             const row =
                 newsToDatabase(
-                    item,
+                    {
+                        ...item,
+                        status: "draft",
+                        is_headline: false,
+                        headline_order: null
+                    },
                     categoryId
                 );
 
-
             if (!row) {
-
                 return {
                     success: false
                 };
-
             }
-
 
             row.author_id =
                 user.id;
@@ -1541,11 +1453,18 @@
             row.published_at =
                 null;
 
+            /*
+             * TASLAK MANŞETTE KALAMAZ
+             */
+            row.is_headline =
+                false;
+
+            row.headline_order =
+                null;
 
             if (!row.id) {
                 delete row.id;
             }
-
 
             const result =
                 await client
@@ -1562,9 +1481,7 @@
                     )
                     .single();
 
-
             if (result.error) {
-
                 console.error(
                     "Supabase taslak kayıt hatası:",
                     result.error
@@ -1572,11 +1489,10 @@
 
                 return {
                     success: false,
-                    error: result.error
+                    error:
+                        result.error
                 };
-
             }
-
 
             return {
                 success: true,
@@ -1587,7 +1503,6 @@
             };
 
         } catch (error) {
-
             console.error(
                 "Supabase taslak istisnası:",
                 error
@@ -1595,22 +1510,252 @@
 
             return {
                 success: false,
-                error: error
+                error:
+                    error
             };
-
         }
-
     }
 
 
-    /* =========================================================
-       HABER GÖRÜNTÜLENME SAYISI
-       ========================================================= */
+    /* =====================================================
+       MANŞET YÖNETİMİ
+       ===================================================== */
 
-    async function incrementNewsViews(
-        id
+    async function getHeadlineSlots() {
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            return [];
+        }
+
+        try {
+            const result =
+                await client
+                    .from("news")
+                    .select(
+                        "id,title,slug,status,is_headline,headline_order"
+                    )
+                    .eq(
+                        "status",
+                        "published"
+                    )
+                    .eq(
+                        "is_headline",
+                        true
+                    )
+                    .not(
+                        "headline_order",
+                        "is",
+                        null
+                    )
+                    .order(
+                        "headline_order",
+                        {
+                            ascending: true
+                        }
+                    );
+
+            if (result.error) {
+                console.error(
+                    "Manşet sıraları alınamadı:",
+                    result.error
+                );
+
+                return [];
+            }
+
+            return result.data || [];
+
+        } catch (error) {
+            console.error(
+                "Manşet sıraları alınamadı:",
+                error
+            );
+
+            return [];
+        }
+    }
+
+
+    async function setHeadline(
+        newsId,
+        order
     ) {
+        const client =
+            await getSupabaseClient();
 
+        if (!client) {
+            throw new Error(
+                "Supabase bağlantısı kurulamadı."
+            );
+        }
+
+        const position =
+            Number(order);
+
+        if (
+            !Number.isInteger(position) ||
+            position < 1 ||
+            position > 10
+        ) {
+            throw new Error(
+                "Manşet sırası 1 ile 10 arasında olmalıdır."
+            );
+        }
+
+        const newsResult =
+            await client
+                .from("news")
+                .select(
+                    "id,status"
+                )
+                .eq(
+                    "id",
+                    newsId
+                )
+                .maybeSingle();
+
+        if (newsResult.error) {
+            throw newsResult.error;
+        }
+
+        if (!newsResult.data) {
+            throw new Error(
+                "Haber bulunamadı."
+            );
+        }
+
+        if (
+            newsResult.data.status !==
+            "published"
+        ) {
+            throw new Error(
+                "Yalnızca yayınlanmış haberler manşete eklenebilir."
+            );
+        }
+
+        const occupied =
+            await client
+                .from("news")
+                .select(
+                    "id,title"
+                )
+                .eq(
+                    "is_headline",
+                    true
+                )
+                .eq(
+                    "headline_order",
+                    position
+                )
+                .neq(
+                    "id",
+                    newsId
+                )
+                .limit(1);
+
+        if (occupied.error) {
+            throw occupied.error;
+        }
+
+        if (
+            occupied.data &&
+            occupied.data.length
+        ) {
+            throw new Error(
+                position +
+                ". manşet sırası başka bir haber tarafından kullanılıyor."
+            );
+        }
+
+        const result =
+            await client
+                .from("news")
+                .update({
+                    is_headline:
+                        true,
+                    headline_order:
+                        position
+                })
+                .eq(
+                    "id",
+                    newsId
+                )
+                .select(
+                    "*,categories(id,name,slug)"
+                )
+                .single();
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        const normalized =
+            normalizeNewsRow(
+                result.data
+            );
+
+        updateLocalNewsCache(
+            normalized
+        );
+
+        return normalized;
+    }
+
+
+    async function removeHeadline(
+        newsId
+    ) {
+        const client =
+            await getSupabaseClient();
+
+        if (!client) {
+            throw new Error(
+                "Supabase bağlantısı kurulamadı."
+            );
+        }
+
+        const result =
+            await client
+                .from("news")
+                .update({
+                    is_headline:
+                        false,
+                    headline_order:
+                        null
+                })
+                .eq(
+                    "id",
+                    newsId
+                )
+                .select(
+                    "*,categories(id,name,slug)"
+                )
+                .single();
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        const normalized =
+            normalizeNewsRow(
+                result.data
+            );
+
+        updateLocalNewsCache(
+            normalized
+        );
+
+        return normalized;
+    }
+
+
+    /* =====================================================
+       GÖRÜNTÜLENME
+       ===================================================== */
+
+    async function incrementNewsViews(id) {
         if (!id) {
             return false;
         }
@@ -1622,39 +1767,313 @@
             return false;
         }
 
-
         try {
-
             const result =
                 await client.rpc(
                     "increment_news_views",
                     {
-                        news_id: id
+                        news_id:
+                            id
                     }
                 );
 
             return !result.error;
 
         } catch (error) {
-
             console.error(
                 "Görüntülenme güncellenemedi:",
                 error
             );
 
             return false;
-
         }
-
     }
 
 
-    /* =========================================================
-       GLOBAL OBJE
-       ========================================================= */
+    /* =====================================================
+       MOBİL MENÜ
+       ===================================================== */
+
+    function initMobileMenu() {
+        document
+            .querySelectorAll(
+                "[data-mobile-menu]"
+            )
+            .forEach(
+                function (button) {
+                    button.addEventListener(
+                        "click",
+                        function () {
+                            document.body
+                                .classList
+                                .toggle(
+                                    "mobile-menu-open"
+                                );
+                        }
+                    );
+                }
+            );
+
+        document.addEventListener(
+            "click",
+            function (event) {
+                if (
+                    event.target.closest(
+                        "[data-mobile-menu-close]"
+                    )
+                ) {
+                    document.body
+                        .classList
+                        .remove(
+                            "mobile-menu-open"
+                        );
+                }
+            }
+        );
+    }
+
+
+    /* =====================================================
+       TARİH / YIL
+       ===================================================== */
+
+    function initDateElements() {
+        document
+            .querySelectorAll(
+                "[data-current-date]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        new Date()
+                            .toLocaleDateString(
+                                "tr-TR",
+                                {
+                                    weekday:
+                                        "long",
+                                    day:
+                                        "2-digit",
+                                    month:
+                                        "long",
+                                    year:
+                                        "numeric"
+                                }
+                            );
+                }
+            );
+
+        document
+            .querySelectorAll(
+                "[data-current-year]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        new Date()
+                            .getFullYear();
+                }
+            );
+    }
+
+
+    /* =====================================================
+       HABER SAYAÇLARI
+       ===================================================== */
+
+    function initNewsCounters() {
+        const news =
+            readStorage(
+                NEWS_KEY
+            );
+
+        const drafts =
+            readStorage(
+                DRAFT_KEY
+            );
+
+        document
+            .querySelectorAll(
+                "[data-news-count]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        news.length;
+                }
+            );
+
+        document
+            .querySelectorAll(
+                "[data-draft-count]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        drafts.length;
+                }
+            );
+
+        document
+            .querySelectorAll(
+                "[data-breaking-count]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        news.filter(
+                            isBreaking
+                        ).length;
+                }
+            );
+
+        document
+            .querySelectorAll(
+                "[data-headline-count]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        news.filter(
+                            isHeadline
+                        ).length;
+                }
+            );
+
+        const views =
+            news.reduce(
+                function (
+                    total,
+                    item
+                ) {
+                    return (
+                        total +
+                        getViews(item)
+                    );
+                },
+                0
+            );
+
+        document
+            .querySelectorAll(
+                "[data-view-count]"
+            )
+            .forEach(
+                function (element) {
+                    element.textContent =
+                        views.toLocaleString(
+                            "tr-TR"
+                        );
+                }
+            );
+    }
+
+
+    /* =====================================================
+       ESC
+       ===================================================== */
+
+    function initEscapeKey() {
+        document.addEventListener(
+            "keydown",
+            function (event) {
+                if (
+                    event.key !==
+                    "Escape"
+                ) {
+                    return;
+                }
+
+                document.body
+                    .classList
+                    .remove(
+                        "mobile-menu-open"
+                    );
+
+                document
+                    .querySelectorAll(
+                        ".modal.active, .modal.open"
+                    )
+                    .forEach(
+                        function (modal) {
+                            modal.classList.remove(
+                                "active",
+                                "open"
+                            );
+                        }
+                    );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       BUTON EFEKTİ
+       ===================================================== */
+
+    function initButtonEffects() {
+        document
+            .querySelectorAll(
+                "button, .btn, .button"
+            )
+            .forEach(
+                function (button) {
+                    button.addEventListener(
+                        "click",
+                        function () {
+                            button.classList.add(
+                                "button-clicked"
+                            );
+
+                            setTimeout(
+                                function () {
+                                    button.classList.remove(
+                                        "button-clicked"
+                                    );
+                                },
+                                180
+                            );
+                        }
+                    );
+                }
+            );
+    }
+
+
+    /* =====================================================
+       SUPABASE ARKA PLAN
+       ===================================================== */
+
+    function initSupabaseBackground() {
+        if (!isCloudConfigured()) {
+            return;
+        }
+
+        getSupabaseClient()
+            .then(
+                function (client) {
+                    if (!client) {
+                        return;
+                    }
+
+                    startCloudNewsRefresh();
+                }
+            )
+            .catch(
+                function (error) {
+                    console.warn(
+                        "Supabase arka plan başlatma hatası:",
+                        error
+                    );
+                }
+            );
+    }
+
+
+    /* =====================================================
+       GLOBAL API
+       ===================================================== */
 
     window.AkcaabatHaber = {
-
         NEWS_KEY:
             NEWS_KEY,
 
@@ -1666,42 +2085,34 @@
 
         readNews:
             function () {
-
                 startCloudNewsRefresh();
 
                 return readStorage(
                     NEWS_KEY
                 );
-
             },
 
         readDrafts:
             function () {
-
                 return readStorage(
                     DRAFT_KEY
                 );
-
             },
 
         saveNews:
             function (data) {
-
                 return writeStorage(
                     NEWS_KEY,
                     data
                 );
-
             },
 
         saveDrafts:
             function (data) {
-
                 return writeStorage(
                     DRAFT_KEY,
                     data
                 );
-
             },
 
         createId:
@@ -1758,8 +2169,14 @@
         isBreaking:
             isBreaking,
 
-        slugify:
-            slugify,
+        isHeadline:
+            isHeadline,
+
+        getHeadlineOrder:
+            getHeadlineOrder,
+
+        normalizeNewsRow:
+            normalizeNewsRow,
 
         getSupabaseClient:
             getSupabaseClient,
@@ -1782,6 +2199,18 @@
         refreshNewsFromSupabase:
             refreshNewsFromSupabase,
 
+        getHeadlines:
+            getHeadlines,
+
+        getHeadlineSlots:
+            getHeadlineSlots,
+
+        setHeadline:
+            setHeadline,
+
+        removeHeadline:
+            removeHeadline,
+
         upsertNewsToSupabase:
             upsertNewsToSupabase,
 
@@ -1790,2121 +2219,36 @@
 
         incrementNewsViews:
             incrementNewsViews
-
     };
 
 
-    /* =========================================================
-       MOBİL MENÜ
-       ========================================================= */
-
-    function initMobileMenu() {
-
-        const buttons =
-            document.querySelectorAll(
-                "[data-mobile-menu]"
-            );
-
-        buttons.forEach(
-            function (button) {
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        document.body.classList.toggle(
-                            "mobile-menu-open"
-                        );
-
-                    }
-                );
-
-            }
-        );
-
-
-        document.addEventListener(
-            "click",
-            function (event) {
-
-                const target =
-                    event.target;
-
-                if (
-                    target.closest(
-                        "[data-mobile-menu-close]"
-                    )
-                ) {
-
-                    document.body.classList.remove(
-                        "mobile-menu-open"
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       RESİM ÖNİZLEME
-       ========================================================= */
-
-    function initImagePreview() {
-
-        const input =
-            document.querySelector(
-                'input[type="file"][data-image-input]'
-            );
-
-        const preview =
-            document.querySelector(
-                "[data-image-preview]"
-            );
-
-        if (!input || !preview) {
-            return;
-        }
-
-
-        input.addEventListener(
-            "change",
-            function () {
-
-                const file =
-                    input.files &&
-                    input.files[0];
-
-
-                if (!file) {
-                    return;
-                }
-
-
-                if (
-                    !file.type.startsWith(
-                        "image/"
-                    )
-                ) {
-
-                    alert(
-                        "Lütfen geçerli bir görsel seç."
-                    );
-
-                    input.value = "";
-
-                    return;
-
-                }
-
-
-                const reader =
-                    new FileReader();
-
-
-                reader.onload =
-                    function (event) {
-
-                        preview.src =
-                            event.target.result;
-
-                        preview.style.display =
-                            "block";
-
-                    };
-
-
-                reader.readAsDataURL(
-                    file
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       FORM ELEMENTLERİ
-       ========================================================= */
-
-    function findFormElement(
-        form,
-        selectors
-    ) {
-
-        for (
-            let i = 0;
-            i < selectors.length;
-            i++
-        ) {
-
-            const element =
-                form.querySelector(
-                    selectors[i]
-                );
-
-            if (element) {
-                return element;
-            }
-
-        }
-
-        return null;
-
-    }
-
-
-    function findInput(
-        form,
-        selectors
-    ) {
-
-        return findFormElement(
-            form,
-            selectors
-        );
-
-    }
-
-
-    function getFormValue(
-        form,
-        selectors
-    ) {
-
-        const element =
-            findFormElement(
-                form,
-                selectors
-            );
-
-        if (!element) {
-            return "";
-        }
-
-        return String(
-            element.value || ""
-        ).trim();
-
-    }
-
-
-    function getFormCheckbox(
-        form,
-        selectors
-    ) {
-
-        const element =
-            findFormElement(
-                form,
-                selectors
-            );
-
-        if (!element) {
-            return false;
-        }
-
-        return !!element.checked;
-
-    }
-
-
-    /* =========================================================
-       HABER FORMU
-       ========================================================= */
-
-    function initNewsForm() {
-
-        const form =
-            document.querySelector(
-                "[data-news-form]"
-            );
-
-        if (!form) {
-            return;
-        }
-
-
-        const titleInput =
-            findInput(
-                form,
-                [
-                    "#title",
-                    "#baslik",
-                    "[name='title']",
-                    "[name='baslik']"
-                ]
-            );
-
-
-        const summaryInput =
-            findInput(
-                form,
-                [
-                    "#summary",
-                    "#ozet",
-                    "[name='summary']",
-                    "[name='ozet']"
-                ]
-            );
-
-
-        const contentInput =
-            findInput(
-                form,
-                [
-                    "#content",
-                    "#icerik",
-                    "[name='content']",
-                    "[name='icerik']"
-                ]
-            );
-
-
-        const categoryInput =
-            findInput(
-                form,
-                [
-                    "#category",
-                    "#kategori",
-                    "[name='category']",
-                    "[name='kategori']"
-                ]
-            );
-
-
-        const imageInput =
-            findInput(
-                form,
-                [
-                    "#image",
-                    "#gorsel",
-                    "[name='image']",
-                    "[name='gorsel']"
-                ]
-            );
-
-
-        const breakingInput =
-            findInput(
-                form,
-                [
-                    "#breaking",
-                    "[name='breaking']"
-                ]
-            );
-
-
-        const publishButton =
-            form.querySelector(
-                "[data-publish]"
-            );
-
-
-        const draftButton =
-            form.querySelector(
-                "[data-save-draft]"
-            );
-
-
-        const previewButton =
-            form.querySelector(
-                "[data-preview]"
-            );
-
-
-        const titleCounter =
-            document.querySelector(
-                "[data-title-counter]"
-            );
-
-
-        const summaryCounter =
-            document.querySelector(
-                "[data-summary-counter]"
-            );
-
-
-        const contentCounter =
-            document.querySelector(
-                "[data-content-counter]"
-            );
-
-
-        /* -----------------------------------------------------
-           KARAKTER SAYACI
-           ----------------------------------------------------- */
-
-        function updateCounters() {
-
-            if (
-                titleInput &&
-                titleCounter
-            ) {
-
-                titleCounter.textContent =
-                    titleInput.value.length;
-
-            }
-
-
-            if (
-                summaryInput &&
-                summaryCounter
-            ) {
-
-                summaryCounter.textContent =
-                    summaryInput.value.length;
-
-            }
-
-
-            if (
-                contentInput &&
-                contentCounter
-            ) {
-
-                contentCounter.textContent =
-                    contentInput.value.length;
-
-            }
-
-        }
-
-
-        [
-            titleInput,
-            summaryInput,
-            contentInput
-        ].forEach(
-            function (input) {
-
-                if (!input) {
-                    return;
-                }
-
-                input.addEventListener(
-                    "input",
-                    updateCounters
-                );
-
-            }
-        );
-
-
-        updateCounters();
-
-
-        /* -----------------------------------------------------
-           GÖRSEL
-           ----------------------------------------------------- */
-
-        function getImageValue() {
-
-            if (!imageInput) {
-                return FALLBACK_IMAGE;
-            }
-
-
-            if (
-                imageInput.type ===
-                "file"
-            ) {
-
-                const preview =
-                    document.querySelector(
-                        "[data-image-preview]"
-                    );
-
-
-                if (
-                    preview &&
-                    preview.src &&
-                    preview.src.indexOf(
-                        "data:image"
-                    ) === 0
-                ) {
-
-                    return preview.src;
-
-                }
-
-
-                return FALLBACK_IMAGE;
-
-            }
-
-
-            return (
-                imageInput.value ||
-                FALLBACK_IMAGE
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           EDIT ID
-           ----------------------------------------------------- */
-
-        function getEditId() {
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            return (
-                params.get("edit") ||
-                ""
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           TASLAK ID
-           ----------------------------------------------------- */
-
-        function getDraftId() {
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-            return (
-                params.get("draft") ||
-                ""
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           MEVCUT HABER
-           ----------------------------------------------------- */
-
-        function findExistingNews() {
-
-            const editId =
-                getEditId();
-
-
-            if (!editId) {
-                return null;
-            }
-
-
-            const news =
-                readStorage(
-                    NEWS_KEY
-                );
-
-
-            return (
-                news.find(
-                    function (item) {
-
-                        return (
-                            String(
-                                getNewsId(item)
-                            ) ===
-                            String(editId)
-                        );
-
-                    }
-                ) ||
-                null
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           FORM VERİSİ
-           ----------------------------------------------------- */
-
-        function collectData(
-            existing,
-            status
-        ) {
-
-            const title =
-                titleInput
-                    ? titleInput.value.trim()
-                    : "";
-
-
-            const summary =
-                summaryInput
-                    ? summaryInput.value.trim()
-                    : "";
-
-
-            const content =
-                contentInput
-                    ? contentInput.value.trim()
-                    : "";
-
-
-            const category =
-                categoryInput
-                    ? categoryInput.value.trim()
-                    : "Genel";
-
-
-            const breaking =
-                breakingInput
-                    ? breakingInput.checked
-                    : false;
-
-
-            const newsList =
-                readStorage(
-                    NEWS_KEY
-                );
-
-
-            const slug =
-                createUniqueSlug(
-                    title,
-                    newsList,
-                    existing
-                        ? existing.id
-                        : ""
-                );
-
-
-            return {
-
-                id:
-                    existing &&
-                    existing.id
-                        ? existing.id
-                        : createId("haber"),
-
-
-                title:
-                    title,
-
-
-                slug:
-                    slug,
-
-
-                summary:
-                    summary,
-
-
-                content:
-                    content,
-
-
-                category:
-                    category ||
-                    "Genel",
-
-
-                breaking:
-                    breaking,
-
-
-                image:
-                    getImageValue(),
-
-
-                views:
-                    existing &&
-                    Number.isFinite(
-                        Number(
-                            existing.views
-                        )
-                    )
-                        ? Number(
-                            existing.views
-                        )
-                        : 0,
-
-
-                createdAt:
-                    existing &&
-                    existing.createdAt
-                        ? existing.createdAt
-                        : nowIso(),
-
-
-                updatedAt:
-                    nowIso(),
-
-
-                publishedAt:
-                    existing &&
-                    existing.publishedAt
-                        ? existing.publishedAt
-                        : nowIso(),
-
-
-                status:
-                    status ||
-                    "published"
-
-            };
-
-        }
-
-
-        /* -----------------------------------------------------
-           DOĞRULAMA
-           ----------------------------------------------------- */
-
-        function validateData(
-            data
-        ) {
-
-            if (!data.title) {
-
-                alert(
-                    "Lütfen haber başlığını gir."
-                );
-
-                if (titleInput) {
-                    titleInput.focus();
-                }
-
-                return false;
-
-            }
-
-
-            if (
-                data.title.length <
-                5
-            ) {
-
-                alert(
-                    "Haber başlığı en az 5 karakter olmalı."
-                );
-
-                if (titleInput) {
-                    titleInput.focus();
-                }
-
-                return false;
-
-            }
-
-
-            if (!data.content) {
-
-                alert(
-                    "Lütfen haber içeriğini gir."
-                );
-
-                if (contentInput) {
-                    contentInput.focus();
-                }
-
-                return false;
-
-            }
-
-
-            if (
-                data.content.length <
-                20
-            ) {
-
-                alert(
-                    "Haber içeriği çok kısa."
-                );
-
-                if (contentInput) {
-                    contentInput.focus();
-                }
-
-                return false;
-
-            }
-
-
-            return true;
-
-        }
-
-
-        /* -----------------------------------------------------
-           LOCAL HABER KAYDET
-           ----------------------------------------------------- */
-
-        function saveLocalPublishedNews(
-            data
-        ) {
-
-            const news =
-                readStorage(
-                    NEWS_KEY
-                );
-
-
-            const existingIndex =
-                news.findIndex(
-                    function (item) {
-
-                        return (
-                            String(
-                                getNewsId(item)
-                            ) ===
-                            String(
-                                data.id
-                            )
-                        );
-
-                    }
-                );
-
-
-            if (
-                existingIndex >= 0
-            ) {
-
-                news[
-                    existingIndex
-                ] = data;
-
-            } else {
-
-                news.unshift(
-                    data
-                );
-
-            }
-
-
-            return writeStorage(
-                NEWS_KEY,
-                news
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           YAYINLA
-           ----------------------------------------------------- */
-
-        async function savePublishedNews() {
-
-            const existing =
-                findExistingNews();
-
-
-            const data =
-                collectData(
-                    existing,
-                    "published"
-                );
-
-
-            if (
-                !validateData(data)
-            ) {
-
-                return false;
-
-            }
-
-
-            /*
-             * Önce local cache.
-             * Böylece mevcut sayfalar bozulmaz.
-             */
-
-            const localSaved =
-                saveLocalPublishedNews(
-                    data
-                );
-
-
-            if (!localSaved) {
-
-                alert(
-                    "Haber kaydedilemedi. Tarayıcı depolama alanını kontrol et."
-                );
-
-                return false;
-
-            }
-
-
-            removeDraftByNewsId(
-                data.id
-            );
-
-
-            /*
-             * Supabase'e giriş yapılmışsa
-             * gerçek veritabanına da gönder.
-             */
-
-            if (isCloudConfigured()) {
-
-                const cloud =
-                    await upsertNewsToSupabase(
-                        data
-                    );
-
-
-                if (
-                    cloud.success &&
-                    cloud.data
-                ) {
-
-                    updateLocalNewsCache(
-                        cloud.data
-                    );
-
-                } else if (
-                    cloud.reason ===
-                    "not_authenticated"
-                ) {
-
-                    console.warn(
-                        "Supabase: Admin girişi yapılmadığı için haber yalnızca yerel kaydedildi."
-                    );
-
-                }
-
-            }
-
-
-            return true;
-
-        }
-
-
-        /* -----------------------------------------------------
-           TASLAK KAYDET
-           ----------------------------------------------------- */
-
-        async function saveDraft() {
-
-            const existing =
-                findExistingNews();
-
-
-            const title =
-                titleInput
-                    ? titleInput.value.trim()
-                    : "";
-
-
-            const summary =
-                summaryInput
-                    ? summaryInput.value.trim()
-                    : "";
-
-
-            const content =
-                contentInput
-                    ? contentInput.value.trim()
-                    : "";
-
-
-            const category =
-                categoryInput
-                    ? categoryInput.value.trim()
-                    : "Genel";
-
-
-            const breaking =
-                breakingInput
-                    ? breakingInput.checked
-                    : false;
-
-
-            const params =
-                new URLSearchParams(
-                    window.location.search
-                );
-
-
-            const requestedDraftId =
-                params.get("draft");
-
-
-            const draftId =
-                requestedDraftId ||
-                (
-                    existing &&
-                    existing.id
-                        ? existing.id
-                        : createId("taslak")
-                );
-
-
-            const drafts =
-                readStorage(
-                    DRAFT_KEY
-                );
-
-
-            const existingDraft =
-                drafts.find(
-                    function (item) {
-
-                        return (
-                            String(
-                                item.id
-                            ) ===
-                            String(
-                                draftId
-                            )
-                        );
-
-                    }
-                );
-
-
-            const newsList =
-                readStorage(
-                    NEWS_KEY
-                );
-
-
-            const draft = {
-
-                id:
-                    draftId,
-
-                title:
-                    title,
-
-                slug:
-                    createUniqueSlug(
-                        title,
-                        newsList,
-                        existing
-                            ? existing.id
-                            : ""
-                    ),
-
-                summary:
-                    summary,
-
-                content:
-                    content,
-
-                category:
-                    category ||
-                    "Genel",
-
-                breaking:
-                    breaking,
-
-                image:
-                    getImageValue(),
-
-                createdAt:
-                    existingDraft &&
-                    existingDraft.createdAt
-                        ? existingDraft.createdAt
-                        : nowIso(),
-
-                updatedAt:
-                    nowIso(),
-
-                status:
-                    "draft"
-
-            };
-
-
-            const index =
-                drafts.findIndex(
-                    function (item) {
-
-                        return (
-                            String(
-                                item.id
-                            ) ===
-                            String(
-                                draftId
-                            )
-                        );
-
-                    }
-                );
-
-
-            if (index >= 0) {
-
-                drafts[index] =
-                    draft;
-
-            } else {
-
-                drafts.unshift(
-                    draft
-                );
-
-            }
-
-
-            const saved =
-                writeStorage(
-                    DRAFT_KEY,
-                    drafts
-                );
-
-
-            if (!saved) {
-
-                alert(
-                    "Taslak kaydedilemedi."
-                );
-
-                return false;
-
-            }
-
-
-            /*
-             * Supabase taslak kaydı.
-             */
-
-            if (isCloudConfigured()) {
-
-                await saveDraftToSupabase(draft);
-
-
-            }
-
-
-            alert(
-                "Taslak başarıyla kaydedildi."
-            );
-
-
-            return true;
-
-        }
-
-
-        /* -----------------------------------------------------
-           TASLAK SİL
-           ----------------------------------------------------- */
-
-        function removeDraftByNewsId(
-            id
-        ) {
-
-            const drafts =
-                readStorage(
-                    DRAFT_KEY
-                );
-
-
-            const filtered =
-                drafts.filter(
-                    function (item) {
-
-                        return (
-                            String(
-                                item.id
-                            ) !==
-                            String(id)
-                        );
-
-                    }
-                );
-
-
-            writeStorage(
-                DRAFT_KEY,
-                filtered
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           YAYINLA BUTONU
-           ----------------------------------------------------- */
-
-        if (publishButton) {
-
-            publishButton.addEventListener(
-                "click",
-                async function (event) {
-
-                    event.preventDefault();
-
-
-                    const saved =
-                        await savePublishedNews();
-
-
-                    if (!saved) {
-                        return;
-                    }
-
-
-                    alert(
-                        "Haber başarıyla yayınlandı."
-                    );
-
-
-                    window.location.href =
-                        "haber.html";
-
-                }
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           TASLAK BUTONU
-           ----------------------------------------------------- */
-
-        if (draftButton) {
-
-            draftButton.addEventListener(
-                "click",
-                async function (event) {
-
-                    event.preventDefault();
-
-                    await saveDraft();
-
-                }
-            );
-
-        }
-
-
-        /* -----------------------------------------------------
-           ÖNİZLEME
-           ----------------------------------------------------- */
-
-        if (previewButton) {
-
-            previewButton.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-
-                    const title =
-                        titleInput
-                            ? titleInput.value.trim()
-                            : "";
-
-
-                    if (!title) {
-
-                        alert(
-                            "Önizleme için önce başlık gir."
-                        );
-
-                        return;
-
-                    }
-
-
-                    const existing =
-                        findExistingNews();
-
-
-                    const temporary =
-                        collectData(
-                            existing,
-                            "preview"
-                        );
-
-
-                    sessionStorage.setItem(
-                        "akcaabat_preview_haber",
-                        JSON.stringify(
-                            temporary
-                        )
-                    );
-
-
-                    window.open(
-                        "haber-onizleme.html",
-                        "_blank"
-                    );
-
-                }
-            );
-
-        }
-
-    }
-
-
-    /* =========================================================
-       OTOMATİK TASLAK
-       ========================================================= */
-
-    function initAutoDraft() {
-
-        const form =
-            document.querySelector(
-                "[data-news-form]"
-            );
-
-        if (!form) {
-            return;
-        }
-
-
-        const title =
-            findInput(
-                form,
-                [
-                    "#title",
-                    "#baslik",
-                    "[name='title']",
-                    "[name='baslik']"
-                ]
-            );
-
-
-        const summary =
-            findInput(
-                form,
-                [
-                    "#summary",
-                    "#ozet",
-                    "[name='summary']",
-                    "[name='ozet']"
-                ]
-            );
-
-
-        const content =
-            findInput(
-                form,
-                [
-                    "#content",
-                    "#icerik",
-                    "[name='content']",
-                    "[name='icerik']"
-                ]
-            );
-
-
-        if (
-            !title &&
-            !summary &&
-            !content
-        ) {
-            return;
-        }
-
-
-        let timer =
-            null;
-
-
-        function saveTemporary() {
-
-            const data = {
-
-                title:
-                    title
-                        ? title.value
-                        : "",
-
-                summary:
-                    summary
-                        ? summary.value
-                        : "",
-
-                content:
-                    content
-                        ? content.value
-                        : "",
-
-                savedAt:
-                    nowIso()
-
-            };
-
-
-            if (
-                !data.title &&
-                !data.summary &&
-                !data.content
-            ) {
-
-                return;
-
-            }
-
-
-            try {
-
-                sessionStorage.setItem(
-                    "akcaabat_auto_draft",
-                    JSON.stringify(data)
-                );
-
-            } catch (error) {
-
-                console.warn(
-                    "Otomatik taslak kaydedilemedi.",
-                    error
-                );
-
-            }
-
-        }
-
-
-        [
-            title,
-            summary,
-            content
-        ].forEach(
-            function (input) {
-
-                if (!input) {
-                    return;
-                }
-
-
-                input.addEventListener(
-                    "input",
-                    function () {
-
-                        clearTimeout(
-                            timer
-                        );
-
-
-                        timer =
-                            setTimeout(
-                                saveTemporary,
-                                1200
-                            );
-
-                    }
-                );
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       FORM TEMİZLE
-       ========================================================= */
-
-    function initClearForm() {
-
-        const button =
-            document.querySelector(
-                "[data-clear-form]"
-            );
-
-
-        const form =
-            document.querySelector(
-                "[data-news-form]"
-            );
-
-
-        if (!button || !form) {
-            return;
-        }
-
-
-        button.addEventListener(
-            "click",
-            function (event) {
-
-                event.preventDefault();
-
-
-                const confirmed =
-                    confirm(
-                        "Formdaki tüm bilgiler temizlensin mi?"
-                    );
-
-
-                if (!confirmed) {
-                    return;
-                }
-
-
-                form.reset();
-
-
-                const preview =
-                    document.querySelector(
-                        "[data-image-preview]"
-                    );
-
-
-                if (preview) {
-
-                    preview.removeAttribute(
-                        "src"
-                    );
-
-                    preview.style.display =
-                        "none";
-
-                }
-
-
-                try {
-
-                    sessionStorage.removeItem(
-                        "akcaabat_auto_draft"
-                    );
-
-                } catch (error) {
-
-                    console.warn(
-                        error
-                    );
-
-                }
-
-
-                document
-                    .querySelectorAll(
-                        "[data-title-counter], [data-summary-counter], [data-content-counter]"
-                    )
-                    .forEach(
-                        function (element) {
-
-                            element.textContent =
-                                "0";
-
-                        }
-                    );
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       OTOMATİK TASLAĞI YÜKLE
-       ========================================================= */
-
-    function loadAutoDraft() {
-
-        const form =
-            document.querySelector(
-                "[data-news-form]"
-            );
-
-        if (!form) {
-            return;
-        }
-
-
-        const params =
-            new URLSearchParams(
-                window.location.search
-            );
-
-
-        if (
-            params.has("edit") ||
-            params.has("draft")
-        ) {
-
-            return;
-
-        }
-
-
-        try {
-
-            const raw =
-                sessionStorage.getItem(
-                    "akcaabat_auto_draft"
-                );
-
-
-            if (!raw) {
-                return;
-            }
-
-
-            const data =
-                JSON.parse(raw);
-
-
-            if (!data) {
-                return;
-            }
-
-
-            const title =
-                findInput(
-                    form,
-                    [
-                        "#title",
-                        "#baslik",
-                        "[name='title']",
-                        "[name='baslik']"
-                    ]
-                );
-
-
-            const summary =
-                findInput(
-                    form,
-                    [
-                        "#summary",
-                        "#ozet",
-                        "[name='summary']",
-                        "[name='ozet']"
-                    ]
-                );
-
-
-            const content =
-                findInput(
-                    form,
-                    [
-                        "#content",
-                        "#icerik",
-                        "[name='content']",
-                        "[name='icerik']"
-                    ]
-                );
-
-
-            if (
-                title &&
-                data.title
-            ) {
-
-                title.value =
-                    data.title;
-
-            }
-
-
-            if (
-                summary &&
-                data.summary
-            ) {
-
-                summary.value =
-                    data.summary;
-
-            }
-
-
-            if (
-                content &&
-                data.content
-            ) {
-
-                content.value =
-                    data.content;
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "Otomatik taslak yüklenemedi:",
-                error
-            );
-
-        }
-
-    }
-
-
-    /* =========================================================
-       BUTON ANİMASYONU
-       ========================================================= */
-
-    function initButtonEffects() {
-
-        document
-            .querySelectorAll(
-                "button, .btn, .button"
-            )
-            .forEach(
-                function (button) {
-
-                    button.addEventListener(
-                        "click",
-                        function () {
-
-                            button.classList.add(
-                                "button-clicked"
-                            );
-
-
-                            setTimeout(
-                                function () {
-
-                                    button.classList.remove(
-                                        "button-clicked"
-                                    );
-
-                                },
-                                180
-                            );
-
-                        }
-                    );
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       GÖRSEL URL
-       ========================================================= */
-
-    function initImageUrlInputs() {
-
-        document
-            .querySelectorAll(
-                "[data-image-url]"
-            )
-            .forEach(
-                function (input) {
-
-                    input.addEventListener(
-                        "input",
-                        function () {
-
-                            const preview =
-                                document.querySelector(
-                                    "[data-image-preview]"
-                                );
-
-
-                            if (
-                                !preview ||
-                                !input.value.trim()
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            preview.src =
-                                input.value.trim();
-
-
-                            preview.style.display =
-                                "block";
-
-
-                            preview.onerror =
-                                function () {
-
-                                    preview.src =
-                                        FALLBACK_IMAGE;
-
-                                };
-
-                        }
-                    );
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       FORM DOĞRULAMA
-       ========================================================= */
-
-    function initValidation() {
-
-        document
-            .querySelectorAll(
-                "form"
-            )
-            .forEach(
-                function (form) {
-
-                    if (
-                        form.matches(
-                            "[data-no-validation]"
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    form.addEventListener(
-                        "submit",
-                        function (event) {
-
-                            const required =
-                                form.querySelectorAll(
-                                    "[required]"
-                                );
-
-
-                            let valid =
-                                true;
-
-
-                            required.forEach(
-                                function (field) {
-
-                                    if (
-                                        !String(
-                                            field.value || ""
-                                        ).trim()
-                                    ) {
-
-                                        valid =
-                                            false;
-
-
-                                        field.classList.add(
-                                            "input-error"
-                                        );
-
-                                    } else {
-
-                                        field.classList.remove(
-                                            "input-error"
-                                        );
-
-                                    }
-
-                                }
-                            );
-
-
-                            if (!valid) {
-
-                                event.preventDefault();
-
-
-                                alert(
-                                    "Lütfen zorunlu alanları doldur."
-                                );
-
-                            }
-
-                        }
-                    );
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       TARİH
-       ========================================================= */
-
-    function initDateElements() {
-
-        document
-            .querySelectorAll(
-                "[data-current-date]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        new Date()
-                            .toLocaleDateString(
-                                "tr-TR",
-                                {
-                                    weekday:
-                                        "long",
-                                    day:
-                                        "2-digit",
-                                    month:
-                                        "long",
-                                    year:
-                                        "numeric"
-                                }
-                            );
-
-                }
-            );
-
-
-        document
-            .querySelectorAll(
-                "[data-current-year]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        new Date()
-                            .getFullYear();
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       HABER SAYAÇLARI
-       ========================================================= */
-
-    function initNewsCounters() {
-
-        const news =
-            readStorage(
-                NEWS_KEY
-            );
-
-
-        const drafts =
-            readStorage(
-                DRAFT_KEY
-            );
-
-
-        document
-            .querySelectorAll(
-                "[data-news-count]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        news.length;
-
-                }
-            );
-
-
-        document
-            .querySelectorAll(
-                "[data-draft-count]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        drafts.length;
-
-                }
-            );
-
-
-        document
-            .querySelectorAll(
-                "[data-breaking-count]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        news.filter(
-                            function (item) {
-
-                                return isBreaking(
-                                    item
-                                );
-
-                            }
-                        ).length;
-
-                }
-            );
-
-
-        const views =
-            news.reduce(
-                function (
-                    total,
-                    item
-                ) {
-
-                    return (
-                        total +
-                        getViews(item)
-                    );
-
-                },
-                0
-            );
-
-
-        document
-            .querySelectorAll(
-                "[data-view-count]"
-            )
-            .forEach(
-                function (element) {
-
-                    element.textContent =
-                        views.toLocaleString(
-                            "tr-TR"
-                        );
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       ESC
-       ========================================================= */
-
-    function initEscapeKey() {
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key ===
-                    "Escape"
-                ) {
-
-                    document.body.classList.remove(
-                        "mobile-menu-open"
-                    );
-
-
-                    document
-                        .querySelectorAll(
-                            ".modal.active, .modal.open"
-                        )
-                        .forEach(
-                            function (modal) {
-
-                                modal.classList.remove(
-                                    "active",
-                                    "open"
-                                );
-
-                            }
-                        );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       SUPABASE OTOMATİK BAŞLATMA
-       ========================================================= */
-
-    function initSupabaseBackground() {
-
-        if (!isCloudConfigured()) {
-            return;
-        }
-
-
-        /*
-         * Supabase kütüphanesini arka planda yükle.
-         * Sayfanın açılmasını bekletmez.
-         */
-
-        getSupabaseClient()
-            .then(
-                function (client) {
-
-                    if (!client) {
-                        return;
-                    }
-
-                    startCloudNewsRefresh();
-
-                }
-            )
-            .catch(
-                function (error) {
-
-                    console.warn(
-                        "Supabase arka plan başlatma hatası:",
-                        error
-                    );
-
-                }
-            );
-
-    }
-
-
-    /* =========================================================
-       BAŞLANGIÇ
-       ========================================================= */
+    /* =====================================================
+       BAŞLAT
+       ===================================================== */
 
     function init() {
-
         initMobileMenu();
-
-        initImagePreview();
-
-        initNewsForm();
-
-        initAutoDraft();
-
-        loadAutoDraft();
-
-        initClearForm();
-
-        initButtonEffects();
-
-        initImageUrlInputs();
-
-        initValidation();
-
         initDateElements();
-
         initNewsCounters();
-
         initEscapeKey();
-
+        initButtonEffects();
         initSupabaseBackground();
 
         if (
             "serviceWorker" in navigator &&
             window.isSecureContext
         ) {
-            navigator.serviceWorker.register("/sw.js")
-                .catch(function (error) {
-                    console.warn(
-                        "Çevrimdışı destek başlatılamadı:",
-                        error
-                    );
-                });
+            navigator.serviceWorker
+                .register("/sw.js")
+                .catch(
+                    function (error) {
+                        console.warn(
+                            "Çevrimdışı destek başlatılamadı:",
+                            error
+                        );
+                    }
+                );
         }
-
     }
 
 
@@ -3912,17 +2256,15 @@
         document.readyState ===
         "loading"
     ) {
-
         document.addEventListener(
             "DOMContentLoaded",
-            init
+            init,
+            {
+                once: true
+            }
         );
-
     } else {
-
         init();
-
     }
-
 
 })();
