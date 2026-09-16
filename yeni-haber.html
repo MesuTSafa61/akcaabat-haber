@@ -1,2186 +1,1407 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#071a33">
-
-<title>Yeni Haber | Akçaabat Haber</title>
-<meta name="description" content="Akçaabat Haber yeni haber yönetimi">
-
-<link rel="stylesheet" href="style.css?v=8">
-
-<style>
-*{box-sizing:border-box}
-
-:root{
-    --navy:#071a33;
-    --navy2:#0b2547;
-    --blue:#1261a8;
-    --red:#d71920;
-    --red-dark:#b80f17;
-    --green:#16844a;
-    --orange:#d97706;
-    --bg:#f4f6f9;
-    --white:#fff;
-    --text:#172033;
-    --muted:#697386;
-    --line:#e3e7ec;
-}
-
-body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:Arial,Helvetica,sans-serif;
-}
-
-button,input,select,textarea{font:inherit}
-a{text-decoration:none;color:inherit}
-
-.admin-layout{
-    min-height:100vh;
-    display:flex;
-}
-
-.admin-sidebar{
-    width:250px;
-    background:var(--navy);
-    color:#fff;
-    position:fixed;
-    left:0;
-    top:0;
-    bottom:0;
-    overflow-y:auto;
-    z-index:1000;
-}
-
-.sidebar-brand{
-    padding:24px 20px;
-    border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.sidebar-brand h2{
-    margin:0;
-    font-size:21px;
-}
-
-.sidebar-brand span{
-    display:block;
-    margin-top:5px;
-    color:#9ca8bb;
-    font-size:12px;
-}
-
-.sidebar-nav{
-    padding:16px 12px;
-}
-
-.sidebar-nav a{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    color:#cbd5e1;
-    padding:12px 13px;
-    border-radius:8px;
-    margin-bottom:5px;
-    font-size:14px;
-    transition:.2s;
-}
-
-.sidebar-nav a:hover{
-    background:rgba(255,255,255,.07);
-    color:#fff;
-}
-
-.sidebar-nav a.active{
-    background:var(--blue);
-    color:#fff;
-}
-
-.section-title{
-    color:#6f8098;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    margin:20px 12px 8px;
-}
-
-.admin-main{
-    width:calc(100% - 250px);
-    margin-left:250px;
-    min-height:100vh;
-}
-
-.admin-topbar{
-    height:70px;
-    background:#fff;
-    border-bottom:1px solid var(--line);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 28px;
-    position:sticky;
-    top:0;
-    z-index:100;
-}
-
-.topbar-left{
-    display:flex;
-    align-items:center;
-    gap:14px;
-}
-
-.mobile-menu{
-    display:none;
-    border:0;
-    background:#edf2f8;
-    border-radius:8px;
-    width:40px;
-    height:40px;
-    cursor:pointer;
-    font-size:18px;
-}
-
-.page-title{
-    margin:0;
-    font-size:22px;
-    color:var(--navy);
-}
-
-.topbar-right{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.user-info{text-align:right}
-
-.user-info strong{
-    display:block;
-    font-size:13px;
-}
-
-.user-info small{
-    color:var(--muted);
-    font-size:11px;
-}
-
-.logout-btn{
-    border:0;
-    background:#ffeaeb;
-    color:var(--red-dark);
-    border-radius:8px;
-    padding:9px 12px;
-    cursor:pointer;
-    font-weight:700;
-}
-
-.content{
-    padding:28px;
-    max-width:1250px;
-    margin:0 auto;
-}
-
-.page-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:20px;
-}
-
-.page-header h1{
-    margin:0;
-    font-size:25px;
-    color:var(--navy);
-}
-
-.page-header p{
-    margin:6px 0 0;
-    color:var(--muted);
-    font-size:14px;
-}
-
-.back-btn{
-    color:#374151;
-    background:#fff;
-    border:1px solid #d1d5db;
-    border-radius:8px;
-    padding:10px 14px;
-    font-size:13px;
-    font-weight:700;
-}
-
-.message{
-    display:none;
-    margin-bottom:16px;
-    padding:13px 15px;
-    border-radius:9px;
-    font-size:14px;
-}
-
-.message.show{display:block}
-.message.success{background:#dcfce7;color:#166534}
-.message.error{background:#fee2e2;color:#991b1b}
-.message.warning{background:#fff7ed;color:#9a3412}
-
-.editor-grid{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 330px;
-    gap:20px;
-}
-
-.card{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:22px;
-    box-shadow:0 7px 22px rgba(15,23,42,.04);
-}
-
-.card+.card{margin-top:20px}
-
-.card-title{
-    margin:0 0 18px;
-    font-size:17px;
-    color:var(--navy);
-}
-
-.form-group{margin-bottom:18px}
-.form-group:last-child{margin-bottom:0}
-
-label{
-    display:block;
-    margin-bottom:7px;
-    font-size:13px;
-    font-weight:700;
-    color:#374151;
-}
-
-.required{color:var(--red)}
-
-input[type="text"],
-input[type="file"],
-select,
-textarea{
-    width:100%;
-    border:1px solid #d1d5db;
-    border-radius:8px;
-    background:#fff;
-    padding:11px 12px;
-    font-size:14px;
-    outline:none;
-    font-family:inherit;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-    border-color:var(--blue);
-    box-shadow:0 0 0 3px rgba(18,97,168,.09);
-}
-
-textarea{
-    resize:vertical;
-    min-height:120px;
-    line-height:1.6;
-}
-
-#content{min-height:380px}
-
-.hint{
-    margin-top:6px;
-    color:#8b95a5;
-    font-size:11px;
-    line-height:1.5;
-}
-
-.slug-box{
-    display:flex;
-    gap:8px;
-}
-
-.slug-box input{flex:1}
-
-.generate-btn{
-    border:1px solid #d1d5db;
-    background:#f9fafb;
-    color:#374151;
-    border-radius:8px;
-    padding:0 12px;
-    cursor:pointer;
-    white-space:nowrap;
-}
-
-.image-preview{
-    width:100%;
-    min-height:180px;
-    border:2px dashed #d1d5db;
-    border-radius:10px;
-    background:#f9fafb;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    margin-bottom:12px;
-    color:#9ca3af;
-    text-align:center;
-    padding:15px;
-}
-
-.image-preview img{
-    width:100%;
-    max-height:300px;
-    object-fit:cover;
-    display:block;
-}
-
-.image-preview.has-image{
-    padding:0;
-    border-style:solid;
-}
-
-.check-row{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:12px;
-    border:1px solid var(--line);
-    border-radius:8px;
-    background:#f9fafb;
-}
-
-.check-row input{
-    width:17px;
-    height:17px;
-    accent-color:var(--red);
-}
-
-.check-row label{
-    margin:0;
-    cursor:pointer;
-}
-
-.headline-box{
-    border:1px solid #d9e2ed;
-    border-radius:11px;
-    overflow:hidden;
-    background:#fff;
-}
-
-.headline-top{
-    padding:13px;
-    background:#f8fafc;
-}
-
-.headline-top .check-row{
-    padding:0;
-    border:0;
-    background:transparent;
-}
-
-.headline-settings{
-    padding:14px;
-    border-top:1px solid var(--line);
-    display:none;
-}
-
-.headline-settings.visible{
-    display:block;
-}
-
-.headline-label{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.headline-count{
-    color:var(--muted);
-    font-size:10px;
-    font-weight:600;
-}
-
-.slot-grid{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:7px;
-    margin-top:10px;
-}
-
-.slot-button{
-    border:1px solid #dbe1e8;
-    background:#fff;
-    min-height:38px;
-    border-radius:7px;
-    cursor:pointer;
-    font-weight:800;
-    color:var(--navy);
-}
-
-.slot-button:hover:not(:disabled){
-    border-color:var(--blue);
-    color:var(--blue);
-}
-
-.slot-button.selected{
-    background:var(--red);
-    border-color:var(--red);
-    color:#fff;
-}
-
-.slot-button.occupied{
-    background:#f1f3f5;
-    color:#9ca3af;
-    cursor:not-allowed;
-}
-
-.slot-button.current{
-    background:var(--red);
-    border-color:var(--red);
-    color:#fff;
-}
-
-.slot-info{
-    margin-top:10px;
-    padding:10px;
-    border-radius:7px;
-    background:#f8fafc;
-    color:#64748b;
-    font-size:11px;
-    line-height:1.5;
-}
-
-.slot-info strong{color:var(--navy)}
-
-.status-info{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    padding:10px 12px;
-    background:#f9fafb;
-    border-radius:8px;
-    color:#6b7280;
-    font-size:12px;
-}
-
-.status-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:var(--orange);
-}
-
-.status-dot.saved{background:var(--green)}
-
-.action-buttons{
-    display:grid;
-    gap:9px;
-}
-
-.btn{
-    width:100%;
-    border:0;
-    border-radius:8px;
-    padding:12px 15px;
-    cursor:pointer;
-    font-weight:700;
-    font-size:14px;
-}
-
-.btn:disabled{
-    opacity:.55;
-    cursor:not-allowed;
-}
-
-.btn-primary{
-    background:var(--navy);
-    color:#fff;
-}
-
-.btn-primary:hover:not(:disabled){
-    background:var(--navy2);
-}
-
-.btn-secondary{
-    background:#edf2f7;
-    color:#374151;
-}
-
-.btn-danger{
-    background:#ffeaeb;
-    color:var(--red-dark);
-}
-
-.meta-list{
-    margin:0;
-    padding:0;
-    list-style:none;
-}
-
-.meta-list li{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    padding:10px 0;
-    border-bottom:1px solid #eef0f3;
-    font-size:12px;
-}
-
-.meta-list li:last-child{border-bottom:0}
-
-.meta-list span:first-child{
-    color:var(--muted);
-}
-
-.meta-list span:last-child{
-    color:var(--navy);
-    font-weight:700;
-    text-align:right;
-}
-
-.connection{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    background:var(--navy);
-    color:#fff;
-    padding:9px 12px;
-    border-radius:8px;
-    font-size:11px;
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
-    z-index:1200;
-}
-
-.connection.ok{background:#065f46}
-.connection.error{background:#991b1b}
-
-@media(max-width:950px){
-    .editor-grid{grid-template-columns:1fr}
-}
-
-@media(max-width:800px){
-    .admin-sidebar{
-        transform:translateX(-100%);
-        transition:transform .2s ease;
-    }
-
-    .admin-sidebar.open{
-        transform:translateX(0);
-    }
-
-    .admin-main{
-        width:100%;
-        margin-left:0;
-    }
-
-    .mobile-menu{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-    }
-}
-
-@media(max-width:600px){
-    .admin-topbar{padding:0 14px}
-    .content{padding:18px 12px 80px}
-    .page-title{font-size:18px}
-    .user-info{display:none}
-
-    .page-header{
-        align-items:flex-start;
-        flex-direction:column;
-    }
-
-    .page-header h1{font-size:22px}
-    .card{padding:17px}
-
-    .slug-box{
-        flex-direction:column;
-    }
-
-    .generate-btn{padding:10px}
-    .slot-grid{grid-template-columns:repeat(5,1fr)}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yeni Haber - Akçaabat Haber</title>
+    <meta name="description" content="Akçaabat Haber yönetim paneli yeni haber">
+
+    <link rel="stylesheet" href="style.css?v=3">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f9;
+            color: #1f2937;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .admin-layout {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background: #111827;
+            color: #fff;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+        .sidebar-brand h2 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .sidebar-brand span {
+            display: block;
+            margin-top: 5px;
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d1d5db;
+            text-decoration: none;
+            padding: 12px 13px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #1f2937;
+            color: #fff;
+        }
+
+        .section-title {
+            color: #6b7280;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin: 20px 12px 8px;
+        }
+
+        .admin-main {
+            width: calc(100% - 250px);
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        .admin-topbar {
+            height: 70px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .mobile-menu {
+            display: none;
+            border: 0;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 9px 11px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .user-info small {
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .logout-btn {
+            border: 0;
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 8px;
+            padding: 9px 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 28px;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .page-header p {
+            margin: 6px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: #374151;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 330px;
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .card + .card {
+            margin-top: 20px;
+        }
+
+        .card-title {
+            margin: 0 0 18px;
+            font-size: 17px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #fff;
+            padding: 11px 12px;
+            font-size: 14px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15,118,110,.08);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        #content {
+            min-height: 380px;
+        }
+
+        .hint {
+            margin-top: 6px;
+            color: #9ca3af;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .slug-box {
+            display: flex;
+            gap: 8px;
+        }
+
+        .slug-box input {
+            flex: 1;
+        }
+
+        .generate-btn {
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            color: #374151;
+            border-radius: 8px;
+            padding: 0 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .image-preview {
+            width: 100%;
+            min-height: 180px;
+            border: 2px dashed #d1d5db;
+            border-radius: 10px;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 12px;
+            color: #9ca3af;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-preview.has-image {
+            padding: 0;
+            border-style: solid;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+
+        .check-row input {
+            width: 17px;
+            height: 17px;
+            accent-color: #0f766e;
+        }
+
+        .check-row label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .status-info {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f59e0b;
+        }
+
+        .status-dot.saved {
+            background: #10b981;
+        }
+
+        .action-buttons {
+            display: grid;
+            gap: 9px;
+        }
+
+        .btn {
+            width: 100%;
+            border: 0;
+            border-radius: 8px;
+            padding: 12px 15px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #0f766e;
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #115e59;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .meta-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .meta-list li {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eef0f3;
+            font-size: 12px;
+        }
+
+        .meta-list li:last-child {
+            border-bottom: 0;
+        }
+
+        .meta-list span:first-child {
+            color: #6b7280;
+        }
+
+        .meta-list span:last-child {
+            color: #111827;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .connection {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            background: #111827;
+            color: #fff;
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.15);
+            z-index: 1200;
+        }
+
+        .connection.ok {
+            background: #065f46;
+        }
+
+        .connection.error {
+            background: #991b1b;
+        }
+
+        @media (max-width: 950px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform .2s ease;
+            }
+
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .mobile-menu {
+                display: inline-block;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .admin-topbar {
+                padding: 0 14px;
+            }
+
+            .content {
+                padding: 18px 12px 80px;
+            }
+
+            .page-title {
+                font-size: 18px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .page-header h1 {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            .slug-box {
+                flex-direction: column;
+            }
+
+            .generate-btn {
+                padding: 10px;
+            }
+        }
+    </style>
+  <link rel="stylesheet" href="admin-shell.css?v=1">
 </head>
 
 <body>
 
 <div class="admin-layout">
 
-<aside class="admin-sidebar" id="sidebar">
-    <div class="sidebar-brand">
-        <h2>Akçaabat Haber</h2>
-        <span>Yönetim Paneli</span>
-    </div>
-
-    <nav class="sidebar-nav">
-        <div class="section-title">Ana Menü</div>
-
-        <a href="admin.html">📊 Dashboard</a>
-        <a href="yeni-haber.html" class="active">📝 Yeni Haber</a>
-        <a href="haberler.html">📰 Haberler</a>
-        <a href="taslaklar.html">📁 Taslaklar</a>
-
-        <div class="section-title">Site</div>
-
-        <a href="index.html" target="_blank">
-            🌐 Siteyi Görüntüle
-        </a>
-
-        <div class="section-title">Hesap</div>
-
-        <a href="#" id="sidebarLogout">
-            🚪 Çıkış Yap
-        </a>
-    </nav>
-</aside>
-
-<main class="admin-main">
-
-<header class="admin-topbar">
-
-    <div class="topbar-left">
-        <button
-            type="button"
-            class="mobile-menu"
-            id="mobileMenu"
-            aria-label="Menüyü aç"
-        >
-            ☰
-        </button>
-
-        <h1 class="page-title" id="topTitle">
-            Yeni Haber
-        </h1>
-    </div>
-
-    <div class="topbar-right">
-
-        <div class="user-info">
-            <strong id="userEmail">
-                Kontrol ediliyor...
-            </strong>
-            <small id="userRole">...</small>
+    <aside class="admin-sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <h2>Akçaabat Haber</h2>
+            <span>Yönetim Paneli</span>
         </div>
 
-        <button
-            type="button"
-            class="logout-btn"
-            id="logoutBtn"
-        >
-            Çıkış
-        </button>
+        <nav class="sidebar-nav">
+            <div class="section-title">Ana Menü</div>
 
-    </div>
+            <a href="admin.html">📊 Dashboard</a>
+            <a href="yeni-haber.html" class="active">📝 Yeni Haber</a>
+            <a href="haberler.html">📰 Haberler</a>
+            <a href="taslaklar.html">📁 Taslaklar</a>
 
-</header>
+            <div class="section-title">Site</div>
 
-<section class="content">
+            <a href="index.html" target="_blank">🌐 Siteyi Görüntüle</a>
 
-<div class="page-header">
-    <div>
-        <h1 id="pageHeading">Yeni Haber</h1>
-        <p id="pageDescription">
-            Siteniz için yeni bir haber oluşturun.
-        </p>
-    </div>
+            <div class="section-title">Hesap</div>
 
-    <a href="haberler.html" class="back-btn">
-        ← Haberler
-    </a>
+            <a href="#" id="sidebarLogout">🚪 Çıkış Yap</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button
+                    type="button"
+                    class="mobile-menu"
+                    id="mobileMenu"
+                >
+                    ☰
+                </button>
+
+                <h1 class="page-title" id="topTitle">
+                    Yeni Haber
+                </h1>
+            </div>
+
+            <div class="topbar-right">
+                <div class="user-info">
+                    <strong id="userEmail">Kontrol ediliyor...</strong>
+                    <small id="userRole">...</small>
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-btn"
+                    id="logoutBtn"
+                >
+                    Çıkış
+                </button>
+            </div>
+        </header>
+
+        <section class="content">
+
+            <div class="page-header">
+                <div>
+                    <h1 id="pageHeading">Yeni Haber</h1>
+                    <p id="pageDescription">
+                        Siteniz için yeni bir haber oluşturun.
+                    </p>
+                </div>
+
+                <a
+                    href="haberler.html"
+                    class="back-btn"
+                >
+                    ← Haberler
+                </a>
+            </div>
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+            <form id="newsForm">
+
+                <div class="editor-grid">
+
+                    <div>
+
+                        <div class="card">
+
+                            <h2 class="card-title">
+                                Haber İçeriği
+                            </h2>
+
+                            <div class="form-group">
+                                <label for="title">
+                                    Haber Başlığı
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="title"
+                                    maxlength="250"
+                                    required
+                                    placeholder="Haber başlığını yazın..."
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="slug">
+                                    SEO URL
+                                </label>
+
+                                <div class="slug-box">
+                                    <input
+                                        type="text"
+                                        id="slug"
+                                        maxlength="250"
+                                        placeholder="haber-basligi"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="generate-btn"
+                                        id="generateSlug"
+                                    >
+                                        Oluştur
+                                    </button>
+                                </div>
+
+                                <div class="hint">
+                                    Haber adresinde kullanılacak benzersiz URL.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="summary">
+                                    Kısa Özet
+                                    <span class="required">*</span>
+                                </label>
+
+                                <textarea
+                                    id="summary"
+                                    maxlength="500"
+                                    required
+                                    placeholder="Haberin kısa özetini yazın..."
+                                ></textarea>
+
+                                <div class="hint">
+                                    Ana sayfa ve haber listelerinde gösterilecek kısa açıklama.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="content">
+                                    Haber Metni
+                                    <span class="required">*</span>
+                                </label>
+
+                                <textarea
+                                    id="content"
+                                    required
+                                    placeholder="Haber metnini buraya yazın..."
+                                ></textarea>
+
+                                <div class="hint">
+                                    Paragrafları boş satır bırakarak ayırabilirsiniz.
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card">
+
+                            <h2 class="card-title">
+                                Görsel
+                            </h2>
+
+                            <div
+                                class="image-preview"
+                                id="imagePreview"
+                            >
+                                Haber görseli seçilmedi
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">
+                                    Haber Görseli
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="image"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                >
+
+                                <div class="hint">
+                                    JPG, PNG, WEBP veya GIF kullanabilirsiniz.
+                                    Büyük dosyalardan kaçının.
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="imageUrl">
+                                    Görsel URL
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="imageUrl"
+                                    placeholder="https://..."
+                                >
+
+                                <div class="hint">
+                                    İsterseniz doğrudan mevcut bir görsel URL'si de kullanabilirsiniz.
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="card">
+
+                            <h2 class="card-title">
+                                Yayın Ayarları
+                            </h2>
+
+                            <div class="form-group">
+                                <label for="category">
+                                    Kategori
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="category"
+                                    required
+                                >
+                                    <option value="">
+                                        Kategoriler yükleniyor...
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="check-row">
+                                    <input
+                                        type="checkbox"
+                                        id="breaking"
+                                    >
+
+                                    <label for="breaking">
+                                        🔴 Son dakika / flaş haber
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="check-row">
+                                    <input type="checkbox" id="headline">
+                                    <label for="headline">⭐ Manşete ekle</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="headlineOrderGroup" hidden>
+                                <label for="headlineOrder">Manşet Sırası</label>
+                                <select id="headlineOrder">
+                                    <option value="">Sıra seçin</option>
+                                    <option value="1">1</option><option value="2">2</option>
+                                    <option value="3">3</option><option value="4">4</option>
+                                    <option value="5">5</option><option value="6">6</option>
+                                    <option value="7">7</option><option value="8">8</option>
+                                    <option value="9">9</option><option value="10">10</option>
+                                </select>
+                                <div class="hint">Yalnızca yayınlanmış haberler manşette gösterilir.</div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="status-info">
+                                    <span
+                                        class="status-dot"
+                                        id="saveDot"
+                                    ></span>
+
+                                    <span id="saveStatus">
+                                        Henüz kaydedilmedi
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    id="draftBtn"
+                                >
+                                    Taslak Olarak Kaydet
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary"
+                                    id="publishBtn"
+                                >
+                                    Haberi Yayınla
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-danger"
+                                    id="deleteBtn"
+                                    style="display:none;"
+                                >
+                                    Haberi Sil
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card">
+
+                            <h2 class="card-title">
+                                Haber Bilgileri
+                            </h2>
+
+                            <ul class="meta-list">
+
+                                <li>
+                                    <span>Durum</span>
+                                    <span id="metaStatus">
+                                        Yeni
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span>Yazar</span>
+                                    <span id="metaAuthor">
+                                        -
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span>Oluşturulma</span>
+                                    <span id="metaCreated">
+                                        -
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span>Güncelleme</span>
+                                    <span id="metaUpdated">
+                                        -
+                                    </span>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+    </main>
 </div>
-
-<div id="message" class="message"></div>
-
-<form id="newsForm">
-
-<div class="editor-grid">
-
-<div>
-
-<div class="card">
-
-<h2 class="card-title">Haber İçeriği</h2>
-
-<div class="form-group">
-    <label for="title">
-        Haber Başlığı
-        <span class="required">*</span>
-    </label>
-
-    <input
-        type="text"
-        id="title"
-        maxlength="250"
-        required
-        placeholder="Haber başlığını yazın..."
-    >
-</div>
-
-<div class="form-group">
-    <label for="slug">SEO URL</label>
-
-    <div class="slug-box">
-        <input
-            type="text"
-            id="slug"
-            maxlength="250"
-            placeholder="haber-basligi"
-        >
-
-        <button
-            type="button"
-            class="generate-btn"
-            id="generateSlug"
-        >
-            Oluştur
-        </button>
-    </div>
-
-    <div class="hint">
-        Haber adresinde kullanılacak benzersiz URL.
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="summary">
-        Kısa Özet
-        <span class="required">*</span>
-    </label>
-
-    <textarea
-        id="summary"
-        maxlength="500"
-        required
-        placeholder="Haberin kısa özetini yazın..."
-    ></textarea>
-</div>
-
-<div class="form-group">
-    <label for="content">
-        Haber Metni
-        <span class="required">*</span>
-    </label>
-
-    <textarea
-        id="content"
-        required
-        placeholder="Haber metnini buraya yazın..."
-    ></textarea>
-</div>
-
-</div>
-
-<div class="card">
-
-<h2 class="card-title">Görsel</h2>
 
 <div
-    class="image-preview"
-    id="imagePreview"
+    class="connection"
+    id="connection"
 >
-    Haber görseli seçilmedi
-</div>
-
-<div class="form-group">
-    <label for="image">
-        Haber Görseli
-    </label>
-
-    <input
-        type="file"
-        id="image"
-        accept="image/jpeg,image/png,image/webp,image/gif"
-    >
-
-    <div class="hint">
-        JPG, PNG, WEBP veya GIF. En fazla 8 MB.
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="imageUrl">
-        Görsel URL
-    </label>
-
-    <input
-        type="text"
-        id="imageUrl"
-        placeholder="https://..."
-    >
-</div>
-
-</div>
-
-</div>
-
-<div>
-
-<div class="card">
-
-<h2 class="card-title">Yayın Ayarları</h2>
-
-<div class="form-group">
-
-    <label for="category">
-        Kategori
-        <span class="required">*</span>
-    </label>
-
-    <select id="category" required>
-        <option value="">
-            Kategoriler yükleniyor...
-        </option>
-    </select>
-
-</div>
-
-<div class="form-group">
-
-    <div class="check-row">
-        <input
-            type="checkbox"
-            id="breaking"
-        >
-
-        <label for="breaking">
-            🔴 Son dakika / flaş haber
-        </label>
-    </div>
-
-</div>
-
-<div class="form-group">
-
-<div class="headline-box">
-
-    <div class="headline-top">
-
-        <div class="check-row">
-
-            <input
-                type="checkbox"
-                id="headline"
-            >
-
-            <label for="headline">
-                ⭐ Manşete Ekle
-            </label>
-
-        </div>
-
-    </div>
-
-    <div
-        class="headline-settings"
-        id="headlineSettings"
-    >
-
-        <div class="headline-label">
-            <label style="margin:0">
-                Manşet Sırası
-            </label>
-
-            <span
-                class="headline-count"
-                id="headlineCount"
-            >
-                0 / 10 kullanılıyor
-            </span>
-        </div>
-
-        <div
-            class="slot-grid"
-            id="headlineSlots"
-        ></div>
-
-        <div
-            class="slot-info"
-            id="headlineInfo"
-        >
-            Manşette görünmesi için 1–10
-            arasında bir pozisyon seç.
-        </div>
-
-    </div>
-
-</div>
-
-<div class="hint">
-    Manşet yalnızca yayınlanan haberlerde aktiftir.
-    Taslak kaydedersen haber otomatik olarak manşetten çıkar.
-</div>
-
-</div>
-
-<div class="form-group">
-
-    <div class="status-info">
-
-        <span
-            class="status-dot"
-            id="saveDot"
-        ></span>
-
-        <span id="saveStatus">
-            Henüz kaydedilmedi
-        </span>
-
-    </div>
-
-</div>
-
-<div class="action-buttons">
-
-    <button
-        type="button"
-        class="btn btn-secondary"
-        id="draftBtn"
-    >
-        Taslak Olarak Kaydet
-    </button>
-
-    <button
-        type="submit"
-        class="btn btn-primary"
-        id="publishBtn"
-    >
-        Haberi Yayınla
-    </button>
-
-    <button
-        type="button"
-        class="btn btn-danger"
-        id="deleteBtn"
-        style="display:none"
-    >
-        Haberi Sil
-    </button>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2 class="card-title">
-    Haber Bilgileri
-</h2>
-
-<ul class="meta-list">
-
-    <li>
-        <span>Durum</span>
-        <span id="metaStatus">Yeni</span>
-    </li>
-
-    <li>
-        <span>Manşet</span>
-        <span id="metaHeadline">Hayır</span>
-    </li>
-
-    <li>
-        <span>Yazar</span>
-        <span id="metaAuthor">-</span>
-    </li>
-
-    <li>
-        <span>Oluşturulma</span>
-        <span id="metaCreated">-</span>
-    </li>
-
-    <li>
-        <span>Güncelleme</span>
-        <span id="metaUpdated">-</span>
-    </li>
-
-</ul>
-
-</div>
-
-</div>
-
-</div>
-
-</form>
-
-</section>
-
-</main>
-
-</div>
-
-<div class="connection" id="connection">
     Supabase bağlantısı kuruluyor...
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 
 <script>
-(function(){
+(function () {
+    "use strict";
 
-"use strict";
+    let client = null;
+    let currentUser = null;
+    let currentNews = null;
+    let isEditMode = false;
+    let isSaving = false;
 
-let client=null;
-let currentUser=null;
-let currentNews=null;
-let isSaving=false;
+    const params =
+        new URLSearchParams(window.location.search);
 
-let headlineItems=[];
-let selectedHeadlineOrder=null;
+    const editId = params.get("edit");
+    const draftId = params.get("draft");
 
-const params=
-    new URLSearchParams(
-        window.location.search
-    );
+    const sidebar =
+        document.getElementById("sidebar");
 
-const editId=params.get("edit");
-const draftId=params.get("draft");
+    const mobileMenu =
+        document.getElementById("mobileMenu");
 
-const $=function(id){
-    return document.getElementById(id);
-};
+    const logoutBtn =
+        document.getElementById("logoutBtn");
 
-const sidebar=$("sidebar");
-const mobileMenu=$("mobileMenu");
+    const sidebarLogout =
+        document.getElementById("sidebarLogout");
 
-const logoutBtn=$("logoutBtn");
-const sidebarLogout=$("sidebarLogout");
+    const userEmail =
+        document.getElementById("userEmail");
 
-const userEmail=$("userEmail");
-const userRole=$("userRole");
+    const userRole =
+        document.getElementById("userRole");
 
-const topTitle=$("topTitle");
-const pageHeading=$("pageHeading");
-const pageDescription=$("pageDescription");
+    const topTitle =
+        document.getElementById("topTitle");
 
-const message=$("message");
-const connection=$("connection");
+    const pageHeading =
+        document.getElementById("pageHeading");
 
-const form=$("newsForm");
+    const pageDescription =
+        document.getElementById("pageDescription");
 
-const titleInput=$("title");
-const slugInput=$("slug");
-const summaryInput=$("summary");
-const contentInput=$("content");
-const categoryInput=$("category");
+    const message =
+        document.getElementById("message");
 
-const imageInput=$("image");
-const imageUrlInput=$("imageUrl");
-const imagePreview=$("imagePreview");
+    const connection =
+        document.getElementById("connection");
 
-const breakingInput=$("breaking");
+    const form =
+        document.getElementById("newsForm");
 
-const headlineInput=$("headline");
-const headlineSettings=$("headlineSettings");
-const headlineSlots=$("headlineSlots");
-const headlineCount=$("headlineCount");
-const headlineInfo=$("headlineInfo");
+    const titleInput =
+        document.getElementById("title");
 
-const draftBtn=$("draftBtn");
-const publishBtn=$("publishBtn");
-const deleteBtn=$("deleteBtn");
+    const slugInput =
+        document.getElementById("slug");
 
-const generateSlugBtn=$("generateSlug");
+    const summaryInput =
+        document.getElementById("summary");
 
-const saveDot=$("saveDot");
-const saveStatus=$("saveStatus");
+    const contentInput =
+        document.getElementById("content");
 
-const metaStatus=$("metaStatus");
-const metaHeadline=$("metaHeadline");
-const metaAuthor=$("metaAuthor");
-const metaCreated=$("metaCreated");
-const metaUpdated=$("metaUpdated");
+    const categoryInput =
+        document.getElementById("category");
 
-function escapeHtml(value){
-    return String(
-        value==null ? "" : value
-    )
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
+    const imageInput =
+        document.getElementById("image");
 
-function showMessage(text,type){
-    message.textContent=text;
+    const imageUrlInput =
+        document.getElementById("imageUrl");
 
-    message.className=
-        "message show "+
-        (type||"success");
+    const imagePreview =
+        document.getElementById("imagePreview");
 
-    clearTimeout(
-        showMessage.timer
-    );
+    const breakingInput =
+        document.getElementById("breaking");
 
-    showMessage.timer=
-        setTimeout(function(){
-            message.className="message";
-        },5000);
-}
+    const headlineInput =
+        document.getElementById("headline");
 
-function setConnection(text,type){
-    connection.textContent=text;
-    connection.className="connection";
+    const headlineOrderInput =
+        document.getElementById("headlineOrder");
 
-    if(type){
-        connection.classList.add(type);
-    }
-}
+    const headlineOrderGroup =
+        document.getElementById("headlineOrderGroup");
 
-function setSaving(text,saved){
-    saveStatus.textContent=text;
+    const draftBtn =
+        document.getElementById("draftBtn");
 
-    saveDot.classList.toggle(
-        "saved",
-        Boolean(saved)
-    );
-}
+    const publishBtn =
+        document.getElementById("publishBtn");
 
-function formatDate(value){
-    if(!value)return "-";
+    const deleteBtn =
+        document.getElementById("deleteBtn");
 
-    const date=new Date(value);
+    const generateSlugBtn =
+        document.getElementById("generateSlug");
 
-    if(Number.isNaN(date.getTime())){
-        return "-";
+    const saveDot =
+        document.getElementById("saveDot");
+
+    const saveStatus =
+        document.getElementById("saveStatus");
+
+    const metaStatus =
+        document.getElementById("metaStatus");
+
+    const metaAuthor =
+        document.getElementById("metaAuthor");
+
+    const metaCreated =
+        document.getElementById("metaCreated");
+
+    const metaUpdated =
+        document.getElementById("metaUpdated");
+
+    function escapeHtml(value) {
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
-    return date.toLocaleString(
-        "tr-TR",
-        {
-            day:"2-digit",
-            month:"2-digit",
-            year:"numeric",
-            hour:"2-digit",
-            minute:"2-digit"
+    function showMessage(text, type) {
+        message.textContent = text;
+        message.className =
+            "message show " + type;
+
+        window.clearTimeout(showMessage.timer);
+
+        showMessage.timer =
+            window.setTimeout(function () {
+                message.className = "message";
+            }, 5000);
+    }
+
+    function setConnection(text, type) {
+        connection.textContent = text;
+        connection.className = "connection";
+
+        if (type) {
+            connection.classList.add(type);
         }
-    );
-}
-
-function slugify(text){
-    return String(text||"")
-        .toLocaleLowerCase("tr-TR")
-        .replace(/ğ/g,"g")
-        .replace(/ü/g,"u")
-        .replace(/ş/g,"s")
-        .replace(/ı/g,"i")
-        .replace(/ö/g,"o")
-        .replace(/ç/g,"c")
-        .replace(/â/g,"a")
-        .replace(/î/g,"i")
-        .replace(/û/g,"u")
-        .replace(/[^a-z0-9\s-]/g,"")
-        .trim()
-        .replace(/\s+/g,"-")
-        .replace(/-+/g,"-")
-        .substring(0,240);
-}
-
-function statusText(status){
-    if(status==="published"){
-        return "Yayında";
     }
 
-    if(status==="archived"){
-        return "Arşiv";
+    function setSaving(text, saved) {
+        saveStatus.textContent = text;
+
+        if (saved) {
+            saveDot.classList.add("saved");
+        } else {
+            saveDot.classList.remove("saved");
+        }
     }
 
-    return "Taslak";
-}
+    function formatDate(value) {
+        if (!value) {
+            return "-";
+        }
 
-function updateImagePreview(url){
+        const date = new Date(value);
 
-    if(!url){
-        imagePreview.className=
-            "image-preview";
+        if (Number.isNaN(date.getTime())) {
+            return "-";
+        }
 
-        imagePreview.textContent=
-            "Haber görseli seçilmedi";
-
-        return;
-    }
-
-    imagePreview.className=
-        "image-preview has-image";
-
-    imagePreview.innerHTML=
-        '<img src="'+
-        escapeHtml(url)+
-        '" alt="Haber görseli">';
-}
-
-function previewSelectedFile(file){
-
-    if(!file){
-        updateImagePreview(
-            imageUrlInput.value.trim()
-        );
-        return;
-    }
-
-    const reader=new FileReader();
-
-    reader.onload=function(event){
-        updateImagePreview(
-            event.target.result
-        );
-    };
-
-    reader.readAsDataURL(file);
-}
-
-async function createClient(){
-
-    if(
-        !window.supabase ||
-        !window.supabase.createClient
-    ){
-        throw new Error(
-            "Supabase kütüphanesi yüklenemedi."
-        );
-    }
-
-    if(
-        !window.AKCAABAT_SUPABASE ||
-        !window.AKCAABAT_SUPABASE.url ||
-        !window.AKCAABAT_SUPABASE.key
-    ){
-        throw new Error(
-            "Supabase bağlantı ayarları bulunamadı."
-        );
-    }
-
-    client=
-        window.supabase.createClient(
-            window.AKCAABAT_SUPABASE.url,
-            window.AKCAABAT_SUPABASE.key
-        );
-}
-
-async function checkAuth(){
-
-    const result=
-        await client.auth.getUser();
-
-    if(
-        result.error ||
-        !result.data ||
-        !result.data.user
-    ){
-        window.location.replace(
-            "admin-giris.html"
-        );
-
-        return false;
-    }
-
-    currentUser=
-        result.data.user;
-
-    const profileResult=
-        await client
-            .from("profiles")
-            .select(
-                "display_name,role"
-            )
-            .eq(
-                "id",
-                currentUser.id
-            )
-            .maybeSingle();
-
-    if(profileResult.error){
-        throw profileResult.error;
-    }
-
-    const profile=
-        profileResult.data;
-
-    if(
-        !profile ||
-        !["admin","editor"].includes(
-            profile.role
-        )
-    ){
-        await client.auth.signOut();
-
-        window.location.replace(
-            "admin-giris.html"
-        );
-
-        return false;
-    }
-
-    userEmail.textContent=
-        currentUser.email ||
-        "Yönetici";
-
-    userRole.textContent=
-        profile.role==="admin"
-            ? "Yönetici"
-            : "Editör";
-
-    metaAuthor.textContent=
-        profile.display_name ||
-        currentUser.email ||
-        "-";
-
-    return true;
-}
-
-async function loadCategories(){
-
-    const result=
-        await client
-            .from("categories")
-            .select(
-                "id,name,slug"
-            )
-            .eq(
-                "is_active",
-                true
-            )
-            .order(
-                "sort_order",
-                {ascending:true}
-            )
-            .order(
-                "name",
-                {ascending:true}
-            );
-
-    if(result.error){
-        throw result.error;
-    }
-
-    categoryInput.innerHTML=
-        '<option value="">Kategori seçin</option>';
-
-    (result.data||[])
-        .forEach(function(category){
-
-            const option=
-                document.createElement(
-                    "option"
-                );
-
-            option.value=
-                category.id;
-
-            option.textContent=
-                category.name;
-
-            categoryInput.appendChild(
-                option
-            );
+        return date.toLocaleString("tr-TR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
         });
-}
-
-async function loadHeadlineSlots(){
-
-    const result=
-        await client
-            .from("news")
-            .select(
-                "id,title,headline_order"
-            )
-            .eq(
-                "status",
-                "published"
-            )
-            .eq(
-                "is_headline",
-                true
-            )
-            .not(
-                "headline_order",
-                "is",
-                null
-            )
-            .order(
-                "headline_order",
-                {ascending:true}
-            );
-
-    if(result.error){
-        throw result.error;
     }
 
-    headlineItems=
-        result.data||[];
+    function slugify(text) {
+        return String(text || "")
+            .toLocaleLowerCase("tr-TR")
+            .replace(/ğ/g, "g")
+            .replace(/ü/g, "u")
+            .replace(/ş/g, "s")
+            .replace(/ı/g, "i")
+            .replace(/ö/g, "o")
+            .replace(/ç/g, "c")
+            .replace(/â/g, "a")
+            .replace(/î/g, "i")
+            .replace(/û/g, "u")
+            .replace(/[^a-z0-9\s-]/g, "")
+            .trim()
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .substring(0, 240);
+    }
 
-    renderHeadlineSlots();
-}
-
-function findHeadlineByOrder(order){
-
-    return headlineItems.find(
-        function(item){
-            return Number(
-                item.headline_order
-            )===Number(order);
-        }
-    );
-}
-
-function renderHeadlineSlots(){
-
-    headlineSlots.innerHTML="";
-
-    headlineCount.textContent=
-        headlineItems.length+
-        " / 10 kullanılıyor";
-
-    for(let i=1;i<=10;i++){
-
-        const item=
-            findHeadlineByOrder(i);
-
-        const button=
-            document.createElement(
-                "button"
-            );
-
-        button.type="button";
-        button.className=
-            "slot-button";
-
-        button.textContent=i;
-
-        const belongsToCurrent=
-            item &&
-            currentNews &&
-            String(item.id)===
-            String(currentNews.id);
-
-        if(
-            item &&
-            !belongsToCurrent
-        ){
-            button.disabled=true;
-
-            button.classList.add(
-                "occupied"
-            );
-
-            button.title=
-                item.title ||
-                "Bu sıra dolu";
+    async function loadSupabaseScript() {
+        if (
+            window.supabase &&
+            window.supabase.createClient
+        ) {
+            return;
         }
 
-        if(
-            Number(
-                selectedHeadlineOrder
-            )===i
-        ){
-            button.classList.add(
-                "selected"
+        await new Promise(function (resolve, reject) {
+            const script =
+                document.createElement("script");
+
+            script.src =
+                "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+            script.onload = resolve;
+            script.onerror = reject;
+
+            document.head.appendChild(script);
+        });
+    }
+
+    async function createClient() {
+        await loadSupabaseScript();
+
+        if (
+            !window.AKCAABAT_SUPABASE ||
+            !window.AKCAABAT_SUPABASE.url ||
+            !window.AKCAABAT_SUPABASE.key
+        ) {
+            throw new Error(
+                "Supabase bağlantı ayarları bulunamadı."
             );
         }
 
-        if(belongsToCurrent){
-            button.classList.add(
-                "current"
+        client =
+            window.supabase.createClient(
+                window.AKCAABAT_SUPABASE.url,
+                window.AKCAABAT_SUPABASE.key
             );
+
+        return client;
+    }
+
+    async function checkAuth() {
+        const result =
+            await client.auth.getUser();
+
+        if (
+            result.error ||
+            !result.data ||
+            !result.data.user
+        ) {
+            window.location.href =
+                "admin-giris.html";
+
+            return false;
         }
 
-        button.addEventListener(
-            "click",
-            function(){
+        currentUser =
+            result.data.user;
 
-                if(button.disabled){
-                    return;
-                }
+        userEmail.textContent =
+            currentUser.email ||
+            "Yönetici";
 
-                selectedHeadlineOrder=i;
+        const profileResult =
+            await client
+                .from("profiles")
+                .select("display_name, role")
+                .eq("id", currentUser.id)
+                .maybeSingle();
 
-                renderHeadlineSlots();
+        if (profileResult.error) {
+            throw profileResult.error;
+        }
 
-                headlineInfo.innerHTML=
-                    "<strong>"+
-                    i+
-                    ". sıra seçildi.</strong> "+
-                    "Haber yayınlandığında bu pozisyonda görünecek.";
+        const profile =
+            profileResult.data;
+
+        if (
+            !profile ||
+            !["admin", "editor"].includes(
+                profile.role
+            )
+        ) {
+            await client.auth.signOut();
+
+            window.location.href =
+                "admin-giris.html";
+
+            return false;
+        }
+
+        userRole.textContent =
+            profile.role === "admin"
+                ? "Yönetici"
+                : "Editör";
+
+        metaAuthor.textContent =
+            profile.display_name ||
+            currentUser.email ||
+            "-";
+
+        return true;
+    }
+
+    async function loadCategories() {
+        const result =
+            await client
+                .from("categories")
+                .select("id, name, slug")
+                .eq("is_active", true)
+                .order("sort_order", {
+                    ascending: true
+                })
+                .order("name", {
+                    ascending: true
+                });
+
+        if (result.error) {
+            throw result.error;
+        }
+
+        categoryInput.innerHTML =
+            '<option value="">Kategori seçin</option>';
+
+        (result.data || []).forEach(
+            function (category) {
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    category.id;
+
+                option.textContent =
+                    category.name;
+
+                categoryInput.appendChild(option);
             }
         );
-
-        headlineSlots.appendChild(
-            button
-        );
-    }
-}
-
-function updateHeadlineVisibility(){
-
-    const enabled=
-        headlineInput.checked;
-
-    headlineSettings.classList.toggle(
-        "visible",
-        enabled
-    );
-
-    if(!enabled){
-        selectedHeadlineOrder=null;
-
-        metaHeadline.textContent=
-            "Hayır";
     }
 
-    renderHeadlineSlots();
-}
+    function updatePageMode() {
+        isEditMode =
+            Boolean(editId || draftId);
 
-function updatePageMode(){
+        if (isEditMode) {
+            topTitle.textContent =
+                "Haber Düzenle";
 
-    const editMode=
-        Boolean(editId||draftId||currentNews);
+            pageHeading.textContent =
+                "Haber Düzenle";
 
-    if(editMode){
+            pageDescription.textContent =
+                "Mevcut haber veya taslağın bilgilerini düzenleyin.";
 
-        topTitle.textContent=
-            "Haber Düzenle";
+            deleteBtn.style.display =
+                "block";
+        } else {
+            topTitle.textContent =
+                "Yeni Haber";
 
-        pageHeading.textContent=
-            "Haber Düzenle";
+            pageHeading.textContent =
+                "Yeni Haber";
 
-        pageDescription.textContent=
-            "Mevcut haber veya taslağın bilgilerini düzenleyin.";
+            pageDescription.textContent =
+                "Siteniz için yeni bir haber oluşturun.";
 
-        deleteBtn.style.display=
-            "block";
-
-    }else{
-
-        topTitle.textContent=
-            "Yeni Haber";
-
-        pageHeading.textContent=
-            "Yeni Haber";
-
-        pageDescription.textContent=
-            "Siteniz için yeni bir haber oluşturun.";
-
-        deleteBtn.style.display=
-            "none";
-    }
-}
-
-async function loadExistingNews(){
-
-    const id=
-        editId||draftId;
-
-    if(!id)return;
-
-    setConnection(
-        "Haber bilgileri yükleniyor..."
-    );
-
-    const result=
-        await client
-            .from("news")
-            .select(`
-                id,
-                title,
-                slug,
-                summary,
-                content,
-                category_id,
-                image_url,
-                status,
-                is_breaking,
-                is_headline,
-                headline_order,
-                views,
-                author_id,
-                published_at,
-                created_at,
-                updated_at
-            `)
-            .eq("id",id)
-            .maybeSingle();
-
-    if(result.error){
-        throw result.error;
-    }
-
-    if(!result.data){
-        throw new Error(
-            "Haber bulunamadı."
-        );
-    }
-
-    currentNews=result.data;
-
-    titleInput.value=
-        currentNews.title||"";
-
-    slugInput.value=
-        currentNews.slug||"";
-
-    summaryInput.value=
-        currentNews.summary||"";
-
-    contentInput.value=
-        currentNews.content||"";
-
-    categoryInput.value=
-        currentNews.category_id||"";
-
-    imageUrlInput.value=
-        currentNews.image_url||"";
-
-    breakingInput.checked=
-        currentNews.is_breaking===true;
-
-    headlineInput.checked=
-        currentNews.is_headline===true;
-
-    selectedHeadlineOrder=
-        currentNews.is_headline
-            ? Number(
-                currentNews.headline_order
-            ) || null
-            : null;
-
-    updateImagePreview(
-        currentNews.image_url
-    );
-
-    metaStatus.textContent=
-        statusText(
-            currentNews.status
-        );
-
-    metaHeadline.textContent=
-        currentNews.is_headline
-            ? (
-                currentNews.headline_order+
-                ". sıra"
-            )
-            : "Hayır";
-
-    metaCreated.textContent=
-        formatDate(
-            currentNews.created_at
-        );
-
-    metaUpdated.textContent=
-        formatDate(
-            currentNews.updated_at
-        );
-
-    publishBtn.textContent=
-        currentNews.status==="published"
-            ? "Haberi Güncelle"
-            : "Haberi Yayınla";
-
-    draftBtn.textContent=
-        currentNews.status==="draft"
-            ? "Taslağı Güncelle"
-            : "Taslak Olarak Kaydet";
-
-    updatePageMode();
-    updateHeadlineVisibility();
-
-    setSaving(
-        "Mevcut haber yüklendi",
-        true
-    );
-
-    setConnection(
-        "Supabase bağlı",
-        "ok"
-    );
-}
-
-async function uploadImage(file){
-
-    if(!file)return null;
-
-    const allowed=[
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/gif"
-    ];
-
-    if(!allowed.includes(file.type)){
-        throw new Error(
-            "Desteklenmeyen görsel formatı."
-        );
-    }
-
-    if(file.size>8*1024*1024){
-        throw new Error(
-            "Görsel 8 MB'dan küçük olmalıdır."
-        );
-    }
-
-    let extension=
-        file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-    if(extension==="jpeg"){
-        extension="jpg";
-    }
-
-    const fileName=
-        "haber-"+
-        Date.now()+
-        "-"+
-        Math.random()
-            .toString(36)
-            .substring(2,9)+
-        "."+
-        extension;
-
-    const path=
-        "news/"+fileName;
-
-    const upload=
-        await client.storage
-            .from("news-images")
-            .upload(
-                path,
-                file,
-                {
-                    cacheControl:"3600",
-                    upsert:false,
-                    contentType:file.type
-                }
-            );
-
-    if(upload.error){
-        throw new Error(
-            "Haber görseli yüklenemedi: "+
-            upload.error.message
-        );
-    }
-
-    const publicResult=
-        client.storage
-            .from("news-images")
-            .getPublicUrl(path);
-
-    return publicResult.data.publicUrl;
-}
-
-async function createUniqueSlug(
-    base,
-    existingId
-){
-
-    let slug=
-        slugify(base);
-
-    if(!slug){
-        slug=
-            "haber-"+Date.now();
-    }
-
-    const original=slug;
-    let counter=2;
-
-    while(true){
-
-        let query=
-            client
-                .from("news")
-                .select("id")
-                .eq("slug",slug)
-                .limit(1);
-
-        if(existingId){
-            query=
-                query.neq(
-                    "id",
-                    existingId
-                );
+            deleteBtn.style.display =
+                "none";
         }
+    }
 
-        const result=
-            await query;
+    async function loadExistingNews() {
+        const id =
+            editId || draftId;
 
-        if(result.error){
-            throw result.error;
+        if (!id) {
+            return;
         }
-
-        if(
-            !result.data ||
-            result.data.length===0
-        ){
-            return slug;
-        }
-
-        slug=
-            original+
-            "-"+
-            counter;
-
-        counter++;
-    }
-}
-
-async function verifyHeadlineSlot(order){
-
-    if(!order){
-        throw new Error(
-            "Manşete eklemek için 1–10 arasında sıra seçmelisin."
-        );
-    }
-
-    let query=
-        client
-            .from("news")
-            .select(
-                "id,title,headline_order"
-            )
-            .eq(
-                "is_headline",
-                true
-            )
-            .eq(
-                "headline_order",
-                Number(order)
-            )
-            .limit(1);
-
-    if(currentNews){
-        query=
-            query.neq(
-                "id",
-                currentNews.id
-            );
-    }
-
-    const result=
-        await query;
-
-    if(result.error){
-        throw result.error;
-    }
-
-    if(
-        result.data &&
-        result.data.length
-    ){
-        throw new Error(
-            order+
-            ". manşet sırası şu anda başka bir habere ait: \""+
-            (
-                result.data[0].title||
-                "Başlıksız haber"
-            )+
-            "\""
-        );
-    }
-}
-
-function getFormData(){
-
-    return{
-        title:
-            titleInput.value.trim(),
-
-        slug:
-            slugInput.value.trim(),
-
-        summary:
-            summaryInput.value.trim(),
-
-        content:
-            contentInput.value.trim(),
-
-        category_id:
-            categoryInput.value,
-
-        image_url:
-            imageUrlInput.value.trim(),
-
-        is_breaking:
-            breakingInput.checked,
-
-        is_headline:
-            headlineInput.checked,
-
-        headline_order:
-            selectedHeadlineOrder
-    };
-}
-
-function validateForm(data,status){
-
-    if(!data.title){
-        throw new Error(
-            "Haber başlığı boş bırakılamaz."
-        );
-    }
-
-    if(!data.summary){
-        throw new Error(
-            "Haber özeti boş bırakılamaz."
-        );
-    }
-
-    if(!data.content){
-        throw new Error(
-            "Haber metni boş bırakılamaz."
-        );
-    }
-
-    if(!data.category_id){
-        throw new Error(
-            "Lütfen bir kategori seçin."
-        );
-    }
-
-    if(
-        status==="published" &&
-        data.is_headline &&
-        (
-            !data.headline_order ||
-            data.headline_order<1 ||
-            data.headline_order>10
-        )
-    ){
-        throw new Error(
-            "Manşet için 1–10 arasında sıra seçmelisin."
-        );
-    }
-}
-
-async function saveNews(status){
-
-    if(isSaving)return;
-
-    isSaving=true;
-
-    draftBtn.disabled=true;
-    publishBtn.disabled=true;
-    deleteBtn.disabled=true;
-
-    try{
-
-        const data=
-            getFormData();
-
-        validateForm(
-            data,
-            status
-        );
-
-        setSaving(
-            "Kaydediliyor...",
-            false
-        );
 
         setConnection(
-            "Haber kaydediliyor..."
+            "Haber bilgileri yükleniyor..."
         );
 
-        /*
-         * Taslak haber hiçbir zaman
-         * manşette tutulmaz.
-         */
-        const willBeHeadline=
-            status==="published" &&
-            data.is_headline===true;
+        const result =
+            await client
+                .from("news")
+                .select(`
+                    id,
+                    title,
+                    slug,
+                    summary,
+                    content,
+                    category_id,
+                    image_url,
+                    status,
+                    is_breaking,
+                    is_headline,
+                    headline_order,
+                    views,
+                    author_id,
+                    published_at,
+                    created_at,
+                    updated_at
+                `)
+                .eq("id", id)
+                .maybeSingle();
 
-        const headlineOrder=
-            willBeHeadline
-                ? Number(
-                    data.headline_order
-                )
-                : null;
-
-        if(willBeHeadline){
-            await verifyHeadlineSlot(
-                headlineOrder
-            );
-        }
-
-        let imageUrl=
-            data.image_url||null;
-
-        const selectedFile=
-            imageInput.files &&
-            imageInput.files[0];
-
-        if(selectedFile){
-
-            setSaving(
-                "Görsel yükleniyor...",
-                false
-            );
-
-            imageUrl=
-                await uploadImage(
-                    selectedFile
-                );
-        }
-
-        const slug=
-            await createUniqueSlug(
-                data.slug||
-                data.title,
-                currentNews
-                    ? currentNews.id
-                    : null
-            );
-
-        const payload={
-            title:data.title,
-            slug:slug,
-            summary:data.summary,
-            content:data.content,
-            category_id:data.category_id,
-            image_url:imageUrl,
-            status:status,
-            is_breaking:data.is_breaking,
-
-            is_headline:
-                willBeHeadline,
-
-            headline_order:
-                headlineOrder,
-
-            author_id:
-                currentUser.id
-        };
-
-        if(status==="published"){
-
-            payload.published_at=
-                currentNews &&
-                currentNews.published_at
-                    ? currentNews.published_at
-                    : new Date()
-                        .toISOString();
-
-        }else{
-
-            payload.published_at=null;
-            payload.is_headline=false;
-            payload.headline_order=null;
-        }
-
-        let result;
-
-        if(currentNews){
-
-            result=
-                await client
-                    .from("news")
-                    .update(payload)
-                    .eq(
-                        "id",
-                        currentNews.id
-                    )
-                    .select()
-                    .single();
-
-        }else{
-
-            result=
-                await client
-                    .from("news")
-                    .insert(payload)
-                    .select()
-                    .single();
-        }
-
-        if(result.error){
+        if (result.error) {
             throw result.error;
         }
 
-        currentNews=
-            result.data;
-
-        window.history.replaceState(
-            {},
-            "",
-            "yeni-haber.html?edit="+
-            encodeURIComponent(
-                currentNews.id
-            )
-        );
-
-        slugInput.value=
-            currentNews.slug||"";
-
-        imageUrlInput.value=
-            currentNews.image_url||"";
-
-        headlineInput.checked=
-            currentNews.is_headline===true;
-
-        selectedHeadlineOrder=
-            currentNews.is_headline
-                ? Number(
-                    currentNews.headline_order
-                )||null
-                : null;
-
-        if(currentNews.image_url){
-            updateImagePreview(
-                currentNews.image_url
+        if (!result.data) {
+            throw new Error(
+                "Haber bulunamadı."
             );
         }
 
-        metaStatus.textContent=
-            statusText(
-                currentNews.status
-            );
+        currentNews =
+            result.data;
 
-        metaHeadline.textContent=
-            currentNews.is_headline
-                ? (
-                    currentNews.headline_order+
-                    ". sıra"
-                )
-                : "Hayır";
+        titleInput.value =
+            currentNews.title || "";
 
-        metaCreated.textContent=
-            formatDate(
-                currentNews.created_at
-            );
+        slugInput.value =
+            currentNews.slug || "";
 
-        metaUpdated.textContent=
-            formatDate(
-                currentNews.updated_at
-            );
+        summaryInput.value =
+            currentNews.summary || "";
 
-        publishBtn.textContent=
-            currentNews.status==="published"
+        contentInput.value =
+            currentNews.content || "";
+
+        categoryInput.value =
+            currentNews.category_id || "";
+
+        imageUrlInput.value =
+            currentNews.image_url || "";
+
+        breakingInput.checked =
+            Boolean(currentNews.is_breaking);
+
+        headlineInput.checked =
+            Boolean(currentNews.is_headline);
+
+        headlineOrderInput.value =
+            currentNews.headline_order || "";
+
+        headlineOrderGroup.hidden =
+            !headlineInput.checked;
+
+        updateImagePreview(
+            currentNews.image_url
+        );
+
+        metaStatus.textContent =
+            statusText(currentNews.status);
+
+        metaCreated.textContent =
+            formatDate(currentNews.created_at);
+
+        metaUpdated.textContent =
+            formatDate(currentNews.updated_at);
+
+        publishBtn.textContent =
+            currentNews.status === "published"
                 ? "Haberi Güncelle"
                 : "Haberi Yayınla";
 
-        draftBtn.textContent=
-            currentNews.status==="draft"
+        draftBtn.textContent =
+            currentNews.status === "draft"
                 ? "Taslağı Güncelle"
                 : "Taslak Olarak Kaydet";
 
-        updatePageMode();
-
-        await loadHeadlineSlots();
-
-        updateHeadlineVisibility();
-
         setSaving(
-            status==="published"
-                ? "Haber başarıyla kaydedildi"
-                : "Taslak kaydedildi",
+            "Mevcut haber yüklendi",
             true
         );
 
@@ -2188,344 +1409,764 @@ async function saveNews(status){
             "Supabase bağlı",
             "ok"
         );
-
-        showMessage(
-            status==="published"
-                ? (
-                    currentNews.is_headline
-                        ? "Haber yayınlandı ve "+
-                          currentNews.headline_order+
-                          ". sırada manşete eklendi."
-                        : "Haber başarıyla yayınlandı."
-                )
-                : "Taslak kaydedildi. Haber manşetteyse manşetten çıkarıldı.",
-            "success"
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        let errorMessage=
-            error &&
-            error.message
-                ? error.message
-                : "Haber kaydedilirken bir hata oluştu.";
-
-        /*
-         * Veritabanındaki unique index
-         * son güvenlik katmanıdır.
-         */
-        if(
-            error &&
-            error.code==="23505"
-        ){
-            errorMessage=
-                "Seçtiğin manşet sırası başka bir haber tarafından kullanılıyor. Başka bir sıra seç.";
-        }
-
-        setSaving(
-            "Kayıt başarısız",
-            false
-        );
-
-        setConnection(
-            "Kayıt hatası",
-            "error"
-        );
-
-        showMessage(
-            errorMessage,
-            "error"
-        );
-
-        try{
-            await loadHeadlineSlots();
-        }catch(slotError){
-            console.error(slotError);
-        }
-
-    }finally{
-
-        isSaving=false;
-
-        draftBtn.disabled=false;
-        publishBtn.disabled=false;
-        deleteBtn.disabled=false;
     }
-}
 
-async function deleteNews(){
+    function statusText(status) {
+        if (status === "published") {
+            return "Yayında";
+        }
 
-    if(!currentNews)return;
+        if (status === "archived") {
+            return "Arşiv";
+        }
 
-    const confirmed=
-        window.confirm(
-            "Bu haberi kalıcı olarak silmek istediğine emin misin?"
-        );
+        return "Taslak";
+    }
 
-    if(!confirmed)return;
+    function updateImagePreview(url) {
+        if (!url) {
+            imagePreview.className =
+                "image-preview";
 
-    try{
+            imagePreview.innerHTML =
+                "Haber görseli seçilmedi";
 
-        deleteBtn.disabled=true;
+            return;
+        }
 
-        setConnection(
-            "Haber siliniyor..."
-        );
+        imagePreview.className =
+            "image-preview has-image";
 
-        const result=
-            await client
-                .from("news")
-                .delete()
-                .eq(
-                    "id",
-                    currentNews.id
+        imagePreview.innerHTML =
+            '<img src="' +
+            escapeHtml(url) +
+            '" alt="Haber görseli">';
+    }
+
+    function previewSelectedFile(file) {
+        if (!file) {
+            if (imageUrlInput.value) {
+                updateImagePreview(
+                    imageUrlInput.value
+                );
+            }
+
+            return;
+        }
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            function (event) {
+                updateImagePreview(
+                    event.target.result
+                );
+            };
+
+        reader.readAsDataURL(file);
+    }
+
+    async function uploadImage(file) {
+        if (!file) {
+            return null;
+        }
+
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif"
+        ];
+
+        if (
+            !allowedTypes.includes(
+                file.type
+            )
+        ) {
+            throw new Error(
+                "Desteklenmeyen görsel formatı."
+            );
+        }
+
+        if (
+            file.size >
+            8 * 1024 * 1024
+        ) {
+            throw new Error(
+                "Görsel 8 MB'dan küçük olmalıdır."
+            );
+        }
+
+        const extension =
+            file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+        const safeExtension =
+            extension === "jpeg"
+                ? "jpg"
+                : extension;
+
+        const fileName =
+            "haber-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .substring(2, 9) +
+            "." +
+            safeExtension;
+
+        const filePath =
+            "news/" + fileName;
+
+        const uploadResult =
+            await client.storage
+                .from("news-images")
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        cacheControl: "3600",
+                        upsert: false,
+                        contentType: file.type
+                    }
                 );
 
-        if(result.error){
-            throw result.error;
+        if (uploadResult.error) {
+            throw new Error(
+                "Görsel yüklenemedi. Supabase Storage'da 'news-images' alanının oluşturulduğundan emin olun."
+            );
         }
 
-        showMessage(
-            "Haber silindi.",
-            "success"
-        );
+        const publicResult =
+            client.storage
+                .from("news-images")
+                .getPublicUrl(filePath);
 
-        setTimeout(function(){
-            window.location.href=
-                "haberler.html";
-        },700);
-
-    }catch(error){
-
-        console.error(error);
-
-        deleteBtn.disabled=false;
-
-        setConnection(
-            "Silme hatası",
-            "error"
-        );
-
-        showMessage(
-            error.message||
-            "Haber silinemedi.",
-            "error"
-        );
-    }
-}
-
-function generateSlug(){
-
-    slugInput.value=
-        slugify(
-            titleInput.value
-        );
-}
-
-headlineInput.addEventListener(
-    "change",
-    function(){
-
-        if(!headlineInput.checked){
-            selectedHeadlineOrder=null;
-
-            headlineInfo.textContent=
-                "Manşet seçimi kapatıldı.";
-        }else{
-            headlineInfo.textContent=
-                "Manşette görünmesi için boş bir sıra seç.";
+        if (
+            !publicResult ||
+            !publicResult.data ||
+            !publicResult.data.publicUrl
+        ) {
+            throw new Error(
+                "Görsel URL'si alınamadı."
+            );
         }
 
-        updateHeadlineVisibility();
+        return publicResult.data.publicUrl;
     }
-);
 
-titleInput.addEventListener(
-    "blur",
-    function(){
+    async function createUniqueSlug(
+        baseSlug,
+        existingId
+    ) {
+        let slug =
+            slugify(baseSlug);
 
-        if(
-            !slugInput.value.trim()
-        ){
-            generateSlug();
+        if (!slug) {
+            slug =
+                "haber-" +
+                Date.now();
+        }
+
+        const original =
+            slug;
+
+        let counter = 2;
+
+        while (true) {
+            let query =
+                client
+                    .from("news")
+                    .select("id")
+                    .eq("slug", slug)
+                    .limit(1);
+
+            if (existingId) {
+                query =
+                    query.neq(
+                        "id",
+                        existingId
+                    );
+            }
+
+            const result =
+                await query;
+
+            if (result.error) {
+                throw result.error;
+            }
+
+            if (
+                !result.data ||
+                result.data.length === 0
+            ) {
+                return slug;
+            }
+
+            slug =
+                original +
+                "-" +
+                counter;
+
+            counter++;
         }
     }
-);
 
-generateSlugBtn.addEventListener(
-    "click",
-    generateSlug
-);
+    function getFormData() {
+        return {
+            title:
+                titleInput.value.trim(),
 
-imageInput.addEventListener(
-    "change",
-    function(){
+            slug:
+                slugInput.value.trim(),
 
-        previewSelectedFile(
-            imageInput.files &&
-            imageInput.files[0]
-        );
+            summary:
+                summaryInput.value.trim(),
+
+            content:
+                contentInput.value.trim(),
+
+            category_id:
+                categoryInput.value,
+
+            image_url:
+                imageUrlInput.value.trim(),
+
+            is_breaking:
+                breakingInput.checked,
+
+            is_headline:
+                headlineInput.checked,
+
+            headline_order:
+                headlineInput.checked
+                    ? Number(headlineOrderInput.value) || null
+                    : null
+        };
     }
-);
 
-imageUrlInput.addEventListener(
-    "input",
-    function(){
+    headlineInput.addEventListener("change", function () {
+        headlineOrderGroup.hidden = !headlineInput.checked;
+        if (!headlineInput.checked) headlineOrderInput.value = "";
+    });
 
-        if(
-            !imageInput.files ||
-            !imageInput.files[0]
-        ){
-            updateImagePreview(
-                imageUrlInput.value.trim()
+    async function validateHeadlineSlot(data, status) {
+        if (status !== "published" || !data.is_headline) return;
+        if (!data.headline_order || data.headline_order < 1 || data.headline_order > 10) {
+            throw new Error("Manşet için 1-10 arasında bir sıra seçin.");
+        }
+        let query = client.from("news")
+            .select("id,title")
+            .eq("status", "published")
+            .eq("is_headline", true)
+            .eq("headline_order", data.headline_order)
+            .limit(1);
+        if (currentNews && currentNews.id) query = query.neq("id", currentNews.id);
+        const result = await query;
+        if (result.error) throw result.error;
+        if (result.data && result.data.length) {
+            throw new Error("Bu manşet sırası dolu: “" + result.data[0].title + "”. Önce diğer haberi manşetten çıkarın.");
+        }
+    }
+
+    function validateForm(data) {
+        if (!data.title) {
+            throw new Error(
+                "Haber başlığı boş bırakılamaz."
+            );
+        }
+
+        if (!data.summary) {
+            throw new Error(
+                "Haber özeti boş bırakılamaz."
+            );
+        }
+
+        if (!data.content) {
+            throw new Error(
+                "Haber metni boş bırakılamaz."
+            );
+        }
+
+        if (!data.category_id) {
+            throw new Error(
+                "Lütfen bir kategori seçin."
             );
         }
     }
-);
 
-draftBtn.addEventListener(
-    "click",
-    function(){
-        saveNews("draft");
-    }
-);
-
-form.addEventListener(
-    "submit",
-    function(event){
-        event.preventDefault();
-        saveNews("published");
-    }
-);
-
-deleteBtn.addEventListener(
-    "click",
-    deleteNews
-);
-
-mobileMenu.addEventListener(
-    "click",
-    function(){
-        sidebar.classList.toggle(
-            "open"
-        );
-    }
-);
-
-document.addEventListener(
-    "click",
-    function(event){
-
-        if(
-            window.innerWidth<=800 &&
-            sidebar.classList.contains(
-                "open"
-            ) &&
-            !sidebar.contains(
-                event.target
-            ) &&
-            event.target!==mobileMenu
-        ){
-            sidebar.classList.remove(
-                "open"
-            );
+    async function saveNews(status) {
+        if (isSaving) {
+            return;
         }
-    }
-);
 
-async function logout(){
+        isSaving = true;
 
-    if(client){
-        await client.auth.signOut();
-    }
+        draftBtn.disabled = true;
+        publishBtn.disabled = true;
+        deleteBtn.disabled = true;
 
-    window.location.replace(
-        "admin-giris.html"
-    );
-}
+        try {
+            const data =
+                getFormData();
 
-logoutBtn.addEventListener(
-    "click",
-    logout
-);
+            validateForm(data);
 
-sidebarLogout.addEventListener(
-    "click",
-    function(event){
-        event.preventDefault();
-        logout();
-    }
-);
+            await validateHeadlineSlot(data, status);
 
-async function init(){
+            setSaving(
+                "Kaydediliyor...",
+                false
+            );
 
-    try{
+            setConnection(
+                "Haber kaydediliyor..."
+            );
 
-        setConnection(
-            "Supabase bağlantısı kuruluyor..."
-        );
+            let imageUrl =
+                data.image_url ||
+                null;
 
-        await createClient();
+            const selectedFile =
+                imageInput.files &&
+                imageInput.files[0];
 
-        const authenticated=
-            await checkAuth();
+            if (selectedFile) {
+                setSaving(
+                    "Görsel yükleniyor...",
+                    false
+                );
 
-        if(!authenticated)return;
+                imageUrl =
+                    await uploadImage(
+                        selectedFile
+                    );
+            }
 
-        updatePageMode();
+            const slug =
+                await createUniqueSlug(
+                    data.slug ||
+                    data.title,
+                    currentNews
+                        ? currentNews.id
+                        : null
+                );
 
-        await loadCategories();
+            const payload = {
+                title:
+                    data.title,
 
-        /*
-         * Önce mevcut haberi yüklüyoruz.
-         * Böylece kendi manşet sırası
-         * "dolu" olarak engellenmez.
-         */
-        await loadExistingNews();
+                slug:
+                    slug,
 
-        await loadHeadlineSlots();
+                summary:
+                    data.summary,
 
-        updateHeadlineVisibility();
+                content:
+                    data.content,
 
-        if(!currentNews){
+                category_id:
+                    data.category_id,
+
+                image_url:
+                    imageUrl,
+
+                status:
+                    status,
+
+                is_breaking:
+                    data.is_breaking,
+
+                is_headline:
+                    status === "published" ? data.is_headline : false,
+
+                headline_order:
+                    status === "published" && data.is_headline
+                        ? data.headline_order
+                        : null,
+
+                author_id:
+                    currentUser.id
+            };
+
+            if (
+                status === "published"
+            ) {
+                payload.published_at =
+                    currentNews &&
+                    currentNews.published_at
+                        ? currentNews.published_at
+                        : new Date().toISOString();
+            } else {
+                payload.published_at =
+                    null;
+            }
+
+            let result;
+
+            if (currentNews) {
+                result =
+                    await client
+                        .from("news")
+                        .update(payload)
+                        .eq(
+                            "id",
+                            currentNews.id
+                        )
+                        .select()
+                        .single();
+            } else {
+                result =
+                    await client
+                        .from("news")
+                        .insert(payload)
+                        .select()
+                        .single();
+            }
+
+            if (result.error) {
+                throw result.error;
+            }
+
+            currentNews =
+                result.data;
+
+            isEditMode = true;
+
+            window.history.replaceState(
+                {},
+                "",
+                "yeni-haber.html?edit=" +
+                encodeURIComponent(
+                    currentNews.id
+                )
+            );
+
+            updatePageMode();
+
+            slugInput.value =
+                currentNews.slug || "";
+
+            imageUrlInput.value =
+                currentNews.image_url || "";
+
+            if (currentNews.image_url) {
+                updateImagePreview(
+                    currentNews.image_url
+                );
+            }
+
+            metaStatus.textContent =
+                statusText(
+                    currentNews.status
+                );
+
+            metaCreated.textContent =
+                formatDate(
+                    currentNews.created_at
+                );
+
+            metaUpdated.textContent =
+                formatDate(
+                    currentNews.updated_at
+                );
+
+            publishBtn.textContent =
+                currentNews.status === "published"
+                    ? "Haberi Güncelle"
+                    : "Haberi Yayınla";
+
+            draftBtn.textContent =
+                currentNews.status === "draft"
+                    ? "Taslağı Güncelle"
+                    : "Taslak Olarak Kaydet";
+
+            setSaving(
+                status === "published"
+                    ? "Haber yayınlandı"
+                    : "Taslak kaydedildi",
+                true
+            );
 
             setConnection(
                 "Supabase bağlı",
                 "ok"
             );
 
+            showMessage(
+                status === "published"
+                    ? "Haber başarıyla yayınlandı."
+                    : "Taslak başarıyla kaydedildi.",
+                "success"
+            );
+
+        } catch (error) {
+            console.error(error);
+
             setSaving(
-                "Yeni haber hazır",
+                "Kayıt başarısız",
                 false
             );
 
-            metaHeadline.textContent=
-                "Hayır";
+            setConnection(
+                "Kayıt hatası",
+                "error"
+            );
+
+            showMessage(
+                error.message ||
+                "Haber kaydedilirken bir hata oluştu.",
+                "error"
+            );
+
+        } finally {
+            isSaving = false;
+
+            draftBtn.disabled = false;
+            publishBtn.disabled = false;
+            deleteBtn.disabled = false;
+        }
+    }
+
+    async function deleteNews() {
+        if (!currentNews) {
+            return;
         }
 
-    }catch(error){
+        const confirmed =
+            window.confirm(
+                "Bu haberi kalıcı olarak silmek istediğinize emin misiniz?"
+            );
 
-        console.error(error);
+        if (!confirmed) {
+            return;
+        }
 
-        setConnection(
-            "Supabase bağlantı hatası",
-            "error"
-        );
+        try {
+            deleteBtn.disabled = true;
 
-        showMessage(
-            error.message||
-            "Sayfa hazırlanırken hata oluştu.",
-            "error"
-        );
+            setConnection(
+                "Haber siliniyor..."
+            );
+
+            const result =
+                await client
+                    .from("news")
+                    .delete()
+                    .eq(
+                        "id",
+                        currentNews.id
+                    );
+
+            if (result.error) {
+                throw result.error;
+            }
+
+            showMessage(
+                "Haber silindi. Haber listesine yönlendiriliyorsunuz.",
+                "success"
+            );
+
+            window.setTimeout(
+                function () {
+                    window.location.href =
+                        "haberler.html";
+                },
+                900
+            );
+
+        } catch (error) {
+            console.error(error);
+
+            deleteBtn.disabled = false;
+
+            setConnection(
+                "Silme hatası",
+                "error"
+            );
+
+            showMessage(
+                error.message ||
+                "Haber silinirken hata oluştu.",
+                "error"
+            );
+        }
     }
-}
 
-init();
+    function generateSlug() {
+        slugInput.value =
+            slugify(
+                titleInput.value
+            );
+    }
+
+    titleInput.addEventListener(
+        "blur",
+        function () {
+            if (!slugInput.value.trim()) {
+                generateSlug();
+            }
+        }
+    );
+
+    generateSlugBtn.addEventListener(
+        "click",
+        generateSlug
+    );
+
+    imageInput.addEventListener(
+        "change",
+        function () {
+            previewSelectedFile(
+                imageInput.files &&
+                imageInput.files[0]
+            );
+        }
+    );
+
+    imageUrlInput.addEventListener(
+        "input",
+        function () {
+            if (
+                !imageInput.files ||
+                !imageInput.files[0]
+            ) {
+                updateImagePreview(
+                    imageUrlInput.value.trim()
+                );
+            }
+        }
+    );
+
+    draftBtn.addEventListener(
+        "click",
+        function () {
+            saveNews("draft");
+        }
+    );
+
+    publishBtn.addEventListener(
+        "click",
+        function (event) {
+            event.preventDefault();
+            saveNews("published");
+        }
+    );
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+            event.preventDefault();
+            saveNews("published");
+        }
+    );
+
+    deleteBtn.addEventListener(
+        "click",
+        deleteNews
+    );
+
+    mobileMenu.addEventListener(
+        "click",
+        function () {
+            sidebar.classList.toggle("open");
+        }
+    );
+
+    logoutBtn.addEventListener(
+        "click",
+        async function () {
+            await client.auth.signOut();
+
+            window.location.href =
+                "admin-giris.html";
+        }
+    );
+
+    sidebarLogout.addEventListener(
+        "click",
+        async function (event) {
+            event.preventDefault();
+
+            await client.auth.signOut();
+
+            window.location.href =
+                "admin-giris.html";
+        }
+    );
+
+    document.addEventListener(
+        "click",
+        function (event) {
+            if (
+                window.innerWidth <= 800 &&
+                sidebar.classList.contains("open") &&
+                !sidebar.contains(event.target) &&
+                event.target !== mobileMenu
+            ) {
+                sidebar.classList.remove("open");
+            }
+        }
+    );
+
+    async function init() {
+        try {
+            setConnection(
+                "Supabase bağlantısı kuruluyor..."
+            );
+
+            await createClient();
+
+            const authenticated =
+                await checkAuth();
+
+            if (!authenticated) {
+                return;
+            }
+
+            updatePageMode();
+
+            await loadCategories();
+
+            await loadExistingNews();
+
+            if (!currentNews) {
+                setConnection(
+                    "Supabase bağlı",
+                    "ok"
+                );
+
+                setSaving(
+                    "Yeni haber hazır",
+                    false
+                );
+            }
+
+        } catch (error) {
+            console.error(error);
+
+            setConnection(
+                "Supabase bağlantı hatası",
+                "error"
+            );
+
+            showMessage(
+                error.message ||
+                "Sayfa hazırlanırken hata oluştu.",
+                "error"
+            );
+        }
+    }
+
+    init();
 
 })();
 </script>
 
+  <script src="admin-shell.js?v=1"></script>
 </body>
 </html>
