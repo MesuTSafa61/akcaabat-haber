@@ -39,12 +39,12 @@
 
     <link
         rel="stylesheet"
-        href="style.css?v=8"
+        href="style.css?v=9"
     >
 
     <link
         rel="stylesheet"
-        href="portal-shell.css?v=8"
+        href="portal-shell.css?v=9"
     >
 </head>
 
@@ -65,6 +65,7 @@
     <section
         class="breaking-news-bar"
         aria-label="Son dakika haberleri"
+        hidden
     >
         <div class="container">
 
@@ -98,7 +99,7 @@
              ANA MANŞET
              ================================================= -->
 
-        <section class="home-headline-section">
+        <section class="home-headline-section" id="homeHeadlineSection">
 
             <div class="container">
 
@@ -268,7 +269,7 @@
                 <div class="quick-service-grid">
 
                     <a
-                        href="son-dakika.html"
+                        href="haber.html?breaking=1"
                         class="quick-service-card"
                     >
                         <span class="quick-service-icon">
@@ -288,7 +289,7 @@
 
 
                     <a
-                        href="akcaabat.html"
+                        href="kategori.html?kategori=Akçaabat"
                         class="quick-service-card"
                     >
                         <span class="quick-service-icon">
@@ -308,7 +309,7 @@
 
 
                     <a
-                        href="trabzon.html"
+                        href="kategori.html?kategori=Trabzon"
                         class="quick-service-card"
                     >
                         <span class="quick-service-icon">
@@ -328,7 +329,7 @@
 
 
                     <a
-                        href="trabzonspor.html"
+                        href="kategori.html?kategori=Trabzonspor"
                         class="quick-service-card"
                     >
                         <span class="quick-service-icon">
@@ -484,7 +485,7 @@
                         <h2>Akçaabat</h2>
                     </div>
 
-                    <a href="akcaabat.html">
+                    <a href="kategori.html?kategori=Akçaabat">
                         Tüm Akçaabat Haberleri
                     </a>
 
@@ -520,7 +521,7 @@
                         <h2>Trabzon</h2>
                     </div>
 
-                    <a href="trabzon.html">
+                    <a href="kategori.html?kategori=Trabzon">
                         Tüm Trabzon Haberleri
                     </a>
 
@@ -556,7 +557,7 @@
                         <h2>Trabzonspor</h2>
                     </div>
 
-                    <a href="trabzonspor.html">
+                    <a href="kategori.html?kategori=Trabzonspor">
                         Tüm Trabzonspor Haberleri
                     </a>
 
@@ -614,6 +615,29 @@
 
 
         <!-- =================================================
+             KÖŞE YAZARLARI
+             ================================================= -->
+
+        <section class="home-category-links" aria-labelledby="writersTitle">
+            <div class="container">
+                <div class="section-title-bar">
+                    <div>
+                        <span></span>
+                        <h2 id="writersTitle">Köşe Yazarları</h2>
+                    </div>
+                    <a href="yazarlar.html">Tümünü Gör</a>
+                </div>
+                <div class="category-link-grid">
+                    <a href="yazarlar.html">
+                        <strong>Yazar kadrosu hazırlanıyor</strong>
+                        <span>Doğrulanmış yazar profilleri yayınlandığında burada yer alacak ›</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =================================================
              DİĞER KATEGORİLER
              ================================================= -->
 
@@ -633,32 +657,32 @@
 
                 <div class="category-link-grid">
 
-                    <a href="gundem.html">
+                    <a href="kategori.html?kategori=Gündem">
                         <strong>Gündem</strong>
                         <span>Günün gelişmeleri ›</span>
                     </a>
 
-                    <a href="spor.html">
+                    <a href="kategori.html?kategori=Spor">
                         <strong>Spor</strong>
                         <span>Spor haberleri ›</span>
                     </a>
 
-                    <a href="ekonomi.html">
+                    <a href="kategori.html?kategori=Ekonomi">
                         <strong>Ekonomi</strong>
                         <span>Ekonomi gündemi ›</span>
                     </a>
 
-                    <a href="yasam.html">
+                    <a href="kategori.html?kategori=Yaşam">
                         <strong>Yaşam</strong>
                         <span>Yaşam haberleri ›</span>
                     </a>
 
-                    <a href="siyaset.html">
+                    <a href="kategori.html?kategori=Siyaset">
                         <strong>Siyaset</strong>
                         <span>Siyasi gelişmeler ›</span>
                     </a>
 
-                    <a href="turkiye.html">
+                    <a href="kategori.html?kategori=Türkiye">
                         <strong>Türkiye</strong>
                         <span>Türkiye gündemi ›</span>
                     </a>
@@ -684,8 +708,8 @@
          ===================================================== -->
 
     <script src="supabase-config.js"></script>
-    <script src="script.js?v=8"></script>
-    <script src="portal-shell.js?v=8"></script>
+    <script src="script.js?v=9"></script>
+    <script src="portal-shell.js?v=9"></script>
 
 
     <script>
@@ -1211,6 +1235,15 @@
         function renderEmptyHeadline() {
             stopHeadlineTimer();
 
+            const section =
+                document.getElementById(
+                    "homeHeadlineSection"
+                );
+
+            if (section) {
+                section.hidden = true;
+            }
+
             const link =
                 document.getElementById(
                     "mainHeadlineLink"
@@ -1337,6 +1370,15 @@
                 headlines[
                     activeHeadline
                 ];
+
+            const section =
+                document.getElementById(
+                    "homeHeadlineSection"
+                );
+
+            if (section) {
+                section.hidden = false;
+            }
 
             const link =
                 document.getElementById(
@@ -1776,7 +1818,12 @@
                     "breakingNewsContent"
                 );
 
-            if (!target) {
+            const bar =
+                document.querySelector(
+                    ".breaking-news-bar"
+                );
+
+            if (!target || !bar) {
                 return;
             }
 
@@ -1793,14 +1840,12 @@
                     .slice(0, 8);
 
             if (!breakingNews.length) {
-                target.innerHTML = `
-                    <span>
-                        Akçaabat ve Trabzon'dan son gelişmeler Akçaabat Haber'de.
-                    </span>
-                `;
-
+                bar.hidden = true;
+                target.innerHTML = "";
                 return;
             }
+
+            bar.hidden = false;
 
             target.innerHTML =
                 breakingNews
@@ -1920,7 +1965,14 @@
 
             const items =
                 news
-                    .filter(isPublished)
+                    .filter(
+                        function (item) {
+                            return (
+                                isPublished(item) &&
+                                views(item) > 0
+                            );
+                        }
+                    )
                     .slice()
                     .sort(
                         function (a, b) {
@@ -1935,7 +1987,7 @@
             if (!items.length) {
                 target.innerHTML = `
                     <div class="home-empty">
-                        Henüz haber bulunmuyor.
+                        Görüntülenme verisi bulunan haber henüz yok.
                     </div>
                 `;
 
@@ -1994,148 +2046,210 @@
                 return;
             }
 
-            if (
-                !A().getSupabaseClient
-            ) {
+            if (!A().getSupabaseClient) {
                 target.innerHTML = `
-                    <a
-                        class="match-center-fallback"
-                        href="mac-merkezi.html"
-                    >
-                        Maç Merkezi'ni Aç
+                    <a class="match-center-fallback" href="mac-merkezi.html">
+                        <strong>Maç Merkezi</strong>
+                        <span>Fikstür ve sonuçlar için aç ›</span>
                     </a>
                 `;
-
                 return;
             }
 
             try {
                 const client =
-                    await A()
-                        .getSupabaseClient();
+                    await A().getSupabaseClient();
 
                 if (!client) {
                     throw new Error(
-                        "Supabase yok."
+                        "Supabase istemcisi kullanılamıyor."
                     );
                 }
 
-                const result =
-                    await client
-                        .from("matches")
-                        .select("*")
-                        .order(
-                            "match_date",
-                            {
-                                ascending: true
-                            }
-                        )
-                        .limit(6);
+                const responses =
+                    await Promise.all([
+                        client
+                            .from("sports_matches")
+                            .select(
+                                "id,team_id,opponent_name,competition,match_date,status,home_away,home_score,away_score,match_url,is_featured"
+                            )
+                            .order(
+                                "match_date",
+                                { ascending: false }
+                            )
+                            .limit(24),
+                        client
+                            .from("sports_teams")
+                            .select("id,name")
+                            .eq("is_active", true)
+                    ]);
 
-                if (
-                    result.error ||
-                    !result.data ||
-                    !result.data.length
-                ) {
-                    throw (
-                        result.error ||
-                        new Error(
-                            "Maç bulunamadı."
-                        )
-                    );
+                const matchesResult = responses[0];
+                const teamsResult = responses[1];
+
+                if (matchesResult.error) {
+                    throw matchesResult.error;
+                }
+
+                const teamNames = {};
+
+                if (!teamsResult.error) {
+                    (teamsResult.data || [])
+                        .forEach(function (team) {
+                            teamNames[team.id] =
+                                team.name;
+                        });
+                }
+
+                const now = Date.now();
+
+                const matches =
+                    (matchesResult.data || [])
+                        .slice()
+                        .sort(function (a, b) {
+                            const live = function (match) {
+                                return /live|canlı|playing|started/i
+                                    .test(String(match.status || ""));
+                            };
+
+                            if (live(a) !== live(b)) {
+                                return live(a) ? -1 : 1;
+                            }
+
+                            const aTime =
+                                new Date(a.match_date).getTime();
+
+                            const bTime =
+                                new Date(b.match_date).getTime();
+
+                            const aFuture =
+                                Number.isFinite(aTime) &&
+                                aTime >= now;
+
+                            const bFuture =
+                                Number.isFinite(bTime) &&
+                                bTime >= now;
+
+                            if (aFuture !== bFuture) {
+                                return aFuture ? -1 : 1;
+                            }
+
+                            return aFuture
+                                ? aTime - bTime
+                                : bTime - aTime;
+                        })
+                        .slice(0, 6);
+
+                if (!matches.length) {
+                    target.innerHTML = `
+                        <a class="match-center-fallback" href="mac-merkezi.html">
+                            <strong>Maç verisi henüz bulunmuyor</strong>
+                            <span>Maç Merkezi'ni aç ›</span>
+                        </a>
+                    `;
+                    return;
                 }
 
                 target.innerHTML =
-                    result.data
-                        .map(
-                            function (match) {
-                                const home =
-                                    match.home_team ||
-                                    match.home_team_name ||
-                                    "Ev Sahibi";
+                    matches
+                        .map(function (match) {
+                            const ownTeam =
+                                teamNames[match.team_id] ||
+                                "Takım bilgisi yok";
 
-                                const away =
-                                    match.away_team ||
-                                    match.away_team_name ||
-                                    "Deplasman";
+                            const isAway =
+                                match.home_away === "away";
 
-                                const homeScore =
-                                    match.home_score ??
-                                    "-";
+                            const home =
+                                isAway
+                                    ? match.opponent_name
+                                    : ownTeam;
 
-                                const awayScore =
-                                    match.away_score ??
-                                    "-";
+                            const away =
+                                isAway
+                                    ? ownTeam
+                                    : match.opponent_name;
 
-                                const status =
-                                    match.status ||
-                                    "";
+                            const homeScore =
+                                match.home_score ??
+                                "-";
 
-                                return `
-                                    <article class="home-match-card">
+                            const awayScore =
+                                match.away_score ??
+                                "-";
 
-                                        <div class="match-card-top">
-                                            <span>
-                                                ${escapeHtml(
-                                                    match.competition ||
-                                                    match.league ||
-                                                    "Maç"
-                                                )}
-                                            </span>
+                            const rawStatus =
+                                String(match.status || "");
 
-                                            <small>
-                                                ${escapeHtml(status)}
-                                            </small>
+                            const live =
+                                /live|canlı|playing|started/i
+                                    .test(rawStatus);
+
+                            const finished =
+                                /finished|completed|played|bitti|full/i
+                                    .test(rawStatus);
+
+                            const dateValue =
+                                new Date(match.match_date);
+
+                            const status =
+                                live
+                                    ? "CANLI"
+                                    : (
+                                        finished
+                                            ? "TAMAMLANDI"
+                                            : (
+                                                Number.isNaN(dateValue.getTime())
+                                                    ? "PROGRAM"
+                                                    : dateValue.toLocaleString(
+                                                        "tr-TR",
+                                                        {
+                                                            day: "2-digit",
+                                                            month: "2-digit",
+                                                            hour: "2-digit",
+                                                            minute: "2-digit"
+                                                        }
+                                                    )
+                                            )
+                                    );
+
+                            return `
+                                <article class="home-match-card">
+                                    <div class="match-card-top">
+                                        <span>${escapeHtml(
+                                            match.competition ||
+                                            "Maç"
+                                        )}</span>
+                                        <small>${escapeHtml(status)}</small>
+                                    </div>
+                                    <div class="match-teams">
+                                        <strong>${escapeHtml(home)}</strong>
+                                        <div class="match-score">
+                                            <span>${escapeHtml(homeScore)}</span>
+                                            <b>:</b>
+                                            <span>${escapeHtml(awayScore)}</span>
                                         </div>
-
-                                        <div class="match-teams">
-
-                                            <strong>
-                                                ${escapeHtml(home)}
-                                            </strong>
-
-                                            <div class="match-score">
-                                                <span>
-                                                    ${escapeHtml(homeScore)}
-                                                </span>
-
-                                                <b>:</b>
-
-                                                <span>
-                                                    ${escapeHtml(awayScore)}
-                                                </span>
-                                            </div>
-
-                                            <strong>
-                                                ${escapeHtml(away)}
-                                            </strong>
-
-                                        </div>
-
-                                    </article>
-                                `;
-                            }
-                        )
+                                        <strong>${escapeHtml(away)}</strong>
+                                    </div>
+                                </article>
+                            `;
+                        })
                         .join("");
 
             } catch (error) {
-                target.innerHTML = `
-                    <a
-                        class="match-center-fallback"
-                        href="mac-merkezi.html"
-                    >
-                        <strong>
-                            Maç Merkezi
-                        </strong>
+                console.warn(
+                    "Ana sayfa maç verisi:",
+                    error
+                );
 
-                        <span>
-                            Fikstür, sonuçlar ve canlı skorlar için aç ›
-                        </span>
+                target.innerHTML = `
+                    <a class="match-center-fallback" href="mac-merkezi.html">
+                        <strong>Maç verisi şu anda kullanılamıyor</strong>
+                        <span>Maç Merkezi'ni aç ›</span>
                     </a>
                 `;
             }
         }
-
 
         /* =================================================
            TÜM BLOKLAR

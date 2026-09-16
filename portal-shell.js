@@ -119,9 +119,16 @@
 
                     <a
                         class="ah-service"
-                        href="canli.html"
+                        href="kameralar.html"
                     >
-                        CANLI SERVİSLER
+                        KAMERALAR
+                    </a>
+
+                    <a
+                        class="ah-service"
+                        href="trafik.html"
+                    >
+                        TRAFİK
                     </a>
 
                 </div>
@@ -214,11 +221,38 @@
 
 
                 <a
-                    href="canli.html"
-                    class="ah-live"
-                    data-page="canli.html"
+                    href="mac-merkezi.html"
+                    data-page="mac-merkezi.html"
                 >
-                    ● CANLI
+                    MAÇ MERKEZİ
+                </a>
+
+                <a
+                    href="kameralar.html"
+                    data-page="kameralar.html"
+                >
+                    KAMERALAR
+                </a>
+
+                <a
+                    href="trafik.html"
+                    data-page="trafik.html"
+                >
+                    TRAFİK
+                </a>
+
+                <a
+                    href="yazarlar.html"
+                    data-page="yazarlar.html"
+                >
+                    YAZARLAR
+                </a>
+
+                <a
+                    href="haber.html?breaking=1"
+                    class="ah-live"
+                >
+                    ● SON DAKİKA
                 </a>
 
             </div>
@@ -246,6 +280,25 @@
         </div>
     `;
 
+
+    /*
+     * Ana sayfa kendi yoğun Son Dakika akışını kullanır.
+     * Böylece ikinci bir bant üretilmez.
+     */
+    if (
+        body.classList.contains(
+            "home-page"
+        )
+    ) {
+        const duplicateBreaking =
+            header.querySelector(
+                ".ah-breaking"
+            );
+
+        if (duplicateBreaking) {
+            duplicateBreaking.remove();
+        }
+    }
 
     body.insertBefore(
         header,
@@ -352,12 +405,16 @@
                     Maç Merkezi
                 </a>
 
-                <a href="canli.html">
-                    Canlı Kameralar
+                <a href="kameralar.html">
+                    Kameralar / MOBESE
                 </a>
 
-                <a href="canli.html#trafik">
+                <a href="trafik.html">
                     Trafik
+                </a>
+
+                <a href="yazarlar.html">
+                    Köşe Yazarları
                 </a>
 
                 <a href="iletisim.html">
@@ -620,7 +677,6 @@
        ===================================================== */
 
     async function loadBreakingNews() {
-
         const breaking =
             document.getElementById(
                 "ahBreaking"
@@ -628,72 +684,72 @@
 
         if (!breaking) return;
 
+        const band =
+            breaking.closest(
+                ".ah-breaking"
+            );
+
+        const hideBand = function () {
+            if (band) {
+                band.hidden = true;
+            }
+
+            breaking.textContent = "";
+        };
+
+        const showItem = function (item) {
+            if (!item || !item.title) {
+                hideBand();
+                return false;
+            }
+
+            breaking.textContent =
+                item.title;
+
+            if (band) {
+                band.hidden = false;
+            }
+
+            return true;
+        };
+
+        if (band) {
+            band.hidden = true;
+        }
 
         try {
-
-            /*
-             * Önce ortak haber motorunu kullan.
-             */
-
             if (
                 window.AkcaabatHaber &&
                 typeof window.AkcaabatHaber
                     .fetchNewsFromSupabase ===
                     "function"
             ) {
-
                 const rows =
                     await window.AkcaabatHaber
                         .fetchNewsFromSupabase();
 
-                if (
-                    Array.isArray(rows) &&
-                    rows.length
-                ) {
-
-                    const selected =
-                        rows.find(
+                const selected =
+                    Array.isArray(rows)
+                        ? rows.find(
                             (item) =>
                                 item.is_breaking === true
-                        ) ||
-                        rows[0];
+                        )
+                        : null;
 
-
-                    if (
-                        selected &&
-                        selected.title
-                    ) {
-
-                        breaking.textContent =
-                            selected.title;
-
-                        return;
-
-                    }
-
+                if (showItem(selected)) {
+                    return;
                 }
-
             }
-
-
-            /*
-             * Ortak motor kullanılamazsa
-             * doğrudan Supabase.
-             */
 
             const client =
                 await getClient();
 
             if (!client) {
-
-                breaking.textContent =
-                    "Akçaabat ve Trabzon'dan son gelişmeler Akçaabat Haber'de.";
-
+                hideBand();
                 return;
             }
 
-
-            let result =
+            const result =
                 await client
                     .from("news")
                     .select(
@@ -709,83 +765,33 @@
                     )
                     .order(
                         "published_at",
-                        {
-                            ascending: false
-                        }
+                        { ascending: false }
                     )
                     .limit(1);
 
-
-            let rows =
-                result.data || [];
-
-
-            /*
-             * Aktif son dakika haberi yoksa
-             * en yeni yayınlanmış haberi getir.
-             */
-
-            if (!rows.length) {
-
-                result =
-                    await client
-                        .from("news")
-                        .select(
-                            "id,title,slug,published_at"
-                        )
-                        .eq(
-                            "status",
-                            "published"
-                        )
-                        .order(
-                            "published_at",
-                            {
-                                ascending: false
-                            }
-                        )
-                        .limit(1);
-
-                rows =
-                    result.data || [];
+            if (result.error) {
+                throw result.error;
             }
 
-
-            if (
-                rows.length &&
-                rows[0].title
-            ) {
-
-                breaking.textContent =
-                    rows[0].title;
-
-            } else {
-
-                breaking.textContent =
-                    "Akçaabat ve Trabzon'dan son gelişmeler Akçaabat Haber'de.";
-
-            }
+            showItem(
+                (result.data || [])[0]
+            );
 
         } catch (error) {
-
             console.warn(
                 "Son dakika yüklenemedi:",
                 error
             );
 
-            breaking.textContent =
-                "Akçaabat ve Trabzon'dan son gelişmeler Akçaabat Haber'de.";
-
+            hideBand();
         }
-
     }
-
 
     /* =====================================================
        HEADER SON DAKİKA HABERİNE TIKLAMA
        ===================================================== */
 
     async function makeBreakingClickable() {
-
         const breaking =
             document.getElementById(
                 "ahBreaking"
@@ -793,20 +799,17 @@
 
         if (!breaking) return;
 
-
         try {
-
             const client =
                 await getClient();
 
             if (!client) return;
 
-
-            let response =
+            const response =
                 await client
                     .from("news")
                     .select(
-                        "id,title,slug,is_breaking,published_at"
+                        "id,title,slug,published_at"
                     )
                     .eq(
                         "status",
@@ -818,120 +821,71 @@
                     )
                     .order(
                         "published_at",
-                        {
-                            ascending: false
-                        }
+                        { ascending: false }
                     )
                     .limit(1);
 
-
-            let data =
-                response.data || [];
-
-
-            if (!data.length) {
-
-                response =
-                    await client
-                        .from("news")
-                        .select(
-                            "id,title,slug,published_at"
-                        )
-                        .eq(
-                            "status",
-                            "published"
-                        )
-                        .order(
-                            "published_at",
-                            {
-                                ascending: false
-                            }
-                        )
-                        .limit(1);
-
-                data =
-                    response.data || [];
+            if (
+                response.error ||
+                !response.data ||
+                !response.data.length
+            ) {
+                return;
             }
 
-
-            if (!data.length) return;
-
-
             const news =
-                data[0];
+                response.data[0];
 
-
-            breaking.style.cursor =
-                "pointer";
-
-
-            breaking.setAttribute(
-                "role",
-                "link"
-            );
-
-
-            breaking.setAttribute(
-                "tabindex",
-                "0"
-            );
-
-
-            const openNews = () => {
-
+            const openNews = function () {
                 const value =
                     news.slug ||
                     news.id;
 
                 if (!value) return;
 
-
                 window.location.href =
                     "haber-detay.html?slug=" +
-                    encodeURIComponent(
-                        value
-                    );
-
+                    encodeURIComponent(value);
             };
 
+            breaking.style.cursor =
+                "pointer";
+
+            breaking.setAttribute(
+                "role",
+                "link"
+            );
+
+            breaking.setAttribute(
+                "tabindex",
+                "0"
+            );
 
             breaking.addEventListener(
                 "click",
                 openNews
             );
 
-
             breaking.addEventListener(
                 "keydown",
-                (event) => {
-
+                function (event) {
                     if (
-                        event.key ===
-                            "Enter" ||
-                        event.key ===
-                            " "
+                        event.key === "Enter" ||
+                        event.key === " "
                     ) {
-
                         event.preventDefault();
-
                         openNews();
-
                     }
-
                 }
             );
 
         } catch (error) {
-
             console.warn(
                 "Son dakika bağlantısı:",
                 error
             );
-
         }
-
     }
-
 
     /* =====================================================
        BAŞLAT

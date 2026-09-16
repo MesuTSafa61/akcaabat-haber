@@ -1,23 +1,31 @@
 /*
  * Akçaabat Haber
  * Service Worker
- * Sürüm: 1.0.0
+ * Sürüm: 1.1.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v99";
+const CACHE_NAME = "akcaabat-haber-v100";
+const BASE_URL = new URL("./", self.location.href);
 
 const STATIC_FILES = [
-  "/",
-  "/index.html",
-  "/haberler.html",
-  "/haber-detay.html",
-  "/offline.html",
-  "/style.css",
-  "/script.js",
-  "/supabase-config.js",
-  "/favicon.svg",
-  "/site.webmanifest"
-];
+  "",
+  "index.html",
+  "haber.html",
+  "haber-detay.html",
+  "kategori.html",
+  "mac-merkezi.html",
+  "kameralar.html",
+  "trafik.html",
+  "yazarlar.html",
+  "offline.html",
+  "style.css",
+  "portal-shell.css",
+  "script.js",
+  "portal-shell.js",
+  "supabase-config.js",
+  "favicon.svg",
+  "site.webmanifest"
+].map(path => new URL(path, BASE_URL).href);
 
 self.addEventListener("install", event => {
   event.waitUntil(
@@ -76,7 +84,9 @@ self.addEventListener("fetch", event => {
         })
         .catch(() => {
           if (event.request.mode === "navigate") {
-            return caches.match("/offline.html");
+            return caches.match(
+              new URL("offline.html", BASE_URL).href
+            );
           }
 
           return new Response(
