@@ -52,7 +52,7 @@
   window.setInterval(updateClock, 30000);
 
   const money = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value)) element.textContent = money.format(value) + (suffix || ""); }
+  function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value) && value > 0) element.textContent = money.format(value) + (suffix || ""); }
   async function loadMarketData() {
     try {
       await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
