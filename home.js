@@ -176,20 +176,27 @@
     }
 
     function renderHeadlines() {
-        state.headlines = state.news.filter(function (item) {
+        const eligibleHeadlines = state.news.filter(function (item) {
             return item.status === "published" && item.is_headline === true &&
                 item.headline_order >= 1 && item.headline_order <= 10;
-        }).sort(function (a, b) { return a.headline_order - b.headline_order; }).slice(0, 10);
+        });
+        const adminHeadlines = eligibleHeadlines.filter(function (item) {
+            return String(item.id || "").indexOf("curated-") !== 0;
+        });
+        state.headlines = (adminHeadlines.length ? adminHeadlines : eligibleHeadlines)
+            .sort(function (a, b) { return a.headline_order - b.headline_order; })
+            .slice(0, 10);
 
         const hero = document.getElementById("heroSection");
         const deck = document.querySelector(".headline-deck");
         const track = document.getElementById("headlineTrack");
         if (!state.headlines.length) {
             if (hero) hero.hidden = true;
-            if (deck) deck.innerHTML = '<div class="headline-empty"><strong>Manşetler hazırlanıyor</strong><span>Yönetim panelinden 1-10 sıralı manşet seçildiğinde burada yayınlanır.</span></div>';
+            if (deck) deck.hidden = true;
             return;
         }
         if (hero) hero.hidden = false;
+        if (deck) deck.hidden = false;
         if (track) {
             track.innerHTML = state.headlines.map(function (item, index) {
                 return '<button class="headline-tab" type="button" role="tab" aria-selected="' +

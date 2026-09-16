@@ -23,8 +23,9 @@
             status: "published",
             is_breaking: config.breaking === true,
             breaking: config.breaking === true,
-            is_headline: false,
-            headline_order: null,
+            is_headline: Number.isInteger(config.headlineOrder),
+            headline_order: Number.isInteger(config.headlineOrder) ? config.headlineOrder : null,
+            headline_source: Number.isInteger(config.headlineOrder) ? "editorial_fallback" : null,
             views: 0,
             published_at: config.publishedAt,
             created_at: config.publishedAt,
@@ -44,6 +45,7 @@
             category: "Trabzonspor",
             image: "assets/news/trabzonspor.svg",
             publishedAt: "2026-09-16T14:25:00+03:00",
+            headlineOrder: 1,
             breaking: true,
             sourceName: "Yeni Şafak Spor",
             sourceUrl: "https://www.yenisafak.com/spor/trabzonspor-tarihinin-45inci-teknik-direktoru-thomas-reis-oldu-4856413"
@@ -56,6 +58,7 @@
             category: "Spor",
             image: "assets/news/sebatspor.svg",
             publishedAt: "2026-09-16T10:10:00+03:00",
+            headlineOrder: 4,
             sourceName: "Akçaabat'ın Sesi",
             sourceUrl: "https://www.akcaabatinsesi.com/"
         }),
@@ -67,6 +70,7 @@
             category: "Trabzon",
             image: "assets/news/trabzon.svg",
             publishedAt: "2026-09-15T15:00:00+03:00",
+            headlineOrder: 3,
             sourceName: "Trabzon Valiliği",
             sourceUrl: "https://www.trabzon.gov.tr/"
         }),
@@ -78,6 +82,7 @@
             category: "Trabzonspor",
             image: "assets/news/trabzonspor.svg",
             publishedAt: "2026-09-14T12:30:00+03:00",
+            headlineOrder: 10,
             sourceName: "61saat",
             sourceUrl: "https://www.61saat.com/trabzonsporda-son-tarih-15-eylul-bu-habere-dikkat"
         }),
@@ -89,6 +94,7 @@
             category: "Akçaabat",
             image: "assets/news/akcaabat.svg",
             publishedAt: "2026-09-12T10:00:00+03:00",
+            headlineOrder: 2,
             sourceName: "Akçaabat Belediyesi",
             sourceUrl: "https://www.akcaabat.bel.tr/"
         }),
@@ -100,6 +106,7 @@
             category: "Trabzonspor",
             image: "assets/news/trabzonspor.svg",
             publishedAt: "2026-09-12T20:59:00+03:00",
+            headlineOrder: 6,
             sourceName: "beIN SPORTS",
             sourceUrl: "https://beinsports.com.tr/haber/tumosan-konyaspor-trabzonspor-4"
         }),
@@ -111,6 +118,7 @@
             category: "Trabzon",
             image: "assets/news/trabzon.svg",
             publishedAt: "2026-09-10T11:00:00+03:00",
+            headlineOrder: 5,
             sourceName: "Trabzon Büyükşehir Belediyesi",
             sourceUrl: "https://www.trabzon.bel.tr/Web/Icerik/baskan-genc-uzunkum-un-temelini-10-eylul-de-hep-birlikte-atacagiz"
         }),
@@ -122,6 +130,7 @@
             category: "Trabzon",
             image: "assets/news/trabzon.svg",
             publishedAt: "2026-09-09T16:00:00+03:00",
+            headlineOrder: 9,
             sourceName: "Haber61",
             sourceUrl: "https://www.haber61.net/trabzon/trabzon-sanatevi-buyuksehire-mi-devrediliyor-baskan-genc-acikladi/642798"
         }),
@@ -155,6 +164,7 @@
             category: "Akçaabat",
             image: "assets/news/akcaabat.svg",
             publishedAt: "2026-09-06T11:00:00+03:00",
+            headlineOrder: 7,
             sourceName: "Akçaabat Belediyesi",
             sourceUrl: "https://www.akcaabat.bel.tr/"
         }),
@@ -177,6 +187,7 @@
             category: "Akçaabat",
             image: "assets/news/akcaabat.svg",
             publishedAt: "2026-09-04T12:00:00+03:00",
+            headlineOrder: 8,
             sourceName: "Akçaabat Belediyesi",
             sourceUrl: "https://www.akcaabat.bel.tr/"
         }),

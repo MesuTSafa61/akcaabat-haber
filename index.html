@@ -20,7 +20,7 @@
   <meta property="og:url" content="https://akcaabathaber.com.tr/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="style.css?v=20260916-3">
+  <link rel="stylesheet" href="style.css?v=20260916-4">
 
 </head>
 
@@ -2006,7 +2006,15 @@
         }
 
         function renderHero(news) {
-          headlineItems = news.slice(0, Math.min(10, news.length));
+          headlineItems = news.filter(function(item){
+            const order = Number(item.headline_order || item.headlineOrder || 0);
+            return item.status === "published" &&
+              (item.is_headline === true || item.isHeadline === true) &&
+              order >= 1 && order <= 10;
+          }).sort(function(a,b){
+            return Number(a.headline_order || a.headlineOrder) -
+              Number(b.headline_order || b.headlineOrder);
+          }).slice(0,10);
           if (!headlineItems.length) return;
           const track = document.getElementById("headlineTrack");
           if (track) {
@@ -2941,8 +2949,8 @@
     );
 
   </script>
-  <script src="current-news.js?v=20260916-3"></script>
-  <script src="home.js?v=20260916-3"></script>
+  <script src="current-news.js?v=20260916-4"></script>
+  <script src="home.js?v=20260916-4"></script>
 
 </body>
 </html>
