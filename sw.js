@@ -4,7 +4,7 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v104";
+const CACHE_NAME = "akcaabat-haber-v105";
 
 const STATIC_FILES = [
   "./",
@@ -60,46 +60,47 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+  const isFreshAsset =
+    event.request.mode === "navigate" ||
+    /\.(?:css|js)(?:\?|$)/i.test(requestUrl.pathname + requestUrl.search);
 
-      return fetch(event.request)
-        .then(networkResponse => {
-          if (
-            !networkResponse ||
-            networkResponse.status !== 200 ||
-            networkResponse.type === "opaque"
-          ) {
-            return networkResponse;
-          }
+  const updateCache = networkResponse => {
+    if (
+      networkResponse &&
+      networkResponse.status === 200 &&
+      networkResponse.type !== "opaque"
+    ) {
+      const responseClone = networkResponse.clone();
+      caches.open(CACHE_NAME).then(cache => {
+        cache.put(event.request, responseClone);
+      });
+    }
+    return networkResponse;
+  };
 
-          const responseClone = networkResponse.clone();
-
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
-
-          return networkResponse;
-        })
-        .catch(() => {
-          if (event.request.mode === "navigate") {
-            return caches.match(new URL("./offline.html", self.registration.scope).href);
-          }
-
-          return new Response(
-            "İçerik şu anda kullanılamıyor.",
-            {
-              status: 503,
-              statusText: "Service Unavailable",
-              headers: {
-                "Content-Type": "text/plain; charset=utf-8"
-              }
+  if (isFreshAsset) {
+    event.respondWith(
+      fetch(event.request)
+        .then(updateCache)
+        .catch(() =>
+          caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) return cachedResponse;
+            if (event.request.mode === "navigate") {
+              return caches.match(new URL("./offline.html", self.registration.scope).href);
             }
-          );
-        });
-    })
+            return new Response("İçerik şu anda kullanılamıyor.", {
+              status: 503,
+              headers: { "Content-Type": "text/plain; charset=utf-8" }
+            });
+          })
+        )
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse =>
+      cachedResponse || fetch(event.request).then(updateCache)
+    )
   );
 });
