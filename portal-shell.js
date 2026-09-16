@@ -136,16 +136,29 @@
       }
     });
   }
-  async function loadAdvertisements(attempt) {
-    if (window.supabase && window.AKCAABAT_SUPABASE) {
-      try {
-        const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
-        const result = await client.from("site_settings").select("value").eq("key", "advertisements").maybeSingle();
-        if (!result.error && result.data && result.data.value && Array.isArray(result.data.value.ads)) placeAds(result.data.value.ads);
-      } catch (error) { console.warn("Reklamlar yüklenemedi:", error); }
-      return;
-    }
-    if ((attempt || 0) < 20) window.setTimeout(function () { loadAdvertisements((attempt || 0) + 1); }, 250);
+  function loadDependency(src, ready) {
+    if (ready()) return Promise.resolve();
+    return new Promise(function (resolve, reject) {
+      let script = document.querySelector('script[src="' + src + '"]');
+      if (!script) {
+        script = document.createElement("script");
+        script.src = src;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener("load", resolve, { once: true });
+      script.addEventListener("error", reject, { once: true });
+      window.setTimeout(function () { if (ready()) resolve(); }, 500);
+    });
   }
-  loadAdvertisements(0);
+  async function loadAdvertisements() {
+    try {
+      await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
+      await loadDependency("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2", function () { return Boolean(window.supabase); });
+      const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+      const result = await client.from("site_settings").select("value").eq("key", "advertisements").maybeSingle();
+      if (!result.error && result.data && result.data.value && Array.isArray(result.data.value.ads)) placeAds(result.data.value.ads);
+    } catch (error) { console.warn("Reklamlar yüklenemedi:", error); }
+  }
+  loadAdvertisements();
 })();
