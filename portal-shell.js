@@ -53,16 +53,25 @@
 
   const money = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value) && value > 0) element.textContent = money.format(value) + (suffix || ""); }
+  function showMarket(data) {
+    if (!data) return;
+    setMarket("marketUsd", Number(data.usd_try), " ₺");
+    setMarket("marketEur", Number(data.eur_try), " ₺");
+    setMarket("marketGold", Number(data.gold_try_gram), " ₺/gr");
+    setMarket("marketSilver", Number(data.silver_try_gram), " ₺/gr");
+  }
   async function loadMarketData() {
     try {
       await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
+      const config = window.AKCAABAT_SUPABASE;
+      const cachedResponse = await fetch(config.url + "/rest/v1/site_settings?key=eq.market_data&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
+      if (cachedResponse.ok) {
+        const rows = await cachedResponse.json();
+        if (rows && rows[0]) showMarket(rows[0].value);
+      }
       const response = await fetch(window.AKCAABAT_SUPABASE.url + "/functions/v1/market-data", { headers: { Accept: "application/json" } });
       if (!response.ok) throw new Error();
-      const data = await response.json();
-      setMarket("marketUsd", Number(data.usd_try), " ₺");
-      setMarket("marketEur", Number(data.eur_try), " ₺");
-      setMarket("marketGold", Number(data.gold_try_gram), " ₺/gr");
-      setMarket("marketSilver", Number(data.silver_try_gram), " ₺/gr");
+      showMarket(await response.json());
     } catch (_) {}
   }
   async function loadHeaderWeather() {

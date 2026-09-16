@@ -30,11 +30,21 @@ Deno.serve(async (request) => {
   const perOunce = 31.1034768;
   const numberOrNull = (value: number) => Number.isFinite(value) && value > 0 ? Math.round(value * 100) / 100 : null;
 
-  return new Response(JSON.stringify({
+  const payload = {
     usd_try: numberOrNull(usdTry),
     eur_try: numberOrNull(usdTry / usdEur),
     gold_try_gram: numberOrNull(goldUsd * usdTry / perOunce),
     silver_try_gram: numberOrNull(silverUsd * usdTry / perOunce),
     updated_at: new Date().toISOString(),
-  }), { headers: cors });
+  };
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (supabaseUrl && serviceKey) {
+    await fetch(supabaseUrl + "/rest/v1/site_settings?on_conflict=key", {
+      method: "POST",
+      headers: { apikey: serviceKey, authorization: "Bearer " + serviceKey, "content-type": "application/json", prefer: "resolution=merge-duplicates" },
+      body: JSON.stringify({ key: "market_data", value: payload, updated_at: payload.updated_at }),
+    }).catch(() => null);
+  }
+  return new Response(JSON.stringify(payload), { headers: cors });
 });
