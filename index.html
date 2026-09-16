@@ -1,2415 +1,2948 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <title>Akçaabat Haber | Akçaabat ve Trabzon'dan Son Dakika Haberleri</title>
 
-    <title>
-        Akçaabat Haber | Akçaabat, Trabzon ve Trabzonspor Haberleri
-    </title>
+  <meta
+    name="description"
+    content="Akçaabat Haber; Akçaabat ve Trabzon'dan son dakika haberleri, gündem, spor, siyaset, ekonomi, kültür ve yaşam haberleri."
+  >
 
-    <meta
-        name="description"
-        content="Akçaabat'tan son dakika haberleri, Trabzon gündemi, Trabzonspor gelişmeleri, spor, ekonomi, yaşam ve bölgeden güncel haberler."
-    >
+  <meta name="theme-color" content="#0b1830">
+  <link rel="canonical" href="https://akcaabathaber.com.tr/">
+  <link rel="manifest" href="site.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Akçaabat Haber | Akçaabat ve Trabzon Haberleri">
+  <meta property="og:description" content="Akçaabat ve Trabzon'dan güvenilir, güncel yerel haberler.">
+  <meta property="og:url" content="https://akcaabathaber.com.tr/">
+  <meta name="twitter:card" content="summary_large_image">
 
-    <meta
-        name="robots"
-        content="index,follow,max-image-preview:large"
-    >
+  <link rel="stylesheet" href="style.css">
 
-    <meta
-        name="theme-color"
-        content="#071a33"
-    >
-
-    <link
-        rel="canonical"
-        href="https://akcaabathaber.com.tr/"
-    >
-
-    <link
-        rel="manifest"
-        href="site.webmanifest"
-    >
-
-    <link
-        rel="stylesheet"
-        href="style.css?v=9"
-    >
-
-    <link
-        rel="stylesheet"
-        href="portal-shell.css?v=9"
-    >
 </head>
 
-<body class="home-page">
+<body>
 
-    <!-- =====================================================
-         ÜST PORTAL ALANI
-         portal-shell.js tarafından hazırlanır
-         ===================================================== -->
+  <!-- =========================
+       ÜST BİLGİ BAR
+  ========================== -->
 
-    <div id="portalHeader"></div>
+  <div class="top-bar">
+
+    <div class="container top-bar-inner">
+
+      <div class="top-date">
+
+        <span>📅</span>
+
+        <span id="currentDate">
+          12 Eylül 2026
+        </span>
+
+      </div>
 
 
-    <!-- =====================================================
-         SON DAKİKA BANDI
-         ===================================================== -->
+      <div class="top-info">
 
-    <section
-        class="breaking-news-bar"
-        aria-label="Son dakika haberleri"
-        hidden
-    >
-        <div class="container">
+        <span>📍 Akçaabat</span>
 
-            <div class="breaking-news-inner">
+        <span class="top-separator">
+          •
+        </span>
 
-                <div class="breaking-news-label">
-                    <span class="breaking-live-dot"></span>
-                    SON DAKİKA
-                </div>
+        <span>Trabzon</span>
 
-                <div class="breaking-news-track">
+        <span class="top-separator">
+          •
+        </span>
 
-                    <div
-                        class="breaking-news-content"
-                        id="breakingNewsContent"
-                    >
-                        Akçaabat ve Trabzon'dan son gelişmeler...
-                    </div>
+        <span id="currentTime">
+          --:--
+        </span>
 
-                </div>
+      </div>
 
-            </div>
+    </div>
+
+  </div>
+
+  <section class="market-strip" aria-label="Piyasa bilgileri">
+    <div class="container market-inner">
+      <a href="canli-servisler.html" class="live-tv"><span>▶</span> AKÇAABAT TV CANLI</a>
+      <div class="market-list">
+        <span><b>DOLAR</b> 48,66 <i>▲ %0,06</i></span>
+        <span><b>EURO</b> 56,21 <i>▲ %0,04</i></span>
+        <span><b>ALTIN</b> 6.767 <i>▲ %0,80</i></span>
+        <span><b>BIST</b> 13.829 <i class="down">▼ %0,46</i></span>
+      </div>
+      <a href="canli-servisler.html" class="market-weather">☁ Akçaabat 19°</a>
+    </div>
+  </section>
+
+
+  <!-- =========================
+       ANA HEADER
+  ========================== -->
+
+  <header class="site-header">
+
+    <div class="container header-main">
+
+      <button
+        class="mobile-menu-button"
+        type="button"
+        aria-label="Menüyü aç"
+        aria-expanded="false"
+        id="mobileMenuButton"
+      >
+
+        <span></span>
+        <span></span>
+        <span></span>
+
+      </button>
+
+
+      <a
+        href="index.html"
+        class="brand"
+        aria-label="Akçaabat Haber Ana Sayfa"
+      >
+
+        <div class="brand-mark">
+          AH
+        </div>
+
+        <div class="brand-text">
+
+          <strong>
+            AKÇAABAT
+          </strong>
+
+          <span>
+            HABER
+          </span>
 
         </div>
+
+      </a>
+
+
+      <div class="header-center">
+
+        <div class="header-slogan">
+
+          <strong>
+            Akçaabat'ın Haber Merkezi
+          </strong>
+
+          <span>
+            Doğru • Hızlı • Tarafsız
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="header-actions">
+
+        <button
+          class="header-search-button"
+          type="button"
+          id="headerSearchButton"
+          aria-label="Arama"
+        >
+          🔍
+        </button>
+
+
+        <a
+          href="admin.html"
+          class="admin-link"
+        >
+          Yönetim
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         NAVİGASYON
+    ========================== -->
+
+    <nav
+      class="main-nav"
+      id="mainNav"
+    >
+
+      <div class="container nav-inner">
+
+        <a
+          href="index.html"
+          class="nav-link active"
+        >
+          Ana Sayfa
+        </a>
+
+
+        <a
+          href="kategori.html?kategori=Akçaabat"
+          class="nav-link"
+        >
+          Akçaabat
+        </a>
+
+
+        <a
+          href="kategori.html?kategori=Trabzon"
+          class="nav-link"
+        >
+          Trabzon
+        </a>
+
+
+        <a
+          href="kategori.html?kategori=Spor"
+          class="nav-link"
+        >
+          Trabzonspor
+        </a>
+
+
+        <a
+          href="haber.html?breaking=1"
+          class="nav-link"
+        >
+          Son Dakika
+        </a>
+
+
+        <a
+          href="kategori.html?kategori=Gündem"
+          class="nav-link"
+        >
+          Gündem
+        </a>
+
+
+        <a
+          href="kategori.html?kategori=Spor"
+          class="nav-link"
+        >
+          Spor
+        </a>
+
+
+        <a
+          href="mac-merkezi.html"
+          class="nav-link"
+        >
+          Maç Merkezi
+        </a>
+
+        <a href="kameralar.html" class="nav-link">Kameralar</a>
+        <a href="trafik.html" class="nav-link">Trafik</a>
+        <a href="yazarlar.html" class="nav-link">Yazarlar</a>
+
+      </div>
+
+    </nav>
+
+  </header>
+
+  <nav class="service-strip" aria-label="Hızlı servisler">
+    <div class="container service-inner">
+      <a href="mac-merkezi.html">⚽ Maç Merkezi</a>
+      <a href="kameralar.html">🎥 Mobeseler</a>
+      <a href="trafik.html">🚗 Trafik Durumu</a>
+      <a href="canli-servisler.html">☀ Hava Durumu</a>
+      <a href="haber.html">▦ Tüm Manşetler</a>
+      <a href="arama.html">⌕ Haber Arşivi</a>
+    </div>
+  </nav>
+
+
+  <!-- =========================
+       SON DAKİKA ŞERİDİ
+  ========================== -->
+
+  <section class="breaking-bar">
+
+    <div class="container breaking-inner">
+
+      <div class="breaking-label">
+
+        <span class="breaking-dot"></span>
+
+        SON DAKİKA
+
+      </div>
+
+
+      <div
+        class="breaking-content"
+        id="breakingContent"
+      >
+        Akçaabat ve Trabzon'dan günün öne çıkan gelişmeleri...
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ARAMA ALANI
+  ========================== -->
+
+  <section
+    class="search-panel"
+    id="searchPanel"
+  >
+
+    <div class="container">
+
+      <form
+        class="search-form"
+        id="siteSearchForm"
+      >
+
+        <input
+          type="search"
+          id="siteSearchInput"
+          placeholder="Haberlerde ara..."
+          autocomplete="off"
+        >
+
+
+        <button type="submit">
+          🔍 Ara
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ANA İÇERİK
+  ========================== -->
+
+  <main class="container site-main">
+
+
+    <!-- HABER BAŞLIK -->
+
+    <div class="section-heading">
+
+      <div>
+
+        <span class="section-kicker">
+          AKÇAABAT'TAN
+        </span>
+
+        <h1>
+          Günün Öne Çıkan Haberleri
+        </h1>
+
+      </div>
+
+
+      <a
+        href="haber.html"
+        class="section-more"
+      >
+        Tüm Haberler →
+      </a>
+
+    </div>
+
+
+    <!-- =========================
+         MANŞET ALANI
+    ========================== -->
+
+    <section
+      class="hero-layout"
+      id="heroSection"
+    >
+
+      <article
+        class="hero-news"
+        id="heroNews"
+      >
+
+        <div class="hero-image-wrap">
+
+          <img
+            id="heroImage"
+            src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1400&q=85"
+            alt="Akçaabat Haber"
+          >
+
+
+          <span
+            class="hero-category"
+            id="heroCategory"
+          >
+            GÜNDEM
+          </span>
+
+
+          <span
+            class="hero-breaking"
+            id="heroBreaking"
+            hidden
+          >
+            SON DAKİKA
+          </span>
+
+        </div>
+
+
+        <div class="hero-content">
+
+          <div class="news-meta">
+
+            <span id="heroDate">
+              12 Eylül 2026
+            </span>
+
+          </div>
+
+
+          <h2 id="heroTitle">
+            Akçaabat ve Trabzon'dan günün öne çıkan gelişmeleri
+          </h2>
+
+
+          <p id="heroSummary">
+            Akçaabat Haber, bölgedeki gelişmeleri hızlı ve güvenilir şekilde okuyucularına ulaştırıyor.
+          </p>
+
+
+          <span class="read-more">
+            Haberin devamı →
+          </span>
+
+        </div>
+
+      </article>
+
+
+      <!-- MANŞET YANI -->
+
+      <div
+        class="hero-side"
+        id="heroSideNews"
+      >
+
+        <article class="side-news">
+
+          <div class="side-news-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=700&q=80"
+              alt="Akçaabat Haber"
+            >
+
+            <span>
+              GÜNDEM
+            </span>
+
+          </div>
+
+
+          <div class="side-news-content">
+
+            <small>
+              Bugünün haberi
+            </small>
+
+            <h3>
+              Akçaabat'ta gündemden öne çıkan gelişmeler
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <article class="side-news">
+
+          <div class="side-news-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=700&q=80"
+              alt="Spor Haberleri"
+            >
+
+            <span>
+              SPOR
+            </span>
+
+          </div>
+
+
+          <div class="side-news-content">
+
+            <small>
+              Trabzon
+            </small>
+
+            <h3>
+              Sporda günün gelişmeleri ve son dakika haberleri
+            </h3>
+
+          </div>
+
+        </article>
+
+
+        <article class="side-news">
+
+          <div class="side-news-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1521292270410-a8c4d716d518?auto=format&fit=crop&w=700&q=80"
+              alt="Yerel Haber"
+            >
+
+            <span>
+              AKÇAABAT
+            </span>
+
+          </div>
+
+
+          <div class="side-news-content">
+
+            <small>
+              Yerel
+            </small>
+
+            <h3>
+              İlçeden güncel haberler ve yerel gelişmeler
+            </h3>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- PROFESYONEL MANŞET GEZGİNİ -->
+    <section class="headline-deck" aria-label="Günün manşetleri">
+      <div class="headline-deck-top">
+        <div><span class="section-kicker">MANŞET</span><strong>Günün Haberleri</strong></div>
+        <div class="headline-controls">
+          <button type="button" id="headlinePrev" aria-label="Önceki manşet">‹</button>
+          <span id="headlineCounter">1 / 1</span>
+          <button type="button" id="headlineNext" aria-label="Sonraki manşet">›</button>
+        </div>
+      </div>
+      <div class="headline-track" id="headlineTrack" role="tablist" aria-label="Manşet seçimi"></div>
     </section>
 
 
-    <main>
+    <!-- =========================
+         KATEGORİ KISAYOLLARI
+    ========================== -->
 
-        <!-- =================================================
-             ANA MANŞET
-             ================================================= -->
+    <section class="category-strip">
 
-        <section class="home-headline-section" id="homeHeadlineSection">
-
-            <div class="container">
-
-                <div class="home-section-heading">
-
-                    <div>
-                        <span class="section-kicker">
-                            AKÇAABAT HABER
-                        </span>
-
-                        <h1>
-                            Günün Manşetleri
-                        </h1>
-                    </div>
-
-                    <a
-                        href="haber.html"
-                        class="section-all-link"
-                    >
-                        Tüm Haberler
-                        <span>›</span>
-                    </a>
-
-                </div>
+      <a
+        href="kategori.html?kategori=Akçaabat"
+        class="category-chip"
+      >
+        <span>📍</span>
+        Akçaabat
+      </a>
 
 
-                <div
-                    class="main-headline"
-                    id="mainHeadline"
-                    tabindex="0"
-                    aria-label="Ana manşet"
-                >
-
-                    <div class="main-headline-stage">
-
-                        <a
-                            href="#"
-                            class="main-headline-link"
-                            id="mainHeadlineLink"
-                            aria-label="Manşet haberini aç"
-                        >
-
-                            <img
-                                id="mainHeadlineImage"
-                                class="main-headline-image"
-                                src=""
-                                alt=""
-                            >
-
-                            <div
-                                class="main-headline-placeholder"
-                                id="mainHeadlinePlaceholder"
-                            >
-                                <strong>
-                                    AKÇAABAT HABER
-                                </strong>
-
-                                <span>
-                                    Manşet haberleri yükleniyor...
-                                </span>
-                            </div>
+      <a
+        href="kategori.html?kategori=Trabzon"
+        class="category-chip"
+      >
+        <span>🏙️</span>
+        Trabzon
+      </a>
 
 
-                            <div class="main-headline-overlay"></div>
+      <a
+        href="kategori.html?kategori=Spor"
+        class="category-chip"
+      >
+        <span>⚽</span>
+        Spor
+      </a>
 
 
-                            <div class="main-headline-content">
-
-                                <div class="main-headline-meta">
-
-                                    <span
-                                        class="headline-category"
-                                        id="mainHeadlineCategory"
-                                    >
-                                        AKÇAABAT
-                                    </span>
-
-                                    <span
-                                        class="headline-breaking"
-                                        id="mainHeadlineBreaking"
-                                        hidden
-                                    >
-                                        SON DAKİKA
-                                    </span>
-
-                                    <time
-                                        id="mainHeadlineDate"
-                                    ></time>
-
-                                </div>
+      <a
+        href="kategori.html?kategori=Asayiş"
+        class="category-chip"
+      >
+        <span>🚨</span>
+        Asayiş
+      </a>
 
 
-                                <h2 id="mainHeadlineTitle">
-                                    Manşet haberleri yükleniyor...
-                                </h2>
+      <a
+        href="kategori.html?kategori=Ekonomi"
+        class="category-chip"
+      >
+        <span>💰</span>
+        Ekonomi
+      </a>
 
 
-                                <p id="mainHeadlineSummary">
-                                    Akçaabat, Trabzon ve bölgeden öne çıkan gelişmeler.
-                                </p>
+      <a
+        href="kategori.html?kategori=Kültür"
+        class="category-chip"
+      >
+        <span>🎭</span>
+        Kültür & Yaşam
+      </a>
 
-                            </div>
-
-                        </a>
-
-
-                        <button
-                            type="button"
-                            class="headline-arrow headline-arrow-prev"
-                            id="headlinePrev"
-                            aria-label="Önceki manşet"
-                        >
-                            ‹
-                        </button>
+    </section>
 
 
-                        <button
-                            type="button"
-                            class="headline-arrow headline-arrow-next"
-                            id="headlineNext"
-                            aria-label="Sonraki manşet"
-                        >
-                            ›
-                        </button>
+    <!-- =========================
+         İÇERİK + SIDEBAR
+    ========================== -->
+
+    <div class="content-layout">
 
 
-                        <div class="headline-swipe-hint">
-                            ‹ Kaydır ›
-                        </div>
+      <!-- SOL ANA İÇERİK -->
 
-                    </div>
+      <section class="news-column">
+
+        <div class="section-heading compact">
+
+          <div>
+
+            <span class="section-kicker">
+              GÜNCEL
+            </span>
+
+            <h2>
+              Son Haberler
+            </h2>
+
+          </div>
 
 
-                    <div class="headline-navigation">
+          <a
+            href="haber.html"
+            class="section-more"
+          >
+            Tümünü Gör →
+          </a>
 
-                        <div
-                            class="headline-numbers"
-                            id="headlineNumbers"
-                            aria-label="Manşet sıralaması"
-                        ></div>
+        </div>
 
 
-                        <div
-                            class="headline-counter"
-                            id="headlineCounter"
-                        >
-                            0 / 10
-                        </div>
+        <div
+          class="news-grid"
+          id="newsGrid"
+        >
 
-                    </div>
+          <article class="news-card">
 
-                </div>
+            <div class="news-card-image">
+
+              <img
+                src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80"
+                alt="Akçaabat Haber"
+              >
+
+              <span class="news-card-category">
+                GÜNDEM
+              </span>
 
             </div>
+
+
+            <div class="news-card-body">
+
+              <div class="news-card-meta">
+                12 Eylül 2026
+              </div>
+
+              <h3>
+                Akçaabat'tan günün önemli gelişmeleri
+              </h3>
+
+              <p>
+                Bölgeden son gelişmeler, gündem ve yerel haberler...
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="news-card">
+
+            <div class="news-card-image">
+
+              <img
+                src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80"
+                alt="Spor Haberleri"
+              >
+
+              <span class="news-card-category">
+                SPOR
+              </span>
+
+            </div>
+
+
+            <div class="news-card-body">
+
+              <div class="news-card-meta">
+                12 Eylül 2026
+              </div>
+
+              <h3>
+                Trabzonspor'da gündem hareketli
+              </h3>
+
+              <p>
+                Bordo-mavili ekipte son gelişmeler ve spor gündemi...
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="news-card">
+
+            <div class="news-card-image">
+
+              <img
+                src="https://images.unsplash.com/photo-1444723121867-7a241cacace9?auto=format&fit=crop&w=800&q=80"
+                alt="Yerel Haber"
+              >
+
+              <span class="news-card-category">
+                AKÇAABAT
+              </span>
+
+            </div>
+
+
+            <div class="news-card-body">
+
+              <div class="news-card-meta">
+                12 Eylül 2026
+              </div>
+
+              <h3>
+                İlçede hayat ve yerel gündem
+              </h3>
+
+              <p>
+                Akçaabat'tan yaşam, etkinlik ve yerel gelişmeler...
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="news-card">
+
+            <div class="news-card-image">
+
+              <img
+                src="https://images.unsplash.com/photo-1521292270410-a8c4d716d518?auto=format&fit=crop&w=800&q=80"
+                alt="Trabzon Haberleri"
+              >
+
+              <span class="news-card-category">
+                TRABZON
+              </span>
+
+            </div>
+
+
+            <div class="news-card-body">
+
+              <div class="news-card-meta">
+                12 Eylül 2026
+              </div>
+
+              <h3>
+                Trabzon gündeminden son gelişmeler
+              </h3>
+
+              <p>
+                Trabzon ve ilçelerinden güncel haberler...
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="news-card">
+
+            <div class="news-card-image">
+
+              <img
+                src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80"
+                alt="Siyaset Haberleri"
+              >
+
+              <span class="news-card-category">
+                SİYASET
+              </span>
+
+            </div>
+
+
+            <div class="news-card-body">
+
+              <div class="news-card-meta">
+                12 Eylül 2026
+              </div>
+
+              <h3>
+                Siyaset gündeminde son gelişmeler
+              </h3>
+
+              <p>
+                Bölgedeki siyasi gündem ve açıklamalar...
+              </p>
+
+            </div>
+
+          </article>
+
+
+          <article class="news-card">
+
+            <div class="news-card-image">
+
+              <img
+                src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80"
+                alt="Ekonomi Haberleri"
+              >
+
+              <span class="news-card-category">
+                EKONOMİ
+              </span>
+
+            </div>
+
+
+            <div class="news-card-body">
+
+              <div class="news-card-meta">
+                12 Eylül 2026
+              </div>
+
+              <h3>
+                Ekonomide günün öne çıkan başlıkları
+              </h3>
+
+              <p>
+                Ekonomi dünyasından son gelişmeler...
+              </p>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           SAĞ SIDEBAR
+      ========================== -->
+
+      <aside class="sidebar">
+
+
+        <!-- ÇOK OKUNANLAR -->
+
+        <section class="sidebar-box">
+
+          <div class="sidebar-title">
+
+            <div>
+
+              <span>
+                OKUYUCULARIN
+              </span>
+
+              <strong>
+                EN ÇOK OKUDUKLARI
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="popular-list"
+            id="popularNews"
+          >
+
+            <article class="popular-item">
+
+              <span class="popular-number">
+                01
+              </span>
+
+              <div>
+
+                <small>
+                  GÜNDEM
+                </small>
+
+                <h3>
+                  Akçaabat'ta günün öne çıkan gelişmeleri
+                </h3>
+
+              </div>
+
+            </article>
+
+
+            <article class="popular-item">
+
+              <span class="popular-number">
+                02
+              </span>
+
+              <div>
+
+                <small>
+                  SPOR
+                </small>
+
+                <h3>
+                  Trabzonspor'da son gelişmeler
+                </h3>
+
+              </div>
+
+            </article>
+
+
+            <article class="popular-item">
+
+              <span class="popular-number">
+                03
+              </span>
+
+              <div>
+
+                <small>
+                  AKÇAABAT
+                </small>
+
+                <h3>
+                  İlçeden güncel haberler
+                </h3>
+
+              </div>
+
+            </article>
+
+
+            <article class="popular-item">
+
+              <span class="popular-number">
+                04
+              </span>
+
+              <div>
+
+                <small>
+                  TRABZON
+                </small>
+
+                <h3>
+                  Trabzon gündeminde son dakika
+                </h3>
+
+              </div>
+
+            </article>
+
+
+            <article class="popular-item">
+
+              <span class="popular-number">
+                05
+              </span>
+
+              <div>
+
+                <small>
+                  YAŞAM
+                </small>
+
+                <h3>
+                  Bölgeden yaşam haberleri
+                </h3>
+
+              </div>
+
+            </article>
+
+          </div>
 
         </section>
 
 
-        <!-- =================================================
-             HIZLI SERVİSLER
-             ================================================= -->
+        <!-- HAVA DURUMU -->
 
-        <section class="home-quick-services">
+        <section class="weather-box">
 
-            <div class="container">
+          <div class="weather-header">
 
-                <div class="quick-service-grid">
+            <div>
 
-                    <a
-                        href="haber.html?breaking=1"
-                        class="quick-service-card"
-                    >
-                        <span class="quick-service-icon">
-                            ●
-                        </span>
+              <span>
+                AKÇAABAT
+              </span>
 
-                        <span>
-                            <strong>
-                                Son Dakika
-                            </strong>
-
-                            <small>
-                                Anlık gelişmeler
-                            </small>
-                        </span>
-                    </a>
-
-
-                    <a
-                        href="kategori.html?kategori=Akçaabat"
-                        class="quick-service-card"
-                    >
-                        <span class="quick-service-icon">
-                            A
-                        </span>
-
-                        <span>
-                            <strong>
-                                Akçaabat
-                            </strong>
-
-                            <small>
-                                İlçeden haberler
-                            </small>
-                        </span>
-                    </a>
-
-
-                    <a
-                        href="kategori.html?kategori=Trabzon"
-                        class="quick-service-card"
-                    >
-                        <span class="quick-service-icon">
-                            T
-                        </span>
-
-                        <span>
-                            <strong>
-                                Trabzon
-                            </strong>
-
-                            <small>
-                                Kent gündemi
-                            </small>
-                        </span>
-                    </a>
-
-
-                    <a
-                        href="kategori.html?kategori=Trabzonspor"
-                        class="quick-service-card"
-                    >
-                        <span class="quick-service-icon">
-                            TS
-                        </span>
-
-                        <span>
-                            <strong>
-                                Trabzonspor
-                            </strong>
-
-                            <small>
-                                Bordo-mavi gündem
-                            </small>
-                        </span>
-                    </a>
-
-                </div>
+              <strong>
+                Hava Durumu
+              </strong>
 
             </div>
+
+            <span class="weather-icon">
+              ☀️
+            </span>
+
+          </div>
+
+
+          <div class="weather-main">
+
+            <strong>
+              22°
+            </strong>
+
+            <div>
+
+              <span>
+                Parçalı Bulutlu
+              </span>
+
+              <small>
+                Bugün
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="weather-details">
+
+            <span>
+              🌡️ Hissedilen 23°
+            </span>
+
+            <span>
+              💨 8 km/s
+            </span>
+
+          </div>
 
         </section>
 
 
-        <!-- =================================================
-             SON HABERLER + ÇOK OKUNANLAR
-             ================================================= -->
+        <!-- HIZLI MENÜ -->
 
-        <section class="home-content-section">
+        <section class="sidebar-box quick-box">
 
-            <div class="container">
+          <div class="sidebar-title">
 
-                <div class="home-primary-layout">
+            <div>
 
-                    <div class="home-primary-main">
+              <span>
+                AKÇAABAT HABER
+              </span>
 
-                        <div class="section-title-bar">
-
-                            <div>
-                                <span></span>
-                                <h2>Son Haberler</h2>
-                            </div>
-
-                            <a href="haber.html">
-                                Tümünü Gör
-                            </a>
-
-                        </div>
-
-
-                        <div
-                            class="latest-news-grid"
-                            id="latestNewsGrid"
-                        >
-                            <div class="home-loading">
-                                Haberler yükleniyor...
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                    <aside class="home-sidebar">
-
-                        <div class="sidebar-panel">
-
-                            <div class="sidebar-panel-title">
-                                <span>
-                                    Çok Okunanlar
-                                </span>
-                            </div>
-
-                            <div
-                                class="popular-news-list"
-                                id="popularNewsList"
-                            >
-                                <div class="home-loading">
-                                    Yükleniyor...
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div class="sidebar-panel live-sidebar-panel">
-
-                            <div class="sidebar-panel-title">
-                                <span>
-                                    Canlı Servisler
-                                </span>
-                            </div>
-
-
-                            <div class="sidebar-service-list">
-
-                                <a href="trafik.html">
-                                    <strong>
-                                        Akçaabat Trafik
-                                    </strong>
-
-                                    <small>
-                                        Yol ve ulaşım bilgileri
-                                    </small>
-                                </a>
-
-
-                                <a href="kameralar.html">
-                                    <strong>
-                                        Canlı Kameralar
-                                    </strong>
-
-                                    <small>
-                                        Mevcut yayın noktaları
-                                    </small>
-                                </a>
-
-
-                                <a href="mac-merkezi.html">
-                                    <strong>
-                                        Maç Merkezi
-                                    </strong>
-
-                                    <small>
-                                        Fikstür ve skorlar
-                                    </small>
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </aside>
-
-                </div>
+              <strong>
+                HIZLI MENÜ
+              </strong>
 
             </div>
 
-        </section>
+          </div>
 
 
-        <!-- =================================================
-             AKÇAABAT
-             ================================================= -->
+          <div class="quick-links">
 
-        <section class="home-category-section">
-
-            <div class="container">
-
-                <div class="section-title-bar">
-
-                    <div>
-                        <span></span>
-                        <h2>Akçaabat</h2>
-                    </div>
-
-                    <a href="kategori.html?kategori=Akçaabat">
-                        Tüm Akçaabat Haberleri
-                    </a>
-
-                </div>
+            <a href="haber.html">
+              📰 Tüm Haberler
+            </a>
 
 
-                <div
-                    class="category-news-grid"
-                    id="akcaabatNewsGrid"
-                >
-                    <div class="home-loading">
-                        Akçaabat haberleri yükleniyor...
-                    </div>
-                </div>
+            <a href="kategori.html?kategori=Akçaabat">
+              📍 Akçaabat Haberleri
+            </a>
 
-            </div>
+
+            <a href="kategori.html?kategori=Trabzon">
+              🏙️ Trabzon Haberleri
+            </a>
+
+
+            <a href="kategori.html?kategori=Spor">
+              ⚽ Spor Haberleri
+            </a>
+
+
+            <a href="kategori.html?kategori=Asayiş">
+              🚨 Asayiş Haberleri
+            </a>
+
+          </div>
 
         </section>
 
+      </aside>
 
-        <!-- =================================================
-             TRABZON
-             ================================================= -->
+    </div>
 
-        <section class="home-category-section home-category-soft">
 
-            <div class="container">
+    <div id="categorySections" class="category-sections" aria-live="polite"></div>
 
-                <div class="section-title-bar">
+    <section class="portal-services" aria-labelledby="serviceTitle">
+      <div class="section-heading compact portal-section-head">
+        <div><span class="section-kicker">CANLI SERVİSLER</span><h2 id="serviceTitle">Akçaabat’ın Dijital Merkezi</h2></div>
+      </div>
+      <div class="portal-services-grid">
+        <a class="portal-service-card match-card" href="mac-merkezi.html">
+          <span class="portal-service-icon">⚽</span>
+          <div><small>FİKSTÜR • SONUÇ • PUAN DURUMU</small><strong>Maç Merkezi</strong><p>Trabzonspor ve günün maçlarını takip edin.</p></div>
+          <b>Merkeze Git →</b>
+        </a>
+        <a class="portal-service-card" href="kameralar.html">
+          <span class="portal-service-icon">🎥</span>
+          <div><small>AKÇAABAT • TRABZON</small><strong>Kameralar / MOBESE</strong><p>Doğrulanmış şehir kameralarına erişin.</p></div>
+          <b>Kameraları Aç →</b>
+        </a>
+        <a class="portal-service-card" href="trafik.html">
+          <span class="portal-service-icon">🚗</span>
+          <div><small>SAHİL YOLU • ŞEHİR YÖNÜ</small><strong>Trafik Merkezi</strong><p>Resmî harita ve trafik kaynaklarına ulaşın.</p></div>
+          <b>Trafiği Gör →</b>
+        </a>
+      </div>
+    </section>
 
-                    <div>
-                        <span></span>
-                        <h2>Trabzon</h2>
-                    </div>
+    <section class="authors-preview" aria-labelledby="authorsTitle">
+      <div class="section-heading compact portal-section-head">
+        <div><span class="section-kicker">GÖRÜŞ</span><h2 id="authorsTitle">Köşe Yazarları</h2></div>
+        <a href="yazarlar.html" class="section-more">Tüm Yazarlar →</a>
+      </div>
+      <div class="authors-grid" id="authorsGrid">
+        <div class="empty-inline">Yazar içerikleri yönetim panelinden eklendiğinde burada yayınlanacaktır.</div>
+      </div>
+    </section>
 
-                    <a href="kategori.html?kategori=Trabzon">
-                        Tüm Trabzon Haberleri
-                    </a>
+    <!-- =========================
+         BÖLGESEL VURGU
+    ========================== -->
 
-                </div>
+    <section class="local-highlight">
 
+      <div class="local-highlight-content">
 
-                <div
-                    class="category-news-grid"
-                    id="trabzonNewsGrid"
-                >
-                    <div class="home-loading">
-                        Trabzon haberleri yükleniyor...
-                    </div>
-                </div>
+        <span>
+          AKÇAABAT'TAN TRABZON'A
+        </span>
 
-            </div>
+        <h2>
+          Bölgenin nabzını birlikte tutuyoruz.
+        </h2>
 
-        </section>
+        <p>
+          Akçaabat ve Trabzon'daki gelişmeleri hızlı,
+          anlaşılır ve güvenilir şekilde takip edin.
+        </p>
 
+      </div>
 
-        <!-- =================================================
-             TRABZONSPOR
-             ================================================= -->
 
-        <section class="home-category-section">
+      <a
+        href="haber.html"
+        class="local-highlight-button"
+      >
+        Haberleri Keşfet →
+      </a>
 
-            <div class="container">
+    </section>
 
-                <div class="section-title-bar">
+  </main>
 
-                    <div>
-                        <span></span>
-                        <h2>Trabzonspor</h2>
-                    </div>
 
-                    <a href="kategori.html?kategori=Trabzonspor">
-                        Tüm Trabzonspor Haberleri
-                    </a>
+  <!-- =========================
+       FOOTER
+  ========================== -->
 
-                </div>
+  <footer class="site-footer">
 
+    <div class="container footer-grid">
 
-                <div
-                    class="category-news-grid"
-                    id="trabzonsporNewsGrid"
-                >
-                    <div class="home-loading">
-                        Trabzonspor haberleri yükleniyor...
-                    </div>
-                </div>
 
-            </div>
+      <div class="footer-brand">
 
-        </section>
+        <a
+          href="index.html"
+          class="brand footer-logo"
+        >
 
+          <div class="brand-mark">
+            AH
+          </div>
 
-        <!-- =================================================
-             MAÇ MERKEZİ
-             ================================================= -->
+          <div class="brand-text">
 
-        <section class="home-match-section">
+            <strong>
+              AKÇAABAT
+            </strong>
 
-            <div class="container">
+            <span>
+              HABER
+            </span>
 
-                <div class="section-title-bar">
+          </div>
 
-                    <div>
-                        <span></span>
-                        <h2>Maç Merkezi</h2>
-                    </div>
+        </a>
 
-                    <a href="mac-merkezi.html">
-                        Maç Merkezine Git
-                    </a>
 
-                </div>
+        <p>
+          Akçaabat ve Trabzon'dan doğru,
+          hızlı ve güncel haberler.
+        </p>
 
+      </div>
 
-                <div
-                    class="home-match-center"
-                    id="homeMatchCenter"
-                >
-                    <div class="home-loading">
-                        Maç bilgileri yükleniyor...
-                    </div>
-                </div>
 
-            </div>
+      <div class="footer-column">
 
-        </section>
+        <h3>
+          Kategoriler
+        </h3>
 
 
-        <!-- =================================================
-             KÖŞE YAZARLARI
-             ================================================= -->
+        <a href="kategori.html?kategori=Akçaabat">
+          Akçaabat
+        </a>
 
-        <section class="home-category-links" aria-labelledby="writersTitle">
-            <div class="container">
-                <div class="section-title-bar">
-                    <div>
-                        <span></span>
-                        <h2 id="writersTitle">Köşe Yazarları</h2>
-                    </div>
-                    <a href="yazarlar.html">Tümünü Gör</a>
-                </div>
-                <div class="category-link-grid">
-                    <a href="yazarlar.html">
-                        <strong>Yazar kadrosu hazırlanıyor</strong>
-                        <span>Doğrulanmış yazar profilleri yayınlandığında burada yer alacak ›</span>
-                    </a>
-                </div>
-            </div>
-        </section>
 
+        <a href="kategori.html?kategori=Trabzon">
+          Trabzon
+        </a>
 
-        <!-- =================================================
-             DİĞER KATEGORİLER
-             ================================================= -->
 
-        <section class="home-category-links">
+        <a href="kategori.html?kategori=Spor">
+          Spor
+        </a>
 
-            <div class="container">
 
-                <div class="section-title-bar">
+        <a href="kategori.html?kategori=Gündem">
+          Gündem
+        </a>
 
-                    <div>
-                        <span></span>
-                        <h2>Gündem</h2>
-                    </div>
+      </div>
 
-                </div>
 
+      <div class="footer-column">
 
-                <div class="category-link-grid">
+        <h3>
+          Hızlı Erişim
+        </h3>
 
-                    <a href="kategori.html?kategori=Gündem">
-                        <strong>Gündem</strong>
-                        <span>Günün gelişmeleri ›</span>
-                    </a>
 
-                    <a href="kategori.html?kategori=Spor">
-                        <strong>Spor</strong>
-                        <span>Spor haberleri ›</span>
-                    </a>
+        <a href="haber.html">
+          Son Haberler
+        </a>
 
-                    <a href="kategori.html?kategori=Ekonomi">
-                        <strong>Ekonomi</strong>
-                        <span>Ekonomi gündemi ›</span>
-                    </a>
 
-                    <a href="kategori.html?kategori=Yaşam">
-                        <strong>Yaşam</strong>
-                        <span>Yaşam haberleri ›</span>
-                    </a>
+        <a href="kategori.html?kategori=Asayiş">
+          Asayiş
+        </a>
 
-                    <a href="kategori.html?kategori=Siyaset">
-                        <strong>Siyaset</strong>
-                        <span>Siyasi gelişmeler ›</span>
-                    </a>
 
-                    <a href="kategori.html?kategori=Türkiye">
-                        <strong>Türkiye</strong>
-                        <span>Türkiye gündemi ›</span>
-                    </a>
+        <a href="kategori.html?kategori=Ekonomi">
+          Ekonomi
+        </a>
 
-                </div>
 
-            </div>
+        <a href="kategori.html?kategori=Kültür">
+          Kültür & Yaşam
+        </a>
 
-        </section>
+      </div>
 
-    </main>
 
+      <div class="footer-column">
 
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
+        <h3>
+          Akçaabat Haber
+        </h3>
 
-    <div id="portalFooter"></div>
 
+        <a href="admin.html">
+          Yönetim Paneli
+        </a>
 
-    <!-- =====================================================
-         SCRIPTLER
-         ===================================================== -->
 
-    <script src="supabase-config.js"></script>
-    <script src="script.js?v=9"></script>
-    <script src="portal-shell.js?v=10"></script>
+        <a href="yeni-haber.html">
+          Haber Gönder
+        </a>
 
 
-    <script>
-    (function () {
-        "use strict";
+        <a href="index.html">
+          Ana Sayfa
+        </a>
 
-        const MAX_HEADLINES = 10;
-        const AUTO_TIME = 5000;
-        const SWIPE_MIN = 45;
+      </div>
 
-        let news = [];
-        let headlines = [];
-        let activeHeadline = 0;
+    </div>
 
-        let headlineTimer = null;
-        let transitionTimer = null;
 
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchMoved = false;
+    <div class="footer-bottom">
 
+      <div class="container footer-bottom-inner">
 
-        /* =================================================
-           KISA YARDIMCILAR
-           ================================================= */
+        <span>
+          © <span id="currentYear">2026</span>
+          Akçaabat Haber
+        </span>
 
-        function A() {
-            return window.AkcaabatHaber || {};
-        }
+        <span>
+          Akçaabat • Trabzon
+        </span>
 
+      </div>
 
-        function escapeHtml(value) {
-            if (A().escapeHtml) {
-                return A().escapeHtml(value);
+    </div>
+
+  </footer>
+
+
+  <!-- =========================
+       MOBİL MENÜ OVERLAY
+  ========================== -->
+
+  <div
+    class="mobile-overlay"
+    id="mobileOverlay"
+  ></div>
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="supabase-news.js"></script>
+
+
+  <!-- =========================
+       ANA SAYFA MOTORU
+  ========================== -->
+
+  <script type="text/plain" id="legacyHomeEngine">
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+
+
+        const NEWS_KEY =
+          "akcaabat_haberler";
+
+
+        const FALLBACK_IMAGE =
+          "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=80";
+
+
+        /* =========================
+           HABERLERİ AL
+        ========================== */
+
+        function getNews() {
+
+          try {
+
+            const raw =
+              localStorage.getItem(
+                NEWS_KEY
+              );
+
+
+            if (!raw) {
+              return [];
             }
 
-            return String(value || "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+
+            const data =
+              JSON.parse(raw);
 
 
-        function title(item) {
-            return (
-                item?.title ||
-                "Başlıksız Haber"
-            );
-        }
-
-
-        function summary(item) {
-            return (
-                item?.summary ||
-                ""
-            );
-        }
-
-
-        function category(item) {
-            return (
-                item?.category ||
-                item?.categories?.name ||
-                "Genel"
-            );
-        }
-
-
-        function image(item) {
-            return (
-                item?.image_url ||
-                item?.image ||
-                ""
-            );
-        }
-
-
-        function views(item) {
-            const value =
-                Number(item?.views);
-
-            return Number.isFinite(value)
-                ? value
-                : 0;
-        }
-
-
-        function newsDate(item) {
-            return (
-                item?.published_at ||
-                item?.publishedAt ||
-                item?.created_at ||
-                item?.createdAt ||
-                ""
-            );
-        }
-
-
-        function formatDate(value) {
-            if (!value) {
-                return "";
+            if (!Array.isArray(data)) {
+              return [];
             }
 
-            const date =
-                new Date(value);
 
-            if (
-                Number.isNaN(
-                    date.getTime()
-                )
-            ) {
-                return "";
-            }
+            return data.filter(
+              function (item) {
 
-            return date.toLocaleDateString(
-                "tr-TR",
-                {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric"
-                }
-            );
-        }
-
-
-        function url(item) {
-            if (A().getNewsUrl) {
-                return A().getNewsUrl(item);
-            }
-
-            return (
-                "haber-detay.html?slug=" +
-                encodeURIComponent(
-                    item?.slug || ""
-                )
-            );
-        }
-
-
-        function isBreaking(item) {
-            return (
-                item?.is_breaking === true ||
-                item?.breaking === true
-            );
-        }
-
-
-        /*
-         * SADECE GERÇEK MANŞET ALANI.
-         * FEATURED VEYA OTOMATİK SON HABER FALLBACK YOK.
-         */
-        function isHeadline(item) {
-            if (
-                item?.status !== "published"
-            ) {
-                return false;
-            }
-
-            if (
-                item?.is_headline !== true
-            ) {
-                return false;
-            }
-
-            const order =
-                Number(
-                    item?.headline_order
+                return (
+                  item &&
+                  (
+                    item.status === "published" ||
+                    item.status === undefined
+                  )
                 );
 
-            return (
-                Number.isInteger(order) &&
-                order >= 1 &&
-                order <= 10
+              }
             );
-        }
 
+          } catch (error) {
 
-        function headlineOrder(item) {
-            const value =
-                Number(
-                    item?.headline_order
-                );
-
-            if (
-                !Number.isInteger(value) ||
-                value < 1 ||
-                value > 10
-            ) {
-                return 999;
-            }
-
-            return value;
-        }
-
-
-        function isPublished(item) {
-            return (
-                !item?.status ||
-                item.status === "published"
+            console.warn(
+              "Haberler okunamadı:",
+              error
             );
+
+            return [];
+
+          }
+
         }
 
 
-        function normalizeCategory(value) {
-            return String(value || "")
-                .toLocaleLowerCase("tr-TR")
-                .trim();
-        }
+        /* =========================
+           DEĞER AL
+        ========================== */
 
-
-        function categoryMatches(
-            item,
-            names
+        function value(
+          item,
+          keys,
+          fallback = ""
         ) {
-            const current =
-                normalizeCategory(
-                    category(item)
-                );
 
-            return names.some(
-                function (name) {
-                    return (
-                        current ===
-                        normalizeCategory(name)
-                    );
-                }
-            );
-        }
-
-
-        /* =================================================
-           HABER KARTI
-           ================================================= */
-
-        function newsCard(item) {
-            const img = image(item);
-
-            return `
-                <article class="home-news-card">
-
-                    <a
-                        class="home-news-card-image"
-                        href="${escapeHtml(url(item))}"
-                    >
-                        ${
-                            img
-                                ? `
-                                    <img
-                                        src="${escapeHtml(img)}"
-                                        alt="${escapeHtml(title(item))}"
-                                        loading="lazy"
-                                    >
-                                `
-                                : `
-                                    <div class="news-image-placeholder">
-                                        AKÇAABAT HABER
-                                    </div>
-                                `
-                        }
-
-                        ${
-                            isBreaking(item)
-                                ? `
-                                    <span class="news-breaking-badge">
-                                        SON DAKİKA
-                                    </span>
-                                `
-                                : ""
-                        }
-                    </a>
-
-                    <div class="home-news-card-body">
-
-                        <div class="home-news-card-meta">
-
-                            <span>
-                                ${escapeHtml(category(item))}
-                            </span>
-
-                            <time>
-                                ${escapeHtml(formatDate(newsDate(item)))}
-                            </time>
-
-                        </div>
-
-                        <h3>
-                            <a href="${escapeHtml(url(item))}">
-                                ${escapeHtml(title(item))}
-                            </a>
-                        </h3>
-
-                        ${
-                            summary(item)
-                                ? `
-                                    <p>
-                                        ${escapeHtml(summary(item))}
-                                    </p>
-                                `
-                                : ""
-                        }
-
-                    </div>
-
-                </article>
-            `;
-        }
-
-
-        /* =================================================
-           MANŞET
-           ================================================= */
-
-        function stopHeadlineTimer() {
-            if (headlineTimer) {
-                clearInterval(
-                    headlineTimer
-                );
-
-                headlineTimer = null;
-            }
-        }
-
-
-        function startHeadlineTimer() {
-            stopHeadlineTimer();
+          for (
+            const key of keys
+          ) {
 
             if (
-                headlines.length <= 1 ||
-                document.hidden
+              item &&
+              item[key] !== undefined &&
+              item[key] !== null &&
+              String(
+                item[key]
+              ).trim() !== ""
             ) {
-                return;
+
+              return item[key];
+
             }
 
-            headlineTimer =
-                setInterval(
-                    function () {
-                        showHeadline(
-                            activeHeadline + 1,
-                            false
-                        );
-                    },
-                    AUTO_TIME
-                );
+          }
+
+
+          return fallback;
+
         }
 
+
+        /* =========================
+           HTML GÜVENLİĞİ
+        ========================== */
+
+        function escapeHtml(
+          text
+        ) {
+
+          return String(
+            text || ""
+          )
+            .replace(
+              /&/g,
+              "&amp;"
+            )
+            .replace(
+              /</g,
+              "&lt;"
+            )
+            .replace(
+              />/g,
+              "&gt;"
+            )
+            .replace(
+              /"/g,
+              "&quot;"
+            )
+            .replace(
+              /'/g,
+              "&#039;"
+            );
+
+        }
+
+
+        /* =========================
+           RESİM
+        ========================== */
+
+        function imageValue(
+          item
+        ) {
+
+          const image =
+            value(
+              item,
+              [
+                "image",
+                "gorsel",
+                "resim",
+                "imageUrl"
+              ],
+              FALLBACK_IMAGE
+            );
+
+
+          if (
+            typeof image !== "string" ||
+            image.trim() === ""
+          ) {
+
+            return FALLBACK_IMAGE;
+
+          }
+
+
+          return image;
+
+        }
+
+
+        /* =========================
+           KATEGORİ
+        ========================== */
+
+        function categoryValue(
+          item
+        ) {
+
+          return value(
+            item,
+            [
+              "category",
+              "kategori"
+            ],
+            "Gündem"
+          );
+
+        }
+
+
+        /* =========================
+           BAŞLIK
+        ========================== */
+
+        function titleValue(
+          item
+        ) {
+
+          return value(
+            item,
+            [
+              "title",
+              "baslik"
+            ],
+            "Başlıksız Haber"
+          );
+
+        }
+
+
+        /* =========================
+           ÖZET
+        ========================== */
+
+        function summaryValue(
+          item
+        ) {
+
+          return value(
+            item,
+            [
+              "summary",
+              "ozet"
+            ],
+            ""
+          );
+
+        }
+
+
+        /* =========================
+           TARİH
+        ========================== */
+
+        function dateValue(
+          item
+        ) {
+
+          return value(
+            item,
+            [
+              "publishedAt",
+              "createdAt",
+              "updatedAt"
+            ],
+            ""
+          );
+
+        }
+
+
+        /* =========================
+           TARİH FORMATLA
+        ========================== */
+
+        function formatDate(
+          date
+        ) {
+
+          if (!date) {
+
+            return "Tarih belirtilmedi";
+
+          }
+
+
+          const parsed =
+            new Date(date);
+
+
+          if (
+            Number.isNaN(
+              parsed.getTime()
+            )
+          ) {
+
+            return String(date);
+
+          }
+
+
+          return parsed.toLocaleDateString(
+            "tr-TR",
+            {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric"
+            }
+          );
+
+        }
+
+
+        /* =========================
+           HABERLERİ SIRALA
+        ========================== */
+
+        function sortNews(
+          news
+        ) {
+
+          return news
+            .slice()
+            .sort(
+              function (a, b) {
+
+                const dateA =
+                  new Date(
+                    dateValue(a)
+                  ).getTime() || 0;
+
+
+                const dateB =
+                  new Date(
+                    dateValue(b)
+                  ).getTime() || 0;
+
+
+                return dateB - dateA;
+
+              }
+            );
+
+        }
+
+
+        /* =========================
+           HABER ID
+        ========================== */
+
+        function newsId(
+          item
+        ) {
+
+          return value(
+            item,
+            [
+              "id",
+              "haberId"
+            ],
+            ""
+          );
+
+        }
+
+
+        /* =========================
+           SLUG ÜRET
+        ========================== */
+
+        function makeSlug(
+          item
+        ) {
+
+          const existingSlug =
+            value(
+              item,
+              ["slug"],
+              ""
+            );
+
+
+          if (
+            existingSlug
+          ) {
+
+            return String(
+              existingSlug
+            )
+              .trim()
+              .toLowerCase();
+
+          }
+
+
+          const title =
+            titleValue(item);
+
+
+          /*
+           * script.js içindeki slugify
+           * fonksiyonunu kullan.
+           */
+
+          if (
+            window.AkcaabatHaber &&
+            typeof
+              window.AkcaabatHaber.slugify ===
+              "function"
+          ) {
+
+            const generated =
+              window.AkcaabatHaber.slugify(
+                title
+              );
+
+
+            if (generated) {
+              return generated;
+            }
+
+          }
+
+
+          /*
+           * Yedek slug sistemi.
+           */
+
+          return String(
+            title || ""
+          )
+            .toLowerCase()
+            .trim()
+            .replace(
+              /ğ/g,
+              "g"
+            )
+            .replace(
+              /ü/g,
+              "u"
+            )
+            .replace(
+              /ş/g,
+              "s"
+            )
+            .replace(
+              /ı/g,
+              "i"
+            )
+            .replace(
+              /ö/g,
+              "o"
+            )
+            .replace(
+              /ç/g,
+              "c"
+            )
+            .replace(
+              /[^a-z0-9\s-]/g,
+              ""
+            )
+            .replace(
+              /\s+/g,
+              "-"
+            )
+            .replace(
+              /-+/g,
+              "-"
+            )
+            .replace(
+              /^-+|-+$/g,
+              ""
+            );
+
+        }
+
+
+        /* =========================
+           HABER URL'Sİ
+        ========================== */
+
+        function getNewsUrl(
+          item
+        ) {
+
+          if (!item) {
+            return "";
+          }
+
+
+          /*
+           * Yeni script.js içindeki
+           * merkezi URL fonksiyonunu kullan.
+           */
+
+          if (
+            window.AkcaabatHaber &&
+            typeof
+              window.AkcaabatHaber.getNewsUrl ===
+              "function"
+          ) {
+
+            const url =
+              window.AkcaabatHaber.getNewsUrl(
+                item
+              );
+
+
+            if (url) {
+              return url;
+            }
+
+          }
+
+
+          /*
+           * Slug oluştur.
+           */
+
+          const slug =
+            makeSlug(item);
+
+
+          if (slug) {
+
+            return (
+              "haber-detay.html?slug=" +
+              encodeURIComponent(
+                slug
+              )
+            );
+
+          }
+
+
+          /*
+           * Son güvenlik seçeneği:
+           * eski ID sistemi.
+           */
+
+          const id =
+            newsId(item);
+
+
+          if (id) {
+
+            return (
+              "haber-detay.html?id=" +
+              encodeURIComponent(
+                id
+              )
+            );
+
+          }
+
+
+          return "";
+
+        }
+
+
+        /* =========================
+           HABER AÇ
+        ========================== */
+
+        function openNews(
+          item
+        ) {
+
+          const url =
+            getNewsUrl(item);
+
+
+          if (!url) {
+            return;
+          }
+
+
+          window.location.href =
+            url;
+
+        }
+
+
+        /* =========================
+           ELEMENT TEXT
+        ========================== */
+
+        function setText(
+          id,
+          text
+        ) {
+
+          const element =
+            document.getElementById(
+              id
+            );
+
+
+          if (element) {
+
+            element.textContent =
+              text;
+
+          }
+
+        }
+
+
+        /* =========================
+           MANŞET
+        ========================== */
+
+        let headlineItems = [];
+        let headlineIndex = 0;
+        let headlineTimer = null;
+
+        function showHeadline(index) {
+          if (!headlineItems.length) return;
+          headlineIndex = (index + headlineItems.length) % headlineItems.length;
+          const hero = headlineItems[headlineIndex];
+          const heroImage = document.getElementById("heroImage");
+          const heroBreaking = document.getElementById("heroBreaking");
+          if (heroImage) { heroImage.src = imageValue(hero); heroImage.alt = titleValue(hero); }
+          setText("heroTitle", titleValue(hero));
+          setText("heroSummary", summaryValue(hero));
+          setText("heroCategory", categoryValue(hero).toUpperCase());
+          setText("heroDate", formatDate(dateValue(hero)));
+          if (heroBreaking) heroBreaking.hidden = !(hero.breaking === true || hero.breaking === "true");
+          const heroElement = document.getElementById("heroNews");
+          if (heroElement) { heroElement.onclick = function(){ openNews(hero); }; heroElement.style.cursor = "pointer"; }
+          const counter = document.getElementById("headlineCounter");
+          if (counter) counter.textContent = (headlineIndex + 1) + " / " + headlineItems.length;
+          document.querySelectorAll(".headline-tab").forEach(function(tab, i){
+            tab.classList.toggle("is-active", i === headlineIndex);
+            tab.setAttribute("aria-selected", i === headlineIndex ? "true" : "false");
+          });
+        }
 
         function restartHeadlineTimer() {
-            stopHeadlineTimer();
-            startHeadlineTimer();
+          if (headlineTimer) clearInterval(headlineTimer);
+          if (headlineItems.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            headlineTimer = setInterval(function(){ showHeadline(headlineIndex + 1); }, 6500);
+          }
         }
 
-
-        /*
-         * SADECE NUMARA ŞERİDİNİ KAYDIRIR.
-         * DOCUMENT SCROLL'U DEĞİŞTİRMEZ.
-         */
-        function centerActiveNumber() {
-            const strip =
-                document.getElementById(
-                    "headlineNumbers"
-                );
-
-            if (!strip) {
-                return;
-            }
-
-            const active =
-                strip.querySelector(
-                    ".headline-number.active"
-                );
-
-            if (!active) {
-                return;
-            }
-
-            const targetLeft =
-                active.offsetLeft -
-                (
-                    strip.clientWidth -
-                    active.offsetWidth
-                ) / 2;
-
-            const maxLeft =
-                Math.max(
-                    0,
-                    strip.scrollWidth -
-                    strip.clientWidth
-                );
-
-            const finalLeft =
-                Math.max(
-                    0,
-                    Math.min(
-                        targetLeft,
-                        maxLeft
-                    )
-                );
-
-            strip.scrollTo({
-                left: finalLeft,
-                behavior: "smooth"
+        function renderHero(news) {
+          headlineItems = news.slice(0, Math.min(10, news.length));
+          if (!headlineItems.length) return;
+          const track = document.getElementById("headlineTrack");
+          if (track) {
+            track.innerHTML = headlineItems.map(function(item, i){
+              return `<button class="headline-tab" type="button" role="tab" aria-selected="${i===0?'true':'false'}" data-headline-index="${i}">
+                <span class="headline-number">${String(i+1).padStart(2,'0')}</span>
+                <img src="${escapeHtml(imageValue(item))}" alt="" loading="lazy">
+                <span class="headline-tab-copy"><small>${escapeHtml(categoryValue(item).toUpperCase())}</small><b>${escapeHtml(titleValue(item))}</b></span>
+              </button>`;
+            }).join("");
+            track.querySelectorAll(".headline-tab").forEach(function(tab){
+              tab.addEventListener("click", function(){ showHeadline(Number(tab.dataset.headlineIndex)); restartHeadlineTimer(); });
             });
+          }
+          const prev = document.getElementById("headlinePrev");
+          const next = document.getElementById("headlineNext");
+          if (prev) prev.onclick = function(){ showHeadline(headlineIndex - 1); restartHeadlineTimer(); };
+          if (next) next.onclick = function(){ showHeadline(headlineIndex + 1); restartHeadlineTimer(); };
+          showHeadline(0);
+          restartHeadlineTimer();
         }
 
 
-        function renderHeadlineNumbers() {
-            const strip =
-                document.getElementById(
-                    "headlineNumbers"
-                );
+        /* =========================
+           YAN HABERLER
+        ========================== */
 
-            if (!strip) {
-                return;
-            }
+        function renderSideNews(
+          news
+        ) {
 
-            if (!headlines.length) {
-                strip.innerHTML = "";
-                return;
-            }
+          const container =
+            document.getElementById(
+              "heroSideNews"
+            );
 
-            strip.innerHTML =
-                headlines
-                    .map(
+
+          if (!container) {
+            return;
+          }
+
+
+          const items =
+            news.slice(
+              1,
+              4
+            );
+
+
+          if (!items.length) {
+            return;
+          }
+
+
+          container.innerHTML =
+            items.map(
+              function (item) {
+
+                const url =
+                  getNewsUrl(item);
+
+
+                return `
+
+                  <article
+                    class="side-news"
+                    data-news-id="${escapeHtml(
+                      newsId(item)
+                    )}"
+                    data-news-url="${escapeHtml(
+                      url
+                    )}"
+                  >
+
+                    <div class="side-news-image">
+
+                      <img
+                        src="${escapeHtml(
+                          imageValue(item)
+                        )}"
+                        alt="${escapeHtml(
+                          titleValue(item)
+                        )}"
+                        loading="lazy"
+                      >
+
+                      <span>
+                        ${escapeHtml(
+                          categoryValue(
+                            item
+                          ).toUpperCase()
+                        )}
+                      </span>
+
+                    </div>
+
+
+                    <div class="side-news-content">
+
+                      <small>
+                        ${escapeHtml(
+                          formatDate(
+                            dateValue(item)
+                          )
+                        )}
+                      </small>
+
+                      <h3>
+                        ${escapeHtml(
+                          titleValue(item)
+                        )}
+                      </h3>
+
+                    </div>
+
+                  </article>
+
+                `;
+
+              }
+            ).join("");
+
+
+          container
+            .querySelectorAll(
+              ".side-news"
+            )
+            .forEach(
+              function (card) {
+
+                card.addEventListener(
+                  "click",
+                  function () {
+
+                    const id =
+                      card.dataset.newsId;
+
+
+                    const item =
+                      news.find(
                         function (
-                            item,
-                            index
+                          newsItem
                         ) {
-                            const order =
-                                headlineOrder(item);
 
-                            return `
-                                <button
-                                    type="button"
-                                    class="headline-number ${
-                                        index === activeHeadline
-                                            ? "active"
-                                            : ""
-                                    }"
-                                    data-headline-index="${index}"
-                                    aria-label="${order}. manşet"
-                                    aria-current="${
-                                        index === activeHeadline
-                                            ? "true"
-                                            : "false"
-                                    }"
-                                >
-                                    ${order}
-                                </button>
-                            `;
+                          return (
+                            newsId(
+                              newsItem
+                            ) === id
+                          );
+
                         }
-                    )
-                    .join("");
+                      );
 
-            strip
-                .querySelectorAll(
-                    "[data-headline-index]"
-                )
-                .forEach(
-                    function (button) {
-                        button.addEventListener(
-                            "click",
-                            function () {
-                                const index =
-                                    Number(
-                                        button.dataset
-                                            .headlineIndex
-                                    );
 
-                                showHeadline(
-                                    index,
-                                    true
-                                );
-                            }
-                        );
+                    if (item) {
+
+                      openNews(
+                        item
+                      );
+
                     }
+
+                  }
                 );
+
+              }
+            );
+
         }
 
 
-        function updateHeadlineNumberState() {
-            const strip =
-                document.getElementById(
-                    "headlineNumbers"
-                );
+        /* =========================
+           HABER GRID
+        ========================== */
 
-            if (!strip) {
-                return;
-            }
-
-            strip
-                .querySelectorAll(
-                    ".headline-number"
-                )
-                .forEach(
-                    function (
-                        button,
-                        index
-                    ) {
-                        const active =
-                            index ===
-                            activeHeadline;
-
-                        button.classList.toggle(
-                            "active",
-                            active
-                        );
-
-                        button.setAttribute(
-                            "aria-current",
-                            active
-                                ? "true"
-                                : "false"
-                        );
-                    }
-                );
-
-            centerActiveNumber();
-        }
-
-
-        function renderEmptyHeadline() {
-            stopHeadlineTimer();
-
-            const section =
-                document.getElementById(
-                    "homeHeadlineSection"
-                );
-
-            if (section) {
-                section.hidden = true;
-            }
-
-            const link =
-                document.getElementById(
-                    "mainHeadlineLink"
-                );
-
-            const img =
-                document.getElementById(
-                    "mainHeadlineImage"
-                );
-
-            const placeholder =
-                document.getElementById(
-                    "mainHeadlinePlaceholder"
-                );
-
-            const categoryElement =
-                document.getElementById(
-                    "mainHeadlineCategory"
-                );
-
-            const breaking =
-                document.getElementById(
-                    "mainHeadlineBreaking"
-                );
-
-            const date =
-                document.getElementById(
-                    "mainHeadlineDate"
-                );
-
-            const headlineTitle =
-                document.getElementById(
-                    "mainHeadlineTitle"
-                );
-
-            const headlineSummary =
-                document.getElementById(
-                    "mainHeadlineSummary"
-                );
-
-            const counter =
-                document.getElementById(
-                    "headlineCounter"
-                );
-
-            if (link) {
-                link.removeAttribute("href");
-            }
-
-            if (img) {
-                img.removeAttribute("src");
-                img.alt = "";
-                img.style.display = "none";
-            }
-
-            if (placeholder) {
-                placeholder.style.display =
-                    "flex";
-
-                placeholder.innerHTML = `
-                    <strong>
-                        AKÇAABAT HABER
-                    </strong>
-
-                    <span>
-                        Henüz manşet haberi seçilmedi.
-                    </span>
-                `;
-            }
-
-            if (categoryElement) {
-                categoryElement.textContent =
-                    "AKÇAABAT HABER";
-            }
-
-            if (breaking) {
-                breaking.hidden = true;
-            }
-
-            if (date) {
-                date.textContent = "";
-            }
-
-            if (headlineTitle) {
-                headlineTitle.textContent =
-                    "Henüz manşet haberi seçilmedi.";
-            }
-
-            if (headlineSummary) {
-                headlineSummary.textContent =
-                    "Manşet haberleri yönetim panelinden seçilebilir.";
-            }
-
-            if (counter) {
-                counter.textContent =
-                    "0 / 10";
-            }
-
-            renderHeadlineNumbers();
-        }
-
-
-        function showHeadline(
-            requestedIndex,
-            userAction
+        function renderNewsGrid(
+          news
         ) {
-            if (!headlines.length) {
-                renderEmptyHeadline();
-                return;
-            }
 
-            const length =
-                headlines.length;
+          const container =
+            document.getElementById(
+              "newsGrid"
+            );
 
-            activeHeadline =
-                (
-                    requestedIndex %
-                    length +
-                    length
-                ) %
-                length;
 
-            const item =
-                headlines[
-                    activeHeadline
-                ];
+          if (!container) {
+            return;
+          }
 
-            const section =
-                document.getElementById(
-                    "homeHeadlineSection"
-                );
 
-            if (section) {
-                section.hidden = false;
-            }
+          const items =
+            news.slice(
+              0,
+              6
+            );
 
-            const link =
-                document.getElementById(
-                    "mainHeadlineLink"
-                );
 
-            const img =
-                document.getElementById(
-                    "mainHeadlineImage"
-                );
+          if (!items.length) {
+            return;
+          }
 
-            const placeholder =
-                document.getElementById(
-                    "mainHeadlinePlaceholder"
-                );
 
-            const categoryElement =
-                document.getElementById(
-                    "mainHeadlineCategory"
-                );
+          container.innerHTML =
+            items.map(
+              function (item) {
 
-            const breaking =
-                document.getElementById(
-                    "mainHeadlineBreaking"
-                );
+                const url =
+                  getNewsUrl(item);
 
-            const date =
-                document.getElementById(
-                    "mainHeadlineDate"
-                );
 
-            const headlineTitle =
-                document.getElementById(
-                    "mainHeadlineTitle"
-                );
+                return `
 
-            const headlineSummary =
-                document.getElementById(
-                    "mainHeadlineSummary"
-                );
+                  <article
+                    class="news-card"
+                    data-news-id="${escapeHtml(
+                      newsId(item)
+                    )}"
+                    data-news-url="${escapeHtml(
+                      url
+                    )}"
+                  >
 
-            const counter =
-                document.getElementById(
-                    "headlineCounter"
-                );
+                    <div class="news-card-image">
 
-            const stage =
-                document.querySelector(
-                    ".main-headline-stage"
-                );
+                      <img
+                        src="${escapeHtml(
+                          imageValue(item)
+                        )}"
+                        alt="${escapeHtml(
+                          titleValue(item)
+                        )}"
+                        loading="lazy"
+                      >
 
-            if (transitionTimer) {
-                clearTimeout(
-                    transitionTimer
-                );
-            }
+                      <span class="news-card-category">
+                        ${escapeHtml(
+                          categoryValue(
+                            item
+                          ).toUpperCase()
+                        )}
+                      </span>
 
-            if (stage) {
-                stage.classList.add(
-                    "headline-changing"
-                );
-            }
+                    </div>
 
-            transitionTimer =
-                setTimeout(
-                    function () {
-                        if (link) {
-                            link.href =
-                                url(item);
-                        }
 
-                        const imgUrl =
-                            image(item);
+                    <div class="news-card-body">
 
-                        if (
-                            img &&
-                            imgUrl
+                      <div class="news-card-meta">
+                        ${escapeHtml(
+                          formatDate(
+                            dateValue(item)
+                          )
+                        )}
+                      </div>
+
+
+                      <h3>
+                        ${escapeHtml(
+                          titleValue(item)
+                        )}
+                      </h3>
+
+
+                      <p>
+                        ${escapeHtml(
+                          summaryValue(item)
+                        )}
+                      </p>
+
+                    </div>
+
+                  </article>
+
+                `;
+
+              }
+            ).join("");
+
+
+          container
+            .querySelectorAll(
+              ".news-card"
+            )
+            .forEach(
+              function (card) {
+
+                card.addEventListener(
+                  "click",
+                  function () {
+
+                    const id =
+                      card.dataset.newsId;
+
+
+                    const item =
+                      news.find(
+                        function (
+                          newsItem
                         ) {
-                            img.src =
-                                imgUrl;
 
-                            img.alt =
-                                title(item);
+                          return (
+                            newsId(
+                              newsItem
+                            ) === id
+                          );
 
-                            img.style.display =
-                                "block";
-                        } else if (img) {
-                            img.removeAttribute(
-                                "src"
-                            );
-
-                            img.style.display =
-                                "none";
                         }
+                      );
 
-                        if (placeholder) {
-                            placeholder.style.display =
-                                imgUrl
-                                    ? "none"
-                                    : "flex";
-                        }
 
-                        if (categoryElement) {
-                            categoryElement.textContent =
-                                category(item);
-                        }
+                    if (item) {
 
-                        if (breaking) {
-                            breaking.hidden =
-                                !isBreaking(item);
-                        }
+                      openNews(
+                        item
+                      );
 
-                        if (date) {
-                            date.textContent =
-                                formatDate(
-                                    newsDate(item)
-                                );
-                        }
+                    }
 
-                        if (headlineTitle) {
-                            headlineTitle.textContent =
-                                title(item);
-                        }
-
-                        if (headlineSummary) {
-                            headlineSummary.textContent =
-                                summary(item) ||
-                                "Haberi okumak için tıklayın.";
-                        }
-
-                        if (counter) {
-                            counter.textContent =
-                                (
-                                    activeHeadline +
-                                    1
-                                ) +
-                                " / " +
-                                headlines.length;
-                        }
-
-                        updateHeadlineNumberState();
-
-                        if (stage) {
-                            stage.classList.remove(
-                                "headline-changing"
-                            );
-                        }
-                    },
-                    110
+                  }
                 );
 
-            if (userAction) {
-                restartHeadlineTimer();
-            }
+              }
+            );
+
         }
 
 
-        function renderHeadline() {
-            headlines =
-                news
-                    .filter(isHeadline)
-                    .sort(
-                        function (a, b) {
-                            return (
-                                headlineOrder(a) -
-                                headlineOrder(b)
-                            );
-                        }
-                    )
-                    .slice(
-                        0,
-                        MAX_HEADLINES
-                    );
-
-            activeHeadline = 0;
-
-            if (!headlines.length) {
-                renderEmptyHeadline();
-                return;
-            }
-
-            renderHeadlineNumbers();
-            showHeadline(0, false);
-            startHeadlineTimer();
-        }
-
-
-        function initHeadlineControls() {
-            const headline =
-                document.getElementById(
-                    "mainHeadline"
-                );
-
-            const prev =
-                document.getElementById(
-                    "headlinePrev"
-                );
-
-            const next =
-                document.getElementById(
-                    "headlineNext"
-                );
-
-            if (!headline) {
-                return;
-            }
-
-            if (prev) {
-                prev.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        showHeadline(
-                            activeHeadline - 1,
-                            true
-                        );
-                    }
-                );
-            }
-
-            if (next) {
-                next.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        showHeadline(
-                            activeHeadline + 1,
-                            true
-                        );
-                    }
-                );
-            }
-
-
-            headline.addEventListener(
-                "mouseenter",
-                stopHeadlineTimer
-            );
-
-            headline.addEventListener(
-                "mouseleave",
-                startHeadlineTimer
-            );
-
-
-            headline.addEventListener(
-                "keydown",
-                function (event) {
-                    if (
-                        event.key ===
-                        "ArrowLeft"
-                    ) {
-                        event.preventDefault();
-
-                        showHeadline(
-                            activeHeadline - 1,
-                            true
-                        );
-                    }
-
-                    if (
-                        event.key ===
-                        "ArrowRight"
-                    ) {
-                        event.preventDefault();
-
-                        showHeadline(
-                            activeHeadline + 1,
-                            true
-                        );
-                    }
-
-                    if (
-                        event.key ===
-                        "Enter" &&
-                        headlines[
-                            activeHeadline
-                        ]
-                    ) {
-                        window.location.href =
-                            url(
-                                headlines[
-                                    activeHeadline
-                                ]
-                            );
-                    }
-                }
-            );
-
-
-            headline.addEventListener(
-                "touchstart",
-                function (event) {
-                    if (
-                        !event.touches ||
-                        !event.touches.length
-                    ) {
-                        return;
-                    }
-
-                    touchStartX =
-                        event.touches[0]
-                            .clientX;
-
-                    touchStartY =
-                        event.touches[0]
-                            .clientY;
-
-                    touchMoved =
-                        false;
-
-                    stopHeadlineTimer();
-                },
-                {
-                    passive: true
-                }
-            );
-
-
-            headline.addEventListener(
-                "touchmove",
-                function (event) {
-                    if (
-                        !event.touches ||
-                        !event.touches.length
-                    ) {
-                        return;
-                    }
-
-                    const diffX =
-                        Math.abs(
-                            event.touches[0]
-                                .clientX -
-                            touchStartX
-                        );
-
-                    const diffY =
-                        Math.abs(
-                            event.touches[0]
-                                .clientY -
-                            touchStartY
-                        );
-
-                    if (
-                        diffX >
-                        diffY + 8
-                    ) {
-                        touchMoved =
-                            true;
-                    }
-                },
-                {
-                    passive: true
-                }
-            );
-
-
-            headline.addEventListener(
-                "touchend",
-                function (event) {
-                    if (
-                        !event.changedTouches ||
-                        !event.changedTouches.length
-                    ) {
-                        startHeadlineTimer();
-                        return;
-                    }
-
-                    const endX =
-                        event.changedTouches[0]
-                            .clientX;
-
-                    const endY =
-                        event.changedTouches[0]
-                            .clientY;
-
-                    const diffX =
-                        endX -
-                        touchStartX;
-
-                    const diffY =
-                        endY -
-                        touchStartY;
-
-                    if (
-                        touchMoved &&
-                        Math.abs(diffX) >=
-                            SWIPE_MIN &&
-                        Math.abs(diffX) >
-                            Math.abs(diffY)
-                    ) {
-                        if (diffX < 0) {
-                            showHeadline(
-                                activeHeadline + 1,
-                                true
-                            );
-                        } else {
-                            showHeadline(
-                                activeHeadline - 1,
-                                true
-                            );
-                        }
-                    } else {
-                        startHeadlineTimer();
-                    }
-                },
-                {
-                    passive: true
-                }
-            );
-
-
-            document.addEventListener(
-                "visibilitychange",
-                function () {
-                    if (document.hidden) {
-                        stopHeadlineTimer();
-                    } else {
-                        startHeadlineTimer();
-                    }
-                }
-            );
-        }
-
-
-        /* =================================================
-           SON DAKİKA BANDI
-           ================================================= */
-
-        function renderBreaking() {
-            const target =
-                document.getElementById(
-                    "breakingNewsContent"
-                );
-
-            const bar =
-                document.querySelector(
-                    ".breaking-news-bar"
-                );
-
-            if (!target || !bar) {
-                return;
-            }
-
-            const breakingNews =
-                news
-                    .filter(
-                        function (item) {
-                            return (
-                                isPublished(item) &&
-                                isBreaking(item)
-                            );
-                        }
-                    )
-                    .slice(0, 8);
-
-            if (!breakingNews.length) {
-                bar.hidden = true;
-                target.innerHTML = "";
-                return;
-            }
-
-            bar.hidden = false;
-
-            target.innerHTML =
-                breakingNews
-                    .map(
-                        function (item) {
-                            return `
-                                <a href="${escapeHtml(url(item))}">
-                                    ${escapeHtml(title(item))}
-                                </a>
-                            `;
-                        }
-                    )
-                    .join(
-                        '<span class="breaking-separator">•</span>'
-                    );
-        }
-
-
-        /* =================================================
-           SON HABERLER
-           ================================================= */
-
-        function renderLatest() {
-            const target =
-                document.getElementById(
-                    "latestNewsGrid"
-                );
-
-            if (!target) {
-                return;
-            }
-
-            const items =
-                news
-                    .filter(isPublished)
-                    .slice(0, 12);
-
-            if (!items.length) {
-                target.innerHTML = `
-                    <div class="home-empty">
-                        Henüz yayınlanmış haber bulunmuyor.
-                    </div>
-                `;
-
-                return;
-            }
-
-            target.innerHTML =
-                items
-                    .map(newsCard)
-                    .join("");
-        }
-
-
-        /* =================================================
-           KATEGORİ HABERLERİ
-           ================================================= */
-
-        function renderCategory(
-            elementId,
-            names
-        ) {
-            const target =
-                document.getElementById(
-                    elementId
-                );
-
-            if (!target) {
-                return;
-            }
-
-            const items =
-                news
-                    .filter(
-                        function (item) {
-                            return (
-                                isPublished(item) &&
-                                categoryMatches(
-                                    item,
-                                    names
-                                )
-                            );
-                        }
-                    )
-                    .slice(0, 6);
-
-            if (!items.length) {
-                target.innerHTML = `
-                    <div class="home-empty">
-                        Bu kategoride henüz haber bulunmuyor.
-                    </div>
-                `;
-
-                return;
-            }
-
-            target.innerHTML =
-                items
-                    .map(newsCard)
-                    .join("");
-        }
-
-
-        /* =================================================
+        /* =========================
            ÇOK OKUNANLAR
-           ================================================= */
+        ========================== */
 
-        function renderPopular() {
-            const target =
-                document.getElementById(
-                    "popularNewsList"
-                );
-
-            if (!target) {
-                return;
-            }
-
-            const items =
-                news
-                    .filter(
-                        function (item) {
-                            return (
-                                isPublished(item) &&
-                                views(item) > 0
-                            );
-                        }
-                    )
-                    .slice()
-                    .sort(
-                        function (a, b) {
-                            return (
-                                views(b) -
-                                views(a)
-                            );
-                        }
-                    )
-                    .slice(0, 10);
-
-            if (!items.length) {
-                target.innerHTML = `
-                    <div class="home-empty">
-                        Görüntülenme verisi bulunan haber henüz yok.
-                    </div>
-                `;
-
-                return;
-            }
-
-            target.innerHTML =
-                items
-                    .map(
-                        function (
-                            item,
-                            index
-                        ) {
-                            return `
-                                <a
-                                    class="popular-news-item"
-                                    href="${escapeHtml(url(item))}"
-                                >
-
-                                    <span class="popular-news-number">
-                                        ${index + 1}
-                                    </span>
-
-                                    <span class="popular-news-info">
-
-                                        <strong>
-                                            ${escapeHtml(title(item))}
-                                        </strong>
-
-                                        <small>
-                                            ${views(item).toLocaleString("tr-TR")}
-                                            görüntülenme
-                                        </small>
-
-                                    </span>
-
-                                </a>
-                            `;
-                        }
-                    )
-                    .join("");
-        }
-
-
-        /* =================================================
-           MAÇ MERKEZİ
-           ================================================= */
-
-        async function renderMatches() {
-            const target =
-                document.getElementById(
-                    "homeMatchCenter"
-                );
-
-            if (!target) {
-                return;
-            }
-
-            if (!A().getSupabaseClient) {
-                target.innerHTML = `
-                    <a class="match-center-fallback" href="mac-merkezi.html">
-                        <strong>Maç Merkezi</strong>
-                        <span>Fikstür ve sonuçlar için aç ›</span>
-                    </a>
-                `;
-                return;
-            }
-
-            try {
-                const client =
-                    await A().getSupabaseClient();
-
-                if (!client) {
-                    throw new Error(
-                        "Supabase istemcisi kullanılamıyor."
-                    );
-                }
-
-                const responses =
-                    await Promise.all([
-                        client
-                            .from("sports_matches")
-                            .select(
-                                "id,team_id,opponent_name,competition,match_date,status,home_away,home_score,away_score,match_url,is_featured"
-                            )
-                            .order(
-                                "match_date",
-                                { ascending: false }
-                            )
-                            .limit(24),
-                        client
-                            .from("sports_teams")
-                            .select("id,name")
-                            .eq("is_active", true)
-                    ]);
-
-                const matchesResult = responses[0];
-                const teamsResult = responses[1];
-
-                if (matchesResult.error) {
-                    throw matchesResult.error;
-                }
-
-                const teamNames = {};
-
-                if (!teamsResult.error) {
-                    (teamsResult.data || [])
-                        .forEach(function (team) {
-                            teamNames[team.id] =
-                                team.name;
-                        });
-                }
-
-                const now = Date.now();
-
-                const matches =
-                    (matchesResult.data || [])
-                        .slice()
-                        .sort(function (a, b) {
-                            const live = function (match) {
-                                return /live|canlı|playing|started/i
-                                    .test(String(match.status || ""));
-                            };
-
-                            if (live(a) !== live(b)) {
-                                return live(a) ? -1 : 1;
-                            }
-
-                            const aTime =
-                                new Date(a.match_date).getTime();
-
-                            const bTime =
-                                new Date(b.match_date).getTime();
-
-                            const aFuture =
-                                Number.isFinite(aTime) &&
-                                aTime >= now;
-
-                            const bFuture =
-                                Number.isFinite(bTime) &&
-                                bTime >= now;
-
-                            if (aFuture !== bFuture) {
-                                return aFuture ? -1 : 1;
-                            }
-
-                            return aFuture
-                                ? aTime - bTime
-                                : bTime - aTime;
-                        })
-                        .slice(0, 6);
-
-                if (!matches.length) {
-                    target.innerHTML = `
-                        <a class="match-center-fallback" href="mac-merkezi.html">
-                            <strong>Maç verisi henüz bulunmuyor</strong>
-                            <span>Maç Merkezi'ni aç ›</span>
-                        </a>
-                    `;
-                    return;
-                }
-
-                target.innerHTML =
-                    matches
-                        .map(function (match) {
-                            const ownTeam =
-                                teamNames[match.team_id] ||
-                                "Takım bilgisi yok";
-
-                            const isAway =
-                                match.home_away === "away";
-
-                            const home =
-                                isAway
-                                    ? match.opponent_name
-                                    : ownTeam;
-
-                            const away =
-                                isAway
-                                    ? ownTeam
-                                    : match.opponent_name;
-
-                            const homeScore =
-                                match.home_score ??
-                                "-";
-
-                            const awayScore =
-                                match.away_score ??
-                                "-";
-
-                            const rawStatus =
-                                String(match.status || "");
-
-                            const live =
-                                /live|canlı|playing|started/i
-                                    .test(rawStatus);
-
-                            const finished =
-                                /finished|completed|played|bitti|full/i
-                                    .test(rawStatus);
-
-                            const dateValue =
-                                new Date(match.match_date);
-
-                            const status =
-                                live
-                                    ? "CANLI"
-                                    : (
-                                        finished
-                                            ? "TAMAMLANDI"
-                                            : (
-                                                Number.isNaN(dateValue.getTime())
-                                                    ? "PROGRAM"
-                                                    : dateValue.toLocaleString(
-                                                        "tr-TR",
-                                                        {
-                                                            day: "2-digit",
-                                                            month: "2-digit",
-                                                            hour: "2-digit",
-                                                            minute: "2-digit"
-                                                        }
-                                                    )
-                                            )
-                                    );
-
-                            return `
-                                <article class="home-match-card">
-                                    <div class="match-card-top">
-                                        <span>${escapeHtml(
-                                            match.competition ||
-                                            "Maç"
-                                        )}</span>
-                                        <small>${escapeHtml(status)}</small>
-                                    </div>
-                                    <div class="match-teams">
-                                        <strong>${escapeHtml(home)}</strong>
-                                        <div class="match-score">
-                                            <span>${escapeHtml(homeScore)}</span>
-                                            <b>:</b>
-                                            <span>${escapeHtml(awayScore)}</span>
-                                        </div>
-                                        <strong>${escapeHtml(away)}</strong>
-                                    </div>
-                                </article>
-                            `;
-                        })
-                        .join("");
-
-            } catch (error) {
-                console.warn(
-                    "Ana sayfa maç verisi:",
-                    error
-                );
-
-                target.innerHTML = `
-                    <a class="match-center-fallback" href="mac-merkezi.html">
-                        <strong>Maç verisi şu anda kullanılamıyor</strong>
-                        <span>Maç Merkezi'ni aç ›</span>
-                    </a>
-                `;
-            }
-        }
-
-        /* =================================================
-           TÜM BLOKLAR
-           ================================================= */
-
-        function renderAll() {
-            renderHeadline();
-            renderBreaking();
-            renderLatest();
-
-            renderCategory(
-                "akcaabatNewsGrid",
-                [
-                    "Akçaabat",
-                    "Akcaabat"
-                ]
-            );
-
-            renderCategory(
-                "trabzonNewsGrid",
-                [
-                    "Trabzon"
-                ]
-            );
-
-            renderCategory(
-                "trabzonsporNewsGrid",
-                [
-                    "Trabzonspor",
-                    "Trabzonspor Haberleri"
-                ]
-            );
-
-            renderPopular();
-        }
-
-
-        /* =================================================
-           VERİLER
-           ================================================= */
-
-        async function loadNews() {
-            /*
-             * Önce cache.
-             * Sayfa boş beklemez.
-             */
-            if (A().readNews) {
-                const cached =
-                    A().readNews();
-
-                if (
-                    Array.isArray(cached) &&
-                    cached.length
-                ) {
-                    news =
-                        cached.filter(
-                            isPublished
-                        );
-
-                    renderAll();
-                }
-            }
-
-            /*
-             * Ardından gerçek Supabase verisi.
-             */
-            if (
-                A().fetchNewsFromSupabase
-            ) {
-                try {
-                    const cloud =
-                        await A()
-                            .fetchNewsFromSupabase();
-
-                    if (
-                        Array.isArray(cloud) &&
-                        cloud.length
-                    ) {
-                        news =
-                            cloud.filter(
-                                isPublished
-                            );
-
-                        if (A().saveNews) {
-                            A().saveNews(
-                                news
-                            );
-                        }
-
-                        renderAll();
-                    }
-                } catch (error) {
-                    console.error(
-                        "Ana sayfa haberleri alınamadı:",
-                        error
-                    );
-                }
-            }
-
-            if (!news.length) {
-                renderAll();
-            }
-        }
-
-
-        /* =================================================
-           CACHE GÜNCELLENİNCE
-           ================================================= */
-
-        document.addEventListener(
-            "akcaabat:news-updated",
-            function (event) {
-                if (
-                    !event.detail ||
-                    !Array.isArray(
-                        event.detail.news
-                    )
-                ) {
-                    return;
-                }
-
-                news =
-                    event.detail.news
-                        .filter(
-                            isPublished
-                        );
-
-                renderAll();
-            }
-        );
-
-
-        /* =================================================
-           BAŞLAT
-           ================================================= */
-
-        function initHome() {
-            initHeadlineControls();
-            loadNews();
-            renderMatches();
-        }
-
-
-        if (
-            document.readyState ===
-            "loading"
+        function renderPopular(
+          news
         ) {
-            document.addEventListener(
-                "DOMContentLoaded",
-                initHome,
-                {
-                    once: true
-                }
+
+          const container =
+            document.getElementById(
+              "popularNews"
             );
-        } else {
-            initHome();
+
+
+          if (!container) {
+            return;
+          }
+
+
+          const sorted =
+            news
+              .slice()
+              .sort(
+                function (a, b) {
+
+                  const viewsA =
+                    Number(
+                      value(
+                        a,
+                        [
+                          "views",
+                          "goruntulenme"
+                        ],
+                        0
+                      )
+                    );
+
+
+                  const viewsB =
+                    Number(
+                      value(
+                        b,
+                        [
+                          "views",
+                          "goruntulenme"
+                        ],
+                        0
+                      )
+                    );
+
+
+                  return (
+                    viewsB -
+                    viewsA
+                  );
+
+                }
+              );
+
+
+          const items =
+            sorted.length
+              ? sorted.slice(
+                  0,
+                  5
+                )
+              : [];
+
+
+          if (!items.length) {
+            return;
+          }
+
+
+          container.innerHTML =
+            items.map(
+              function (
+                item,
+                index
+              ) {
+
+                const url =
+                  getNewsUrl(item);
+
+
+                return `
+
+                  <article
+                    class="popular-item"
+                    data-news-id="${escapeHtml(
+                      newsId(item)
+                    )}"
+                    data-news-url="${escapeHtml(
+                      url
+                    )}"
+                  >
+
+                    <span class="popular-number">
+                      ${String(
+                        index + 1
+                      ).padStart(
+                        2,
+                        "0"
+                      )}
+                    </span>
+
+
+                    <div>
+
+                      <small>
+                        ${escapeHtml(
+                          categoryValue(
+                            item
+                          ).toUpperCase()
+                        )}
+                      </small>
+
+
+                      <h3>
+                        ${escapeHtml(
+                          titleValue(item)
+                        )}
+                      </h3>
+
+                    </div>
+
+                  </article>
+
+                `;
+
+              }
+            ).join("");
+
+
+          container
+            .querySelectorAll(
+              ".popular-item"
+            )
+            .forEach(
+              function (
+                itemElement
+              ) {
+
+                itemElement.addEventListener(
+                  "click",
+                  function () {
+
+                    const id =
+                      itemElement.dataset.newsId;
+
+
+                    const item =
+                      news.find(
+                        function (
+                          newsItem
+                        ) {
+
+                          return (
+                            newsId(
+                              newsItem
+                            ) === id
+                          );
+
+                        }
+                      );
+
+
+                    if (item) {
+
+                      openNews(
+                        item
+                      );
+
+                    }
+
+                  }
+                );
+
+              }
+            );
+
         }
 
-    })();
-    </script>
+
+        /* =========================
+           SON DAKİKA
+        ========================== */
+
+        function renderBreaking(
+          news
+        ) {
+
+          const element =
+            document.getElementById(
+              "breakingContent"
+            );
+
+
+          if (!element) {
+            return;
+          }
+
+
+          const breaking =
+            news.find(
+              function (item) {
+
+                return (
+                  item.breaking === true ||
+                  item.breaking === "true"
+                );
+
+              }
+            );
+
+
+          if (breaking) {
+
+            element.textContent =
+              titleValue(
+                breaking
+              );
+
+          } else if (
+            news[0]
+          ) {
+
+            element.textContent =
+              titleValue(
+                news[0]
+              );
+
+          }
+
+        }
+
+
+        /* =========================
+           TARİH / SAAT
+        ========================== */
+
+        function initializeDate() {
+
+          const now =
+            new Date();
+
+
+          const dateElement =
+            document.getElementById(
+              "currentDate"
+            );
+
+
+          if (dateElement) {
+
+            dateElement.textContent =
+              now.toLocaleDateString(
+                "tr-TR",
+                {
+                  weekday:
+                    "long",
+                  day:
+                    "numeric",
+                  month:
+                    "long",
+                  year:
+                    "numeric"
+                }
+              );
+
+          }
+
+
+          const yearElement =
+            document.getElementById(
+              "currentYear"
+            );
+
+
+          if (yearElement) {
+
+            yearElement.textContent =
+              now.getFullYear();
+
+          }
+
+
+          function updateClock() {
+
+            const timeElement =
+              document.getElementById(
+                "currentTime"
+              );
+
+
+            if (!timeElement) {
+              return;
+            }
+
+
+            timeElement.textContent =
+              new Date()
+                .toLocaleTimeString(
+                  "tr-TR",
+                  {
+                    hour:
+                      "2-digit",
+                    minute:
+                      "2-digit"
+                  }
+                );
+
+          }
+
+
+          updateClock();
+
+
+          setInterval(
+            updateClock,
+            30000
+          );
+
+        }
+
+
+        /* =========================
+           ARAMA
+        ========================== */
+
+        function initializeSearch() {
+
+          const button =
+            document.getElementById(
+              "headerSearchButton"
+            );
+
+
+          const panel =
+            document.getElementById(
+              "searchPanel"
+            );
+
+
+          const form =
+            document.getElementById(
+              "siteSearchForm"
+            );
+
+
+          const input =
+            document.getElementById(
+              "siteSearchInput"
+            );
+
+
+          if (
+            button &&
+            panel
+          ) {
+
+            button.addEventListener(
+              "click",
+              function () {
+
+                panel.classList.toggle(
+                  "search-open"
+                );
+
+
+                if (
+                  panel.classList.contains(
+                    "search-open"
+                  ) &&
+                  input
+                ) {
+
+                  setTimeout(
+                    function () {
+
+                      input.focus();
+
+                    },
+                    100
+                  );
+
+                }
+
+              }
+            );
+
+          }
+
+
+          if (
+            form &&
+            input
+          ) {
+
+            form.addEventListener(
+              "submit",
+              function (
+                event
+              ) {
+
+                event.preventDefault();
+
+
+                const query =
+                  input.value.trim();
+
+
+                if (!query) {
+                  return;
+                }
+
+
+                window.location.href =
+                  "haber.html?search=" +
+                  encodeURIComponent(
+                    query
+                  );
+
+              }
+            );
+
+          }
+
+        }
+
+
+        /* =========================
+           MOBİL MENÜ
+        ========================== */
+
+        function initializeMobileMenu() {
+
+          const button =
+            document.getElementById(
+              "mobileMenuButton"
+            );
+
+
+          const nav =
+            document.getElementById(
+              "mainNav"
+            );
+
+
+          const overlay =
+            document.getElementById(
+              "mobileOverlay"
+            );
+
+
+          if (
+            !button ||
+            !nav
+          ) {
+
+            return;
+
+          }
+
+
+          function toggleMenu() {
+
+            const open =
+              nav.classList.toggle(
+                "mobile-open"
+              );
+
+
+            button.setAttribute(
+              "aria-expanded",
+              open
+                ? "true"
+                : "false"
+            );
+
+
+            if (overlay) {
+
+              overlay.classList.toggle(
+                "active",
+                open
+              );
+
+            }
+
+          }
+
+
+          button.addEventListener(
+            "click",
+            toggleMenu
+          );
+
+
+          if (overlay) {
+
+            overlay.addEventListener(
+              "click",
+              toggleMenu
+            );
+
+          }
+
+
+          nav
+            .querySelectorAll(
+              "a"
+            )
+            .forEach(
+              function (
+                link
+              ) {
+
+                link.addEventListener(
+                  "click",
+                  function () {
+
+                    nav.classList.remove(
+                      "mobile-open"
+                    );
+
+
+                    button.setAttribute(
+                      "aria-expanded",
+                      "false"
+                    );
+
+
+                    if (overlay) {
+
+                      overlay.classList.remove(
+                        "active"
+                      );
+
+                    }
+
+                  }
+                );
+
+              }
+            );
+
+        }
+
+
+        /* =========================
+           BAŞLAT
+        ========================== */
+
+        function initialize() {
+
+          initializeDate();
+
+          initializeSearch();
+
+          initializeMobileMenu();
+
+
+          const news =
+            sortNews(
+              getNews()
+            );
+
+
+          if (!news.length) {
+            return;
+          }
+
+
+          renderHero(
+            news
+          );
+
+
+          renderSideNews(
+            news
+          );
+
+
+          renderNewsGrid(
+            news
+          );
+
+
+          renderPopular(
+            news
+          );
+
+
+          renderBreaking(
+            news
+          );
+
+        }
+
+
+        initialize();
+
+      }
+    );
+
+  </script>
+  <script src="current-news.js"></script>
+  <script src="home.js"></script>
 
 </body>
 </html>

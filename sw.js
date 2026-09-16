@@ -1,31 +1,33 @@
 /*
  * Akçaabat Haber
  * Service Worker
- * Sürüm: 1.1.0
+ * Sürüm: 1.0.0
  */
 
 const CACHE_NAME = "akcaabat-haber-v101";
-const BASE_URL = new URL("./", self.location.href);
 
 const STATIC_FILES = [
-  "",
-  "index.html",
-  "haber.html",
-  "haber-detay.html",
-  "kategori.html",
-  "mac-merkezi.html",
-  "kameralar.html",
-  "trafik.html",
-  "yazarlar.html",
-  "offline.html",
-  "style.css",
-  "portal-shell.css",
-  "script.js",
-  "portal-shell.js",
-  "supabase-config.js",
-  "favicon.svg",
-  "site.webmanifest"
-].map(path => new URL(path, BASE_URL).href);
+  "./",
+  "./index.html",
+  "./haberler.html",
+  "./haber-detay.html",
+  "./offline.html",
+  "./style.css",
+  "./script.js",
+  "./home.js",
+  "./current-news.js",
+  "./assets/news/akcaabat.svg",
+  "./assets/news/trabzon.svg",
+  "./assets/news/trabzonspor.svg",
+  "./assets/news/sebatspor.svg",
+  "./mac-merkezi.html",
+  "./kameralar.html",
+  "./trafik.html",
+  "./yazarlar.html",
+  "./supabase-config.js",
+  "./favicon.svg",
+  "./site.webmanifest"
+];
 
 self.addEventListener("install", event => {
   event.waitUntil(
@@ -84,9 +86,7 @@ self.addEventListener("fetch", event => {
         })
         .catch(() => {
           if (event.request.mode === "navigate") {
-            return caches.match(
-              new URL("offline.html", BASE_URL).href
-            );
+            return caches.match(new URL("./offline.html", self.registration.scope).href);
           }
 
           return new Response(

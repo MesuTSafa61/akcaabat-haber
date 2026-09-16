@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Sebatspor haber kategori görseli</title>
+  <desc id="desc">Kırmızı ve beyaz özgün Sebatspor haber görseli</desc>
+  <rect width="1200" height="675" fill="#8d1118"/>
+  <path d="M780-40h190L600 715H410z" fill="#fff" opacity=".94"/>
+  <path d="M980-40h105L715 715H610z" fill="#071a33" opacity=".88"/>
+  <rect x="76" y="72" width="12" height="300" fill="#fff"/>
+  <text x="120" y="190" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700">AKÇAABAT HABER • SPOR</text>
+  <text x="120" y="295" fill="#fff" font-family="Arial,Helvetica,sans-serif" font-size="82" font-weight="900">SEBATSPOR</text>
+  <text x="120" y="355" fill="#ffd6d8" font-family="Arial,Helvetica,sans-serif" font-size="28">KIRMIZI-BEYAZ GÜNDEM</text>
+</svg>
