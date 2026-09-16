@@ -53,6 +53,34 @@ function rssItems(xml: string): Item[] {
   }).filter((item) => item.url && item.title);
 }
 
+function fanatikItems(html: string, sourceUrl: string): Item[] {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  if (!doc) throw new Error("Fanatik sayfası ayrıştırılamadı");
+  const seen = new Set<string>();
+  const items: Item[] = [];
+  for (const anchor of [...doc.querySelectorAll("a[href]")]) {
+    const rawHref = anchor.getAttribute("href") || "";
+    let url: URL;
+    try { url = new URL(rawHref, sourceUrl); } catch { continue; }
+    if (url.hostname !== "www.fanatik.com.tr" && url.hostname !== "fanatik.com.tr") continue;
+    if (!url.pathname.includes("trabzonspor") || url.pathname === "/trabzonspor") continue;
+    const image = anchor.querySelector("img");
+    const title = clean(
+      anchor.getAttribute("title") || anchor.getAttribute("aria-label") ||
+      image?.getAttribute("alt") || anchor.textContent, 300,
+    );
+    if (title.length < 12 || seen.has(url.href)) continue;
+    const rawImage = image?.getAttribute("src") || image?.getAttribute("data-src") || image?.getAttribute("data-original");
+    let imageUrl: string | null = null;
+    try { if (rawImage) { const parsed = new URL(rawImage, sourceUrl); if (parsed.protocol === "https:") imageUrl = parsed.href; } } catch { /* görselsiz devam */ }
+    seen.add(url.href);
+    items.push({ guid: url.href, url: url.href, title, summary: "", publishedAt: null, imageUrl });
+    if (items.length >= 40) break;
+  }
+  if (!items.length) throw new Error("Fanatik Trabzonspor haber bağlantısı bulunamadı");
+  return items;
+}
+
 function apiItems(body: unknown): Item[] {
   const data = Array.isArray(body) ? body : (body as { items?: unknown[] })?.items;
   if (!Array.isArray(data)) throw new Error("API yanıtında items dizisi yok");
@@ -125,7 +153,8 @@ Deno.serve(async (request) => {
   try {
     const { data: categories } = await client.from("categories").select("id,slug,name").eq("is_active", true);
     const categoryId = (scope: Scope) => categories?.find((category) =>
-      [category.slug, category.name.toLocaleLowerCase("tr-TR")].includes(scope))?.id || null;
+      [category.slug, category.name.toLocaleLowerCase("tr-TR")].includes(scope))?.id ||
+      (scope === "trabzonspor" ? categories?.find((category) => category.slug === "spor")?.id : null) || null;
     const { data: sources, error: sourcesError } = await client.from("news_sources").select("*").eq("is_active", true);
     if (sourcesError) throw sourcesError;
 
@@ -137,13 +166,17 @@ Deno.serve(async (request) => {
           headers: { "Accept": source.source_type === "rss" ? "application/rss+xml, application/atom+xml, application/xml;q=0.9" : "application/json" },
         });
         if (!response.ok) throw new Error("Kaynak HTTP " + response.status);
-        const items = source.source_type === "rss"
-          ? rssItems(await response.text())
-          : apiItems(await response.json());
+        const contentType = response.headers.get("content-type") || "";
+        const items = source.source_type === "api"
+          ? apiItems(await response.json())
+          : contentType.includes("text/html") && source.feed_url.includes("fanatik.com.tr")
+            ? fanatikItems(await response.text(), source.feed_url)
+            : rssItems(await response.text());
 
         for (const item of items) {
           totals.found_count++;
-          const match = classify(item, settings.keywords || {});
+          const match = classify(item, settings.keywords || {}) ||
+            (source.category ? { scope: source.category, score: 2, tags: [source.category] } : null);
           if (!match) { totals.skipped_count++; continue; }
           const fingerprint = await sha256([item.url, item.title.toLocaleLowerCase("tr-TR"), item.publishedAt || ""].join("|"));
           const duplicateChecks = await Promise.all([

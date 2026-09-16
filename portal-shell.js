@@ -11,7 +11,7 @@
   shell.className = "portal-shell-top";
   shell.innerHTML = `
     <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span></div><div class="top-info"><span>📍 Akçaabat</span><span>•</span><span>Trabzon</span><span>•</span><span id="portalCurrentTime">--:--</span></div></div></div>
-    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><a href="canli.html" class="live-tv"><span>▶</span> AKÇAABAT TV CANLI</a><div class="market-list" aria-label="Piyasa özeti"><span><b>DOLAR</b> 48,66 <i>▲ %0,06</i></span><span><b>EURO</b> 56,21 <i>▲ %0,04</i></span><span><b>ALTIN</b> 6.767 <i>▲ %0,80</i></span><span><b>BIST</b> 13.829 <i class="down">▼ %0,46</i></span></div><a href="canli.html" class="market-weather">☁ Akçaabat 19°</a></div></section>
+    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-list" id="portalMarketList" aria-label="Piyasa özeti"><span class="market-item active"><b>DOLAR</b> <em id="marketUsd">—</em></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em></span></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <header class="site-header" id="unifiedSiteHeader">
       <div class="container header-main">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
@@ -23,7 +23,7 @@
         <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="haber.html?breaking=1" class="nav-link" data-breaking="1">Son Dakika</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a><a href="mac-merkezi.html" class="nav-link" data-page="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html" class="nav-link" data-page="kameralar.html">Kameralar</a><a href="trafik.html" class="nav-link" data-page="trafik.html">Trafik</a><a href="yazarlar.html" class="nav-link" data-page="yazarlar.html">Yazarlar</a>
       </div></nav>
     </header>
-    <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Mobeseler</a><a href="trafik.html">🚗 Trafik Durumu</a><a href="canli.html">☀ Hava Durumu</a><a href="haber.html">▦ Tüm Manşetler</a><a href="arama.html">⌕ Haber Arşivi</a></div></nav>
+    <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Mobeseler</a><a href="trafik.html">🚗 Trafik Durumu</a><a href="hava-durumu.html">☀ Hava Durumu</a><a href="haber.html">▦ Tüm Manşetler</a><a href="arama.html">⌕ Haber Arşivi</a></div></nav>
     <section class="breaking-bar" aria-label="Son dakika"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content"><a href="haber.html?breaking=1">Akçaabat ve Trabzon'dan son dakika gelişmeleri</a></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
@@ -50,6 +50,37 @@
   function updateClock() { if (clock) clock.textContent = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }); }
   updateClock();
   window.setInterval(updateClock, 30000);
+
+  const money = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value)) element.textContent = money.format(value) + (suffix || ""); }
+  async function loadMarketData() {
+    try {
+      const results = await Promise.all([
+        fetch("https://api.frankfurter.app/latest?from=USD&to=TRY,EUR").then(function (response) { if (!response.ok) throw new Error(); return response.json(); }),
+        fetch("https://api.gold-api.com/price/XAU").then(function (response) { if (!response.ok) throw new Error(); return response.json(); }),
+        fetch("https://api.gold-api.com/price/XAG").then(function (response) { if (!response.ok) throw new Error(); return response.json(); })
+      ]);
+      const usdTry = Number(results[0].rates && results[0].rates.TRY);
+      const usdEur = Number(results[0].rates && results[0].rates.EUR);
+      setMarket("marketUsd", usdTry, " ₺");
+      setMarket("marketEur", usdTry / usdEur, " ₺");
+      setMarket("marketGold", Number(results[1].price) * usdTry / 31.1034768, " ₺/gr");
+      setMarket("marketSilver", Number(results[2].price) * usdTry / 31.1034768, " ₺/gr");
+    } catch (_) {}
+  }
+  async function loadHeaderWeather() {
+    try {
+      const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.0027&longitude=39.7168&current=temperature_2m,weather_code&timezone=Europe%2FIstanbul");
+      if (!response.ok) throw new Error();
+      const data = await response.json();
+      const target = document.getElementById("portalWeatherNow");
+      if (target && data.current) target.textContent = "☁ Trabzon " + Math.round(Number(data.current.temperature_2m)) + "°";
+    } catch (_) {}
+  }
+  const marketItems = Array.from(document.querySelectorAll(".market-item"));
+  let marketIndex = 0;
+  window.setInterval(function () { if (!marketItems.length) return; marketItems[marketIndex].classList.remove("active"); marketIndex = (marketIndex + 1) % marketItems.length; marketItems[marketIndex].classList.add("active"); }, 4000);
+  loadMarketData(); loadHeaderWeather();
 
   const menuButton = document.getElementById("portalMobileMenuButton");
   const mainNav = document.getElementById("portalMainNav");

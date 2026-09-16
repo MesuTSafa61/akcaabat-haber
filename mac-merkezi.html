@@ -692,7 +692,7 @@
             }
         }
     </style>
-  <link rel="stylesheet" href="portal-shell.css?v=10">
+  <link rel="stylesheet" href="portal-shell.css?v=11">
 </head>
 <body>
 <div class="mc-page">
@@ -1423,7 +1423,13 @@
         }
         carousels[teamKey].matches =
             Array.isArray(matchesResult.data)
-                ? matchesResult.data
+                ? matchesResult.data.filter(function (match) {
+                    const name = String(match.opponent_name || "").trim();
+                    return name &&
+                        !/^Hafta\s/i.test(name) &&
+                        !/^TFF\s*2\.\s*Lig/i.test(name) &&
+                        !/\svs\s*$/i.test(name);
+                })
                 : [];
         carousels[teamKey].index =
             findNearestIndex(
@@ -1676,6 +1682,6 @@
     });
 })();
 </script>
-  <script src="portal-shell.js?v=11" defer></script>
+  <script src="portal-shell.js?v=13" defer></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v114";
+const CACHE_NAME = "akcaabat-haber-v115";
 
 const STATIC_FILES = [
   "./",
@@ -23,6 +23,7 @@ const STATIC_FILES = [
   "./mac-merkezi.html",
   "./kameralar.html",
   "./trafik.html",
+  "./hava-durumu.html",
   "./yazarlar.html",
   "./supabase-config.js",
   "./favicon.svg",
