@@ -200,11 +200,9 @@
         if (track) {
             track.innerHTML = state.headlines.map(function (item, index) {
                 return '<button class="headline-tab" type="button" role="tab" aria-selected="' +
-                    (index === 0 ? "true" : "false") + '" data-index="' + index + '">' +
-                    '<span class="headline-number">' + (index + 1) + '</span>' +
-                    '<img src="' + escapeHtml(imageUrl(item)) + '" alt="" loading="lazy" width="58" height="48">' +
-                    '<span class="headline-tab-copy"><small>' + escapeHtml(categoryName(item).toUpperCase()) +
-                    '</small><b>' + escapeHtml(item.title) + '</b></span></button>';
+                    (index === 0 ? "true" : "false") + '" data-index="' + index +
+                    '" aria-label="' + escapeHtml((index + 1) + '. manşet: ' + item.title) + '">' +
+                    '<span class="headline-number">' + (index + 1) + '</span></button>';
             }).join("");
             track.querySelectorAll(".headline-tab").forEach(function (tab) {
                 tab.addEventListener("click", function () {
@@ -215,8 +213,16 @@
         }
         const prev = document.getElementById("headlinePrev");
         const next = document.getElementById("headlineNext");
-        if (prev) prev.onclick = function () { showHeadline(state.headlineIndex - 1, true); restartHeadlineTimer(); };
-        if (next) next.onclick = function () { showHeadline(state.headlineIndex + 1, true); restartHeadlineTimer(); };
+        if (prev) prev.onclick = function (event) {
+            event.stopPropagation();
+            showHeadline(state.headlineIndex - 1, true);
+            restartHeadlineTimer();
+        };
+        if (next) next.onclick = function (event) {
+            event.stopPropagation();
+            showHeadline(state.headlineIndex + 1, true);
+            restartHeadlineTimer();
+        };
         addHeadlineSwipe();
         showHeadline(0, false);
         restartHeadlineTimer();

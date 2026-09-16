@@ -20,7 +20,7 @@
   <meta property="og:url" content="https://akcaabathaber.com.tr/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="style.css?v=20260916-4">
+  <link rel="stylesheet" href="style.css?v=20260916-5">
 
 </head>
 
@@ -341,7 +341,7 @@
 
     <!-- HABER BAŞLIK -->
 
-    <div class="section-heading">
+    <div class="section-heading headline-heading">
 
       <div>
 
@@ -374,6 +374,8 @@
       class="hero-layout"
       id="heroSection"
     >
+
+      <div class="headline-main-column">
 
       <article
         class="hero-news"
@@ -435,7 +437,20 @@
 
         </div>
 
+        <div class="headline-overlay-controls" aria-label="Manşet kontrolleri">
+          <button type="button" id="headlinePrev" aria-label="Önceki manşet">‹</button>
+          <span id="headlineCounter">1 / 10</span>
+          <button type="button" id="headlineNext" aria-label="Sonraki manşet">›</button>
+        </div>
+
       </article>
+
+      <section class="headline-deck" aria-label="Günün manşetleri">
+        <div class="headline-track" id="headlineTrack" role="tablist" aria-label="Manşet seçimi"></div>
+        <a class="headline-all" href="haber.html" aria-label="Tüm manşetler">T</a>
+      </section>
+
+      </div>
 
 
       <!-- MANŞET YANI -->
@@ -540,20 +555,6 @@
       </div>
 
     </section>
-
-    <!-- PROFESYONEL MANŞET GEZGİNİ -->
-    <section class="headline-deck" aria-label="Günün manşetleri">
-      <div class="headline-deck-top">
-        <div><span class="section-kicker">MANŞET</span><strong>Günün Haberleri</strong></div>
-        <div class="headline-controls">
-          <button type="button" id="headlinePrev" aria-label="Önceki manşet">‹</button>
-          <span id="headlineCounter">1 / 1</span>
-          <button type="button" id="headlineNext" aria-label="Sonraki manşet">›</button>
-        </div>
-      </div>
-      <div class="headline-track" id="headlineTrack" role="tablist" aria-label="Manşet seçimi"></div>
-    </section>
-
 
     <!-- =========================
          KATEGORİ KISAYOLLARI
@@ -2949,8 +2950,8 @@
     );
 
   </script>
-  <script src="current-news.js?v=20260916-4"></script>
-  <script src="home.js?v=20260916-4"></script>
+  <script src="current-news.js?v=20260916-5"></script>
+  <script src="home.js?v=20260916-6"></script>
 
 </body>
 </html>
