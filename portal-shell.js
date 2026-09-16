@@ -4,6 +4,28 @@
     const body = document.body;
     if (!body) return;
 
+    const headerMount =
+        document.getElementById(
+            "portalHeader"
+        );
+
+    const footerMount =
+        document.getElementById(
+            "portalFooter"
+        );
+
+    /*
+     * Kendi üst alanı bulunan özel/admin sayfalarda ikinci
+     * header ve footer üretme. Portal yer tutucusu olan
+     * sayfalar ortak kabuğu bilinçli olarak ister.
+     */
+    if (
+        !headerMount &&
+        body.querySelector("header")
+    ) {
+        return;
+    }
+
     body.classList.add("portal-unified");
 
     /* =====================================================
@@ -300,10 +322,16 @@
         }
     }
 
-    body.insertBefore(
-        header,
-        body.firstChild
-    );
+    if (headerMount) {
+        headerMount.replaceWith(
+            header
+        );
+    } else {
+        body.insertBefore(
+            header,
+            body.firstChild
+        );
+    }
 
 
     /* =====================================================
@@ -469,7 +497,15 @@
     `;
 
 
-    body.appendChild(footer);
+    if (footerMount) {
+        footerMount.replaceWith(
+            footer
+        );
+    } else {
+        body.appendChild(
+            footer
+        );
+    }
 
 
     /* =====================================================
