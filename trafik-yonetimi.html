@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trafik Yönetimi | Akçaabat Haber</title>
+  <link rel="stylesheet" href="admin-shell.css?v=2">
+</head>
+<body>
+  <main class="admin-tool-page" id="toolPage" hidden>
+    <div class="admin-tool-status" id="status" role="status">Trafik ayarları yükleniyor…</div>
+    <div class="admin-tool-grid">
+      <section class="admin-tool-card">
+        <h2>Trafik Sağlayıcısı</h2>
+        <p>Yalnızca sağlayıcının herkese açık ve HTTPS harita bağlantısını kullanın. API anahtarını bu alana yazmayın.</p>
+        <form class="admin-tool-form" id="trafficForm">
+          <label class="wide">Sağlayıcı adı<input id="provider" maxlength="120" placeholder="Örn. Trabzon Büyükşehir Belediyesi"></label>
+          <label class="wide">Herkese açık harita URL<input id="mapUrl" type="url" pattern="https://.*" placeholder="https://..."></label>
+          <label>Önbellek süresi (saniye)<input id="cacheSeconds" type="number" min="30" max="900" value="60"></label>
+          <label class="admin-tool-check"><input id="enabled" type="checkbox"> Trafik haritasını yayınla</label>
+          <div class="admin-tool-actions"><button class="admin-tool-button" type="submit">Ayarları Kaydet</button><a class="admin-tool-button light" href="trafik.html" target="_blank" rel="noopener">Trafik Sayfasını Aç</a></div>
+        </form>
+      </section>
+      <section class="admin-tool-card">
+        <h2>Yayın Durumu</h2>
+        <p>Harita yalnızca etkinleştirildiğinde ve geçerli bir HTTPS kaynak bulunduğunda ziyaretçilere gösterilir.</p>
+        <div id="preview" class="admin-empty">Kaynak kontrol ediliyor…</div>
+      </section>
+    </div>
+  </main>
+  <script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){"use strict";const page=document.getElementById("toolPage"),status=document.getElementById("status"),preview=document.getElementById("preview"),$=id=>document.getElementById(id);let client;
+    const message=(t,e)=>{status.textContent=t;status.classList.toggle("error",!!e)},valid=v=>{try{return new URL(v).protocol==="https:"}catch(_){return false}};
+    async function staff(){const{data:u}=await client.auth.getUser();if(!u.user)return false;const{data:p}=await client.from("profiles").select("role,is_active").eq("id",u.user.id).maybeSingle();return!!(p&&p.is_active&&["admin","editor"].includes(p.role))}
+    function show(c){const active=!!(c.enabled&&c.public_map_url);preview.innerHTML='<span class="admin-badge'+(active?' live':'')+'">'+(active?'YAYINDA':'KAPALI')+'</span><h3>'+(c.provider||'Sağlayıcı belirtilmedi')+'</h3><p>'+(c.public_map_url?'Harita bağlantısı kayıtlı.':'Henüz harita bağlantısı girilmedi.')+'</p>'+(c.public_map_url?'<a class="admin-tool-button light" href="'+c.public_map_url.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">Kaynağı Kontrol Et</a>':'')}
+    async function load(){const{data,error}=await client.from("live_service_settings").select("value,updated_at").eq("key","traffic").single();if(error)throw error;const c=data.value||{};$("provider").value=c.provider||"";$("mapUrl").value=c.public_map_url||"";$("cacheSeconds").value=c.cache_seconds||60;$("enabled").checked=!!c.enabled;show(c);message("Trafik ayarları hazır.")}
+    $("trafficForm").addEventListener("submit",async e=>{e.preventDefault();const url=$("mapUrl").value.trim();if(url&&!valid(url)){message("Yalnızca HTTPS harita bağlantısı kullanın.",true);return}const value={enabled:$("enabled").checked,provider:$("provider").value.trim(),public_map_url:url,cache_seconds:Math.min(900,Math.max(30,Number($("cacheSeconds").value)||60))};const{error}=await client.from("live_service_settings").update({value,updated_at:new Date().toISOString()}).eq("key","traffic");if(error){message("Trafik ayarları kaydedilemedi: "+error.message,true);return}show(value);message("Trafik ayarları kaydedildi.")});
+    (async()=>{client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(e=>{page.hidden=false;message(e.message||"Trafik yönetimi açılamadı.",true)})
+  })();
+  </script>
+  <script src="admin-shell.js?v=2"></script>
+</body>
+</html>

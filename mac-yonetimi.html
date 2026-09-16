@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Maç Merkezi Yönetimi | Akçaabat Haber</title>
+  <link rel="stylesheet" href="admin-shell.css?v=2">
+</head>
+<body>
+  <main class="admin-tool-page" id="toolPage" hidden>
+    <div class="admin-tool-status" id="status" role="status">Maç merkezi yükleniyor…</div>
+    <div class="admin-tool-tabs"><button class="active" type="button" data-tab="matches">Maçlar ve Skorlar</button><button type="button" data-tab="standings">Puan Durumu</button></div>
+    <section id="matchesPanel">
+      <div class="admin-tool-grid">
+        <div class="admin-tool-card"><h2>Maç Ekle / Düzenle</h2><p>Canlı durum ve skor değişiklikleri kaydedildiğinde ziyaretçi Maç Merkezi güncellenir.</p>
+          <form class="admin-tool-form" id="matchForm"><input id="matchId" type="hidden">
+            <label>Takım<select id="matchTeam" required></select></label><label>Rakip<input id="opponent" required maxlength="120"></label>
+            <label>Organizasyon<input id="competition" required maxlength="120"></label><label>Stadyum / Konum<input id="venue" maxlength="160"></label>
+            <label>Maç tarihi<input id="matchDate" type="datetime-local" required></label><label>Ev / Deplasman<select id="homeAway"><option value="home">Ev sahibi</option><option value="away">Deplasman</option></select></label>
+            <label>Durum<select id="matchStatus"><option value="scheduled">Planlandı</option><option value="live">Canlı</option><option value="finished">Bitti</option><option value="postponed">Ertelendi</option><option value="cancelled">İptal</option></select></label><label>Maç bağlantısı<input id="matchUrl" type="url" placeholder="https://..."></label>
+            <label>Ev sahibi skoru<input id="homeScore" type="number" min="0"></label><label>Deplasman skoru<input id="awayScore" type="number" min="0"></label>
+            <label class="wide">Rakip logo URL<input id="opponentLogo" type="url" placeholder="https://..."></label><label class="admin-tool-check"><input id="featured" type="checkbox"> Öne çıkan maç</label>
+            <div class="admin-tool-actions"><button class="admin-tool-button" type="submit">Maçı Kaydet</button><button class="admin-tool-button light" id="resetMatch" type="button">Formu Temizle</button><a class="admin-tool-button light" href="mac-merkezi.html" target="_blank" rel="noopener">Sayfayı Aç</a></div>
+          </form>
+        </div>
+        <div class="admin-tool-card"><h2>Kayıtlı Maçlar</h2><p>Son ve gelecek maç kayıtları.</p><div class="admin-tool-table-wrap" id="matchesList"></div></div>
+      </div>
+    </section>
+    <section id="standingsPanel" hidden>
+      <div class="admin-tool-grid">
+        <div class="admin-tool-card"><h2>Puan Durumu Satırı</h2><p>Takımın güncel lig sıralamasını ve istatistiklerini kaydedin.</p>
+          <form class="admin-tool-form" id="standingForm"><input id="standingId" type="hidden">
+            <label>Takım<select id="standingTeam" required></select></label><label>Takım adı<input id="standingName" required></label><label>Organizasyon<input id="standingCompetition" required></label><label>Sezon<input id="season" required placeholder="2026-2027"></label>
+            <label>Sıra<input id="position" type="number" min="1" required></label><label>Oynanan<input id="played" type="number" min="0" value="0"></label><label>Galibiyet<input id="won" type="number" min="0" value="0"></label><label>Beraberlik<input id="drawn" type="number" min="0" value="0"></label><label>Mağlubiyet<input id="lost" type="number" min="0" value="0"></label><label>Attığı gol<input id="goalsFor" type="number" min="0" value="0"></label><label>Yediği gol<input id="goalsAgainst" type="number" min="0" value="0"></label><label>Puan<input id="points" type="number" min="0" value="0"></label><label class="wide">Son form (W/D/L)<input id="form" maxlength="5" placeholder="WWDLW"></label>
+            <div class="admin-tool-actions"><button class="admin-tool-button" type="submit">Puan Durumunu Kaydet</button><button class="admin-tool-button light" id="resetStanding" type="button">Formu Temizle</button></div>
+          </form>
+        </div>
+        <div class="admin-tool-card"><h2>Kayıtlı Puan Durumu</h2><p>Veritabanındaki gerçek sıralama kayıtları.</p><div class="admin-tool-table-wrap" id="standingsList"></div></div>
+      </div>
+    </section>
+  </main>
+  <script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){"use strict";const page=document.getElementById("toolPage"),status=document.getElementById("status"),$=id=>document.getElementById(id);let client,teams=[],matches=[],standings=[];
+    const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c]),num=v=>v===""||v==null?null:Number(v),message=(t,e)=>{status.textContent=t;status.classList.toggle("error",!!e)},teamName=id=>(teams.find(t=>t.id===id)||{}).name||"Takım";
+    async function staff(){const{data:u}=await client.auth.getUser();if(!u.user)return false;const{data:p}=await client.from("profiles").select("role,is_active").eq("id",u.user.id).maybeSingle();return!!(p&&p.is_active&&["admin","editor"].includes(p.role))}
+    function localDate(iso){if(!iso)return"";const d=new Date(iso),p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+"T"+p(d.getHours())+":"+p(d.getMinutes())}
+    function resetMatch(){$("matchForm").reset();$("matchId").value="";$("matchStatus").value="scheduled";$("homeAway").value="home"}
+    function resetStanding(){$("standingForm").reset();$("standingId").value="";["played","won","drawn","lost","goalsFor","goalsAgainst","points"].forEach(id=>$(id).value=0)}
+    function renderMatches(){if(!matches.length){$("matchesList").innerHTML='<div class="admin-empty">Henüz maç kaydı yok.</div>';return}$("matchesList").innerHTML='<table class="admin-tool-table"><thead><tr><th>Tarih</th><th>Takım / Rakip</th><th>Durum</th><th>Skor</th><th>İşlem</th></tr></thead><tbody>'+matches.map(m=>'<tr><td>'+esc(new Date(m.match_date).toLocaleString("tr-TR"))+'</td><td><b>'+esc(teamName(m.team_id))+'</b><br>'+esc(m.opponent_name)+'</td><td><span class="admin-badge '+(m.status==='live'?'live':'')+'">'+esc(m.status)+'</span></td><td>'+esc(m.home_score??'-')+' - '+esc(m.away_score??'-')+'</td><td><button data-edit-match="'+m.id+'">Düzenle</button> <button class="danger" data-delete-match="'+m.id+'">Sil</button></td></tr>').join('')+'</tbody></table>'}
+    function renderStandings(){if(!standings.length){$("standingsList").innerHTML='<div class="admin-empty">Henüz puan durumu kaydı yok.</div>';return}$("standingsList").innerHTML='<table class="admin-tool-table"><thead><tr><th>Sıra</th><th>Takım</th><th>O</th><th>G-B-M</th><th>AV</th><th>P</th><th>İşlem</th></tr></thead><tbody>'+standings.map(s=>'<tr><td>'+s.position+'</td><td>'+esc(s.team_name)+'</td><td>'+s.played+'</td><td>'+s.won+'-'+s.drawn+'-'+s.lost+'</td><td>'+s.goal_difference+'</td><td><b>'+s.points+'</b></td><td><button data-edit-standing="'+s.id+'">Düzenle</button> <button class="danger" data-delete-standing="'+s.id+'">Sil</button></td></tr>').join('')+'</tbody></table>'}
+    async function load(){const[t,m,s]=await Promise.all([client.from("sports_teams").select("id,name,short_name,league_name,is_active").eq("is_active",true).order("name"),client.from("sports_matches").select("*").order("match_date",{ascending:false}).limit(100),client.from("sports_standings").select("*").order("position")]);if(t.error||m.error||s.error)throw(t.error||m.error||s.error);teams=t.data||[];matches=m.data||[];standings=s.data||[];const options=teams.map(x=>'<option value="'+x.id+'">'+esc(x.name)+'</option>').join('');$("matchTeam").innerHTML=options;$("standingTeam").innerHTML=options;renderMatches();renderStandings();message(matches.length+" maç, "+standings.length+" puan durumu kaydı yüklendi.")}
+    $("matchForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("matchId").value,data={team_id:$("matchTeam").value,opponent_name:$("opponent").value.trim(),opponent_logo_url:$("opponentLogo").value.trim()||null,competition:$("competition").value.trim(),venue:$("venue").value.trim()||null,match_date:new Date($("matchDate").value).toISOString(),status:$("matchStatus").value,home_away:$("homeAway").value,home_score:num($("homeScore").value),away_score:num($("awayScore").value),match_url:$("matchUrl").value.trim()||null,is_featured:$("featured").checked,updated_at:new Date().toISOString()};const r=id?await client.from("sports_matches").update(data).eq("id",id):await client.from("sports_matches").insert({...data,data_source:"manual"});if(r.error){message("Maç kaydedilemedi: "+r.error.message,true);return}resetMatch();await load();message("Maç kaydedildi.")});
+    $("matchesList").addEventListener("click",async e=>{const edit=e.target.dataset.editMatch,del=e.target.dataset.deleteMatch;if(edit){const m=matches.find(x=>x.id===edit);if(!m)return;$("matchId").value=m.id;$("matchTeam").value=m.team_id;$("opponent").value=m.opponent_name;$("opponentLogo").value=m.opponent_logo_url||"";$("competition").value=m.competition;$("venue").value=m.venue||"";$("matchDate").value=localDate(m.match_date);$("matchStatus").value=m.status;$("homeAway").value=m.home_away;$("homeScore").value=m.home_score??"";$("awayScore").value=m.away_score??"";$("matchUrl").value=m.match_url||"";$("featured").checked=!!m.is_featured;scrollTo({top:0,behavior:"smooth"});return}if(del&&confirm("Bu maç kaydı silinsin mi?")){const{error}=await client.from("sports_matches").delete().eq("id",del);if(error)message(error.message,true);else{await load();message("Maç kaydı silindi.")}}});
+    $("standingForm").addEventListener("submit",async e=>{e.preventDefault();const id=$("standingId").value,gf=Number($("goalsFor").value)||0,ga=Number($("goalsAgainst").value)||0,data={team_id:$("standingTeam").value,team_name:$("standingName").value.trim(),competition:$("standingCompetition").value.trim(),season:$("season").value.trim(),position:Number($("position").value),played:Number($("played").value)||0,won:Number($("won").value)||0,drawn:Number($("drawn").value)||0,lost:Number($("lost").value)||0,goals_for:gf,goals_against:ga,goal_difference:gf-ga,points:Number($("points").value)||0,form:$("form").value.trim().toUpperCase()||null,updated_at:new Date().toISOString()};const r=id?await client.from("sports_standings").update(data).eq("id",id):await client.from("sports_standings").insert(data);if(r.error){message("Puan durumu kaydedilemedi: "+r.error.message,true);return}resetStanding();await load();message("Puan durumu kaydedildi.")});
+    $("standingsList").addEventListener("click",async e=>{const edit=e.target.dataset.editStanding,del=e.target.dataset.deleteStanding;if(edit){const s=standings.find(x=>x.id===edit);if(!s)return;$("standingId").value=s.id;$("standingTeam").value=s.team_id;$("standingName").value=s.team_name;$("standingCompetition").value=s.competition;$("season").value=s.season;["position","played","won","drawn","lost","points"].forEach(id=>$(id).value=s[id]);$("goalsFor").value=s.goals_for;$("goalsAgainst").value=s.goals_against;$("form").value=s.form||"";scrollTo({top:0,behavior:"smooth"});return}if(del&&confirm("Bu puan durumu kaydı silinsin mi?")){const{error}=await client.from("sports_standings").delete().eq("id",del);if(error)message(error.message,true);else{await load();message("Puan durumu kaydı silindi.")}}});
+    $("resetMatch").onclick=resetMatch;$("resetStanding").onclick=resetStanding;document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));$("matchesPanel").hidden=b.dataset.tab!=="matches";$("standingsPanel").hidden=b.dataset.tab!=="standings"});
+    (async()=>{client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(e=>{page.hidden=false;message(e.message||"Maç merkezi yönetimi açılamadı.",true)})
+  })();
+  </script>
+  <script src="admin-shell.js?v=2"></script>
+</body>
+</html>

@@ -10,11 +10,14 @@
     "admin-panel.html": ["Dashboard", "Genel durum ve hızlı işlemler"],
     "admin.html": ["Yönetim Ana Sayfası", "Akçaabat Haber içerik yönetimi"],
     "haberler.html": ["Haberler", "Yayınlanan ve planlanan haberleri yönetin"],
+    "manset-yonetimi.html": ["Manşet Yönetimi", "Ana sayfadaki 1–10 manşet sırasını yönetin"],
     "yeni-haber.html": ["Yeni Haber", "Yeni içerik oluşturun veya mevcut haberi düzenleyin"],
     "taslaklar.html": ["Taslaklar", "Yayınlanmamış içerikleri yönetin"],
     "kategoriler.html": ["Kategoriler", "Haber kategorilerini düzenleyin"],
     "yorumlar.html": ["Yorumlar", "Okuyucu etkileşimlerini yönetin"],
     "haber-botu.html": ["Haber Botu", "Kaynakları ve tarama ayarlarını yönetin"],
+    "mac-yonetimi.html": ["Maç Merkezi Yönetimi", "Maç, skor ve puan durumu verilerini yönetin"],
+    "trafik-yonetimi.html": ["Trafik Yönetimi", "Doğrulanmış trafik sağlayıcısını yönetin"],
     "canli-servisler.html": ["Canlı Servisler", "Kamera ve trafik kaynaklarını yönetin"],
     "ayarlar.html": ["Ayarlar", "Site ve yönetim ayarlarını düzenleyin"]
   };
@@ -23,11 +26,14 @@
     ["admin-panel.html", "▦", "Dashboard", "PANEL"],
     ["admin.html", "⌂", "Yönetim Ana Sayfası"],
     ["haberler.html", "▤", "Haberler", "İÇERİK"],
+    ["manset-yonetimi.html", "★", "Manşet Yönetimi"],
     ["yeni-haber.html", "＋", "Yeni Haber"],
     ["taslaklar.html", "◫", "Taslaklar"],
     ["kategoriler.html", "☷", "Kategoriler"],
     ["yorumlar.html", "◌", "Yorumlar"],
     ["haber-botu.html", "◆", "Haber Botu", "SERVİSLER"],
+    ["mac-yonetimi.html", "⚽", "Maç Merkezi Yönetimi"],
+    ["trafik-yonetimi.html", "≋", "Trafik Yönetimi"],
     ["canli-servisler.html", "◉", "Canlı Servisler"],
     ["ayarlar.html", "⚙", "Ayarlar", "SİSTEM"]
   ];

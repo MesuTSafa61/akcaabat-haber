@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Manşet Yönetimi | Akçaabat Haber</title>
+  <link rel="stylesheet" href="admin-shell.css?v=2">
+</head>
+<body>
+  <main class="admin-tool-page" id="toolPage" hidden>
+    <div class="admin-tool-status" id="status" role="status">Manşetler yükleniyor…</div>
+    <section class="admin-tool-card">
+      <h2>Ana Sayfa Manşet Sırası</h2>
+      <p>Yalnızca yayınlanmış haberler seçilebilir. Her sıra tek habere aittir ve ana sayfada 1–10 sırasıyla gösterilir.</p>
+      <div id="headlineSlots"></div>
+    </section>
+  </main>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){"use strict";
+    const page=document.getElementById("toolPage"),status=document.getElementById("status"),slots=document.getElementById("headlineSlots");let client,news=[];
+    const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c]);
+    const message=(text,error)=>{status.textContent=text;status.classList.toggle("error",!!error)};
+    async function staff(){const{data:u}=await client.auth.getUser();if(!u.user)return false;const{data:p}=await client.from("profiles").select("role,is_active").eq("id",u.user.id).maybeSingle();return!!(p&&p.is_active&&["admin","editor"].includes(p.role))}
+    function render(){const options='<option value="">Bu sıra boş</option>'+news.map(n=>'<option value="'+n.id+'">'+esc(n.title)+'</option>').join("");slots.innerHTML=Array.from({length:10},(_,i)=>{const order=i+1,current=news.find(n=>n.is_headline&&Number(n.headline_order)===order);return '<div class="headline-slot"><span class="headline-slot-number">'+order+'</span><select data-slot-select="'+order+'">'+options+'</select><div class="headline-slot-actions"><button type="button" data-save-slot="'+order+'">Kaydet</button><button type="button" data-clear-slot="'+order+'"'+(current?'':' disabled')+'>Çıkar</button></div></div>'}).join("");news.filter(n=>n.is_headline).forEach(n=>{const s=slots.querySelector('[data-slot-select="'+n.headline_order+'"]');if(s)s.value=n.id})}
+    async function load(){const{data,error}=await client.from("news").select("id,title,status,is_headline,headline_order,published_at").eq("status","published").order("published_at",{ascending:false});if(error)throw error;news=data||[];render();message("Manşet sırası hazır. "+news.filter(n=>n.is_headline).length+" aktif manşet bulunuyor.")}
+    slots.addEventListener("click",async e=>{const save=e.target.dataset.saveSlot,clear=e.target.dataset.clearSlot;if(!save&&!clear)return;try{const order=Number(save||clear),current=news.find(n=>n.is_headline&&Number(n.headline_order)===order);if(clear){if(!current)return;const{error}=await client.from("news").update({is_headline:false,headline_order:null,updated_at:new Date().toISOString()}).eq("id",current.id);if(error)throw error;message(order+". sıradaki haber manşetten çıkarıldı.");await load();return}const select=slots.querySelector('[data-slot-select="'+order+'"]'),selected=news.find(n=>n.id===select.value);if(!selected)throw new Error("Bu sıra için yayınlanmış bir haber seçin.");if(current&&current.id!==selected.id&&!confirm(order+". sıradaki mevcut manşet değiştirilsin mi?"))return;const{error:setError}=await client.from("news").update({is_headline:true,headline_order:order,updated_at:new Date().toISOString()}).eq("id",selected.id).eq("status","published");if(setError)throw setError;if(current&&current.id!==selected.id){const{error:clearError}=await client.from("news").update({is_headline:false,headline_order:null,updated_at:new Date().toISOString()}).eq("id",current.id);if(clearError)throw clearError}message(selected.title+" manşette "+order+". sıraya alındı.");await load()}catch(err){message(err.message||"Manşet güncellenemedi.",true)}});
+    (async()=>{if(!window.supabase||!window.AKCAABAT_SUPABASE)throw Error("Bağlantı ayarları bulunamadı.");client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(e=>{page.hidden=false;message(e.message||"Manşet yönetimi açılamadı.",true)})
+  })();
+  </script>
+  <script src="admin-shell.js?v=2"></script>
+</body>
+</html>
