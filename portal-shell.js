@@ -55,17 +55,14 @@
   function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value)) element.textContent = money.format(value) + (suffix || ""); }
   async function loadMarketData() {
     try {
-      const results = await Promise.all([
-        fetch("https://api.frankfurter.app/latest?from=USD&to=TRY,EUR").then(function (response) { if (!response.ok) throw new Error(); return response.json(); }),
-        fetch("https://api.gold-api.com/price/XAU").then(function (response) { if (!response.ok) throw new Error(); return response.json(); }),
-        fetch("https://api.gold-api.com/price/XAG").then(function (response) { if (!response.ok) throw new Error(); return response.json(); })
-      ]);
-      const usdTry = Number(results[0].rates && results[0].rates.TRY);
-      const usdEur = Number(results[0].rates && results[0].rates.EUR);
-      setMarket("marketUsd", usdTry, " ₺");
-      setMarket("marketEur", usdTry / usdEur, " ₺");
-      setMarket("marketGold", Number(results[1].price) * usdTry / 31.1034768, " ₺/gr");
-      setMarket("marketSilver", Number(results[2].price) * usdTry / 31.1034768, " ₺/gr");
+      await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
+      const response = await fetch(window.AKCAABAT_SUPABASE.url + "/functions/v1/market-data", { headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error();
+      const data = await response.json();
+      setMarket("marketUsd", Number(data.usd_try), " ₺");
+      setMarket("marketEur", Number(data.eur_try), " ₺");
+      setMarket("marketGold", Number(data.gold_try_gram), " ₺/gr");
+      setMarket("marketSilver", Number(data.silver_try_gram), " ₺/gr");
     } catch (_) {}
   }
   async function loadHeaderWeather() {
