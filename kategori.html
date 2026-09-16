@@ -474,7 +474,9 @@
                     )
                     .eq(
                         "slug",
-                        requestedSlug
+                        normalizeSlug(
+                            requestedSlug
+                        )
                     )
                     .eq(
                         "is_active",
