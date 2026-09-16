@@ -4,7 +4,7 @@
  * Sürüm: 1.1.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v100";
+const CACHE_NAME = "akcaabat-haber-v101";
 const BASE_URL = new URL("./", self.location.href);
 
 const STATIC_FILES = [
