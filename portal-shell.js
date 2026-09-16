@@ -11,12 +11,12 @@
   shell.className = "portal-shell-top";
   shell.innerHTML = `
     <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span></div><div class="top-info"><span>📍 Akçaabat</span><span>•</span><span>Trabzon</span><span>•</span><span id="portalCurrentTime">--:--</span></div></div></div>
-    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-list" id="portalMarketList" aria-label="Piyasa özeti"><span class="market-item active"><b>DOLAR</b> <em id="marketUsd">—</em></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em></span></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
-    <header class="site-header" id="unifiedSiteHeader">
-      <div class="container header-main">
+    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
+    <header class="site-header portal-site-header" id="unifiedSiteHeader">
+      <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
-        <a href="index.html" class="brand" aria-label="Akçaabat Haber Ana Sayfa"><span class="brand-mark">AH</span><span class="brand-text"><strong>AKÇAABAT</strong><span>HABER</span></span></a>
-        <div class="header-center"><div class="header-slogan"><strong>Akçaabat'ın Haber Merkezi</strong><span>Doğru • Hızlı • Tarafsız</span></div></div>
+        <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" src="assets/akcaabat-haber-logo.png" alt="Akçaabat Haber" width="300" height="100"></a>
+        <div class="header-center"><div class="header-slogan"><strong>Akçaabat'ın Haber Merkezi</strong><span>Akçaabat • Trabzon • Bölgenin gündemi</span></div></div>
         <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button><a href="admin.html" class="admin-link">Yönetim</a></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
@@ -83,9 +83,6 @@
       if (target && data.current) target.textContent = "☁ Trabzon " + Math.round(Number(data.current.temperature_2m)) + "°";
     } catch (_) {}
   }
-  const marketItems = Array.from(document.querySelectorAll(".market-item"));
-  let marketIndex = 0;
-  window.setInterval(function () { if (!marketItems.length) return; marketItems[marketIndex].classList.remove("active"); marketIndex = (marketIndex + 1) % marketItems.length; marketItems[marketIndex].classList.add("active"); }, 4000);
   loadMarketData(); loadHeaderWeather();
 
   const menuButton = document.getElementById("portalMobileMenuButton");
