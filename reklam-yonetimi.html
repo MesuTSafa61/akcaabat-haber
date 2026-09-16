@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reklam Yönetimi | Akçaabat Haber</title>
+  <link rel="stylesheet" href="admin-shell.css?v=3">
+</head>
+<body>
+  <main class="admin-tool-page" id="toolPage" hidden>
+    <div class="admin-tool-status" id="status" role="status">Reklam ayarları yükleniyor…</div>
+    <div class="admin-tool-grid">
+      <section class="admin-tool-card">
+        <h2 id="formTitle">Yeni Reklam</h2>
+        <p>Reklamları yayın alanı ve tarih aralığıyla yönetin. Görsel URL’leri herkese açık HTTPS bağlantısı olmalıdır.</p>
+        <form class="admin-tool-form" id="adForm">
+          <input id="adId" type="hidden">
+          <label class="wide">Reklam / firma adı<input id="adName" maxlength="120" required placeholder="Örn. Akçaabat Yapı"></label>
+          <label>Yayın alanı<select id="adPlacement"><option value="top">Üst banner</option><option value="content">İçerik arası</option><option value="footer">Footer üstü</option></select></label>
+          <label>Reklam etiketi<input id="adLabel" maxlength="30" value="REKLAM" placeholder="REKLAM"></label>
+          <label class="wide">Masaüstü görsel URL<input id="desktopImage" type="url" pattern="https://.*" required placeholder="https://..."></label>
+          <label class="wide">Mobil görsel URL<input id="mobileImage" type="url" pattern="https://.*" placeholder="https://... (boşsa masaüstü görseli kullanılır)"></label>
+          <label class="wide">Tıklama bağlantısı<input id="targetUrl" type="url" pattern="https://.*" placeholder="https://..."></label>
+          <label>Başlangıç tarihi<input id="startAt" type="datetime-local"></label>
+          <label>Bitiş tarihi<input id="endAt" type="datetime-local"></label>
+          <label class="admin-tool-check"><input id="isActive" type="checkbox" checked> Reklamı yayına aç</label>
+          <label class="admin-tool-check"><input id="newTab" type="checkbox" checked> Bağlantıyı yeni sekmede aç</label>
+          <p class="admin-help">Bitiş tarihi boş bırakılırsa reklam siz kapatana kadar yayında kalır. Süresi dolan reklam otomatik gizlenir.</p>
+          <div class="admin-tool-actions"><button class="admin-tool-button" type="submit">Reklamı Kaydet</button><button class="admin-tool-button light" id="resetButton" type="button">Formu Temizle</button><a class="admin-tool-button light" href="index.html" target="_blank" rel="noopener">Siteyi Aç</a></div>
+        </form>
+        <div class="ad-preview" id="preview"><div class="admin-empty">Görsel önizlemesi</div></div>
+      </section>
+      <section class="admin-tool-card">
+        <h2>Kayıtlı Reklamlar</h2>
+        <p>Aktif reklamlar tarih şartları uygunsa seçilen alanda otomatik yayınlanır.</p>
+        <div class="ad-admin-list" id="adList"><div class="admin-empty">Reklamlar yükleniyor…</div></div>
+      </section>
+    </div>
+  </main>
+  <script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){"use strict";
+    const page=document.getElementById("toolPage"),status=document.getElementById("status"),form=document.getElementById("adForm"),list=document.getElementById("adList"),preview=document.getElementById("preview"),$=id=>document.getElementById(id);let client,ads=[];
+    const esc=value=>String(value||"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[char]);
+    const message=(text,error)=>{status.textContent=text;status.classList.toggle("error",!!error)};
+    const validHttps=value=>{try{return new URL(value).protocol==="https:"}catch(_){return false}};
+    const toLocal=value=>{if(!value)return"";const date=new Date(value);if(Number.isNaN(date.getTime()))return"";const pad=n=>String(n).padStart(2,"0");return date.getFullYear()+"-"+pad(date.getMonth()+1)+"-"+pad(date.getDate())+"T"+pad(date.getHours())+":"+pad(date.getMinutes())};
+    const toIso=value=>value?new Date(value).toISOString():null;
+    const placementName=value=>({top:"Üst banner",content:"İçerik arası",footer:"Footer üstü"})[value]||"Reklam alanı";
+    function state(ad){const now=Date.now(),start=ad.start_at?new Date(ad.start_at).getTime():0,end=ad.end_at?new Date(ad.end_at).getTime():Infinity;if(!ad.active)return"Kapalı";if(start>now)return"Planlandı";if(end<now)return"Süresi doldu";return"Yayında"}
+    async function staff(){const{data:userData}=await client.auth.getUser();const user=userData&&userData.user;if(!user)return false;const{data:profile}=await client.from("profiles").select("role,is_active").eq("id",user.id).maybeSingle();return!!(profile&&profile.is_active&&["admin","editor"].includes(profile.role))}
+    function renderPreview(){const url=$("desktopImage").value.trim();preview.innerHTML=url&&validHttps(url)?'<img src="'+esc(url)+'" alt="Reklam önizlemesi">':'<div class="admin-empty">Geçerli bir masaüstü görsel URL’si girin.</div>'}
+    function renderList(){if(!ads.length){list.innerHTML='<div class="admin-empty">Henüz reklam eklenmedi.</div>';return}list.innerHTML=ads.map(ad=>'<article class="ad-admin-item"><div class="ad-admin-thumb">'+(ad.desktop_image?'<img src="'+esc(ad.desktop_image)+'" alt="">':'Görsel yok')+'</div><div class="ad-admin-copy"><strong>'+esc(ad.name)+'</strong><span>'+esc(placementName(ad.placement))+' · '+esc(state(ad))+(ad.end_at?' · Bitiş: '+esc(new Date(ad.end_at).toLocaleString("tr-TR")):'')+'</span></div><div class="ad-admin-controls"><button type="button" data-edit="'+esc(ad.id)+'">Düzenle</button><button class="danger" type="button" data-delete="'+esc(ad.id)+'">Sil</button></div></article>').join("")}
+    function resetForm(){form.reset();$("adId").value="";$("adLabel").value="REKLAM";$("isActive").checked=true;$("newTab").checked=true;$("formTitle").textContent="Yeni Reklam";renderPreview()}
+    function edit(id){const ad=ads.find(item=>item.id===id);if(!ad)return;$("adId").value=ad.id;$("adName").value=ad.name||"";$("adPlacement").value=ad.placement||"top";$("adLabel").value=ad.label||"REKLAM";$("desktopImage").value=ad.desktop_image||"";$("mobileImage").value=ad.mobile_image||"";$("targetUrl").value=ad.target_url||"";$("startAt").value=toLocal(ad.start_at);$("endAt").value=toLocal(ad.end_at);$("isActive").checked=!!ad.active;$("newTab").checked=ad.new_tab!==false;$("formTitle").textContent="Reklamı Düzenle";renderPreview();window.scrollTo({top:0,behavior:"smooth"})}
+    async function persist(text){const{error}=await client.from("site_settings").upsert({key:"advertisements",value:{ads},updated_at:new Date().toISOString()},{onConflict:"key"});if(error)throw error;renderList();message(text)}
+    async function load(){const{data,error}=await client.from("site_settings").select("value").eq("key","advertisements").maybeSingle();if(error)throw error;ads=data&&data.value&&Array.isArray(data.value.ads)?data.value.ads:[];renderList();message("Reklam yönetimi hazır.")}
+    form.addEventListener("submit",async event=>{event.preventDefault();const desktop=$("desktopImage").value.trim(),mobile=$("mobileImage").value.trim(),target=$("targetUrl").value.trim(),start=$("startAt").value,end=$("endAt").value;if(!validHttps(desktop)||mobile&&!validHttps(mobile)||target&&!validHttps(target)){message("Görsel ve bağlantı alanlarında yalnızca HTTPS adresleri kullanın.",true);return}if(start&&end&&new Date(end)<=new Date(start)){message("Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",true);return}const id=$("adId").value||((crypto.randomUUID&&crypto.randomUUID())||"ad-"+Date.now());const item={id,name:$("adName").value.trim(),placement:$("adPlacement").value,label:$("adLabel").value.trim()||"REKLAM",desktop_image:desktop,mobile_image:mobile,target_url:target,start_at:toIso(start),end_at:toIso(end),active:$("isActive").checked,new_tab:$("newTab").checked,updated_at:new Date().toISOString()};const index=ads.findIndex(ad=>ad.id===id);if(index>-1)ads[index]=item;else ads.unshift(item);try{await persist(index>-1?"Reklam güncellendi.":"Reklam eklendi.");resetForm()}catch(error){message("Reklam kaydedilemedi: "+error.message,true)}});
+    list.addEventListener("click",async event=>{const editButton=event.target.closest("[data-edit]"),deleteButton=event.target.closest("[data-delete]");if(editButton)edit(editButton.dataset.edit);if(deleteButton&&confirm("Bu reklamı kalıcı olarak silmek istiyor musunuz?")){ads=ads.filter(ad=>ad.id!==deleteButton.dataset.delete);try{await persist("Reklam silindi.")}catch(error){message("Reklam silinemedi: "+error.message,true)}}});
+    $("resetButton").addEventListener("click",resetForm);$("desktopImage").addEventListener("input",renderPreview);
+    (async()=>{client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(error=>{page.hidden=false;message(error.message||"Reklam yönetimi açılamadı.",true)})
+  })();
+  </script>
+  <script src="admin-shell.js?v=3"></script>
+</body>
+</html>

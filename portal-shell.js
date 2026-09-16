@@ -73,4 +73,79 @@
     link.classList.toggle("active", Boolean(active));
     if (active) link.setAttribute("aria-current", "page");
   });
+
+  function safeHttps(value) {
+    try { return new URL(value, location.href).protocol === "https:"; } catch (_) { return false; }
+  }
+  function adIsLive(ad) {
+    const time = Date.now();
+    const start = ad.start_at ? new Date(ad.start_at).getTime() : 0;
+    const end = ad.end_at ? new Date(ad.end_at).getTime() : Infinity;
+    return Boolean(ad.active && ad.desktop_image && safeHttps(ad.desktop_image) && start <= time && end >= time);
+  }
+  function createAd(ad) {
+    const wrapper = document.createElement("aside");
+    wrapper.className = "portal-ad portal-ad-" + (ad.placement || "top");
+    wrapper.setAttribute("aria-label", "Reklam");
+    const label = document.createElement("span");
+    label.className = "portal-ad-label";
+    label.textContent = ad.label || "REKLAM";
+    const picture = document.createElement("picture");
+    if (ad.mobile_image && safeHttps(ad.mobile_image)) {
+      const source = document.createElement("source");
+      source.media = "(max-width: 640px)";
+      source.srcset = ad.mobile_image;
+      picture.appendChild(source);
+    }
+    const image = document.createElement("img");
+    image.src = ad.desktop_image;
+    image.alt = ad.name || "Reklam";
+    image.loading = "lazy";
+    image.decoding = "async";
+    picture.appendChild(image);
+    let media = picture;
+    if (ad.target_url && safeHttps(ad.target_url)) {
+      const anchor = document.createElement("a");
+      anchor.href = ad.target_url;
+      anchor.setAttribute("aria-label", (ad.name || "Reklam") + " bağlantısını aç");
+      if (ad.new_tab !== false) { anchor.target = "_blank"; anchor.rel = "sponsored noopener noreferrer"; }
+      else anchor.rel = "sponsored";
+      anchor.appendChild(picture);
+      media = anchor;
+    }
+    const inner = document.createElement("div");
+    inner.className = "container portal-ad-inner";
+    inner.appendChild(label);
+    inner.appendChild(media);
+    wrapper.appendChild(inner);
+    return wrapper;
+  }
+  function placeAds(ads) {
+    const liveAds = ads.filter(adIsLive);
+    ["top", "content", "footer"].forEach(function (placement) {
+      const ad = liveAds.find(function (item) { return item.placement === placement; });
+      if (!ad) return;
+      const element = createAd(ad);
+      if (placement === "top") shell.insertAdjacentElement("afterend", element);
+      else if (placement === "footer") footer.insertAdjacentElement("beforebegin", element);
+      else {
+        const main = body.querySelector("main");
+        const firstSection = main && main.querySelector(":scope > section");
+        if (firstSection) firstSection.insertAdjacentElement("afterend", element);
+        else if (main) main.insertBefore(element, main.children[1] || null);
+      }
+    });
+  }
+  async function loadAdvertisements(attempt) {
+    if (window.supabase && window.AKCAABAT_SUPABASE) {
+      try {
+        const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+        const result = await client.from("site_settings").select("value").eq("key", "advertisements").maybeSingle();
+        if (!result.error && result.data && result.data.value && Array.isArray(result.data.value.ads)) placeAds(result.data.value.ads);
+      } catch (error) { console.warn("Reklamlar yüklenemedi:", error); }
+      return;
+    }
+    if ((attempt || 0) < 20) window.setTimeout(function () { loadAdvertisements((attempt || 0) + 1); }, 250);
+  }
+  loadAdvertisements(0);
 })();

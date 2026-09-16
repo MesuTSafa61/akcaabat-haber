@@ -18,6 +18,7 @@
     "haber-botu.html": ["Haber Botu", "Kaynakları ve tarama ayarlarını yönetin"],
     "mac-yonetimi.html": ["Maç Merkezi Yönetimi", "Maç, skor ve puan durumu verilerini yönetin"],
     "trafik-yonetimi.html": ["Trafik Yönetimi", "Doğrulanmış trafik sağlayıcısını yönetin"],
+    "reklam-yonetimi.html": ["Reklam Yönetimi", "Reklam alanlarını ve yayın tarihlerini yönetin"],
     "canli-servisler.html": ["Canlı Servisler", "Kamera ve trafik kaynaklarını yönetin"],
     "ayarlar.html": ["Ayarlar", "Site ve yönetim ayarlarını düzenleyin"]
   };
@@ -34,6 +35,7 @@
     ["haber-botu.html", "◆", "Haber Botu", "SERVİSLER"],
     ["mac-yonetimi.html", "⚽", "Maç Merkezi Yönetimi"],
     ["trafik-yonetimi.html", "≋", "Trafik Yönetimi"],
+    ["reklam-yonetimi.html", "▣", "Reklam Yönetimi"],
     ["canli-servisler.html", "◉", "Canlı Servisler"],
     ["ayarlar.html", "⚙", "Ayarlar", "SİSTEM"]
   ];
