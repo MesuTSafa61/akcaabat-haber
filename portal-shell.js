@@ -15,7 +15,7 @@
     <header class="site-header portal-site-header" id="unifiedSiteHeader">
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
-        <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" src="assets/akcaabat-haber-logo.png" alt="Akçaabat Haber — Akçaabat'ın Nabzı, Karadeniz'in Sesi" width="360" height="120"></a>
+        <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" src="assets/akcaabat-haber-logo.png" alt="Akçaabat Haber — Karadeniz'in Güçlü Sesi" width="360" height="120"></a>
         <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button><a href="admin.html" class="admin-link">Yönetim</a></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
