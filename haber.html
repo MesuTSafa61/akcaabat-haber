@@ -48,7 +48,7 @@
 
     <meta
         property="og:image"
-        content="https://akcaabathaber.com.tr/assets/default-news.jpg"
+        content="https://akcaabathaber.com.tr/favicon.svg"
     >
 
     <meta
@@ -68,7 +68,7 @@
 
     <meta
         name="twitter:image"
-        content="https://akcaabathaber.com.tr/assets/default-news.jpg"
+        content="https://akcaabathaber.com.tr/favicon.svg"
     >
 
     <link
@@ -498,9 +498,9 @@
             let supabaseClient = null;
 
             const DEFAULT_IMAGE =
-                "https://akcaabathaber.com.tr/assets/default-news.jpg";
+                "https://akcaabathaber.com.tr/favicon.svg";
 
-            function getSupabase() {
+            async function getSupabase() {
                 if (
                     window.AkcaabatHaber &&
                     typeof window.AkcaabatHaber
@@ -635,7 +635,7 @@
                     );
 
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client || !select) {
                     return;
@@ -690,7 +690,7 @@
 
             async function loadNews() {
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client) {
                     showError(
