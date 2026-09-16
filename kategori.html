@@ -575,10 +575,20 @@
                 })
                 : [];
 
-        news = window.AkcaabatHaber &&
-            typeof window.AkcaabatHaber.mergePublicNews === "function"
-                ? window.AkcaabatHaber.mergePublicNews(curated.concat(databaseNews))
-                : databaseNews;
+        const seenSlugs = new Set();
+        news = curated.concat(databaseNews)
+            .filter(function (item) {
+                const slug = String(item.slug || "").toLocaleLowerCase("tr-TR");
+                if (!slug || slug.indexOf("demo-") === 0 || seenSlugs.has(slug)) {
+                    return false;
+                }
+                seenSlugs.add(slug);
+                return true;
+            })
+            .sort(function (a, b) {
+                return new Date(b.published_at || b.created_at || 0) -
+                    new Date(a.published_at || a.created_at || 0);
+            });
 
         categoryCount.textContent =
             news.length +
