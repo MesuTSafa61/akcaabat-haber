@@ -43,7 +43,7 @@
     <div class="footer-column"><h3>Kategoriler</h3><a href="kategori.html?kategori=Akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem">Gündem</a></div>
     <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a><a href="yazarlar.html">Yazarlar</a></div>
     <div class="footer-column"><h3>Kurumsal</h3><a href="hakkimizda.html">Hakkımızda</a><a href="kunye.html">Künye</a><a href="iletisim.html">İletişim</a><a href="gizlilik.html">Gizlilik</a><a href="kvkk.html">KVKK</a></div>
-  </div><div class="footer-bottom"><div class="container footer-bottom-inner"><span>© ${now.getFullYear()} Akçaabat Haber</span><span>Akçaabat • Trabzon</span></div></div>`;
+  </div><div class="footer-bottom"><div class="container footer-bottom-inner"><span>© <span id="currentYear">${now.getFullYear()}</span> Akçaabat Haber<span id="footerYear" hidden>${now.getFullYear()}</span></span><span>Akçaabat • Trabzon</span></div></div>`;
   body.appendChild(footer);
 
   const clock = document.getElementById("portalCurrentTime");
