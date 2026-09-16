@@ -321,11 +321,12 @@
     const params =
         new URLSearchParams(window.location.search);
 
-    const requestedSlug =
+    const requestedSlug = normalizeSlug(
         params.get("slug") ||
         params.get("kategori") ||
         params.get("category") ||
-        "";
+        ""
+    );
 
     const requestedName =
         params.get("name") || "";
