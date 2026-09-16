@@ -1307,10 +1307,10 @@
                     return null;
                 }
 
-                const category =
-                    Array.isArray(row.category)
-                        ? row.category[0]
-                        : row.category;
+                const category = row.categories ||
+                    (typeof row.category === "string"
+                        ? { name: row.category, slug: row.category_slug || "" }
+                        : (Array.isArray(row.category) ? row.category[0] : row.category));
 
                 const author =
                     Array.isArray(row.author)
@@ -1376,7 +1376,18 @@
                 const id =
                     getQueryParameter("id");
 
-                const client = getSupabase();
+                if (slug && window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber.getCuratedNews === "function") {
+                    const curated = window.AkcaabatHaber.getCuratedNews().find(function (item) {
+                        return item.slug === slug;
+                    });
+
+                    if (curated) {
+                        return normalizeNews(curated);
+                    }
+                }
+
+                const client = await getSupabase();
 
                 if (!client) {
                     throw new Error(
@@ -1444,11 +1455,11 @@
             }
 
             async function incrementViews(news) {
-                if (!news || !news.id) {
+                if (!news || !news.id || String(news.id).indexOf("curated-") === 0) {
                     return;
                 }
 
-                const client = getSupabase();
+                const client = await getSupabase();
 
                 if (!client) {
                     return;
@@ -1691,7 +1702,7 @@
                 }
 
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client) {
                     return;
@@ -1817,8 +1828,17 @@
                     return;
                 }
 
+                if (String(currentNews.id || "").indexOf("curated-") === 0) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            Bu haber için yorumlar henüz açılmadı.
+                        </div>
+                    `;
+                    return;
+                }
+
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client) {
                     container.innerHTML = `
@@ -1973,8 +1993,16 @@
                     return;
                 }
 
+                if (String(currentNews.id || "").indexOf("curated-") === 0) {
+                    showCommentMessage(
+                        "Bu haber için yorumlar henüz açılmadı.",
+                        "error"
+                    );
+                    return;
+                }
+
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client) {
                     showCommentMessage(

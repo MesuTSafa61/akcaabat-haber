@@ -636,7 +636,7 @@
                     );
 
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client || !select) {
                     return;
@@ -690,13 +690,25 @@
             }
 
             async function loadNews() {
+                const curatedNews = window.AkcaabatHaber &&
+                    typeof window.AkcaabatHaber.getCuratedNews === "function"
+                        ? window.AkcaabatHaber.getCuratedNews()
+                        : [];
+
+                if (curatedNews.length) {
+                    allNews = curatedNews;
+                    applyFilters();
+                }
+
                 const client =
-                    getSupabase();
+                    await getSupabase();
 
                 if (!client) {
-                    showError(
-                        "Supabase bağlantısı kurulamadı."
-                    );
+                    if (!curatedNews.length) {
+                        showError(
+                            "Haber servisine şu anda ulaşılamıyor."
+                        );
+                    }
 
                     return;
                 }
@@ -743,9 +755,11 @@
                         result.error
                     );
 
-                    showError(
-                        "Haberler yüklenirken bir hata oluştu."
-                    );
+                    if (!curatedNews.length) {
+                        showError(
+                            "Haberler yüklenirken bir hata oluştu."
+                        );
+                    }
 
                     return;
                 }
