@@ -260,7 +260,12 @@
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
+            max-height: 430px;
+            padding: 3px;
+            overflow-y: auto;
         }
+
+        .source-search { margin-bottom: 9px; }
 
         .source-option {
             position: relative;
@@ -850,14 +855,9 @@
                             <div class="form-group">
                                 <fieldset class="source-picker">
                                     <legend>Haber Kaynağı</legend>
-                                    <div class="source-options">
-                                        <label class="source-option"><input type="radio" name="sourceName" value="" checked><span>Kaynak yok</span></label>
-                                        <label class="source-option"><input type="radio" name="sourceName" value="Fanatik"><img src="assets/sources/fanatik.svg" alt="Fanatik"></label>
-                                        <label class="source-option"><input type="radio" name="sourceName" value="Fotomaç"><img src="assets/sources/fotomac.svg" alt="Fotomaç"></label>
-                                        <label class="source-option"><input type="radio" name="sourceName" value="61Saat"><img src="assets/sources/61saat.svg" alt="61Saat"></label>
-                                        <label class="source-option"><input type="radio" name="sourceName" value="Haber61"><img src="assets/sources/haber61.svg" alt="Haber61"></label>
-                                        <label class="source-option"><input type="radio" name="sourceName" value="DHA"><img src="assets/sources/dha.svg" alt="DHA"></label>
-                                        <label class="source-option"><input type="radio" name="sourceName" value="İHA"><img src="assets/sources/iha.svg" alt="İHA"></label>
+                                    <input class="source-search" id="sourceSearch" type="text" placeholder="Kaynak ara..." autocomplete="off">
+                                    <div class="source-options" id="sourceOptions">
+                                        <label class="source-option" data-source-search="kaynak yok"><input type="radio" name="sourceName" value="" checked><span>Kaynak yok</span></label>
                                     </div>
                                     <div class="hint">Seçilen logo haberin altında kaynak bilgisi olarak gösterilir; dış bağlantı eklenmez.</div>
                                 </fieldset>
@@ -1068,8 +1068,34 @@
     const categoryInput =
         document.getElementById("category");
 
+    const sourceOptions =
+        document.getElementById("sourceOptions");
+
+    (window.AkcaabatNewsSources ? window.AkcaabatNewsSources.all : []).forEach(function (sourceInfo) {
+        const label = document.createElement("label");
+        label.className = "source-option";
+        label.dataset.sourceSearch = (sourceInfo.name + " " + sourceInfo.aliases.join(" ")).toLocaleLowerCase("tr-TR");
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "sourceName";
+        input.value = sourceInfo.name;
+        const image = document.createElement("img");
+        image.src = window.AkcaabatNewsSources.logoFor(sourceInfo);
+        image.alt = sourceInfo.name;
+        image.loading = "lazy";
+        label.append(input, image);
+        sourceOptions.appendChild(label);
+    });
+
     const sourceInputs =
         Array.from(document.querySelectorAll('input[name="sourceName"]'));
+
+    document.getElementById("sourceSearch").addEventListener("input", function (event) {
+        const term = event.target.value.trim().toLocaleLowerCase("tr-TR");
+        sourceOptions.querySelectorAll(".source-option").forEach(function (option) {
+            option.hidden = Boolean(term) && !option.dataset.sourceSearch.includes(term);
+        });
+    });
 
     const imageInput =
         document.getElementById("image");

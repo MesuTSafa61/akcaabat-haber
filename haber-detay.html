@@ -1640,7 +1640,9 @@
                         window.AkcaabatNewsSources.find(news.source_name);
                     const logo = document.createElement("img");
                     logo.className = "article-source-logo";
-                    logo.src = sourceInfo ? sourceInfo.logo : "assets/akcaabat-haber-logo.svg";
+                    logo.src = sourceInfo && window.AkcaabatNewsSources.logoFor
+                        ? window.AkcaabatNewsSources.logoFor(sourceInfo)
+                        : "assets/akcaabat-haber-logo.svg";
                     logo.alt = sourceInfo ? sourceInfo.name : news.source_name;
                     logo.loading = "lazy";
                     const copy = document.createElement("div");

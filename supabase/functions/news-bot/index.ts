@@ -40,6 +40,14 @@ const turkishDateValue = (value: string | null | undefined) => {
   return dateValue(iso);
 };
 
+const compactTurkishDateValue = (value: string | null | undefined) => {
+  const normalized = clean(value, 100);
+  const match = normalized.match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  if (!match) return turkishDateValue(normalized);
+  const iso = `${match[3]}-${match[2].padStart(2, "0")}-${match[1].padStart(2, "0")}T${(match[4] || "00").padStart(2, "0")}:${match[5] || "00"}:00+03:00`;
+  return dateValue(iso);
+};
+
 const slugify = (value: string) => clean(value, 160).toLocaleLowerCase("tr-TR")
   .replace(/[^a-z0-9ğüşıöç]+/g, "-").replace(/^-+|-+$/g, "") || "haber";
 
@@ -115,17 +123,64 @@ function rssItems(xml: string): Item[] {
   return nodes.map((node) => {
     const text = (selector: string) => node.querySelector(selector)?.textContent || "";
     const link = node.querySelector("link[href]")?.getAttribute("href") || text("link");
+    const rawSummary = text("description") || text("summary") || text("content\\:encoded") || text("content");
+    const embeddedImage = rawSummary.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i)?.[1];
     const image = node.querySelector("enclosure[type^='image']")?.getAttribute("url") ||
-      node.querySelector("media\\:content, content[url]")?.getAttribute("url") || null;
+      node.querySelector("media\\:content, media\\:thumbnail, content[url]")?.getAttribute("url") || embeddedImage || null;
     return {
       guid: clean(text("guid") || text("id"), 500) || null,
       url: clean(link, 2000),
       title: clean(text("title"), 300),
-      summary: clean(text("description") || text("summary") || text("content"), 700),
+      summary: clean(rawSummary, 700),
       publishedAt: dateValue(text("pubDate") || text("published") || text("updated")),
       imageUrl: image && /^https:\/\//i.test(image) ? image : null,
     };
   }).filter((item) => item.url && item.title);
+}
+
+function dhaItems(html: string, sourceUrl: string): Item[] {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  if (!doc) throw new Error("DHA sayfası ayrıştırılamadı");
+  const seen = new Set<string>();
+  const items: Item[] = [];
+  for (const card of [...doc.querySelectorAll(".news__item")]) {
+    const anchor = card.querySelector("a.news__titles-link[href], a.news__link[href], a[href]");
+    if (!anchor) continue;
+    let url: URL;
+    try { url = new URL(anchor.getAttribute("href") || "", sourceUrl); } catch { continue; }
+    if (!/(^|\.)dha\.com\.tr$/i.test(url.hostname)) continue;
+    url.search = "";
+    url.hash = "";
+    if (seen.has(url.href)) continue;
+    const title = clean(
+      card.querySelector(".news__title")?.textContent || anchor.getAttribute("title") || anchor.textContent,
+      300,
+    );
+    const summary = clean(card.querySelector(".news__spot")?.textContent, 700);
+    if (title.length < 12) continue;
+    const image = card.querySelector("img[data-src], img[src]");
+    const rawImage = image?.getAttribute("data-src") || image?.getAttribute("src");
+    let imageUrl: string | null = null;
+    try {
+      if (rawImage) {
+        const parsed = new URL(rawImage, sourceUrl);
+        if (parsed.protocol === "https:") imageUrl = parsed.href;
+      }
+    } catch { /* görselsiz devam */ }
+    seen.add(url.href);
+    const articleId = url.pathname.match(/-(\d+)$/)?.[1] || url.pathname;
+    items.push({
+      guid: `dha:${articleId}`,
+      url: url.href,
+      title,
+      summary,
+      publishedAt: compactTurkishDateValue(card.querySelector(".news__date")?.textContent),
+      imageUrl,
+    });
+    if (items.length >= 12) break;
+  }
+  if (!items.length) throw new Error("DHA haber kartı bulunamadı");
+  return items;
 }
 
 function fanatikItems(html: string, sourceUrl: string): Item[] {
@@ -198,7 +253,8 @@ function classify(item: Item, keywords: Record<string, string[]>) {
   const title = item.title.toLocaleLowerCase("tr-TR");
   const detail = (item.title + " " + item.summary).toLocaleLowerCase("tr-TR");
   let best: { scope: Scope; score: number; tags: string[] } | null = null;
-  (["akcaabat", "trabzon", "trabzonspor"] as Scope[]).forEach((scope) => {
+  // Özel kategoriler eşit puanda genel "Trabzon" kategorisinden önce gelir.
+  (["trabzonspor", "akcaabat", "trabzon"] as Scope[]).forEach((scope) => {
     const terms = Array.isArray(keywords[scope]) ? keywords[scope] : [];
     const tags = terms.filter((term) => detail.includes(String(term).toLocaleLowerCase("tr-TR"))).slice(0, 5);
     const titleHits = terms.filter((term) => title.includes(String(term).toLocaleLowerCase("tr-TR"))).length;
@@ -258,7 +314,8 @@ Deno.serve(async (request) => {
       totals.sources_checked++;
       try {
         const isFanatikSource = source.feed_url.includes("fanatik.com.tr");
-        const sourceDisplayName = isFanatikSource ? "Fanatik" : source.name;
+        const isDhaSource = source.feed_url.includes("dha.com.tr/haberleri/");
+        const sourceDisplayName = isFanatikSource ? "Fanatik" : isDhaSource ? "DHA" : source.name;
         const response = await fetch(source.feed_url, {
           signal: AbortSignal.timeout(8000),
           redirect: "follow",
@@ -275,10 +332,14 @@ Deno.serve(async (request) => {
         const responseBody = await response.text();
         const isFanatikHtml = isFanatikSource &&
           (contentType.includes("text/html") || /<!doctype\s+html|<html[\s>]/i.test(responseBody));
+        const isDhaHtml = isDhaSource &&
+          (contentType.includes("text/html") || /<!doctype\s+html|<html[\s>]/i.test(responseBody));
         let items = source.source_type === "api"
           ? apiItems(JSON.parse(responseBody))
           : isFanatikHtml
             ? fanatikItems(responseBody, response.url || source.feed_url)
+            : isDhaHtml
+              ? dhaItems(responseBody, response.url || source.feed_url)
             : rssItems(responseBody);
         if (isFanatikHtml) {
           items = await Promise.all(items.map(enrichFanatikItem));
@@ -286,17 +347,27 @@ Deno.serve(async (request) => {
 
         for (const item of items) {
           totals.found_count++;
-          // Fanatik liste sayfasında içerik özeti yoktur. Ayrıntı sayfası okunamadıysa
-          // yalnız başlık ve bağlantıdan oluşan eksik bir haber yayımlama.
-          if (isFanatikSource && !item.summary) {
+          // Yalnızca başlık ve bağlantıdan oluşan eksik haberleri hiçbir kaynaktan yayımlama.
+          const normalizedTitle = clean(item.title, 700).toLocaleLowerCase("tr-TR");
+          const normalizedSummary = clean(item.summary, 700).toLocaleLowerCase("tr-TR");
+          if (normalizedSummary.length < 40 || normalizedSummary === normalizedTitle) {
             totals.skipped_count++;
             continue;
           }
+          // Genel RSS/HTML akışlarında kaynak kategorisine körlemesine güvenme. Fanatik
+          // sayfası yalnızca Trabzonspor'a ayrılmıştır; diğer tüm kaynaklar eşleşmelidir.
           const match = classify(item, settings.keywords || {}) ||
-            (source.category ? { scope: source.category, score: 2, tags: [source.category] } : null);
+            (isFanatikSource ? { scope: "trabzonspor" as Scope, score: 2, tags: ["Trabzonspor"] } : null);
           if (!match) { totals.skipped_count++; continue; }
           const itemScope: Scope = isFanatikSource ? "trabzonspor" : match.scope;
           const fingerprint = await sha256([item.url, item.title.toLocaleLowerCase("tr-TR"), item.publishedAt || ""].join("|"));
+          const recentCutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
+          const { data: sameTitle } = await client.from("news").select("id")
+            .eq("title", item.title).gte("created_at", recentCutoff).limit(1);
+          if (sameTitle?.length) {
+            totals.duplicate_count++;
+            continue;
+          }
           const duplicateChecks = await Promise.all([
             client.from("news_bot_items").select("id,news_id").eq("source_url", item.url).limit(1),
             client.from("news_bot_items").select("id,news_id").eq("fingerprint", fingerprint).limit(1),
