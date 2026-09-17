@@ -6,6 +6,9 @@
   <title>Haber Botu | Akçaabat Haber Yönetim</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="admin-shell.css?v=4">
+  <style>
+    .source-grid{display:grid;gap:12px;margin-top:18px}.source-card{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px;border:1px solid #dbe3ee;border-radius:14px;background:#fff}.source-logo{width:104px;height:48px;object-fit:contain;border:1px solid #e5e7eb;border-radius:9px;background:#fff}.source-detail{min-width:0}.source-name{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.source-url{display:block;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#64748b;font-size:.86rem}.source-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.source-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:#eef2f7;color:#334155;font-size:.78rem;font-weight:700}.source-badge.live{background:#dcfce7;color:#166534}.source-badge.draft{background:#fef3c7;color:#92400e}.source-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.source-actions button{margin:0}.source-help{padding:12px 14px;border-radius:10px;background:#eff6ff;color:#1e3a5f}.danger-button{color:#b91c1c}@media(max-width:760px){.source-card{grid-template-columns:78px minmax(0,1fr)}.source-logo{width:74px;height:42px}.source-actions{grid-column:1/-1;justify-content:stretch}.source-actions button{flex:1}.source-url{white-space:normal;overflow-wrap:anywhere}}
+  </style>
 </head>
 <body>
   <main>
@@ -17,9 +20,10 @@
       <h2>Bot ayarları</h2>
       <form id="settingsForm">
         <label><input id="enabled" type="checkbox"> Bot aktif</label>
-        <label>Yayın modu
-          <select id="mode"><option value="draft">Taslak</option><option value="auto_publish">Otomatik yayın</option></select>
+        <label>Genel yayın modu
+          <select id="mode"><option value="draft">Bütün kaynakları taslağa al</option><option value="auto_publish">Her kaynağın kendi ayarını kullan</option></select>
         </label>
+        <p class="source-help">“Her kaynağın kendi ayarını kullan” seçiliyken aşağıdaki kaynaklardan hangisinin doğrudan yayınlanacağını, hangisinin önce taslağa düşeceğini ayrı ayrı belirleyebilirsin.</p>
         <label>Anahtar kelimeler (JSON)
           <textarea id="keywords" rows="8" required></textarea>
         </label>
@@ -42,7 +46,7 @@
         <label><input id="remoteImage" type="checkbox"> Kaynak uzaktan görsel kullanımına izin veriyor</label>
         <button type="submit">Kaynak ekle</button>
       </form>
-      <div id="sources"></div>
+      <div id="sources" class="source-grid"></div>
     </section>
 
     <section>
@@ -52,6 +56,7 @@
   </main>
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="news-sources.js?v=2"></script>
   <script>
   (function () {
     "use strict";
@@ -85,13 +90,24 @@
       byId("mode").value = settingsResult.data.default_mode;
       byId("keywords").value = JSON.stringify(settingsResult.data.keywords, null, 2);
       byId("sources").innerHTML = sourcesResult.data.length
-        ? "<ul>" + sourcesResult.data.map((source) =>
-          "<li><strong>" + escape(source.name) + "</strong> — " + escape(source.feed_url) +
-          " [" + escape(source.category) + "] " + (source.is_active ? "aktif" : "pasif") +
-          " <button data-toggle-source=\"" + source.id + "\" data-active=\"" + source.is_active + "\">" +
-          (source.is_active ? "Kapat" : "Aç") + "</button>" +
-          " <button data-delete-source=\"" + source.id + "\">Sil</button></li>"
-        ).join("") + "</ul>" : "<p>Henüz kaynak eklenmedi.</p>";
+        ? sourcesResult.data.map((source) => {
+          const registry = window.AkcaabatNewsSources;
+          const sourceInfo = registry && (registry.find(source.name) || registry.find(source.feed_url));
+          const logo = registry ? registry.logoFor(sourceInfo) : "assets/akcaabat-haber-logo.svg";
+          const publishText = source.auto_publish ? "Doğrudan yayın" : "Önce taslak";
+          const publishAction = source.auto_publish ? "Taslağa düşür" : "Doğrudan yayınla";
+          return "<article class=\"source-card\">" +
+            "<img class=\"source-logo\" src=\"" + escape(logo) + "\" alt=\"" + escape(source.name) + " logosu\">" +
+            "<div class=\"source-detail\"><div class=\"source-name\"><strong>" + escape(source.name) + "</strong>" +
+            "<span class=\"source-badge " + (source.is_active ? "live" : "") + "\">" + (source.is_active ? "Aktif" : "Pasif") + "</span>" +
+            "<span class=\"source-badge " + (source.auto_publish ? "live" : "draft") + "\">" + publishText + "</span></div>" +
+            "<span class=\"source-url\">" + escape(source.feed_url) + "</span>" +
+            "<div class=\"source-meta\"><span class=\"source-badge\">" + escape(source.category) + "</span>" +
+            "<span class=\"source-badge\">Güven " + escape(source.trust_level) + "/5</span></div></div>" +
+            "<div class=\"source-actions\"><button type=\"button\" data-toggle-publish=\"" + source.id + "\" data-publish=\"" + source.auto_publish + "\">" + publishAction + "</button>" +
+            "<button type=\"button\" data-toggle-source=\"" + source.id + "\" data-active=\"" + source.is_active + "\">" + (source.is_active ? "Botu kapat" : "Botu aç") + "</button>" +
+            "<button type=\"button\" class=\"danger-button\" data-delete-source=\"" + source.id + "\">Sil</button></div></article>";
+        }).join("") : "<p>Henüz kaynak eklenmedi.</p>";
       byId("runs").innerHTML = runsResult.data.length
         ? "<ul>" + runsResult.data.map((run) =>
           "<li>" + escape(run.started_at) + " — " + escape(run.status) +
@@ -130,6 +146,19 @@
     });
 
     byId("sources").addEventListener("click", async (event) => {
+      const publishId = event.target.dataset.togglePublish;
+      if (publishId) {
+        const publish = event.target.dataset.publish !== "true";
+        const { error } = await client.from("news_sources").update({
+          auto_publish: publish, updated_at: new Date().toISOString()
+        }).eq("id", publishId);
+        if (error) status("Yayın tercihi güncellenemedi.", true);
+        else {
+          status(publish ? "Kaynak artık doğrudan yayınlayacak." : "Kaynak artık önce taslağa düşecek.");
+          await load();
+        }
+        return;
+      }
       const toggleId = event.target.dataset.toggleSource;
       if (toggleId) {
         const { error } = await client.from("news_sources").update({

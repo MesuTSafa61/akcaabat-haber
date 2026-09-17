@@ -62,10 +62,16 @@
   function find(value) {
     const needle = normalize(value);
     if (!needle) return null;
-    return sources.find(function (source) {
+    const exact = sources.find(function (source) {
       return normalize(source.name) === needle ||
         normalize(source.key) === needle ||
         source.aliases.some(function (alias) { return normalize(alias) === needle; });
+    });
+    if (exact) return exact;
+    return sources.find(function (source) {
+      return needle.includes(normalize(source.name)) ||
+        needle.includes(normalize(source.key)) ||
+        source.aliases.some(function (alias) { return needle.includes(normalize(alias)); });
     }) || null;
   }
 

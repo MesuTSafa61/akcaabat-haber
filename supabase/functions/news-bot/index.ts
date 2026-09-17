@@ -399,7 +399,7 @@ Deno.serve(async (request) => {
                   if (source.allow_remote_image && item.imageUrl) updates.image_url = item.imageUrl;
                 }
                 if (settings.default_mode === "auto_publish" && source.auto_publish &&
-                  source.trust_level >= 4 && existing.status === "draft") {
+                  existing.status === "draft") {
                   updates.status = "published";
                   updates.published_at = existing.published_at || new Date().toISOString();
                 }
@@ -417,7 +417,7 @@ Deno.serve(async (request) => {
             continue;
           }
 
-          const status = settings.default_mode === "auto_publish" && source.auto_publish && source.trust_level >= 4
+          const status = settings.default_mode === "auto_publish" && source.auto_publish
             ? "published" : "draft";
           const summary = item.summary;
           const payload = {
