@@ -1,3 +1,4 @@
+import { DOMParser } from "linkedom";
 import { createClient } from "@supabase/supabase-js";
 
 type Scope = "akcaabat" | "trabzon" | "trabzonspor";
@@ -24,6 +25,21 @@ const dateValue = (value: string | null | undefined) => {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 };
 
+const turkishDateValue = (value: string | null | undefined) => {
+  const normalized = clean(value, 100).toLocaleLowerCase("tr-TR");
+  const match = normalized.match(/(\d{1,2})\s+([a-zçğıöşü]+)\s+(\d{4}),?\s+(\d{1,2}):(\d{2})/u);
+  if (!match) return dateValue(normalized);
+  const months: Record<string, number> = {
+    ocak: 0, şubat: 1, mart: 2, nisan: 3, mayıs: 4, haziran: 5,
+    temmuz: 6, ağustos: 7, eylül: 8, ekim: 9, kasım: 10, aralık: 11,
+  };
+  const month = months[match[2]];
+  if (month === undefined) return null;
+  // Fanatik kart tarihleri Türkiye saatiyle yayınlanıyor.
+  const iso = `${match[3]}-${String(month + 1).padStart(2, "0")}-${match[1].padStart(2, "0")}T${match[4].padStart(2, "0")}:${match[5]}:00+03:00`;
+  return dateValue(iso);
+};
+
 const slugify = (value: string) => clean(value, 160).toLocaleLowerCase("tr-TR")
   .replace(/[^a-z0-9ğüşıöç]+/g, "-").replace(/^-+|-+$/g, "") || "haber";
 
@@ -36,7 +52,7 @@ async function sha256(value: string) {
 function rssItems(xml: string): Item[] {
   const doc = new DOMParser().parseFromString(xml, "text/xml");
   if (!doc || doc.querySelector("parsererror")) throw new Error("Geçersiz RSS/XML");
-  const nodes = [...doc.querySelectorAll("item"), ...doc.querySelectorAll("entry")].slice(0, 40);
+  const nodes = [...doc.querySelectorAll("item"), ...doc.querySelectorAll("entry")].slice(0, 12);
   return nodes.map((node) => {
     const text = (selector: string) => node.querySelector(selector)?.textContent || "";
     const link = node.querySelector("link[href]")?.getAttribute("href") || text("link");
@@ -58,33 +74,54 @@ function fanatikItems(html: string, sourceUrl: string): Item[] {
   if (!doc) throw new Error("Fanatik sayfası ayrıştırılamadı");
   const seen = new Set<string>();
   const items: Item[] = [];
-  for (const anchor of [...doc.querySelectorAll("a[href]")]) {
+  const cards = [...doc.querySelectorAll(".single-article")];
+  const addAnchor = (anchor: Element, container: Element) => {
     const rawHref = anchor.getAttribute("href") || "";
     let url: URL;
-    try { url = new URL(rawHref, sourceUrl); } catch { continue; }
-    if (url.hostname !== "www.fanatik.com.tr" && url.hostname !== "fanatik.com.tr") continue;
-    if (!url.pathname.includes("trabzonspor") || url.pathname === "/trabzonspor") continue;
-    const image = anchor.querySelector("img");
+    try { url = new URL(rawHref, sourceUrl); } catch { return; }
+    if (url.hostname !== "www.fanatik.com.tr" && url.hostname !== "fanatik.com.tr") return;
+    const articleId = url.pathname.match(/^\/trabzonspor\/[a-z0-9-]+-(\d+)\/?$/i)?.[1];
+    if (!articleId) return;
+    url.search = "";
+    url.hash = "";
+    const image = container.querySelector("a.fixed-ratio img") ||
+      container.querySelector("img[src*='image.fanatik'], img[data-src*='image.fanatik'], img[data-original*='image.fanatik']") ||
+      container.querySelector("img[src], img[data-src]");
     const title = clean(
       anchor.getAttribute("title") || anchor.getAttribute("aria-label") ||
-      image?.getAttribute("alt") || anchor.textContent, 300,
+      anchor.textContent || image?.getAttribute("alt"), 300,
     );
-    if (title.length < 12 || seen.has(url.href)) continue;
+    if (title.length < 12 || seen.has(articleId)) return;
     const rawImage = image?.getAttribute("src") || image?.getAttribute("data-src") || image?.getAttribute("data-original");
     let imageUrl: string | null = null;
     try { if (rawImage) { const parsed = new URL(rawImage, sourceUrl); if (parsed.protocol === "https:") imageUrl = parsed.href; } } catch { /* görselsiz devam */ }
-    seen.add(url.href);
-    items.push({ guid: url.href, url: url.href, title, summary: "", publishedAt: null, imageUrl });
-    if (items.length >= 40) break;
+    seen.add(articleId);
+    const publishedAt = turkishDateValue(container.querySelector(".card-date")?.textContent);
+    items.push({ guid: `fanatik:${articleId}`, url: url.href, title, summary: "", publishedAt, imageUrl });
+  };
+  for (const card of cards) {
+    const anchor = card.querySelector(".single-article__title a[href]") || card.querySelector("a[href]");
+    if (anchor) addAnchor(anchor, card);
+    if (items.length >= 12) break;
   }
-  if (!items.length) throw new Error("Fanatik Trabzonspor haber bağlantısı bulunamadı");
+  // CDN bazı bölgelerde kart sınıflarını sadeleştiriyor; haber URL deseni aynı kalıyor.
+  if (!items.length) {
+    for (const anchor of [...doc.querySelectorAll("a[href]")]) {
+      const container = anchor.parentElement?.parentElement || anchor.parentElement || anchor;
+      addAnchor(anchor, container);
+      if (items.length >= 12) break;
+    }
+  }
+  if (!items.length) {
+    throw new Error(`Fanatik Trabzonspor haber bağlantısı bulunamadı (kart: ${cards.length}, bağlantı: ${doc.querySelectorAll("a[href]").length})`);
+  }
   return items;
 }
 
 function apiItems(body: unknown): Item[] {
   const data = Array.isArray(body) ? body : (body as { items?: unknown[] })?.items;
   if (!Array.isArray(data)) throw new Error("API yanıtında items dizisi yok");
-  return data.slice(0, 40).map((raw) => {
+  return data.slice(0, 12).map((raw) => {
     const item = raw as Record<string, unknown>;
     return {
       guid: clean(String(item.id || item.guid || ""), 500) || null,
@@ -163,15 +200,25 @@ Deno.serve(async (request) => {
       try {
         const response = await fetch(source.feed_url, {
           signal: AbortSignal.timeout(8000),
-          headers: { "Accept": source.source_type === "rss" ? "application/rss+xml, application/atom+xml, application/xml;q=0.9" : "application/json" },
+          redirect: "follow",
+          headers: {
+            "Accept": source.source_type === "rss"
+              ? "application/rss+xml, application/atom+xml, application/xml;q=0.9, text/html;q=0.8"
+              : "application/json",
+            "Accept-Language": "tr-TR,tr;q=0.9",
+            "User-Agent": "AkcaabatHaberBot/1.0 (+https://akcaabathaber.com)",
+          },
         });
         if (!response.ok) throw new Error("Kaynak HTTP " + response.status);
         const contentType = response.headers.get("content-type") || "";
+        const responseBody = await response.text();
+        const isFanatikHtml = source.feed_url.includes("fanatik.com.tr") &&
+          (contentType.includes("text/html") || /<!doctype\s+html|<html[\s>]/i.test(responseBody));
         const items = source.source_type === "api"
-          ? apiItems(await response.json())
-          : contentType.includes("text/html") && source.feed_url.includes("fanatik.com.tr")
-            ? fanatikItems(await response.text(), source.feed_url)
-            : rssItems(await response.text());
+          ? apiItems(JSON.parse(responseBody))
+          : isFanatikHtml
+            ? fanatikItems(responseBody, response.url || source.feed_url)
+            : rssItems(responseBody);
 
         for (const item of items) {
           totals.found_count++;
