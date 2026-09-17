@@ -1117,7 +1117,7 @@
                             <div class="brand-manager">
                                 <div class="brand-manager-preview">
                                     <span>Aktif site logosu</span>
-                                    <img id="brandLogoPreview" src="assets/akcaabat-haber-logo-final.png?v=1" alt="Akçaabat Haber logo önizlemesi">
+                                    <img id="brandLogoPreview" src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber logo önizlemesi">
                                 </div>
                                 <div class="brand-manager-controls">
                                     <label class="form-label" for="brandLogoFile">Yeni Logo Yükle</label>
@@ -1631,7 +1631,7 @@
         sitePhone: "",
         siteAddress: "",
         logoText: "AH",
-        brandLogoUrl: "assets/akcaabat-haber-logo-final.png?v=1",
+        brandLogoUrl: "assets/akcaabat-haber-logo-final-v2.png?v=2",
         themeMode: "light",
         showBreakingBar: true,
         mobileMenuEnabled: true,
@@ -1799,7 +1799,7 @@
 
     function validBrandUrl(value) {
         if (!value) {
-            return "assets/akcaabat-haber-logo-final.png?v=1";
+            return "assets/akcaabat-haber-logo-final-v2.png?v=2";
         }
         try {
             const url = new URL(value, window.location.href);
@@ -1873,7 +1873,7 @@
     }
 
     async function resetBrandLogo() {
-        const defaultUrl = "assets/akcaabat-haber-logo-final.png?v=1";
+        const defaultUrl = "assets/akcaabat-haber-logo-final-v2.png?v=2";
         setValue("brandLogoUrl", defaultUrl);
         updateBrandPreview(defaultUrl);
         await saveSettings(collectSettings());
