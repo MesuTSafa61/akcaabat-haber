@@ -841,6 +841,69 @@
                 max-width: none;
             }
         }
+        .brand-manager {
+            display: grid;
+            grid-template-columns: minmax(260px, 1fr) minmax(300px, 1fr);
+            gap: 22px;
+            margin-bottom: 26px;
+            padding: 20px;
+            border: 1px solid #dfe5ec;
+            border-radius: 8px;
+            background: #f7f9fb;
+        }
+
+        .brand-manager-preview {
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 14px;
+            padding: 18px;
+            border: 1px dashed #c7d0dc;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .brand-manager-preview span {
+            color: #667085;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .brand-manager-preview img {
+            display: block;
+            width: 100%;
+            max-height: 125px;
+            object-fit: contain;
+        }
+
+        .brand-manager-controls {
+            display: grid;
+            align-content: center;
+            gap: 9px;
+        }
+
+        .brand-manager-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 6px;
+        }
+
+        @media (max-width: 720px) {
+            .brand-manager {
+                grid-template-columns: 1fr;
+                padding: 14px;
+            }
+            .brand-manager-preview {
+                min-height: 145px;
+            }
+            .brand-manager-actions .btn {
+                width: 100%;
+            }
+        }
     </style>
   <link rel="stylesheet" href="admin-shell.css?v=2">
 </head>
@@ -1050,6 +1113,25 @@
                         </div>
 
                         <div class="card-body">
+
+                            <div class="brand-manager">
+                                <div class="brand-manager-preview">
+                                    <span>Aktif site logosu</span>
+                                    <img id="brandLogoPreview" src="assets/akcaabat-haber-logo-final.png?v=1" alt="Akçaabat Haber logo önizlemesi">
+                                </div>
+                                <div class="brand-manager-controls">
+                                    <label class="form-label" for="brandLogoFile">Yeni Logo Yükle</label>
+                                    <input class="form-control" id="brandLogoFile" type="file" accept="image/png,image/jpeg,image/webp">
+                                    <div class="form-help">Şeffaf PNG veya WebP önerilir. En fazla 5 MB.</div>
+                                    <label class="form-label" for="brandLogoUrl">Logo Adresi</label>
+                                    <input class="form-control" id="brandLogoUrl" type="url" placeholder="https://.../logo.png">
+                                    <div class="brand-manager-actions">
+                                        <button class="btn btn-primary" id="uploadBrandLogo" type="button">Logoyu Yükle ve Uygula</button>
+                                        <button class="btn btn-secondary" id="resetBrandLogo" type="button">Varsayılan Logoya Dön</button>
+                                    </div>
+                                    <div class="form-help" id="brandLogoStatus">Header ve footer aynı logoyu kullanır.</div>
+                                </div>
+                            </div>
 
                             <div class="form-grid">
 
@@ -1549,6 +1631,7 @@
         sitePhone: "",
         siteAddress: "",
         logoText: "AH",
+        brandLogoUrl: "assets/akcaabat-haber-logo-final.png?v=1",
         themeMode: "light",
         showBreakingBar: true,
         mobileMenuEnabled: true,
@@ -1698,6 +1781,8 @@
             setValue(key, settings[key]);
         });
 
+        updateBrandPreview(settings.brandLogoUrl);
+
         updateSaveStatus("Ayarlar yüklendi.", true);
         await updateSystemStats();
     }
@@ -1710,6 +1795,91 @@
         });
 
         return settings;
+    }
+
+    function validBrandUrl(value) {
+        if (!value) {
+            return "assets/akcaabat-haber-logo-final.png?v=1";
+        }
+        try {
+            const url = new URL(value, window.location.href);
+            if (url.protocol !== "https:" && url.origin !== window.location.origin) {
+                return "";
+            }
+            return url.href;
+        } catch (error) {
+            return "";
+        }
+    }
+
+    function updateBrandPreview(value) {
+        const preview = $("#brandLogoPreview");
+        const safeUrl = validBrandUrl(value);
+        if (preview && safeUrl) {
+            preview.src = safeUrl;
+        }
+    }
+
+    function validateBrandFile(file) {
+        const allowed = ["image/png", "image/jpeg", "image/webp"];
+        if (!file || !allowed.includes(file.type)) {
+            throw new Error("PNG, JPG veya WebP formatında bir logo seçin.");
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            throw new Error("Logo dosyası 5 MB'dan büyük olamaz.");
+        }
+    }
+
+    async function uploadBrandLogo() {
+        const input = $("#brandLogoFile");
+        const button = $("#uploadBrandLogo");
+        const status = $("#brandLogoStatus");
+        const file = input && input.files ? input.files[0] : null;
+        try {
+            validateBrandFile(file);
+            if (!await requireEditor()) {
+                return;
+            }
+            button.disabled = true;
+            button.textContent = "Yükleniyor…";
+            status.textContent = "Logo güvenli depolama alanına yükleniyor…";
+            const extension = file.name.split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
+            const path = "branding/site-logo-" + Date.now() + "." + extension;
+            const upload = await client.storage.from("news-images").upload(path, file, {
+                cacheControl: "31536000",
+                contentType: file.type,
+                upsert: false
+            });
+            if (upload.error) {
+                throw upload.error;
+            }
+            const publicResult = client.storage.from("news-images").getPublicUrl(path);
+            const logoUrl = publicResult.data.publicUrl;
+            setValue("brandLogoUrl", logoUrl);
+            updateBrandPreview(logoUrl);
+            await saveSettings(collectSettings());
+            input.value = "";
+            status.textContent = "Yeni logo header ve footer için kaydedildi.";
+            updateSaveStatus("Logo başarıyla kaydedildi.", true);
+            showToast("Logo başarıyla yüklendi ve siteye uygulandı.", "success");
+        } catch (error) {
+            console.error(error);
+            status.textContent = error.message || "Logo yüklenemedi.";
+            showToast(error.message || "Logo yüklenemedi.", "error");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Logoyu Yükle ve Uygula";
+        }
+    }
+
+    async function resetBrandLogo() {
+        const defaultUrl = "assets/akcaabat-haber-logo-final.png?v=1";
+        setValue("brandLogoUrl", defaultUrl);
+        updateBrandPreview(defaultUrl);
+        await saveSettings(collectSettings());
+        $("#brandLogoStatus").textContent = "Varsayılan logo header ve footer için etkinleştirildi.";
+        updateSaveStatus("Varsayılan logo kaydedildi.", true);
+        showToast("Varsayılan logo geri yüklendi.", "success");
     }
 
     function updateSaveStatus(message, saved) {
@@ -1953,6 +2123,41 @@
         const exportButton = $("#exportSettings");
         const importInput = $("#importSettings");
         const reloadButton = $("#reloadSettings");
+        const uploadLogoButton = $("#uploadBrandLogo");
+        const resetLogoButton = $("#resetBrandLogo");
+        const logoInput = $("#brandLogoFile");
+        const logoUrlInput = $("#brandLogoUrl");
+
+        if (uploadLogoButton) {
+            uploadLogoButton.addEventListener("click", uploadBrandLogo);
+        }
+        if (resetLogoButton) {
+            resetLogoButton.addEventListener("click", function () {
+                resetBrandLogo().catch(function (error) {
+                    console.error(error);
+                    showToast("Varsayılan logo yüklenemedi.", "error");
+                });
+            });
+        }
+        if (logoInput) {
+            logoInput.addEventListener("change", function () {
+                const file = this.files && this.files[0];
+                if (!file) return;
+                try {
+                    validateBrandFile(file);
+                    updateBrandPreview(URL.createObjectURL(file));
+                    $("#brandLogoStatus").textContent = "Önizleme hazır. Uygulamak için yükleme düğmesine basın.";
+                } catch (error) {
+                    this.value = "";
+                    showToast(error.message, "error");
+                }
+            });
+        }
+        if (logoUrlInput) {
+            logoUrlInput.addEventListener("input", function () {
+                updateBrandPreview(this.value);
+            });
+        }
 
         if (saveButton) {
             saveButton.addEventListener(

@@ -15,7 +15,7 @@
     <header class="site-header portal-site-header" id="unifiedSiteHeader">
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
-        <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" src="assets/akcaabat-haber-logo.svg?v=6" alt="Akçaabat Haber — Karadeniz Buradan Konuşur" width="400" height="100"></a>
+        <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" data-brand-logo src="assets/akcaabat-haber-logo-final.png?v=1" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="114"></a>
         <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button><a href="admin.html" class="admin-link">Yönetim</a></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
@@ -38,12 +38,35 @@
   footer.className = "site-footer unified-site-footer";
   footer.id = "unifiedSiteFooter";
   footer.innerHTML = `<div class="container footer-grid">
-    <div class="footer-brand"><a href="index.html" class="brand footer-logo"><span class="brand-mark">AH</span><span class="brand-text"><strong>AKÇAABAT</strong><span>HABER</span></span></a><p>Akçaabat ve Trabzon'dan doğru, hızlı ve güncel haberler.</p></div>
+    <div class="footer-brand"><a href="index.html" class="brand footer-logo" aria-label="Akçaabat Haber Ana Sayfa"><img data-brand-logo src="assets/akcaabat-haber-logo-final.png?v=1" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="114"></a><p>Akçaabat'ın sesi, Karadeniz'in gücü. Akçaabat ve Trabzon'dan doğru, hızlı ve güncel haberler.</p></div>
     <div class="footer-column"><h3>Kategoriler</h3><a href="kategori.html?kategori=Akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem">Gündem</a></div>
     <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a><a href="yazarlar.html">Yazarlar</a></div>
     <div class="footer-column"><h3>Kurumsal</h3><a href="hakkimizda.html">Hakkımızda</a><a href="kunye.html">Künye</a><a href="iletisim.html">İletişim</a><a href="gizlilik.html">Gizlilik</a><a href="kvkk.html">KVKK</a></div>
   </div><div class="footer-bottom"><div class="container footer-bottom-inner"><span>© <span id="currentYear">${now.getFullYear()}</span> Akçaabat Haber<span id="footerYear" hidden>${now.getFullYear()}</span></span><span>Akçaabat • Trabzon</span></div></div>`;
   body.appendChild(footer);
+
+  function safeBrandUrl(value) {
+    if (!value) return "";
+    try {
+      const url = new URL(value, location.href);
+      return url.protocol === "https:" || url.origin === location.origin ? url.href : "";
+    } catch (_) { return ""; }
+  }
+  function applyBrandLogo(value) {
+    const logoUrl = safeBrandUrl(value) || new URL("assets/akcaabat-haber-logo-final.png?v=1", location.href).href;
+    document.querySelectorAll("[data-brand-logo]").forEach(function (image) { image.src = logoUrl; });
+  }
+  async function loadBranding() {
+    try {
+      await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
+      const config = window.AKCAABAT_SUPABASE;
+      const response = await fetch(config.url + "/rest/v1/site_settings?key=eq.site&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
+      if (!response.ok) throw new Error("Marka ayarları alınamadı.");
+      const rows = await response.json();
+      if (rows && rows[0] && rows[0].value) applyBrandLogo(rows[0].value.brandLogoUrl);
+    } catch (_) { applyBrandLogo(""); }
+  }
+  loadBranding();
 
   const clock = document.getElementById("portalCurrentTime");
   function updateClock() { if (clock) clock.textContent = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }); }
