@@ -243,6 +243,63 @@
             margin-bottom: 0;
         }
 
+        .source-picker {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+
+        .source-picker legend {
+            margin-bottom: 9px;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .source-options {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .source-option {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 62px;
+            margin: 0;
+            padding: 8px;
+            overflow: hidden;
+            border: 1px solid #dbe2ea;
+            border-radius: 9px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .source-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .source-option img {
+            width: 100%;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .source-option span {
+            color: #667085;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .source-option:has(input:checked) {
+            border-color: #0f766e;
+            background: #ecfdf5;
+            box-shadow: 0 0 0 2px rgba(15,118,110,.12);
+        }
+
         label {
             display: block;
             margin-bottom: 7px;
@@ -791,6 +848,22 @@
                             </div>
 
                             <div class="form-group">
+                                <fieldset class="source-picker">
+                                    <legend>Haber Kaynağı</legend>
+                                    <div class="source-options">
+                                        <label class="source-option"><input type="radio" name="sourceName" value="" checked><span>Kaynak yok</span></label>
+                                        <label class="source-option"><input type="radio" name="sourceName" value="Fanatik"><img src="assets/sources/fanatik.svg" alt="Fanatik"></label>
+                                        <label class="source-option"><input type="radio" name="sourceName" value="Fotomaç"><img src="assets/sources/fotomac.svg" alt="Fotomaç"></label>
+                                        <label class="source-option"><input type="radio" name="sourceName" value="61Saat"><img src="assets/sources/61saat.svg" alt="61Saat"></label>
+                                        <label class="source-option"><input type="radio" name="sourceName" value="Haber61"><img src="assets/sources/haber61.svg" alt="Haber61"></label>
+                                        <label class="source-option"><input type="radio" name="sourceName" value="DHA"><img src="assets/sources/dha.svg" alt="DHA"></label>
+                                        <label class="source-option"><input type="radio" name="sourceName" value="İHA"><img src="assets/sources/iha.svg" alt="İHA"></label>
+                                    </div>
+                                    <div class="hint">Seçilen logo haberin altında kaynak bilgisi olarak gösterilir; dış bağlantı eklenmez.</div>
+                                </fieldset>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="check-row">
                                     <input
                                         type="checkbox"
@@ -925,6 +998,7 @@
 </div>
 
 <script src="supabase-config.js"></script>
+<script src="news-sources.js?v=1"></script>
 
 <script>
 (function () {
@@ -993,6 +1067,9 @@
 
     const categoryInput =
         document.getElementById("category");
+
+    const sourceInputs =
+        Array.from(document.querySelectorAll('input[name="sourceName"]'));
 
     const imageInput =
         document.getElementById("image");
@@ -1325,6 +1402,7 @@
                     summary,
                     content,
                     category_id,
+                    source_name,
                     image_url,
                     status,
                     is_breaking,
@@ -1367,6 +1445,13 @@
 
         categoryInput.value =
             currentNews.category_id || "";
+
+        const selectedSource = window.AkcaabatNewsSources &&
+            window.AkcaabatNewsSources.find(currentNews.source_name);
+        const selectedSourceName = selectedSource ? selectedSource.name : "";
+        sourceInputs.forEach(function (input) {
+            input.checked = input.value === selectedSourceName;
+        });
 
         imageUrlInput.value =
             currentNews.image_url || "";
@@ -1639,6 +1724,9 @@
             category_id:
                 categoryInput.value,
 
+            source_name:
+                (sourceInputs.find(function (input) { return input.checked; }) || {}).value || "",
+
             image_url:
                 imageUrlInput.value.trim(),
 
@@ -1780,6 +1868,9 @@
 
                 category_id:
                     data.category_id,
+
+                source_name:
+                    data.source_name || null,
 
                 image_url:
                     imageUrl,

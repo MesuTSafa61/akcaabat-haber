@@ -257,6 +257,8 @@ Deno.serve(async (request) => {
     for (const source of (sources || []) as Source[]) {
       totals.sources_checked++;
       try {
+        const isFanatikSource = source.feed_url.includes("fanatik.com.tr");
+        const sourceDisplayName = isFanatikSource ? "Fanatik" : source.name;
         const response = await fetch(source.feed_url, {
           signal: AbortSignal.timeout(8000),
           redirect: "follow",
@@ -271,7 +273,7 @@ Deno.serve(async (request) => {
         if (!response.ok) throw new Error("Kaynak HTTP " + response.status);
         const contentType = response.headers.get("content-type") || "";
         const responseBody = await response.text();
-        const isFanatikHtml = source.feed_url.includes("fanatik.com.tr") &&
+        const isFanatikHtml = isFanatikSource &&
           (contentType.includes("text/html") || /<!doctype\s+html|<html[\s>]/i.test(responseBody));
         let items = source.source_type === "api"
           ? apiItems(JSON.parse(responseBody))
@@ -286,13 +288,14 @@ Deno.serve(async (request) => {
           totals.found_count++;
           // Fanatik liste sayfasında içerik özeti yoktur. Ayrıntı sayfası okunamadıysa
           // yalnız başlık ve bağlantıdan oluşan eksik bir haber yayımlama.
-          if (source.feed_url.includes("fanatik.com.tr") && !item.summary) {
+          if (isFanatikSource && !item.summary) {
             totals.skipped_count++;
             continue;
           }
           const match = classify(item, settings.keywords || {}) ||
             (source.category ? { scope: source.category, score: 2, tags: [source.category] } : null);
           if (!match) { totals.skipped_count++; continue; }
+          const itemScope: Scope = isFanatikSource ? "trabzonspor" : match.scope;
           const fingerprint = await sha256([item.url, item.title.toLocaleLowerCase("tr-TR"), item.publishedAt || ""].join("|"));
           const duplicateChecks = await Promise.all([
             client.from("news_bot_items").select("id,news_id").eq("source_url", item.url).limit(1),
@@ -314,6 +317,10 @@ Deno.serve(async (request) => {
                 const botManagedContent = placeholder || clean(existing.content || "", 1200) ===
                   clean(contentFromSummary(existing.source_summary || ""), 1200);
                 const updates: Record<string, unknown> = {};
+                if (isFanatikSource) {
+                  updates.category_id = categoryId("trabzonspor");
+                  updates.source_name = sourceDisplayName;
+                }
                 if (botManagedContent && item.summary) {
                   updates.summary = item.summary;
                   updates.content = contentFromSummary(item.summary);
@@ -345,9 +352,9 @@ Deno.serve(async (request) => {
           const payload = {
             title: item.title, slug: slugify(item.title) + "-" + fingerprint.slice(0, 8),
             summary, content: contentFromSummary(summary),
-            category_id: categoryId(match.scope), image_url: source.allow_remote_image ? item.imageUrl : null,
+            category_id: categoryId(itemScope), image_url: source.allow_remote_image ? item.imageUrl : null,
             status, published_at: status === "published" ? new Date().toISOString() : null,
-            origin_type: "automated", source_id: source.id, source_name: source.name,
+            origin_type: "automated", source_id: source.id, source_name: sourceDisplayName,
             source_url: item.url, source_guid: item.guid, source_published_at: item.publishedAt,
             source_summary: item.summary || null, source_fingerprint: fingerprint, imported_at: new Date().toISOString(),
           };
@@ -358,7 +365,7 @@ Deno.serve(async (request) => {
           }
           const { error: itemError } = await client.from("news_bot_items").insert({
             source_id: source.id, run_id: run.id, source_guid: item.guid, source_url: item.url,
-            fingerprint, title: item.title, summary: item.summary || null, scope: match.scope, tags: match.tags,
+            fingerprint, title: item.title, summary: item.summary || null, scope: itemScope, tags: match.tags,
             remote_image_url: source.allow_remote_image ? item.imageUrl : null,
             source_published_at: item.publishedAt, disposition: "created", news_id: news.id,
           });
