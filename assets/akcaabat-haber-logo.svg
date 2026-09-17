@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">Akçaabat Haber</title>
+  <desc id="desc">AH harflerinden oluşan kayık ve Karadeniz dalgaları</desc>
+  <g fill="none" fill-rule="evenodd">
+    <!-- A: yelken ve pruva -->
+    <path fill="#071a33" d="M42 190 164 34l112 156h-55l-25-37h-84l-27 37H42Zm96-76h33l-16-27-17 27Z"/>
+    <!-- H: direk, kabin ve kıç -->
+    <path fill="#d71920" d="M230 42h39v72h64V72h39v121h-39v-42h-64v42h-39V42Z"/>
+    <!-- AH harflerini tek bir kayık gövdesinde birleştirir -->
+    <path fill="#071a33" d="M26 187c89 17 213 21 374-18-17 39-63 68-132 75-89 9-181-9-242-57Z"/>
+    <path fill="#d71920" d="M270 194c46-4 91-12 130-25-11 25-38 48-80 61l-50-36Z"/>
+    <!-- Karadeniz dalgaları -->
+    <path stroke="#0b2547" stroke-linecap="round" stroke-width="12" d="M45 250c58-25 109-25 154 0 45 24 97 24 155 0"/>
+    <path stroke="#1594ca" stroke-linecap="round" stroke-width="8" d="M76 275c46-18 88-18 127 0 39 18 82 18 128 0"/>
+  </g>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="435" y="148" fill="#071a33" font-size="78" font-weight="900" letter-spacing="-2">AKÇAABAT</text>
+    <text x="862" y="148" fill="#d71920" font-size="74" font-weight="900" letter-spacing="-1">HABER</text>
+    <line x1="438" y1="178" x2="1118" y2="178" stroke="#d71920" stroke-width="3"/>
+    <text x="438" y="224" fill="#071a33" font-size="27" font-weight="800" letter-spacing="5">KARADENİZ’İN HABERDEKİ GÜCÜ</text>
+  </g>
+</svg>
