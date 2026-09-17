@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kullanıcı ve Yetki Yönetimi | Akçaabat Haber</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="admin-shell.css?v=3">
+  <link rel="stylesheet" href="admin-shell.css?v=4">
   <style>
     :root{--ink:#132238;--muted:#65758a;--line:#dfe5ec;--red:#c91f2d;--green:#147d50;--blue:#175cd3}
     *{box-sizing:border-box}
@@ -133,6 +133,6 @@
     requireAdmin().then(function(ok){if(ok)loadStaff()}).catch(function(error){message(error.message||"Yetki kontrolü başarısız.");loading.classList.add("hide")});
   })();
   </script>
-  <script src="admin-shell.js?v=3"></script>
+  <script src="admin-shell.js?v=4"></script>
 </body>
 </html>

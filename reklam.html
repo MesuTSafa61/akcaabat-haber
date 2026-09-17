@@ -482,6 +482,68 @@
             transform: translateY(-1px);
         }
 
+        .request-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .request-form label {
+            display: grid;
+            gap: 6px;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .request-form .wide { grid-column: 1 / -1; }
+
+        .request-form input,
+        .request-form textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fff;
+            padding: 11px 12px;
+            color: var(--text);
+        }
+
+        .request-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .request-form button {
+            grid-column: 1 / -1;
+            border: 0;
+            border-radius: 10px;
+            background: var(--red);
+            color: #fff;
+            padding: 12px 17px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .request-result {
+            display: none;
+            grid-column: 1 / -1;
+            padding: 11px 13px;
+            border-radius: 9px;
+            background: #ecfdf3;
+            color: #067647;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .request-result.show { display: block; }
+
+        @media (max-width: 680px) {
+            .request-form { grid-template-columns: 1fr; }
+            .request-form .wide,
+            .request-form button { grid-column: auto; }
+        }
+
         .notice {
             margin-top: 20px;
             padding: 15px 17px;
@@ -765,7 +827,7 @@
             }
         }
     </style>
-  <link rel="stylesheet" href="portal-shell.css?v=17">
+  <link rel="stylesheet" href="portal-shell.css?v=20">
 </head>
 
 <body>
@@ -1192,12 +1254,30 @@
                             görüşmek üzere bize ulaşabilirsiniz.
                         </p>
 
-                        <a
-                            href="mailto:info@akcaabathaber.com.tr?subject=Reklam%20ve%20%C4%B0%C5%9F%20Birli%C4%9Fi"
-                            class="email-link"
-                        >
-                            Reklam Talebi Gönder
-                        </a>
+                        <form class="request-form" id="adRequestForm">
+                            <label>
+                                Ad Soyad
+                                <input id="adContactName" maxlength="120" required placeholder="Adınız ve soyadınız">
+                            </label>
+                            <label>
+                                Firma / Marka
+                                <input id="adCompany" maxlength="160" required placeholder="Firma veya marka adı">
+                            </label>
+                            <label>
+                                E-posta
+                                <input id="adEmail" type="email" maxlength="200" required placeholder="ornek@firma.com">
+                            </label>
+                            <label>
+                                Telefon
+                                <input id="adPhone" type="tel" maxlength="40" placeholder="05xx xxx xx xx">
+                            </label>
+                            <label class="wide">
+                                Talep ayrıntısı
+                                <textarea id="adMessage" maxlength="4000" required placeholder="İlgilendiğiniz reklam alanını, tarih aralığını ve talebinizi yazın..."></textarea>
+                            </label>
+                            <div class="request-result" id="adRequestResult" role="status" aria-live="polite"></div>
+                            <button type="submit">Reklam Talebini Gönder</button>
+                        </form>
 
                     </div>
 
@@ -1285,11 +1365,7 @@
                         talepleriniz için bize ulaşabilirsiniz.
                     </p>
 
-                    <a
-                        href="mailto:info@akcaabathaber.com.tr"
-                    >
-                        E-posta Gönder
-                    </a>
+                    <a href="#adRequestForm">Talep Formuna Git</a>
 
                 </div>
 
@@ -1592,6 +1668,43 @@
         );
     </script>
 
-  <script src="portal-shell.js?v=19" defer></script>
+  <script src="supabase-config.js"></script>
+  <script src="public-submissions.js?v=1"></script>
+  <script>
+    (function () {
+      "use strict";
+      const form = document.getElementById("adRequestForm");
+      const result = document.getElementById("adRequestResult");
+      if (!form) return;
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        const button = form.querySelector("button[type='submit']");
+        button.disabled = true;
+        button.textContent = "Gönderiliyor…";
+        try {
+          const company = document.getElementById("adCompany").value.trim();
+          await window.AkcaabatSubmissions.submit({
+            message_type: "advertising",
+            name: document.getElementById("adContactName").value.trim(),
+            email: document.getElementById("adEmail").value.trim(),
+            phone: document.getElementById("adPhone").value.trim(),
+            subject: "Reklam talebi — " + company,
+            message: "Firma / Marka: " + company + "\n\n" + document.getElementById("adMessage").value.trim()
+          });
+          result.textContent = "Reklam talebiniz yönetim paneline iletildi. En kısa sürede incelenecektir.";
+          result.classList.add("show");
+          form.reset();
+        } catch (error) {
+          result.textContent = error.message || "Talep gönderilemedi. Lütfen tekrar deneyin.";
+          result.classList.add("show");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Reklam Talebini Gönder";
+        }
+      });
+    })();
+  </script>
+  <script src="portal-shell.js?v=20" defer></script>
 </body>
 </html>

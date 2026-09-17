@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gelen Mesajlar | Akçaabat Haber</title>
+  <link rel="stylesheet" href="admin-shell.css?v=4">
+  <style>
+    .inbox-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}.inbox-toolbar input,.inbox-toolbar select{min-height:38px;border:1px solid #cfd7e1;border-radius:6px;background:#fff;padding:8px 10px}.inbox-toolbar input{min-width:240px;flex:1}.inbox-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.inbox-stat{padding:14px;background:#fff;border:1px solid var(--adm-line);border-radius:8px}.inbox-stat strong{display:block;color:var(--adm-navy);font-size:23px}.inbox-stat span{color:var(--adm-muted);font-size:10px;font-weight:800}.inbox-list{display:grid;gap:11px}.inbox-item{padding:16px;background:#fff;border:1px solid var(--adm-line);border-left:4px solid #aeb9c7;border-radius:8px;box-shadow:0 3px 12px rgba(7,26,51,.04)}.inbox-item.new{border-left-color:var(--adm-red)}.inbox-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.inbox-title{min-width:0}.inbox-title strong{display:block;color:var(--adm-navy);font-size:14px}.inbox-title span{display:block;margin-top:4px;color:var(--adm-muted);font-size:10px}.inbox-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.inbox-tag{padding:4px 7px;border-radius:999px;background:#eef3f7;color:#344054;font-size:9px;font-weight:900}.inbox-tag.type-contact{background:#eaf5fa;color:#09688f}.inbox-tag.type-report{background:#fff2df;color:#975a00}.inbox-tag.type-advertising{background:#f1ebff;color:#6941c6}.inbox-message{margin:14px 0 0;padding:13px;background:#f7f9fb;border-radius:6px;color:#344054;font-size:12px;line-height:1.65;white-space:pre-wrap}.inbox-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;color:#667085;font-size:10px}.inbox-meta a{color:#09688f;word-break:break-all}.inbox-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.inbox-actions button{border:0;border-radius:5px;padding:8px 10px;background:#e9eef4;color:var(--adm-navy);font-size:10px;font-weight:850;cursor:pointer}.inbox-actions button.primary{background:var(--adm-navy);color:#fff}.inbox-actions button.success{background:#e8f7ee;color:#067647}.inbox-actions button.danger{margin-left:auto;background:#fff0f0;color:#b4232a}@media(max-width:700px){.inbox-stats{grid-template-columns:repeat(2,1fr)}.inbox-head{display:grid}.inbox-tags{justify-content:flex-start}.inbox-toolbar input{min-width:100%}}
+  </style>
+</head>
+<body>
+  <main class="admin-tool-page" id="inboxPage" hidden>
+    <div class="admin-tool-status" id="inboxStatus" role="status">Mesajlar yükleniyor…</div>
+    <div class="inbox-stats">
+      <div class="inbox-stat"><strong id="countNew">0</strong><span>YENİ</span></div>
+      <div class="inbox-stat"><strong id="countContact">0</strong><span>İLETİŞİM</span></div>
+      <div class="inbox-stat"><strong id="countReport">0</strong><span>SORUN BİLDİRİMİ</span></div>
+      <div class="inbox-stat"><strong id="countAdvertising">0</strong><span>REKLAM TALEBİ</span></div>
+    </div>
+    <section class="admin-tool-card">
+      <h2>Gelen Kutusu</h2>
+      <p>İletişim, sorun bildirimi ve reklam taleplerini tek ekrandan yönetin.</p>
+      <div class="inbox-toolbar">
+        <input id="inboxSearch" type="search" placeholder="Ad, e-posta, konu veya mesaj ara…">
+        <select id="typeFilter"><option value="all">Tüm türler</option><option value="contact">İletişim</option><option value="report">Sorun bildirimi</option><option value="advertising">Reklam talebi</option></select>
+        <select id="statusFilter"><option value="all">Tüm durumlar</option><option value="new">Yeni</option><option value="read">Okundu</option><option value="resolved">Çözüldü</option><option value="spam">Spam</option></select>
+        <button class="admin-tool-button light" id="refreshInbox" type="button">Yenile</button>
+      </div>
+      <div class="inbox-list" id="inboxList"><div class="admin-empty">Mesajlar yükleniyor…</div></div>
+    </section>
+  </main>
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function(){"use strict";
+    const page=document.getElementById("inboxPage"),statusBox=document.getElementById("inboxStatus"),list=document.getElementById("inboxList"),search=document.getElementById("inboxSearch"),typeFilter=document.getElementById("typeFilter"),statusFilter=document.getElementById("statusFilter");
+    const client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);let messages=[];
+    const esc=value=>String(value==null?"":value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[char]);
+    const typeName=value=>({contact:"İletişim",report:"Sorun Bildirimi",advertising:"Reklam Talebi"})[value]||"Mesaj";
+    const statusName=value=>({new:"Yeni",read:"Okundu",resolved:"Çözüldü",spam:"Spam"})[value]||value;
+    const date=value=>new Intl.DateTimeFormat("tr-TR",{dateStyle:"medium",timeStyle:"short"}).format(new Date(value));
+    const safeUrl=value=>{try{const url=new URL(value);return url.protocol==="https:"?url.href:""}catch(_){return""}};
+    function notify(text,error){statusBox.textContent=text;statusBox.classList.toggle("error",!!error)}
+    async function staff(){const{data:userData}=await client.auth.getUser();const user=userData&&userData.user;if(!user)return false;const{data:profile}=await client.from("profiles").select("role,is_active").eq("id",user.id).maybeSingle();return!!(profile&&profile.is_active&&["admin","editor"].includes(profile.role))}
+    function updateStats(){document.getElementById("countNew").textContent=messages.filter(x=>x.status==="new").length;document.getElementById("countContact").textContent=messages.filter(x=>x.message_type==="contact").length;document.getElementById("countReport").textContent=messages.filter(x=>x.message_type==="report").length;document.getElementById("countAdvertising").textContent=messages.filter(x=>x.message_type==="advertising").length}
+    function render(){const term=search.value.trim().toLocaleLowerCase("tr-TR"),type=typeFilter.value,state=statusFilter.value;const rows=messages.filter(item=>(type==="all"||item.message_type===type)&&(state==="all"||item.status===state)&&(!term||[item.name,item.email,item.phone,item.subject,item.message].join(" ").toLocaleLowerCase("tr-TR").includes(term)));if(!rows.length){list.innerHTML='<div class="admin-empty">Bu filtrede mesaj bulunamadı.</div>';return}list.innerHTML=rows.map(item=>{const related=safeUrl(item.related_url);return '<article class="inbox-item '+esc(item.status)+'"><div class="inbox-head"><div class="inbox-title"><strong>'+esc(item.subject||typeName(item.message_type))+'</strong><span>'+esc(item.name)+' · '+esc(date(item.created_at))+'</span></div><div class="inbox-tags"><span class="inbox-tag type-'+esc(item.message_type)+'">'+esc(typeName(item.message_type))+'</span><span class="inbox-tag">'+esc(statusName(item.status))+'</span></div></div><div class="inbox-message">'+esc(item.message)+'</div><div class="inbox-meta">'+(item.email?'<a href="mailto:'+encodeURIComponent(item.email)+'">✉ '+esc(item.email)+'</a>':'')+(item.phone?'<a href="tel:'+esc(item.phone.replace(/[^+0-9]/g,""))+'">☎ '+esc(item.phone)+'</a>':'')+(related?'<a href="'+esc(related)+'" target="_blank" rel="noopener">↗ İlgili sayfa</a>':'')+'</div><div class="inbox-actions">'+(item.status!=="read"?'<button data-status="read" data-id="'+esc(item.id)+'">Okundu</button>':'')+(item.status!=="resolved"?'<button class="success" data-status="resolved" data-id="'+esc(item.id)+'">Çözüldü</button>':'')+(item.status!=="spam"?'<button data-status="spam" data-id="'+esc(item.id)+'">Spam</button>':'')+'<button class="danger" data-delete="'+esc(item.id)+'">Sil</button></div></article>'}).join("")}
+    async function load(){notify("Mesajlar yükleniyor…");const{data,error}=await client.from("contact_messages").select("id,name,email,phone,subject,message,message_type,related_url,status,created_at,read_at,resolved_at").order("created_at",{ascending:false}).limit(300);if(error)throw error;messages=data||[];updateStats();render();notify(messages.length+" mesaj yüklendi.")}
+    async function setStatus(id,value){const update={status:value,updated_at:new Date().toISOString()};if(value==="read")update.read_at=new Date().toISOString();if(value==="resolved")update.resolved_at=new Date().toISOString();const{error}=await client.from("contact_messages").update(update).eq("id",id);if(error)throw error;const item=messages.find(x=>x.id===id);if(item)Object.assign(item,update);updateStats();render();notify("Mesaj durumu güncellendi.")}
+    list.addEventListener("click",async event=>{const stateButton=event.target.closest("[data-status]"),deleteButton=event.target.closest("[data-delete]");try{if(stateButton)await setStatus(stateButton.dataset.id,stateButton.dataset.status);if(deleteButton&&confirm("Bu mesajı kalıcı olarak silmek istiyor musunuz?")){const{error}=await client.from("contact_messages").delete().eq("id",deleteButton.dataset.delete);if(error)throw error;messages=messages.filter(x=>x.id!==deleteButton.dataset.delete);updateStats();render();notify("Mesaj silindi.")}}catch(error){notify(error.message||"İşlem tamamlanamadı.",true)}});
+    [search,typeFilter,statusFilter].forEach(element=>element.addEventListener(element===search?"input":"change",render));document.getElementById("refreshInbox").addEventListener("click",()=>load().catch(error=>notify(error.message,true)));
+    (async()=>{if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(error=>{page.hidden=false;notify(error.message||"Mesajlar açılamadı.",true)});
+  })();
+  </script>
+  <script src="admin-shell.js?v=4"></script>
+</body>
+</html>

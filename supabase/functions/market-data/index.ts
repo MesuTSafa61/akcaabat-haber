@@ -17,10 +17,18 @@ Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (request.method !== "GET") return new Response(JSON.stringify({ error: "method_not_allowed" }), { status: 405, headers: cors });
 
-  const [currencies, gold, silver] = await Promise.allSettled([
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const previousRequest = supabaseUrl && serviceKey
+    ? fetch(supabaseUrl + "/rest/v1/site_settings?key=eq.market_data&select=value", {
+        headers: { apikey: serviceKey, authorization: "Bearer " + serviceKey },
+      }).then((response) => response.ok ? response.json() : [])
+    : Promise.resolve([]);
+  const [currencies, gold, silver, previous] = await Promise.allSettled([
     json("https://api.frankfurter.app/latest?from=USD&to=TRY,EUR"),
     json("https://api.gold-api.com/price/XAU"),
     json("https://api.gold-api.com/price/XAG"),
+    previousRequest,
   ]);
   const fx = currencies.status === "fulfilled" ? currencies.value : null;
   const usdTry = Number(fx?.rates?.TRY);
@@ -29,16 +37,31 @@ Deno.serve(async (request) => {
   const silverUsd = silver.status === "fulfilled" ? Number(silver.value?.price) : NaN;
   const perOunce = 31.1034768;
   const numberOrNull = (value: number) => Number.isFinite(value) && value > 0 ? Math.round(value * 100) / 100 : null;
+  const previousValue = previous.status === "fulfilled" ? previous.value?.[0]?.value || {} : {};
+  const movement = (current: number | null, old: unknown) => {
+    const before = Number(old);
+    if (!current || !Number.isFinite(before) || before <= 0) return { direction: "flat", percent: 0 };
+    const percent = Math.round(((current - before) / before) * 10000) / 100;
+    return { direction: percent > 0 ? "up" : percent < 0 ? "down" : "flat", percent: Math.abs(percent) };
+  };
 
-  const payload = {
+  const current = {
     usd_try: numberOrNull(usdTry),
     eur_try: numberOrNull(usdTry / usdEur),
     gold_try_gram: numberOrNull(goldUsd * usdTry / perOunce),
     silver_try_gram: numberOrNull(silverUsd * usdTry / perOunce),
+  };
+
+  const payload = {
+    ...current,
+    changes: {
+      usd: movement(current.usd_try, previousValue.usd_try),
+      eur: movement(current.eur_try, previousValue.eur_try),
+      gold: movement(current.gold_try_gram, previousValue.gold_try_gram),
+      silver: movement(current.silver_try_gram, previousValue.silver_try_gram),
+    },
     updated_at: new Date().toISOString(),
   };
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (supabaseUrl && serviceKey) {
     await fetch(supabaseUrl + "/rest/v1/site_settings?on_conflict=key", {
       method: "POST",

@@ -289,6 +289,34 @@
             color: #555;
         }
 
+        .article-source-card {
+            margin: 6px 32px 26px;
+            padding: 18px;
+            display: grid;
+            grid-template-columns: 46px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #dfe7ef;
+            border-left: 4px solid #1594ca;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f5f9fc, #fff);
+        }
+
+        .article-source-card[hidden] { display: none; }
+        .article-source-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: #e5f4fa; color: #0876a5; font-size: 20px; font-weight: 900; }
+        .article-source-copy { min-width: 0; }
+        .article-source-copy small { display: block; margin-bottom: 3px; color: #667085; font-size: 9px; font-weight: 900; letter-spacing: .1em; }
+        .article-source-copy strong { display: block; color: #0b1f3a; font-size: 14px; }
+        .article-source-copy span { display: block; margin-top: 3px; color: #667085; font-size: 11px; line-height: 1.45; }
+        .article-source-link { display: inline-flex; align-items: center; gap: 7px; padding: 10px 13px; border-radius: 8px; background: #0b1f3a; color: #fff; text-decoration: none; font-size: 11px; font-weight: 850; white-space: nowrap; }
+        .article-source-link:hover { background: #1594ca; }
+
+        @media (max-width: 680px) {
+            .article-source-card { margin: 4px 18px 22px; grid-template-columns: 40px minmax(0, 1fr); padding: 14px; }
+            .article-source-icon { width: 40px; height: 40px; }
+            .article-source-link { grid-column: 1 / -1; justify-content: center; }
+        }
+
         .article-share {
             display: flex;
             align-items: center;
@@ -629,7 +657,7 @@
             }
         }
     </style>
-  <link rel="stylesheet" href="portal-shell.css?v=17">
+  <link rel="stylesheet" href="portal-shell.css?v=20">
 </head>
 
 <body>
@@ -777,7 +805,7 @@
                             class="article-content"
                         ></div>
 
-                        <p id="article-source"></p>
+                        <aside id="article-source" class="article-source-card" aria-label="Haber kaynağı" hidden></aside>
 
                         <div class="article-share">
 
@@ -1608,19 +1636,32 @@
                     formatArticleContent(news.content);
 
                 source.replaceChildren();
+                source.hidden = true;
                 if (
                     news.origin_type === "automated" &&
                     news.source_name &&
                     /^https:\/\//i.test(news.source_url)
                 ) {
-                    const link =
-                        document.createElement("a");
+                    const icon = document.createElement("div");
+                    icon.className = "article-source-icon";
+                    icon.textContent = "↗";
+                    const copy = document.createElement("div");
+                    copy.className = "article-source-copy";
+                    const kicker = document.createElement("small");
+                    kicker.textContent = "HABER KAYNAĞI";
+                    const name = document.createElement("strong");
+                    name.textContent = news.source_name;
+                    const note = document.createElement("span");
+                    note.textContent = "Bu içerik kaynak bilgileri esas alınarak kısa haber özeti biçiminde hazırlanmıştır.";
+                    copy.append(kicker, name, note);
+                    const link = document.createElement("a");
+                    link.className = "article-source-link";
                     link.href = news.source_url;
                     link.target = "_blank";
                     link.rel = "noopener noreferrer";
-                    link.textContent =
-                        "Kaynak: " + news.source_name;
-                    source.appendChild(link);
+                    link.textContent = "Orijinal haberi görüntüle ↗";
+                    source.append(icon, copy, link);
+                    source.hidden = false;
                 }
 
                 renderImage(news);
@@ -2307,6 +2348,6 @@
         })();
     </script>
 
-  <script src="portal-shell.js?v=19" defer></script>
+  <script src="portal-shell.js?v=20" defer></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
   shell.className = "portal-shell-top";
   shell.innerHTML = `
     <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span></div><div class="top-info"><span>📍 Akçaabat</span><span>•</span><span>Trabzon</span><span>•</span><span id="portalCurrentTime">--:--</span></div></div></div>
-    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
+    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <header class="site-header portal-site-header" id="unifiedSiteHeader">
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
@@ -76,12 +76,26 @@
 
   const money = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value) && value > 0) element.textContent = money.format(value) + (suffix || ""); }
+  function setTrend(id, movement) {
+    const element = document.getElementById(id);
+    if (!element || !movement || !["up", "down"].includes(movement.direction)) return;
+    const percent = Number(movement.percent || 0);
+    element.className = "market-trend " + movement.direction;
+    element.textContent = (movement.direction === "up" ? "▲" : "▼") + (percent ? " %" + money.format(percent) : "");
+    element.hidden = false;
+    element.setAttribute("aria-label", movement.direction === "up" ? "Yükseldi" : "Düştü");
+  }
   function showMarket(data) {
     if (!data) return;
     setMarket("marketUsd", Number(data.usd_try), " ₺");
     setMarket("marketEur", Number(data.eur_try), " ₺");
     setMarket("marketGold", Number(data.gold_try_gram), " ₺/gr");
     setMarket("marketSilver", Number(data.silver_try_gram), " ₺/gr");
+    const changes = data.changes || {};
+    setTrend("marketUsdTrend", changes.usd);
+    setTrend("marketEurTrend", changes.eur);
+    setTrend("marketGoldTrend", changes.gold);
+    setTrend("marketSilverTrend", changes.silver);
   }
   async function loadMarketData() {
     try {

@@ -769,7 +769,7 @@
             }
         }
     </style>
-  <link rel="stylesheet" href="portal-shell.css?v=17">
+  <link rel="stylesheet" href="portal-shell.css?v=20">
 </head>
 
 <body>
@@ -879,10 +879,10 @@
                     role="status"
                     aria-live="polite"
                 >
-                    <strong>Form hazırlandı.</strong>
+                    <strong>Bildiriminiz alındı.</strong>
                     <span>
-                        E-posta uygulamanız açılacaktır. Mesajınızı
-                        göndermeden önce bilgileri kontrol edebilirsiniz.
+                        Mesajınız yönetim paneline iletildi ve incelenmek
+                        üzere kayıt altına alındı.
                     </span>
                 </div>
 
@@ -1298,7 +1298,7 @@
 
             form.addEventListener(
                 "submit",
-                function (event) {
+                async function (event) {
                     event.preventDefault();
 
                     if (!form.checkValidity()) {
@@ -1324,36 +1324,33 @@
                     const messageText =
                         document.getElementById("message").value.trim();
 
-                    const body =
-                        "Ad Soyad: " +
-                        (name || "Belirtilmedi") +
-                        "\n" +
-                        "E-posta: " +
-                        email +
-                        "\n" +
-                        "Bildirim Türü: " +
-                        type +
-                        "\n" +
-                        "İlgili Bağlantı: " +
-                        (url || "Belirtilmedi") +
-                        "\n\n" +
-                        "Açıklama:\n" +
-                        messageText;
-
-                    const mailto =
-                        "mailto:info@akcaabathaber.com.tr" +
-                        "?subject=" +
-                        encodeURIComponent(
-                            "[Site Bildirimi] " + subject
-                        ) +
-                        "&body=" +
-                        encodeURIComponent(body);
-
-                    if (successMessage) {
-                        successMessage.classList.add("show");
+                    const button = form.querySelector("button[type='submit']");
+                    button.disabled = true;
+                    button.textContent = "Gönderiliyor…";
+                    try {
+                        await window.AkcaabatSubmissions.submit({
+                            message_type: "report",
+                            name: name || "İsimsiz ziyaretçi",
+                            email: email,
+                            subject: type + " — " + subject,
+                            message: messageText,
+                            related_url: url
+                        });
+                        if (successMessage) {
+                            successMessage.querySelector("strong").textContent = "Bildiriminiz alındı.";
+                            successMessage.querySelector("span").textContent = "Mesajınız yönetim paneline iletildi ve incelenmek üzere kayıt altına alındı.";
+                            successMessage.classList.add("show");
+                        }
+                    } catch (error) {
+                        if (successMessage) {
+                            successMessage.querySelector("strong").textContent = "Gönderilemedi.";
+                            successMessage.querySelector("span").textContent = error.message || "Lütfen kısa süre sonra yeniden deneyin.";
+                            successMessage.classList.add("show");
+                        }
+                    } finally {
+                        button.disabled = false;
+                        button.textContent = "Bildirimi Gönder";
                     }
-
-                    window.location.href = mailto;
                 }
             );
 
@@ -1377,6 +1374,8 @@
         })();
     </script>
 
-  <script src="portal-shell.js?v=19" defer></script>
+  <script src="supabase-config.js"></script>
+  <script src="public-submissions.js?v=1"></script>
+  <script src="portal-shell.js?v=20" defer></script>
 </body>
 </html>

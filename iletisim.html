@@ -511,7 +511,7 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="portal-shell.css?v=17">
+  <link rel="stylesheet" href="portal-shell.css?v=20">
 </head>
 
 <body>
@@ -627,7 +627,7 @@
         </p>
 
         <div id="successMessage" class="success">
-          Mesajınız hazırlanmıştır. E-posta uygulamanız açılacaktır.
+          Mesajınız yönetim paneline iletildi. En kısa sürede incelenecektir.
         </div>
 
         <form id="contactForm" class="form">
@@ -745,7 +745,7 @@
     const form = document.getElementById("contactForm");
     const successMessage = document.getElementById("successMessage");
 
-    form.addEventListener("submit", function(event) {
+    form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
       if (!form.checkValidity()) {
@@ -758,29 +758,35 @@
       const subject = document.getElementById("subject").value.trim();
       const message = document.getElementById("message").value.trim();
 
-      const mailSubject =
-        encodeURIComponent("Akçaabat Haber - " + subject);
-
-      const mailBody = encodeURIComponent(
-        "Ad Soyad: " + name +
-        "\nE-posta: " + email +
-        "\n\nMesaj:\n" + message
-      );
-
-      const mailto =
-        "mailto:info@akcaabathaber.com.tr" +
-        "?subject=" + mailSubject +
-        "&body=" + mailBody;
-
-      successMessage.classList.add("show");
-
-      window.location.href = mailto;
+      const button = form.querySelector("button[type='submit']");
+      button.disabled = true;
+      button.textContent = "Gönderiliyor…";
+      try {
+        await window.AkcaabatSubmissions.submit({
+          message_type: subject === "Reklam" || subject === "İş Birliği" ? "advertising" : "contact",
+          name: name,
+          email: email,
+          subject: subject,
+          message: message
+        });
+        successMessage.textContent = "Mesajınız yönetim paneline iletildi. En kısa sürede incelenecektir.";
+        successMessage.classList.add("show");
+        form.reset();
+      } catch (error) {
+        successMessage.textContent = error.message || "Mesaj gönderilemedi. Lütfen tekrar deneyin.";
+        successMessage.classList.add("show");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Mesajı Gönder";
+      }
     });
 
     document.getElementById("year").textContent =
       new Date().getFullYear();
   </script>
 
-  <script src="portal-shell.js?v=19" defer></script>
+  <script src="supabase-config.js"></script>
+  <script src="public-submissions.js?v=1"></script>
+  <script src="portal-shell.js?v=20" defer></script>
 </body>
 </html>

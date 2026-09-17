@@ -15,6 +15,7 @@
     "taslaklar.html": ["Taslaklar", "Yayınlanmamış içerikleri yönetin"],
     "kategoriler.html": ["Kategoriler", "Haber kategorilerini düzenleyin"],
     "yorumlar.html": ["Yorumlar", "Okuyucu etkileşimlerini yönetin"],
+    "mesajlar.html": ["Gelen Mesajlar", "İletişim, sorun bildirimi ve reklam taleplerini yönetin"],
     "haber-botu.html": ["Haber Botu", "Kaynakları ve tarama ayarlarını yönetin"],
     "mac-yonetimi.html": ["Maç Merkezi Yönetimi", "Maç, skor ve puan durumu verilerini yönetin"],
     "trafik-yonetimi.html": ["Trafik Yönetimi", "Doğrulanmış trafik sağlayıcısını yönetin"],
@@ -33,6 +34,7 @@
     ["taslaklar.html", "◫", "Taslaklar"],
     ["kategoriler.html", "☷", "Kategoriler"],
     ["yorumlar.html", "◌", "Yorumlar"],
+    ["mesajlar.html", "✉", "Gelen Mesajlar"],
     ["haber-botu.html", "◆", "Haber Botu", "SERVİSLER"],
     ["mac-yonetimi.html", "⚽", "Maç Merkezi Yönetimi"],
     ["trafik-yonetimi.html", "≋", "Trafik Yönetimi"],
@@ -44,7 +46,7 @@
   let navHtml = "";
   links.forEach(function (item) {
     if (item[3]) navHtml += '<div class="unified-admin-label">' + item[3] + "</div>";
-    navHtml += '<a class="unified-admin-link' + (page === item[0] ? " active" : "") + '" href="' + item[0] + '" data-admin-page="' + item[0] + '"' + (page === item[0] ? ' aria-current="page"' : "") + (item[4] === "admin" ? ' data-admin-only' : "") + '><span class="unified-admin-icon">' + item[1] + "</span><span>" + item[2] + "</span></a>";
+    navHtml += '<a class="unified-admin-link' + (page === item[0] ? " active" : "") + '" href="' + item[0] + '" data-admin-page="' + item[0] + '"' + (page === item[0] ? ' aria-current="page"' : "") + (item[4] === "admin" ? ' data-admin-only' : "") + '><span class="unified-admin-icon">' + item[1] + "</span><span>" + item[2] + "</span>" + (item[0] === "mesajlar.html" ? '<b class="unified-admin-count" id="unifiedMessageCount" hidden>0</b>' : "") + "</a>";
   });
 
   const shell = document.createElement("div");
@@ -91,6 +93,14 @@
           const allowed = !limitedPages[role] || limitedPages[role].includes(link.dataset.adminPage);
           link.style.display = allowed ? "flex" : "none";
         });
+        if (["admin", "editor"].includes(role)) {
+          const countResult = await client.from("contact_messages").select("id", { count: "exact", head: true }).eq("status", "new");
+          const countTarget = document.getElementById("unifiedMessageCount");
+          if (countTarget && !countResult.error && countResult.count) {
+            countTarget.textContent = String(countResult.count);
+            countTarget.hidden = false;
+          }
+        }
       }
     } catch (_) {}
   }

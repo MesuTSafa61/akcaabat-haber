@@ -49,6 +49,65 @@ async function sha256(value: string) {
   return Array.from(new Uint8Array(hash)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+const contentFromSummary = (summary: string) => clean(summary, 1200)
+  .replace(/([.!?])\s+(?=[A-ZÇĞİÖŞÜ0-9])/g, "$1\n\n");
+
+function newsArticleSchema(value: unknown): Record<string, unknown> | null {
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const found = newsArticleSchema(entry);
+      if (found) return found;
+    }
+    return null;
+  }
+  if (!value || typeof value !== "object") return null;
+  const object = value as Record<string, unknown>;
+  const type = object["@type"];
+  if (type === "NewsArticle" || (Array.isArray(type) && type.includes("NewsArticle"))) return object;
+  return newsArticleSchema(object["@graph"]);
+}
+
+async function enrichFanatikItem(item: Item): Promise<Item> {
+  try {
+    const response = await fetch(item.url, {
+      signal: AbortSignal.timeout(8000),
+      redirect: "follow",
+      headers: {
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "tr-TR,tr;q=0.9",
+        "User-Agent": "AkcaabatHaberBot/1.0 (+https://akcaabathaber.com)",
+      },
+    });
+    if (!response.ok) return item;
+    const doc = new DOMParser().parseFromString(await response.text(), "text/html");
+    if (!doc) return item;
+    let structuredDescription = "";
+    for (const script of [...doc.querySelectorAll("script[type='application/ld+json']")]) {
+      try {
+        const schema = newsArticleSchema(JSON.parse(script.textContent || ""));
+        if (schema?.description) {
+          structuredDescription = String(schema.description);
+          break;
+        }
+      } catch { /* bozuk yapılandırılmış veri yerine meta açıklamasını kullan */ }
+    }
+    const summary = clean(
+      structuredDescription ||
+      doc.querySelector("meta[name='description']")?.getAttribute("content") ||
+      doc.querySelector("meta[property='og:description']")?.getAttribute("content"),
+      700,
+    ).replace(/\s*(?:\.{3}|…)\s*$/, "…");
+    const detailImage = doc.querySelector("meta[property='og:image']")?.getAttribute("content");
+    return {
+      ...item,
+      summary: summary || item.summary,
+      imageUrl: detailImage && /^https:\/\//i.test(detailImage) ? detailImage : item.imageUrl,
+    };
+  } catch {
+    return item;
+  }
+}
+
 function rssItems(xml: string): Item[] {
   const doc = new DOMParser().parseFromString(xml, "text/xml");
   if (!doc || doc.querySelector("parsererror")) throw new Error("Geçersiz RSS/XML");
@@ -214,36 +273,78 @@ Deno.serve(async (request) => {
         const responseBody = await response.text();
         const isFanatikHtml = source.feed_url.includes("fanatik.com.tr") &&
           (contentType.includes("text/html") || /<!doctype\s+html|<html[\s>]/i.test(responseBody));
-        const items = source.source_type === "api"
+        let items = source.source_type === "api"
           ? apiItems(JSON.parse(responseBody))
           : isFanatikHtml
             ? fanatikItems(responseBody, response.url || source.feed_url)
             : rssItems(responseBody);
+        if (isFanatikHtml) {
+          items = await Promise.all(items.map(enrichFanatikItem));
+        }
 
         for (const item of items) {
           totals.found_count++;
+          // Fanatik liste sayfasında içerik özeti yoktur. Ayrıntı sayfası okunamadıysa
+          // yalnız başlık ve bağlantıdan oluşan eksik bir haber yayımlama.
+          if (source.feed_url.includes("fanatik.com.tr") && !item.summary) {
+            totals.skipped_count++;
+            continue;
+          }
           const match = classify(item, settings.keywords || {}) ||
             (source.category ? { scope: source.category, score: 2, tags: [source.category] } : null);
           if (!match) { totals.skipped_count++; continue; }
           const fingerprint = await sha256([item.url, item.title.toLocaleLowerCase("tr-TR"), item.publishedAt || ""].join("|"));
           const duplicateChecks = await Promise.all([
-            client.from("news_bot_items").select("id").eq("source_url", item.url).limit(1),
-            client.from("news_bot_items").select("id").eq("fingerprint", fingerprint).limit(1),
+            client.from("news_bot_items").select("id,news_id").eq("source_url", item.url).limit(1),
+            client.from("news_bot_items").select("id,news_id").eq("fingerprint", fingerprint).limit(1),
             item.guid
-              ? client.from("news_bot_items").select("id").eq("source_id", source.id).eq("source_guid", item.guid).limit(1)
+              ? client.from("news_bot_items").select("id,news_id").eq("source_id", source.id).eq("source_guid", item.guid).limit(1)
               : Promise.resolve({ data: [] }),
           ]);
-          if (duplicateChecks.some((result) => result.data?.length)) {
+          const duplicate = duplicateChecks.flatMap((result) => result.data || [])[0];
+          if (duplicate) {
             totals.duplicate_count++;
+            if (duplicate.news_id) {
+              const { data: existing } = await client.from("news")
+                .select("id,status,published_at,content,source_summary")
+                .eq("id", duplicate.news_id).maybeSingle();
+              if (existing) {
+                const placeholder = !existing.source_summary ||
+                  /kaynağından alınan haber başlığı|Orijinal haber:/i.test(existing.content || "");
+                const botManagedContent = placeholder || clean(existing.content || "", 1200) ===
+                  clean(contentFromSummary(existing.source_summary || ""), 1200);
+                const updates: Record<string, unknown> = {};
+                if (botManagedContent && item.summary) {
+                  updates.summary = item.summary;
+                  updates.content = contentFromSummary(item.summary);
+                  updates.source_summary = item.summary;
+                  if (source.allow_remote_image && item.imageUrl) updates.image_url = item.imageUrl;
+                }
+                if (settings.default_mode === "auto_publish" && source.auto_publish &&
+                  source.trust_level >= 4 && existing.status === "draft") {
+                  updates.status = "published";
+                  updates.published_at = existing.published_at || new Date().toISOString();
+                }
+                if (Object.keys(updates).length) {
+                  updates.updated_at = new Date().toISOString();
+                  await client.from("news").update(updates).eq("id", existing.id);
+                }
+              }
+              await client.from("news_bot_items").update({
+                summary: item.summary || null,
+                remote_image_url: source.allow_remote_image ? item.imageUrl : null,
+                source_published_at: item.publishedAt,
+              }).eq("id", duplicate.id);
+            }
             continue;
           }
 
           const status = settings.default_mode === "auto_publish" && source.auto_publish && source.trust_level >= 4
             ? "published" : "draft";
-          const summary = item.summary || `${source.name} kaynağından alınan haber başlığı.`;
+          const summary = item.summary;
           const payload = {
             title: item.title, slug: slugify(item.title) + "-" + fingerprint.slice(0, 8),
-            summary, content: summary + "\n\nKaynak: " + source.name + "\nOrijinal haber: " + item.url,
+            summary, content: contentFromSummary(summary),
             category_id: categoryId(match.scope), image_url: source.allow_remote_image ? item.imageUrl : null,
             status, published_at: status === "published" ? new Date().toISOString() : null,
             origin_type: "automated", source_id: source.id, source_name: source.name,

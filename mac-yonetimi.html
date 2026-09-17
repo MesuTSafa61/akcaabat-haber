@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Maç Merkezi Yönetimi | Akçaabat Haber</title>
-  <link rel="stylesheet" href="admin-shell.css?v=2">
+  <link rel="stylesheet" href="admin-shell.css?v=4">
 </head>
 <body>
   <main class="admin-tool-page" id="toolPage" hidden>
@@ -58,6 +58,6 @@
     (async()=>{client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(e=>{page.hidden=false;message(e.message||"Maç merkezi yönetimi açılamadı.",true)})
   })();
   </script>
-  <script src="admin-shell.js?v=2"></script>
+  <script src="admin-shell.js?v=4"></script>
 </body>
 </html>
