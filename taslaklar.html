@@ -822,17 +822,15 @@
 
         if (
             !profile ||
-            !["admin", "editor"].includes(profile.role)
+            !["admin", "editor", "writer", "reporter"].includes(profile.role)
         ) {
             await client.auth.signOut();
             window.location.href = "admin-giris.html";
             return false;
         }
 
-        userRole.textContent =
-            profile.role === "admin"
-                ? "Yönetici"
-                : "Editör";
+        const roleNames = { admin: "Yönetici", editor: "Editör", writer: "Köşe Yazarı", reporter: "Muhabir" };
+        userRole.textContent = roleNames[profile.role] || "Yetkili";
 
         return true;
     }

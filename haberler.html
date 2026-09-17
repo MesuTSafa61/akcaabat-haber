@@ -601,7 +601,7 @@
 
             if (
                 !profile ||
-                !["admin", "editor"].includes(
+                !["admin", "editor", "writer", "reporter"].includes(
                     profile.role
                 )
             ) {
@@ -668,7 +668,7 @@
                 await client
                     .from("news")
                     .select(
-                        "id,title,slug,summary,image_url,status,is_breaking,views,published_at,created_at,updated_at,category_id,categories(id,name,slug)"
+                        "id,title,slug,summary,image_url,status,is_breaking,views,published_at,created_at,updated_at,category_id,author_id,content_type,categories(id,name,slug)"
                     )
                     .order("created_at", {
                         ascending: false
@@ -890,6 +890,10 @@
                             item.slug || ""
                         );
 
+                    const canEdit =
+                        ["admin", "editor"].includes(profile.role) ||
+                        (item.author_id === user.id && item.status === "draft");
+
                     return `
                         <tr>
                             <td>
@@ -931,12 +935,11 @@
                             <td>
                                 <div class="news-actions">
 
-                                    <a
-                                        href="${editUrl}"
-                                        class="news-action"
-                                    >
-                                        Düzenle
-                                    </a>
+                                    ${canEdit ? `
+                                        <a href="${editUrl}" class="news-action">
+                                            Düzenle
+                                        </a>
+                                    ` : ""}
 
                                     ${
                                         item.status === "published"
@@ -953,13 +956,11 @@
                                             : ""
                                     }
 
-                                    <button
-                                        type="button"
-                                        class="news-action delete"
-                                        data-delete-id="${escapeHTML(item.id)}"
-                                    >
-                                        Sil
-                                    </button>
+                                    ${canEdit ? `
+                                        <button type="button" class="news-action delete" data-delete-id="${escapeHTML(item.id)}">
+                                            Sil
+                                        </button>
+                                    ` : ""}
 
                                 </div>
                             </td>

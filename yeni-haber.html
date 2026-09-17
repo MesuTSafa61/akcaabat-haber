@@ -933,6 +933,7 @@
     let client = null;
     let currentUser = null;
     let currentNews = null;
+    let currentRole = "";
     let isEditMode = false;
     let isSaving = false;
 
@@ -1206,7 +1207,7 @@
 
         if (
             !profile ||
-            !["admin", "editor"].includes(
+            !["admin", "editor", "writer", "reporter"].includes(
                 profile.role
             )
         ) {
@@ -1218,10 +1219,14 @@
             return false;
         }
 
-        userRole.textContent =
-            profile.role === "admin"
-                ? "Yönetici"
-                : "Editör";
+        currentRole = profile.role;
+        const roleNames = { admin: "Yönetici", editor: "Editör", writer: "Köşe Yazarı", reporter: "Muhabir" };
+        userRole.textContent = roleNames[currentRole] || "Yetkili";
+        if (!["admin", "editor"].includes(currentRole)) {
+            publishBtn.hidden = true;
+            headlineInput.disabled = true;
+            breakingInput.disabled = true;
+        }
 
         metaAuthor.textContent =
             profile.display_name ||
@@ -1329,7 +1334,8 @@
                     author_id,
                     published_at,
                     created_at,
-                    updated_at
+                    updated_at,
+                    content_type
                 `)
                 .eq("id", id)
                 .maybeSingle();
@@ -1711,6 +1717,9 @@
         deleteBtn.disabled = true;
 
         try {
+            if (status === "published" && !["admin", "editor"].includes(currentRole)) {
+                throw new Error("Bu rol yalnızca taslak hazırlayabilir. Yayınlama işlemini editör veya yönetici yapmalıdır.");
+            }
             const data =
                 getFormData();
 
@@ -1790,7 +1799,12 @@
                         : null,
 
                 author_id:
-                    currentUser.id
+                    currentNews && currentNews.author_id ? currentNews.author_id : currentUser.id,
+
+                content_type:
+                    currentNews && currentNews.content_type
+                        ? currentNews.content_type
+                        : (currentRole === "writer" ? "column" : "news")
             };
 
             if (

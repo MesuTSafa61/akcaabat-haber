@@ -1465,7 +1465,7 @@
             .maybeSingle();
 
         if (profileResult.error || !profileResult.data ||
-            !["admin", "editor"].includes(profileResult.data.role)) {
+            !["admin", "editor", "moderator"].includes(profileResult.data.role)) {
             await client.auth.signOut();
             window.location.href = "admin-giris.html";
             return;

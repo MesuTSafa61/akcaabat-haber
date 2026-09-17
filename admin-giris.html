@@ -783,6 +783,35 @@
 
             }
 
+            async function openPanelForUser(user) {
+                const profileResult = await client
+                    .from("profiles")
+                    .select("role,is_active")
+                    .eq("id", user.id)
+                    .maybeSingle();
+
+                if (profileResult.error || !profileResult.data || !profileResult.data.is_active) {
+                    await client.auth.signOut();
+                    throw new Error("Bu hesabın aktif bir yönetim profili bulunmuyor.");
+                }
+
+                const destinations = {
+                    admin: "admin-panel.html",
+                    editor: "admin-panel.html",
+                    moderator: "yorumlar.html",
+                    writer: "taslaklar.html",
+                    reporter: "taslaklar.html"
+                };
+
+                const destination = destinations[profileResult.data.role];
+                if (!destination) {
+                    await client.auth.signOut();
+                    throw new Error("Bu hesaba geçerli bir görev rolü atanmamış.");
+                }
+
+                window.location.replace(destination);
+            }
+
 
             async function initialize() {
 
@@ -812,9 +841,7 @@
                         result.data.user
                     ) {
 
-                        window.location.replace(
-                            "admin.html"
-                        );
+                        await openPanelForUser(result.data.user);
 
                     }
 
@@ -942,16 +969,12 @@
                         );
 
 
-                        setTimeout(
-                            function () {
-
-                                window.location.replace(
-                                    "admin.html"
-                                );
-
-                            },
-                            500
-                        );
+                        window.setTimeout(function () {
+                            openPanelForUser(result.data.user).catch(function (error) {
+                                setLoading(false);
+                                showMessage(error.message || "Yönetim paneli açılamadı.", "error");
+                            });
+                        }, 500);
 
 
                     } catch (error) {

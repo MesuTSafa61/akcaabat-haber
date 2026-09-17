@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kullanıcı ve Yetki Yönetimi | Akçaabat Haber</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="admin-shell.css?v=3">
+  <style>
+    :root{--ink:#132238;--muted:#65758a;--line:#dfe5ec;--red:#c91f2d;--green:#147d50;--blue:#175cd3}
+    *{box-sizing:border-box}
+    body{margin:0;background:#f4f6f8;color:var(--ink);font-family:Inter,Arial,sans-serif}
+    .staff-page{width:min(1180px,calc(100% - 36px));margin:0 auto;padding:28px 0 54px}
+    .staff-alert{display:none;margin-bottom:16px;padding:12px 14px;border:1px solid #f1c5c9;background:#fff4f5;color:#a91624;font-size:13px;font-weight:700}
+    .staff-alert.show{display:block}.staff-alert.success{border-color:#a9dfc5;background:#f0fbf5;color:#11663f}
+    .staff-card{margin-bottom:18px;border:1px solid var(--line);background:#fff;box-shadow:0 7px 22px rgba(19,34,56,.05)}
+    .staff-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 22px;border-bottom:1px solid var(--line)}
+    .staff-card-head h2{margin:0;font-size:18px}.staff-card-head p{margin:6px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
+    .invite-form{display:grid;grid-template-columns:1.2fr 1.5fr 1fr auto;gap:12px;padding:20px 22px;align-items:end}
+    .field{display:grid;gap:7px}.field label{font-size:11px;font-weight:850;color:#33445b}.field input,.field select{height:42px;width:100%;border:1px solid #cfd7e2;border-radius:5px;background:#fff;padding:0 11px;color:var(--ink);font:inherit;font-size:13px}.field input:focus,.field select:focus{outline:2px solid rgba(23,92,211,.18);border-color:#6d9bea}
+    .button{height:42px;border:0;border-radius:5px;padding:0 17px;background:var(--red);color:#fff;font-weight:850;cursor:pointer}.button:disabled{opacity:.55;cursor:not-allowed}.button.secondary{background:#e8edf3;color:#23354d}.button.small{height:34px;padding:0 12px;font-size:11px}
+    .role-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:18px 22px}.role-card{border:1px solid var(--line);background:#fafbfd;padding:13px}.role-card strong{display:block;font-size:12px}.role-card span{display:block;margin-top:5px;color:var(--muted);font-size:10px;line-height:1.45}
+    .table-wrap{overflow:auto}.staff-table{width:100%;min-width:900px;border-collapse:collapse}.staff-table th{padding:11px 13px;background:#f7f9fb;border-bottom:1px solid var(--line);color:#55657a;font-size:10px;text-align:left;letter-spacing:.04em}.staff-table td{padding:12px 13px;border-bottom:1px solid #edf0f4;vertical-align:middle;font-size:12px}.staff-table tr:last-child td{border-bottom:0}.staff-table input[type="text"],.staff-table select{height:35px;border:1px solid #cfd7e2;border-radius:4px;padding:0 9px;background:#fff;color:var(--ink);font-size:12px}.staff-table input[type="text"]{width:180px}.staff-table select{width:135px}.email{font-weight:750}.muted{display:block;margin-top:3px;color:var(--muted);font-size:9px}.active-toggle{display:inline-flex;align-items:center;gap:7px;font-weight:750}.empty{padding:30px!important;text-align:center;color:var(--muted)}
+    .loading-cover{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;background:#f4f6f8}.loading-cover.hide{display:none}.loading-box{display:grid;gap:10px;text-align:center}.spinner{width:32px;height:32px;margin:auto;border:3px solid #dbe2ea;border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:980px){.invite-form{grid-template-columns:1fr 1fr}.role-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.staff-page{width:calc(100% - 20px);padding-top:16px}.staff-card-head{padding:16px}.invite-form{grid-template-columns:1fr;padding:16px}.role-grid{grid-template-columns:1fr;padding:16px}}
+  </style>
+</head>
+<body>
+  <div class="loading-cover" id="loadingCover"><div class="loading-box"><div class="spinner"></div><strong>Yetkiler kontrol ediliyor…</strong></div></div>
+
+  <main class="staff-page">
+    <div class="staff-alert" id="staffAlert" role="status"></div>
+
+    <section class="staff-card">
+      <div class="staff-card-head">
+        <div><h2>Yeni ekip üyesi davet et</h2><p>Kullanıcıya güvenli giriş daveti gönderilir ve seçtiğiniz rol otomatik atanır.</p></div>
+      </div>
+      <form class="invite-form" id="inviteForm">
+        <div class="field"><label for="inviteName">Ad soyad</label><input id="inviteName" maxlength="100" placeholder="Örn. Ayşe Yılmaz"></div>
+        <div class="field"><label for="inviteEmail">E-posta</label><input id="inviteEmail" type="email" required autocomplete="email" placeholder="kullanici@ornek.com"></div>
+        <div class="field"><label for="inviteRole">Yetki</label><select id="inviteRole" required><option value="editor">Editör</option><option value="moderator">Moderatör</option><option value="writer">Köşe Yazarı</option><option value="reporter">Muhabir</option><option value="admin">Yönetici</option></select></div>
+        <button class="button" id="inviteButton" type="submit">Davet Gönder</button>
+      </form>
+    </section>
+
+    <section class="staff-card">
+      <div class="staff-card-head"><div><h2>Rol açıklamaları</h2><p>Her kullanıcıya görevinin gerektirdiği en düşük yetkiyi verin.</p></div></div>
+      <div class="role-grid">
+        <div class="role-card"><strong>Yönetici</strong><span>Tüm içerik, ayar ve kullanıcı yetkilerini yönetir.</span></div>
+        <div class="role-card"><strong>Editör</strong><span>Haberleri düzenler, yayınlar ve içerik ayarlarını yönetir.</span></div>
+        <div class="role-card"><strong>Moderatör</strong><span>Yorumları inceler, onaylar, reddeder veya siler.</span></div>
+        <div class="role-card"><strong>Köşe Yazarı</strong><span>Kendi köşe yazılarını taslak olarak hazırlar.</span></div>
+        <div class="role-card"><strong>Muhabir</strong><span>Kendi haberlerini taslak olarak hazırlar.</span></div>
+      </div>
+    </section>
+
+    <section class="staff-card">
+      <div class="staff-card-head"><div><h2>Ekip üyeleri</h2><p>Rolü, görünen adı ve hesabın aktiflik durumunu buradan değiştirin.</p></div><button class="button secondary small" id="refreshButton" type="button">Yenile</button></div>
+      <div class="table-wrap"><table class="staff-table"><thead><tr><th>KULLANICI</th><th>GÖRÜNEN AD</th><th>ROL</th><th>DURUM</th><th>SON GÜNCELLEME</th><th>İŞLEM</th></tr></thead><tbody id="staffBody"><tr><td class="empty" colspan="6">Kullanıcılar yükleniyor…</td></tr></tbody></table></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+  (function(){
+    "use strict";
+    const config=window.AKCAABAT_SUPABASE;
+    const client=window.supabase.createClient(config.url,config.key);
+    const loading=document.getElementById("loadingCover");
+    const alertBox=document.getElementById("staffAlert");
+    const body=document.getElementById("staffBody");
+    const inviteForm=document.getElementById("inviteForm");
+    const inviteButton=document.getElementById("inviteButton");
+    const refreshButton=document.getElementById("refreshButton");
+    let currentUserId="";
+
+    const roles={admin:"Yönetici",editor:"Editör",moderator:"Moderatör",writer:"Köşe Yazarı",reporter:"Muhabir"};
+    function message(text,type){alertBox.textContent=text;alertBox.className="staff-alert show"+(type==="success"?" success":"");window.clearTimeout(message.timer);message.timer=window.setTimeout(function(){alertBox.className="staff-alert"},6000)}
+    function date(value){if(!value)return"-";return new Date(value).toLocaleString("tr-TR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})}
+    function option(value,label,selected){const item=document.createElement("option");item.value=value;item.textContent=label;item.selected=value===selected;return item}
+
+    async function requireAdmin(){
+      const userResult=await client.auth.getUser();
+      const user=userResult.data&&userResult.data.user;
+      if(userResult.error||!user){location.replace("admin-giris.html");return false}
+      currentUserId=user.id;
+      const profileResult=await client.from("profiles").select("role,is_active").eq("id",user.id).maybeSingle();
+      if(profileResult.error||!profileResult.data||!profileResult.data.is_active||profileResult.data.role!=="admin"){
+        location.replace("admin-panel.html");return false
+      }
+      loading.classList.add("hide");return true
+    }
+
+    function render(rows){
+      body.textContent="";
+      if(!rows.length){const row=document.createElement("tr");const cell=document.createElement("td");cell.colSpan=6;cell.className="empty";cell.textContent="Henüz ekip üyesi bulunmuyor.";row.appendChild(cell);body.appendChild(row);return}
+      rows.forEach(function(item){
+        const row=document.createElement("tr");row.dataset.userId=item.user_id;
+        const identity=document.createElement("td");identity.className="email";identity.textContent=item.email||"E-posta yok";const id=document.createElement("span");id.className="muted";id.textContent=item.user_id;identity.appendChild(id);
+        const nameCell=document.createElement("td");const name=document.createElement("input");name.type="text";name.maxLength=100;name.value=item.display_name||"";name.dataset.field="name";nameCell.appendChild(name);
+        const roleCell=document.createElement("td");const select=document.createElement("select");select.dataset.field="role";Object.keys(roles).forEach(function(key){select.appendChild(option(key,roles[key],item.role))});roleCell.appendChild(select);
+        const activeCell=document.createElement("td");const activeLabel=document.createElement("label");activeLabel.className="active-toggle";const active=document.createElement("input");active.type="checkbox";active.checked=Boolean(item.is_active);active.dataset.field="active";activeLabel.append(active,document.createTextNode(item.is_active?"Aktif":"Pasif"));active.addEventListener("change",function(){activeLabel.lastChild.textContent=active.checked?"Aktif":"Pasif"});activeCell.appendChild(activeLabel);
+        const updated=document.createElement("td");updated.textContent=date(item.updated_at);
+        const action=document.createElement("td");const save=document.createElement("button");save.type="button";save.className="button small";save.textContent="Kaydet";save.addEventListener("click",function(){saveRow(row,save)});action.appendChild(save);
+        if(item.user_id===currentUserId){select.disabled=true;active.disabled=true;const note=document.createElement("span");note.className="muted";note.textContent="Kendi yönetici yetkiniz korunur";roleCell.appendChild(note)}
+        row.append(identity,nameCell,roleCell,activeCell,updated,action);body.appendChild(row)
+      })
+    }
+
+    async function loadStaff(){
+      refreshButton.disabled=true;
+      try{const result=await client.functions.invoke("staff-admin",{body:{action:"list"}});if(result.error)throw result.error;if(result.data&&result.data.error)throw new Error(result.data.error);render(result.data&&result.data.users||[])}
+      catch(error){body.innerHTML='<tr><td class="empty" colspan="6">Kullanıcılar yüklenemedi.</td></tr>';message(error.message||"Kullanıcılar yüklenemedi.")}
+      finally{refreshButton.disabled=false}
+    }
+
+    async function saveRow(row,button){
+      const name=row.querySelector('[data-field="name"]');const role=row.querySelector('[data-field="role"]');const active=row.querySelector('[data-field="active"]');button.disabled=true;button.textContent="Kaydediliyor…";
+      try{const result=await client.functions.invoke("staff-admin",{body:{action:"update",user_id:row.dataset.userId,display_name:name.value.trim(),role:role.value,is_active:active.checked}});if(result.error)throw result.error;if(result.data&&result.data.error)throw new Error(result.data.error);message("Kullanıcı yetkileri güncellendi.","success");await loadStaff()}
+      catch(error){message(error.message||"Yetkiler güncellenemedi.")}
+      finally{button.disabled=false;button.textContent="Kaydet"}
+    }
+
+    inviteForm.addEventListener("submit",async function(event){
+      event.preventDefault();inviteButton.disabled=true;inviteButton.textContent="Gönderiliyor…";
+      try{const result=await client.functions.invoke("staff-admin",{body:{action:"invite",email:document.getElementById("inviteEmail").value.trim(),display_name:document.getElementById("inviteName").value.trim(),role:document.getElementById("inviteRole").value,site_url:location.origin}});if(result.error)throw result.error;if(result.data&&result.data.error)throw new Error(result.data.error);inviteForm.reset();document.getElementById("inviteRole").value="editor";message("Davet gönderildi ve kullanıcı rolü kaydedildi.","success");await loadStaff()}
+      catch(error){message(error.message||"Davet gönderilemedi.")}
+      finally{inviteButton.disabled=false;inviteButton.textContent="Davet Gönder"}
+    });
+    refreshButton.addEventListener("click",loadStaff);
+    requireAdmin().then(function(ok){if(ok)loadStaff()}).catch(function(error){message(error.message||"Yetki kontrolü başarısız.");loading.classList.add("hide")});
+  })();
+  </script>
+  <script src="admin-shell.js?v=3"></script>
+</body>
+</html>

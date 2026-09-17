@@ -20,6 +20,7 @@
     "trafik-yonetimi.html": ["Trafik Yönetimi", "Doğrulanmış trafik sağlayıcısını yönetin"],
     "reklam-yonetimi.html": ["Reklam Yönetimi", "Reklam alanlarını ve yayın tarihlerini yönetin"],
     "canli-servisler.html": ["Canlı Servisler", "Kamera ve trafik kaynaklarını yönetin"],
+    "yetki-yonetimi.html": ["Kullanıcı ve Yetki Yönetimi", "Ekip üyelerini, rolleri ve erişimleri yönetin"],
     "ayarlar.html": ["Ayarlar", "Site ve yönetim ayarlarını düzenleyin"]
   };
   const current = pageData[page] || ["Yönetim Paneli", "Akçaabat Haber yönetim merkezi"];
@@ -37,17 +38,18 @@
     ["trafik-yonetimi.html", "≋", "Trafik Yönetimi"],
     ["reklam-yonetimi.html", "▣", "Reklam Yönetimi"],
     ["canli-servisler.html", "◉", "Canlı Servisler"],
+    ["yetki-yonetimi.html", "♙", "Kullanıcı ve Yetkiler", "EKİP", "admin"],
     ["ayarlar.html", "⚙", "Ayarlar", "SİSTEM"]
   ];
   let navHtml = "";
   links.forEach(function (item) {
     if (item[3]) navHtml += '<div class="unified-admin-label">' + item[3] + "</div>";
-    navHtml += '<a class="unified-admin-link' + (page === item[0] ? " active" : "") + '" href="' + item[0] + '"' + (page === item[0] ? ' aria-current="page"' : "") + '><span class="unified-admin-icon">' + item[1] + "</span><span>" + item[2] + "</span></a>";
+    navHtml += '<a class="unified-admin-link' + (page === item[0] ? " active" : "") + '" href="' + item[0] + '" data-admin-page="' + item[0] + '"' + (page === item[0] ? ' aria-current="page"' : "") + (item[4] === "admin" ? ' data-admin-only' : "") + '><span class="unified-admin-icon">' + item[1] + "</span><span>" + item[2] + "</span></a>";
   });
 
   const shell = document.createElement("div");
   shell.className = "unified-admin-shell";
-  shell.innerHTML = '<aside class="unified-admin-sidebar"><a class="unified-admin-brand" href="admin-panel.html"><span class="unified-admin-mark">AH</span><span class="unified-admin-brand-copy"><strong>AKÇAABAT HABER</strong><span>YÖNETİM MERKEZİ</span></span></a><nav class="unified-admin-nav">' + navHtml + '</nav><div class="unified-admin-sidebar-bottom"><a href="index.html" target="_blank" rel="noopener">↗ Siteyi Görüntüle</a></div></aside><header class="unified-admin-topbar"><button class="unified-admin-menu" id="unifiedAdminMenu" type="button" aria-label="Menüyü aç" aria-expanded="false">☰</button><div class="unified-admin-title"><h1>' + current[0] + '</h1><p>' + current[1] + '</p></div><div class="unified-admin-actions"><div class="unified-admin-user"><strong id="unifiedAdminEmail">Yönetici</strong><span>Yetkili kullanıcı</span></div><a class="unified-admin-view" href="index.html" target="_blank" rel="noopener">Siteyi Aç</a><button class="unified-admin-logout" id="unifiedAdminLogout" type="button">Çıkış</button></div></header><div class="unified-admin-overlay" id="unifiedAdminOverlay"></div>';
+  shell.innerHTML = '<aside class="unified-admin-sidebar"><a class="unified-admin-brand" href="admin-panel.html"><img class="unified-admin-brand-logo" data-admin-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber"><span class="unified-admin-brand-copy"><strong>AKÇAABAT HABER</strong><span>YÖNETİM MERKEZİ</span></span></a><nav class="unified-admin-nav">' + navHtml + '</nav><div class="unified-admin-sidebar-bottom"><a href="index.html" target="_blank" rel="noopener">↗ Siteyi Görüntüle</a></div></aside><header class="unified-admin-topbar"><button class="unified-admin-menu" id="unifiedAdminMenu" type="button" aria-label="Menüyü aç" aria-expanded="false">☰</button><div class="unified-admin-title"><h1>' + current[0] + '</h1><p>' + current[1] + '</p></div><div class="unified-admin-actions"><div class="unified-admin-user"><strong id="unifiedAdminEmail">Yönetici</strong><span id="unifiedAdminRole">Yetkili kullanıcı</span></div><a class="unified-admin-view" href="index.html" target="_blank" rel="noopener">Siteyi Aç</a><button class="unified-admin-logout" id="unifiedAdminLogout" type="button">Çıkış</button></div></header><div class="unified-admin-overlay" id="unifiedAdminOverlay"></div>';
   body.insertBefore(shell, body.firstChild);
 
   const menu = document.getElementById("unifiedAdminMenu");
@@ -72,6 +74,41 @@
       const email = result.data && result.data.user && result.data.user.email;
       const target = document.getElementById("unifiedAdminEmail");
       if (target && email) target.textContent = email;
+      const user = result.data && result.data.user;
+      if (user) {
+        const profileResult = await client.from("profiles").select("role,is_active").eq("id", user.id).maybeSingle();
+        const role = profileResult.data && profileResult.data.is_active ? profileResult.data.role : "";
+        const roleNames = { admin: "Yönetici", editor: "Editör", moderator: "Moderatör", writer: "Köşe Yazarı", reporter: "Muhabir" };
+        const roleTarget = document.getElementById("unifiedAdminRole");
+        if (roleTarget) roleTarget.textContent = roleNames[role] || "Yetkili kullanıcı";
+        body.classList.toggle("admin-role-ready", role === "admin");
+        const limitedPages = {
+          moderator: ["yorumlar.html"],
+          writer: ["haberler.html", "yeni-haber.html", "taslaklar.html"],
+          reporter: ["haberler.html", "yeni-haber.html", "taslaklar.html"]
+        };
+        shell.querySelectorAll("[data-admin-page]").forEach(function (link) {
+          const allowed = !limitedPages[role] || limitedPages[role].includes(link.dataset.adminPage);
+          link.style.display = allowed ? "flex" : "none";
+        });
+      }
+    } catch (_) {}
+  }
+  function safeBrandUrl(value) {
+    if (!value) return "";
+    try {
+      const url = new URL(value, location.href);
+      return url.protocol === "https:" || url.origin === location.origin ? url.href : "";
+    } catch (_) { return ""; }
+  }
+  async function loadBranding() {
+    try {
+      const client = getClient();
+      if (!client) return;
+      const result = await client.from("site_settings").select("value").eq("key", "site").maybeSingle();
+      const configured = result.data && result.data.value && result.data.value.brandLogoUrl;
+      const logoUrl = safeBrandUrl(configured) || new URL("assets/akcaabat-haber-logo-final-v2.png?v=2", location.href).href;
+      shell.querySelectorAll("[data-admin-brand-logo]").forEach(function (image) { image.src = logoUrl; });
     } catch (_) {}
   }
   const logout = document.getElementById("unifiedAdminLogout");
@@ -90,5 +127,5 @@
   const observer = new MutationObserver(revealShell);
   const gated = document.getElementById("adminShell") || document.getElementById("adminApp");
   if (gated) observer.observe(gated, { attributes: true, attributeFilter: ["style", "class"] });
-  window.setTimeout(function () { revealShell(); loadUser(); }, 300);
+  window.setTimeout(function () { revealShell(); loadUser(); loadBranding(); }, 300);
 })();
