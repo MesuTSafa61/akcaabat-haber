@@ -28,5 +28,5 @@
     function card(item){const c=item.data.current,d=item.data.daily;return'<article class="weather-card'+(item.location.primary?' primary':'')+'"><div class="weather-head"><h2>'+esc(item.location.name)+'</h2><span class="weather-icon">'+icon(c.weather_code)+'</span></div><div class="weather-current"><span class="weather-temp">'+Math.round(c.temperature_2m)+'°</span><span class="weather-meta"><span>Hissedilen '+Math.round(c.apparent_temperature)+'°</span><span>Nem %'+Math.round(c.relative_humidity_2m)+'</span><span>Rüzgâr '+Math.round(c.wind_speed_10m)+' km/sa</span></span></div><div class="forecast">'+d.time.map((date,i)=>'<div>'+day(date)+'<br>'+icon(d.weather_code[i])+'<strong>'+Math.round(d.temperature_2m_max[i])+'° / '+Math.round(d.temperature_2m_min[i])+'°</strong></div>').join('')+'</div></article>'}
     Promise.all(locations.map(getWeather)).then(items=>{grid.innerHTML=items.map(card).join('')}).catch(()=>{grid.innerHTML='<div class="weather-empty"><strong>Hava durumu şu anda alınamıyor.</strong><br>Lütfen kısa süre sonra yeniden deneyin.</div>'});
   })();
-  </script><script src="portal-shell.js?v=15"></script>
+  </script><script src="portal-shell.js?v=16"></script>
 </body></html>

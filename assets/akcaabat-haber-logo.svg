@@ -17,6 +17,6 @@
     <text x="435" y="148" fill="#071a33" font-size="78" font-weight="900" letter-spacing="-2">AKÇAABAT</text>
     <text x="862" y="148" fill="#d71920" font-size="74" font-weight="900" letter-spacing="-1">HABER</text>
     <line x1="438" y1="178" x2="1118" y2="178" stroke="#d71920" stroke-width="3"/>
-    <text x="438" y="224" fill="#071a33" font-size="27" font-weight="800" letter-spacing="5">KARADENİZ’İN HABERDEKİ GÜCÜ</text>
+    <text x="438" y="224" fill="#071a33" font-size="30" font-weight="900" letter-spacing="5">KARADENİZ BURADAN KONUŞUR</text>
   </g>
 </svg>
