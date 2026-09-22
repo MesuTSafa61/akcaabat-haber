@@ -25,3 +25,59 @@ body.portal-unified{margin:0;background:var(--page);color:var(--ink);font-family
 .portal-shell-top .market-trend.up{background:#dff8e9!important;color:#067647!important}
 .portal-shell-top .market-trend.down{background:#ffe4e6!important;color:#c01024!important}
 .portal-shell-top .market-item{color:#fff!important}
+
+/* Amiral: onaylı logoyu koruyan, katmanları sadeleştiren üst menü. */
+.portal-shell-top .portal-top-bar{background:#101f35;color:#e2eaf3}
+.portal-shell-top .portal-top-bar .top-info{color:#b9c8d8}
+.portal-shell-top .portal-site-header{box-shadow:none;border-bottom:5px solid #c7192b}
+.portal-shell-top .portal-site-header .portal-brand-row{min-height:94px}
+.portal-shell-top .portal-brand-logo{width:370px!important;max-height:82px}
+.portal-shell-top .header-search-button{border:0;border-left:1px solid #dce4ec;border-radius:0;background:transparent;color:#1b3554}
+.portal-shell-top .main-nav{border-top:0;background:#101f35}
+.portal-shell-top .main-nav .nav-inner{height:52px!important;min-height:52px}
+.portal-shell-top .main-nav .nav-link{border-right:0;padding-inline:17px;color:#fff!important;font-size:13px}
+.portal-shell-top .main-nav .nav-link:hover,.portal-shell-top .main-nav .nav-link.active{background:transparent;color:#ff6b7e!important}
+.portal-shell-top .portal-category-rail{display:none}
+.portal-shell-top .market-strip,.portal-shell-top .market-inner,.portal-shell-top .market-scroll,.portal-shell-top .market-list,.portal-shell-top .market-item{background:#e8f1f6!important}
+.portal-shell-top .market-strip{color:#17324b}
+.portal-shell-top .market-inner{min-height:42px}
+.portal-shell-top .market-item{color:#17324b!important;border-color:#bdcfda}
+.portal-shell-top .market-list em{color:#17324b}
+.portal-shell-top .market-weather{color:#17324b;border-color:#bdcfda}
+.portal-shell-top .service-strip{background:#f5f7f9;color:#213953;border-top:0}
+.portal-shell-top .service-inner{justify-content:space-between;gap:12px;min-height:45px}
+.portal-shell-top .service-inner a,.portal-shell-top .service-inner a:first-child{padding:13px 4px 11px;border:0;border-bottom:2px solid #d5dfe6;font-size:12px}
+.portal-shell-top .service-inner a:hover{background:transparent;color:#bf172a;border-color:#bf172a}
+.portal-shell-top .breaking-bar{border-top:1px solid #e3e8ee}
+@media(max-width:1100px){.portal-shell-top .portal-brand-logo{width:310px!important}.portal-shell-top .main-nav .nav-link{padding-inline:11px;font-size:12px}}
+@media(max-width:780px){
+  .portal-shell-top .portal-site-header .portal-brand-row{min-height:78px;gap:12px}
+  .portal-shell-top .portal-brand-logo{width:min(58vw,255px)!important;max-height:62px}
+  .portal-shell-top .mobile-menu-button{display:flex;flex:0 0 42px;width:42px;height:42px;background:#c7192b;clip-path:polygon(0 0,100% 0,100% 75%,75% 100%,0 100%)}
+  .portal-shell-top .mobile-menu-button span{background:#fff}
+  .portal-shell-top .header-search-button{width:40px;height:42px}
+  .portal-shell-top .main-nav{display:none;border-top:0}
+  .portal-shell-top .main-nav.mobile-open{display:block;top:100%!important;border-top:0;background:#101f35}
+  .portal-shell-top .main-nav .nav-inner{display:grid;height:auto!important;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));padding:10px 12px!important;max-height:65vh;overflow-y:auto}
+  .portal-shell-top .main-nav .nav-link{color:#fff!important;border-color:#ffffff26;padding:15px 12px;font-size:12px}
+  .portal-shell-top .main-nav .nav-link:hover,.portal-shell-top .main-nav .nav-link.active{background:#253c58;color:#ff8897!important}
+  .portal-shell-top .portal-category-rail{display:block;background:#101f35;color:#fff}
+  .portal-shell-top .portal-category-links{display:flex;gap:22px;align-items:center;min-height:49px;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
+  .portal-shell-top .portal-category-links::-webkit-scrollbar{display:none}
+  .portal-shell-top .portal-category-links a{flex:0 0 auto;display:flex;align-items:center;min-height:49px;color:#fff;font-size:12px;font-weight:850;text-decoration:none}
+  .portal-shell-top .portal-category-links a.active{color:#ff697b}
+  .portal-shell-top .service-inner{justify-content:flex-start;gap:14px;scrollbar-width:none}
+  .portal-shell-top .service-inner::-webkit-scrollbar{display:none}
+  .portal-shell-top .service-inner a{flex:0 0 auto;white-space:nowrap}
+}
+@media(max-width:560px){
+  .portal-shell-top .portal-site-header .portal-brand-row{min-height:72px;gap:7px}
+  .portal-shell-top .portal-brand-logo{width:min(55vw,215px)!important;max-height:57px}
+  .portal-shell-top .mobile-menu-button{flex-basis:40px;width:40px;height:40px}
+  .portal-shell-top .header-search-button{width:35px;height:40px}
+  .portal-shell-top .market-inner{min-height:39px}
+  .portal-shell-top .market-item{font-size:10px}
+  .portal-shell-top .market-weather{font-size:10px}
+  .portal-shell-top .service-inner{min-height:44px}
+  .portal-shell-top .service-inner a{font-size:10px}
+}

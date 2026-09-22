@@ -11,7 +11,6 @@
   shell.className = "portal-shell-top";
   shell.innerHTML = `
     <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span></div><div class="top-info"><span>📍 Akçaabat</span><span>•</span><span>Trabzon</span><span>•</span><span id="portalCurrentTime">--:--</span></div></div></div>
-    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <header class="site-header portal-site-header" id="unifiedSiteHeader">
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
@@ -19,10 +18,12 @@
         <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button><a href="admin.html" class="admin-link">Yönetim</a></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
-        <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="haber.html?breaking=1" class="nav-link" data-breaking="1">Son Dakika</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a><a href="mac-merkezi.html" class="nav-link" data-page="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html" class="nav-link" data-page="kameralar.html">Kameralar</a><a href="trafik.html" class="nav-link" data-page="trafik.html">Trafik</a><a href="yazarlar.html" class="nav-link" data-page="yazarlar.html">Yazarlar</a>
+        <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a><a href="yazarlar.html" class="nav-link" data-page="yazarlar.html">Yazarlar</a>
       </div></nav>
     </header>
-    <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Mobeseler</a><a href="trafik.html">🚗 Trafik Durumu</a><a href="hava-durumu.html">☀ Hava Durumu</a><a href="haber.html">▦ Tüm Manşetler</a><a href="arama.html">⌕ Haber Arşivi</a></div></nav>
+    <nav class="portal-category-rail" aria-label="Öne çıkan kategoriler"><div class="container portal-category-links"><a href="index.html" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" data-category="trabzonspor">Trabzonspor</a></div></nav>
+    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
+    <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a></div></nav>
     <section class="breaking-bar" aria-label="Son dakika"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content"><a href="haber.html?breaking=1">Akçaabat ve Trabzon'dan son dakika gelişmeleri</a></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
@@ -141,6 +142,11 @@
   const category = (params.get("kategori") || "").toLocaleLowerCase("tr-TR");
   if (mainNav) mainNav.querySelectorAll(".nav-link").forEach(function (link) {
     const active = (link.dataset.page && link.dataset.page === path) || (link.dataset.category && path === "kategori.html" && link.dataset.category === category) || (link.dataset.breaking && path === "haber.html" && params.get("breaking") === "1");
+    link.classList.toggle("active", Boolean(active));
+    if (active) link.setAttribute("aria-current", "page");
+  });
+  shell.querySelectorAll(".portal-category-links a").forEach(function (link) {
+    const active = (link.dataset.page && link.dataset.page === path) || (link.dataset.category && path === "kategori.html" && link.dataset.category === category);
     link.classList.toggle("active", Boolean(active));
     if (active) link.setAttribute("aria-current", "page");
   });
