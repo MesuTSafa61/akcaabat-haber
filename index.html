@@ -1969,16 +1969,6 @@
 
         function showHeadline(index) {
           if (!headlineItems.length) return;
-          const track = document.getElementById("headlineTrack");
-          if (track) {
-            track.innerHTML = headlineItems.map(function(item, i){
-              return '<button type="button" class="headline-tab" data-headline-index="' + i +
-                '" aria-label="' + (i + 1) + '. manşet" aria-current="' + (i === 0 ? 'true' : 'false') + '"></button>';
-            }).join("");
-            track.querySelectorAll(".headline-tab").forEach(function(tab){
-              tab.onclick = function(event){ event.stopPropagation(); showHeadline(Number(tab.dataset.headlineIndex)); restartHeadlineTimer(); };
-            });
-          }
           headlineIndex = (index + headlineItems.length) % headlineItems.length;
           const hero = headlineItems[headlineIndex];
           const heroImage = document.getElementById("heroImage");
@@ -2017,6 +2007,16 @@
               Number(b.headline_order || b.headlineOrder);
           }).slice(0,10);
           if (!headlineItems.length) return;
+          const track = document.getElementById("headlineTrack");
+          if (track) {
+            track.innerHTML = headlineItems.map(function(item, i){
+              return '<button type="button" class="headline-tab" data-headline-index="' + i +
+                '" aria-label="' + (i + 1) + '. manşet" aria-current="' + (i === 0 ? 'true' : 'false') + '"></button>';
+            }).join("");
+            track.querySelectorAll(".headline-tab").forEach(function(tab){
+              tab.onclick = function(event){ event.stopPropagation(); showHeadline(Number(tab.dataset.headlineIndex)); restartHeadlineTimer(); };
+            });
+          }
           const prev = document.getElementById("headlinePrev");
           const next = document.getElementById("headlineNext");
           if (prev) prev.onclick = function(){ showHeadline(headlineIndex - 1); restartHeadlineTimer(); };
