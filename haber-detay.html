@@ -574,11 +574,15 @@
         }
 
         .comment-text {
+            display: block;
+            width: 100%;
             margin: 0;
             color: #555;
             font-size: 14px;
             line-height: 1.65;
             white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            text-align: left;
         }
 
         .comments-empty {
@@ -644,6 +648,19 @@
 
             .comments-body {
                 padding: 20px 19px 24px;
+            }
+
+            .comment-item {
+                padding: 15px;
+            }
+
+            .comment-top {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .comment-date {
+                white-space: nowrap;
             }
 
             .article-meta {
@@ -1955,11 +1972,7 @@
                                         </span>
                                     </div>
 
-                                    <p class="comment-text">
-                                        ${escapeHtml(
-                                            comment.content
-                                        )}
-                                    </p>
+                                    <p class="comment-text">${escapeHtml(comment.content)}</p>
                                 </div>
                             `;
                         })

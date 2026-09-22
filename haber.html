@@ -177,11 +177,13 @@
         }
 
         .news-card-image-wrap {
+            display: block;
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
             overflow: hidden;
             background: #f1f1f1;
+            text-decoration: none;
         }
 
         .news-card-image {
@@ -235,6 +237,12 @@
         }
 
         .news-card-category {
+            position: static;
+            display: inline-flex;
+            align-self: flex-start;
+            padding: 5px 9px;
+            border-radius: 6px;
+            background: #e9f4fb;
             margin-bottom: 8px;
             color: #174c92;
             font-size: 11px;
@@ -951,6 +959,10 @@
             }
 
             function renderNewsCard(news) {
+                const detailUrl =
+                    "haber-detay.html?slug=" +
+                    encodeURIComponent(news.slug);
+
                 const image =
                     news.image_url ||
                     "";
@@ -988,10 +1000,14 @@
                 return `
                     <article class="news-card">
 
-                        <div class="news-card-image-wrap">
+                        <a
+                            class="news-card-image-wrap"
+                            href="${detailUrl}"
+                            aria-label="${escapeHtml(news.title)} haberini aç"
+                        >
                             ${imageHtml}
                             ${breaking}
-                        </div>
+                        </a>
 
                         <div class="news-card-body">
 
@@ -1003,9 +1019,7 @@
 
                             <h2 class="news-card-title">
                                 <a
-                                    href="haber-detay.html?slug=${encodeURIComponent(
-                                        news.slug
-                                    )}"
+                                    href="${detailUrl}"
                                 >
                                     ${escapeHtml(
                                         news.title
@@ -1030,9 +1044,7 @@
 
                                 <a
                                     class="news-card-read"
-                                    href="haber-detay.html?slug=${encodeURIComponent(
-                                        news.slug
-                                    )}"
+                                    href="${detailUrl}"
                                 >
                                     Haberi Oku →
                                 </a>
