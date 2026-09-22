@@ -20,7 +20,7 @@
   <meta property="og:url" content="https://akcaabathaber.com.tr/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="style.css?v=20260922-1">
+  <link rel="stylesheet" href="style.css?v=20260922-2">
   <link rel="stylesheet" href="portal-shell.css?v=20">
 
 </head>
@@ -437,6 +437,8 @@
         </div>
 
       </article>
+
+      <nav class="headline-progress" id="headlineTrack" aria-label="Manşet seçimi"></nav>
 
       </div>
 
@@ -1967,6 +1969,16 @@
 
         function showHeadline(index) {
           if (!headlineItems.length) return;
+          const track = document.getElementById("headlineTrack");
+          if (track) {
+            track.innerHTML = headlineItems.map(function(item, i){
+              return '<button type="button" class="headline-tab" data-headline-index="' + i +
+                '" aria-label="' + (i + 1) + '. manşet" aria-current="' + (i === 0 ? 'true' : 'false') + '"></button>';
+            }).join("");
+            track.querySelectorAll(".headline-tab").forEach(function(tab){
+              tab.onclick = function(event){ event.stopPropagation(); showHeadline(Number(tab.dataset.headlineIndex)); restartHeadlineTimer(); };
+            });
+          }
           headlineIndex = (index + headlineItems.length) % headlineItems.length;
           const hero = headlineItems[headlineIndex];
           const heroImage = document.getElementById("heroImage");
@@ -1983,6 +1995,7 @@
           document.querySelectorAll(".headline-tab").forEach(function(tab, i){
             tab.classList.toggle("is-active", i === headlineIndex);
             tab.setAttribute("aria-selected", i === headlineIndex ? "true" : "false");
+            tab.setAttribute("aria-current", i === headlineIndex ? "true" : "false");
           });
         }
 
@@ -2925,7 +2938,7 @@
 
   </script>
   <script src="current-news.js?v=20260916-5"></script>
-  <script src="home.js?v=20260916-6"></script>
+  <script src="home.js?v=20260922-2"></script>
   <script src="portal-shell.js?v=20"></script>
 
 </body>

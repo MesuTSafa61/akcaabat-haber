@@ -63,14 +63,19 @@ const contentFromSummary = (summary: string) => clean(summary, 1200)
 // Feed spotu haber gövdesi değildir. Kaynaktaki farklı olguları kısa alıntı olarak ayır.
 function distinctDetails(body: string, summary: string): string {
   const lead = clean(summary, 700).toLocaleLowerCase("tr-TR");
-  const sentences = clean(body, 12000).split(/(?<=[.!?])\s+(?=[A-ZÇĞİÖŞÜ0-9])/u);
+  const separated = String(body || "")
+    .replace(/([.!?])(?=[A-ZÇĞİÖŞÜ])/gu, "$1\n\n")
+    .replace(/([A-ZÇĞİÖŞÜ]{5,})(?=[A-ZÇĞİÖŞÜ][a-zçğıöşü])/gu, "$1\n\n");
+  const sentences = separated.split(/\n{2,}|(?<=[.!?])\s+(?=[A-ZÇĞİÖŞÜ0-9])/u);
   const chosen: string[] = [];
   for (const sentence of sentences) {
     const part = clean(sentence, 600);
-    if (part.length < 45 || lead.includes(part.toLocaleLowerCase("tr-TR"))) continue;
+    const heading = part.length >= 15 && part.length <= 90 &&
+      part === part.toLocaleUpperCase("tr-TR") && !/[.!?]$/.test(part);
+    if ((!heading && part.length < 45) || lead.includes(part.toLocaleLowerCase("tr-TR"))) continue;
     if (chosen.join(" ").length + part.length > 480) break;
-    chosen.push(part);
-    if (chosen.length === 3) break;
+    chosen.push(heading ? part.toLocaleLowerCase("tr-TR").replace(/^./u, (letter) => letter.toLocaleUpperCase("tr-TR")) : part);
+    if (chosen.length === 4) break;
   }
   return chosen.join("\n\n");
 }
@@ -122,8 +127,9 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
       doc.querySelector("meta[property='og:description']")?.getAttribute("content"),
       700,
     ).replace(/\s*(?:\.{3}|…)\s*$/, "…");
-    if (!articleBody) articleBody = [...doc.querySelectorAll(".nd-article-content p, article p")]
-      .map((paragraph) => paragraph.textContent || "").join(" ");
+    const articleSections = [...doc.querySelectorAll(".nd-article-content h2, .nd-article-content h3, .nd-article-content p")]
+      .map((section) => clean(section.textContent, 2000)).filter(Boolean);
+    if (articleSections.length > 1) articleBody = articleSections.join("\n\n");
     const detailImage = doc.querySelector("meta[property='og:image']")?.getAttribute("content");
     return {
       ...item,
@@ -402,7 +408,8 @@ Deno.serve(async (request) => {
                 const placeholder = !existing.source_summary ||
                   /kaynağından alınan haber başlığı|Orijinal haber:/i.test(existing.content || "");
                 const botManagedContent = placeholder || clean(existing.content || "", 1200) ===
-                  clean(contentFromSummary(existing.source_summary || ""), 1200);
+                  clean(contentFromSummary(existing.source_summary || ""), 1200) ||
+                  (isFanatikSource && /[.!?][A-ZÇĞİÖŞÜ]{5,}|[A-ZÇĞİÖŞÜ]{5,}[A-ZÇĞİÖŞÜ][a-zçğıöşü]/u.test(existing.content || ""));
                 const updates: Record<string, unknown> = {};
                 if (isFanatikSource) {
                   updates.category_id = categoryId("trabzonspor");

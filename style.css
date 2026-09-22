@@ -1449,3 +1449,10 @@ body{background:#edf1f4;color:#111827}
 .headline-overlay-controls button{border-radius:7px;background:rgba(7,26,51,.7)}
 .headline-deck{display:none!important}
 @media(max-width:780px){.headline-main-column .hero-news{border-radius:9px}.headline-overlay-controls span{left:11px;top:10px}.headline-main-column .hero-content{padding-bottom:22px}}
+
+.headline-main-column .hero-news{border-radius:12px 12px 0 0}
+.headline-progress{display:flex;align-items:center;gap:7px;width:100%;padding:14px 16px;background:#fff;border-radius:0 0 12px 12px;box-shadow:0 10px 25px rgba(7,27,54,.1)}
+.headline-progress .headline-tab{position:static;display:block;flex:1;min-width:0;width:auto;height:6px;padding:0;border:0;border-radius:99px;background:#172134;box-shadow:none;cursor:pointer}
+.headline-progress .headline-tab:hover,.headline-progress .headline-tab.is-active{background:#1594ca}
+.headline-progress .headline-tab:focus-visible{outline:3px solid #1594ca;outline-offset:3px}
+@media(max-width:780px){.headline-main-column .hero-news{border-radius:9px 9px 0 0}.headline-progress{gap:5px;padding:12px 10px;border-radius:0 0 9px 9px}.headline-progress .headline-tab{height:5px}}

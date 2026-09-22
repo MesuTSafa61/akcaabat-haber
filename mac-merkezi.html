@@ -177,6 +177,7 @@
             font-size: 12px;
             font-weight: 700;
         }
+        .mc-status[hidden] { display: none; }
         .mc-status.ok {
             color: var(--mc-green);
             border-color: rgba(21,148,71,.2);
@@ -732,7 +733,7 @@
                 <h1>Maç Merkezi</h1>
                 <p>Trabzonspor ve Akçaabat Sebat Spor'un geçmiş, güncel ve gelecek maçları.</p>
             </div>
-            <div class="mc-status" id="connectionStatus">Bağlantı kontrol ediliyor…</div>
+            <div class="mc-status" id="connectionStatus" hidden aria-live="polite"></div>
         </div>
         <section class="teams-grid">
             <article class="team-panel" id="trabzonspor">
@@ -973,7 +974,14 @@
         return false;
     }
     function isLive(match) {
-        return normalizeStatus(match) === "live";
+        const date = new Date(match.match_date).getTime();
+        return normalizeStatus(match) === "live" && Number.isFinite(date) &&
+            Date.now() - date < 4 * 60 * 60 * 1000;
+    }
+    function isAwaitingResult(match) {
+        const date = new Date(match.match_date).getTime();
+        return !isFinished(match) && !isLive(match) && Number.isFinite(date) &&
+            Date.now() - date > 3 * 60 * 60 * 1000;
     }
     function getHomeTeam(match, team) {
         if (match.home_away === "away") {
@@ -1027,11 +1035,12 @@
         if (!match || isFinished(match) || isLive(match)) {
             return null;
         }
+        if (isAwaitingResult(match)) return "Sonuç bekleniyor";
         const target = new Date(match.match_date).getTime();
         const now = Date.now();
         const diff = target - now;
         if (diff <= 0) {
-            return "Maç başlamak üzere";
+            return "Maç durumu güncelleniyor";
         }
         const totalSeconds = Math.floor(diff / 1000);
         const days = Math.floor(totalSeconds / 86400);
@@ -1086,12 +1095,14 @@
             const live = isLive(match);
             let label = "MAÇ";
             let labelClass = "";
-            if (index === carousel.index && !finished) {
+            if (index === carousel.index && !finished && !isAwaitingResult(match)) {
                 label = "EN YAKIN MAÇ";
                 labelClass = "next";
             }
             if (finished) {
                 label = "MAÇ SONUCU";
+            } else if (isAwaitingResult(match)) {
+                label = "SON MAÇ";
             }
             const countdown =
                 index === carousel.index
@@ -1131,6 +1142,8 @@
             } else if (live) {
                 countdownHTML =
                     '<div class="countdown">Karşılaşma devam ediyor</div>';
+            } else if (isAwaitingResult(match)) {
+                countdownHTML = '<div class="countdown done">Sonuç bekleniyor</div>';
             }
             const linkHTML = match.match_url
                 ? (
@@ -1639,9 +1652,7 @@
                 ),
                 loadStandings()
             ]);
-            status.textContent =
-                "Supabase bağlantısı aktif";
-            status.classList.add("ok");
+            status.hidden = true;
             subscribeToMatchUpdates();
         } catch (error) {
             console.error(
@@ -1650,6 +1661,7 @@
             );
             status.textContent =
                 "Veri bağlantısı kontrol edilemedi";
+            status.hidden = false;
             status.classList.add("error");
             renderEmpty(
                 carousels.trabzonspor.element,

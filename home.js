@@ -157,6 +157,7 @@
         tabs.forEach(function (tab, index) {
             tab.classList.toggle("is-active", index === state.headlineIndex);
             tab.setAttribute("aria-selected", index === state.headlineIndex ? "true" : "false");
+            tab.setAttribute("aria-current", index === state.headlineIndex ? "true" : "false");
         });
         if (moveNumberStrip && tabs[state.headlineIndex]) {
             const track = document.getElementById("headlineTrack");
@@ -198,10 +199,9 @@
         if (deck) deck.hidden = false;
         if (track) {
             track.innerHTML = state.headlines.map(function (item, index) {
-                return '<button class="headline-tab" type="button" role="tab" aria-selected="' +
+                return '<button class="headline-tab" type="button" aria-current="' +
                     (index === 0 ? "true" : "false") + '" data-index="' + index +
-                    '" aria-label="' + escapeHtml((index + 1) + '. manşet: ' + item.title) + '">' +
-                    '<span class="headline-number">' + (index + 1) + '</span></button>';
+                    '" aria-label="' + escapeHtml((index + 1) + '. manşet: ' + item.title) + '"></button>';
             }).join("");
             track.querySelectorAll(".headline-tab").forEach(function (tab) {
                 tab.addEventListener("click", function () {
