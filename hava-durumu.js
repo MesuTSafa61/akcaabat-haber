@@ -24,9 +24,77 @@
   const fixed = {
     "mahalle:Söğütlü": [41.0064, 39.6138], "mahalle:Yıldızlı": [40.9908, 39.606],
     "mahalle:Yaylacık": [41.0108, 39.5861], "mahalle:Dürbinar": [41.0158, 39.574],
-    "mahalle:Darıca": [41.0281, 39.5269], "mahalle:Akçakale": [41.0651, 39.4345],
-    "mahalle:Mersin": [41.094, 39.356], "ilce:Akçaabat": [41.0197, 39.5716],
+    "mahalle:Darıca": [41.0441, 39.5294], "mahalle:Akçakale": [41.08099, 39.4977],
+    "mahalle:Mersin": [41.08896, 39.46652], "mahalle:Orta": [41.022156, 39.565231],
+    "mahalle:Yeni": [41.016533, 39.584305], "ilce:Akçaabat": [41.0197, 39.5716],
+    "mahalle:Benlitaş Baltacı": [41.03347, 39.47314],
+    "mahalle:Oğulkaya Yolbaşı": [40.93156, 39.59239],
+    "mahalle:Akpınar": [40.92406, 39.50669], "mahalle:Arpacılı": [40.9568, 39.47973],
+    "mahalle:Demirkapı": [40.91464, 39.46308], "mahalle:Cevizlik": [40.89197, 39.54447],
+    "mahalle:Kemaliye": [40.95543, 39.46709], "mahalle:Nefsipulathane": [41.0246, 39.56579],
+    "mahalle:Tütüncüler": [40.99159, 39.52752],
+    "mahalle:Akdamar": [40.9532428, 39.5303108], "mahalle:Aydınköy": [40.99525, 39.41647],
+    "mahalle:Çolaklı": [41.0270927, 39.5630019], "mahalle:Esentepe": [40.932369, 39.576321],
+    "mahalle:Karaman": [40.9659, 39.6023], "mahalle:Kavaklı": [41.020607, 39.525631],
+    "mahalle:Kayalar": [41.0007, 39.5748], "mahalle:Ortaalan": [40.933548, 39.478268],
+    "mahalle:Sarıtaş": [41.010102, 39.566324], "mahalle:Uğurlu": [40.976704, 39.657093],
     "ilce:Ortahisar": [41.0027, 39.7168]
+  };
+  // Harita yerleşim merkezleri: her mahalleye ait ayrı tahmin noktası.
+  const fallbackNeighborhoods = {
+    "Acısu": [40.93893, 39.45912],
+    "Adacık": [41.03724, 39.47527],
+    "Ağaçlı": [40.98769, 39.42506],
+    "Akçakale": [41.08099, 39.4977],
+    "Akçaköy": [40.92551, 39.62545],
+    "Akören": [40.96573, 39.55489],
+    "Alsancak": [40.9553, 39.51092],
+    "Ambarcık": [40.92543, 39.47101],
+    "Bozdoğan": [40.9649, 39.50102],
+    "Cevizli": [40.94345, 39.51138],
+    "Çamlıca": [41.02016, 39.48795],
+    "Çamlıdere": [41.05765, 39.48489],
+    "Çiçeklidüz": [40.97852, 39.5587],
+    "Çilekli": [41.01615, 39.4427],
+    "Çınarlık": [40.98188, 39.52942],
+    "Çukurca": [40.89545, 39.59631],
+    "Darıca": [41.0441, 39.5294],
+    "Demirci": [40.9825, 39.55833],
+    "Demirtaş": [40.97422, 39.59975],
+    "Derecik": [40.9459, 39.59401],
+    "Dörtyol": [40.92242, 39.49178],
+    "Doğanköy": [40.90828, 39.47552],
+    "Erikli": [40.90532, 39.50569],
+    "Eskiköy": [41.05316, 39.4458],
+    "Fındıklı": [40.92724, 39.59236],
+    "Fıstıklı": [40.97693, 39.51945],
+    "Gümüşlü": [40.96661, 39.45944],
+    "Helvacı": [40.99212, 39.5425],
+    "Işıklar": [40.89565, 39.45983],
+    "Kaleönü": [40.99099, 39.47827],
+    "Karaçayır": [41.00562, 39.445],
+    "Karpınar": [41.04695, 39.45271],
+    "Kirazlık": [40.94804, 39.52625],
+    "Koçlu": [40.92775, 39.50878],
+    "Kuruçam": [40.94796, 39.4595],
+    "Maden": [40.90018, 39.59338],
+    "Mersin": [41.08896, 39.46652],
+    "Meşeli": [41.01456, 39.49028],
+    "Meydankaya": [40.97237, 39.54178],
+    "Ortaköy": [40.98542, 39.50359],
+    "Osmanbaba": [40.98421, 39.6026],
+    "Özakdamar": [40.95502, 39.53169],
+    "Özdemirci": [40.99196, 39.57283],
+    "Salacık": [41.05597, 39.53022],
+    "Sarıca": [41.06395, 39.43571],
+    "Sertkaya": [40.95846, 39.47223],
+    "Şinik": [40.94289, 39.49244],
+    "Tatlısu": [40.96636, 39.5354],
+    "Uçarsu": [40.91466, 39.58496],
+    "Yeniköy": [41.04111, 39.49873],
+    "Yeşiltepe": [40.96823, 39.50808],
+    "Yeşilyurt": [40.94532, 39.54428],
+    "Zaferli": [40.96064, 39.48767]
   };
   const geocodeCache = new Map(), weatherCache = new Map(), requests = { mahalle: 0, ilce: 0 };
   const trKey = value => String(value).toLocaleLowerCase("tr-TR").replace(/[^a-zçğıöşü0-9]/gu, "");
@@ -37,6 +105,7 @@
   async function resolveLocation(type, name) {
     const key = type + ":" + name;
     if (fixed[key]) return fixed[key];
+    if (type === "mahalle" && fallbackNeighborhoods[name]) return fallbackNeighborhoods[name];
     if (geocodeCache.has(key)) return geocodeCache.get(key);
     const endpoint = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(name) + "&count=100&language=tr&format=json&countryCode=TR";
     let entries = [];
@@ -81,6 +150,7 @@
         if (match) coords = [match.geometry.coordinates[1], match.geometry.coordinates[0]];
       }
     }
+    if (!coords && type === "mahalle" && fallbackNeighborhoods[name]) coords = fallbackNeighborhoods[name];
     if (!coords) throw new Error("Bu konumun koordinatı doğrulanamadı. Yanlış bir konumun tahmini gösterilmiyor.");
     geocodeCache.set(key, coords);
     return coords;
