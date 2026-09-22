@@ -18,3 +18,10 @@ body.portal-unified{margin:0;background:var(--page);color:var(--ink);font-family
 /* Yönetim panelinden yayınlanan güvenli reklam alanları */
 .portal-ad{width:100%;padding:13px 0;background:#f5f6f8}.portal-ad-inner{position:relative}.portal-ad-label{display:block;margin:0 0 5px;color:#7b8492;font-size:9px;font-weight:800;letter-spacing:.12em;text-align:center}.portal-ad a,.portal-ad picture{display:block}.portal-ad img{display:block;width:100%;max-height:180px;object-fit:cover;background:#e6e9ee}.portal-ad-content{margin:18px 0}.portal-ad-content .portal-ad-inner{width:100%;padding:0}.portal-ad-footer{padding:20px 0;border-top:1px solid #e2e6ec}.portal-ad-top img{aspect-ratio:970/180}.portal-ad-content img{aspect-ratio:970/180}.portal-ad-footer img{aspect-ratio:970/150}
 @media(max-width:640px){.portal-ad{padding:9px 0}.portal-ad img,.portal-ad-top img,.portal-ad-content img,.portal-ad-footer img{max-height:none;aspect-ratio:16/5;object-fit:cover}.portal-ad-label{font-size:8px}}
+
+/* Mobil piyasa bandında eski tema i etiketine beyaz arka plan veriyordu. */
+.portal-shell-top .market-strip,.portal-shell-top .market-inner,.portal-shell-top .market-scroll,.portal-shell-top .market-list,.portal-shell-top .market-item{background:#1594ca!important}
+.portal-shell-top .market-trend[hidden]{display:none!important}
+.portal-shell-top .market-trend.up{background:#dff8e9!important;color:#067647!important}
+.portal-shell-top .market-trend.down{background:#ffe4e6!important;color:#c01024!important}
+.portal-shell-top .market-item{color:#fff!important}

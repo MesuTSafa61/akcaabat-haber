@@ -142,9 +142,8 @@
         const values = {
             heroTitle: item.title,
             heroSummary: item.summary,
-            heroCategory: categoryName(item).toUpperCase(),
             heroDate: publishedDate(item),
-            headlineCounter: (state.headlineIndex + 1) + " / " + state.headlines.length
+            headlineCounter: (state.headlineIndex + 1) + "/" + state.headlines.length
         };
         Object.keys(values).forEach(function (id) {
             const element = document.getElementById(id);

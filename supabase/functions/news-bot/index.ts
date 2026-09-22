@@ -9,7 +9,7 @@ type Source = {
 };
 type Item = {
   guid: string | null; url: string; title: string; summary: string;
-  publishedAt: string | null; imageUrl: string | null;
+  publishedAt: string | null; imageUrl: string | null; content?: string;
 };
 
 const json = (body: unknown, status = 200) =>
@@ -60,6 +60,21 @@ async function sha256(value: string) {
 const contentFromSummary = (summary: string) => clean(summary, 1200)
   .replace(/([.!?])\s+(?=[A-ZÇĞİÖŞÜ0-9])/g, "$1\n\n");
 
+// Feed spotu haber gövdesi değildir. Kaynaktaki farklı olguları kısa alıntı olarak ayır.
+function distinctDetails(body: string, summary: string): string {
+  const lead = clean(summary, 700).toLocaleLowerCase("tr-TR");
+  const sentences = clean(body, 12000).split(/(?<=[.!?])\s+(?=[A-ZÇĞİÖŞÜ0-9])/u);
+  const chosen: string[] = [];
+  for (const sentence of sentences) {
+    const part = clean(sentence, 600);
+    if (part.length < 45 || lead.includes(part.toLocaleLowerCase("tr-TR"))) continue;
+    if (chosen.join(" ").length + part.length > 480) break;
+    chosen.push(part);
+    if (chosen.length === 3) break;
+  }
+  return chosen.join("\n\n");
+}
+
 function newsArticleSchema(value: unknown): Record<string, unknown> | null {
   if (Array.isArray(value)) {
     for (const entry of value) {
@@ -90,12 +105,14 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
     const doc = new DOMParser().parseFromString(await response.text(), "text/html");
     if (!doc) return item;
     let structuredDescription = "";
+    let articleBody = "";
     for (const script of [...doc.querySelectorAll("script[type='application/ld+json']")]) {
       try {
         const schema = newsArticleSchema(JSON.parse(script.textContent || ""));
+        if (schema?.articleBody) articleBody = String(schema.articleBody);
         if (schema?.description) {
           structuredDescription = String(schema.description);
-          break;
+          if (articleBody) break;
         }
       } catch { /* bozuk yapılandırılmış veri yerine meta açıklamasını kullan */ }
     }
@@ -105,10 +122,13 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
       doc.querySelector("meta[property='og:description']")?.getAttribute("content"),
       700,
     ).replace(/\s*(?:\.{3}|…)\s*$/, "…");
+    if (!articleBody) articleBody = [...doc.querySelectorAll(".nd-article-content p, article p")]
+      .map((paragraph) => paragraph.textContent || "").join(" ");
     const detailImage = doc.querySelector("meta[property='og:image']")?.getAttribute("content");
     return {
       ...item,
       summary: summary || item.summary,
+      content: distinctDetails(articleBody, summary || item.summary),
       imageUrl: detailImage && /^https:\/\//i.test(detailImage) ? detailImage : item.imageUrl,
     };
   } catch {
@@ -124,6 +144,7 @@ function rssItems(xml: string): Item[] {
     const text = (selector: string) => node.querySelector(selector)?.textContent || "";
     const link = node.querySelector("link[href]")?.getAttribute("href") || text("link");
     const rawSummary = text("description") || text("summary") || text("content\\:encoded") || text("content");
+    const fullBody = text("content\\:encoded") || text("content");
     const embeddedImage = rawSummary.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i)?.[1];
     const image = node.querySelector("enclosure[type^='image']")?.getAttribute("url") ||
       node.querySelector("media\\:content, media\\:thumbnail, content[url]")?.getAttribute("url") || embeddedImage || null;
@@ -132,6 +153,7 @@ function rssItems(xml: string): Item[] {
       url: clean(link, 2000),
       title: clean(text("title"), 300),
       summary: clean(rawSummary, 700),
+      content: distinctDetails(fullBody, rawSummary),
       publishedAt: dateValue(text("pubDate") || text("published") || text("updated")),
       imageUrl: image && /^https:\/\//i.test(image) ? image : null,
     };
@@ -362,12 +384,6 @@ Deno.serve(async (request) => {
           const itemScope: Scope = isFanatikSource ? "trabzonspor" : match.scope;
           const fingerprint = await sha256([item.url, item.title.toLocaleLowerCase("tr-TR"), item.publishedAt || ""].join("|"));
           const recentCutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
-          const { data: sameTitle } = await client.from("news").select("id")
-            .eq("title", item.title).gte("created_at", recentCutoff).limit(1);
-          if (sameTitle?.length) {
-            totals.duplicate_count++;
-            continue;
-          }
           const duplicateChecks = await Promise.all([
             client.from("news_bot_items").select("id,news_id").eq("source_url", item.url).limit(1),
             client.from("news_bot_items").select("id,news_id").eq("fingerprint", fingerprint).limit(1),
@@ -392,14 +408,14 @@ Deno.serve(async (request) => {
                   updates.category_id = categoryId("trabzonspor");
                   updates.source_name = sourceDisplayName;
                 }
-                if (botManagedContent && item.summary) {
+                if (botManagedContent && item.content) {
                   updates.summary = item.summary;
-                  updates.content = contentFromSummary(item.summary);
+                  updates.content = item.content;
                   updates.source_summary = item.summary;
                   if (source.allow_remote_image && item.imageUrl) updates.image_url = item.imageUrl;
                 }
                 if (settings.default_mode === "auto_publish" && source.auto_publish &&
-                  existing.status === "draft") {
+                  existing.status === "draft" && !!item.content) {
                   updates.status = "published";
                   updates.published_at = existing.published_at || new Date().toISOString();
                 }
@@ -417,12 +433,16 @@ Deno.serve(async (request) => {
             continue;
           }
 
-          const status = settings.default_mode === "auto_publish" && source.auto_publish
+          const { data: sameTitle } = await client.from("news").select("id")
+            .eq("title", item.title).gte("created_at", recentCutoff).limit(1);
+          if (sameTitle?.length) { totals.duplicate_count++; continue; }
+
+          const status = item.content && settings.default_mode === "auto_publish" && source.auto_publish
             ? "published" : "draft";
           const summary = item.summary;
           const payload = {
             title: item.title, slug: slugify(item.title) + "-" + fingerprint.slice(0, 8),
-            summary, content: contentFromSummary(summary),
+            summary, content: item.content || "",
             category_id: categoryId(itemScope), image_url: source.allow_remote_image ? item.imageUrl : null,
             status, published_at: status === "published" ? new Date().toISOString() : null,
             origin_type: "automated", source_id: source.id, source_name: sourceDisplayName,

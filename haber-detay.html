@@ -1647,8 +1647,11 @@
                 breadcrumb.textContent =
                     news.title;
 
-                content.innerHTML =
-                    formatArticleContent(news.content);
+                const articleBodyText = String(news.content || "").replace(/\s+/g, " ").trim();
+                const articleSummaryText = String(news.summary || "").replace(/\s+/g, " ").trim();
+                content.innerHTML = articleBodyText && articleBodyText !== articleSummaryText
+                    ? formatArticleContent(news.content)
+                    : "<p>Haberin ayrıntılı metni henüz eklenmedi.</p>";
 
                 source.replaceChildren();
                 source.hidden = true;

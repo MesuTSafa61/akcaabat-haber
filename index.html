@@ -20,7 +20,7 @@
   <meta property="og:url" content="https://akcaabathaber.com.tr/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="style.css?v=20260916-5">
+  <link rel="stylesheet" href="style.css?v=20260922-1">
   <link rel="stylesheet" href="portal-shell.css?v=20">
 
 </head>
@@ -393,14 +393,6 @@
 
 
           <span
-            class="hero-category"
-            id="heroCategory"
-          >
-            GÜNDEM
-          </span>
-
-
-          <span
             class="hero-breaking"
             id="heroBreaking"
             hidden
@@ -440,16 +432,11 @@
 
         <div class="headline-overlay-controls" aria-label="Manşet kontrolleri">
           <button type="button" id="headlinePrev" aria-label="Önceki manşet">‹</button>
-          <span id="headlineCounter">1 / 10</span>
+          <span id="headlineCounter" aria-live="polite">1/10</span>
           <button type="button" id="headlineNext" aria-label="Sonraki manşet">›</button>
         </div>
 
       </article>
-
-      <section class="headline-deck" aria-label="Günün manşetleri">
-        <div class="headline-track" id="headlineTrack" role="tablist" aria-label="Manşet seçimi"></div>
-        <a class="headline-all" href="haber.html" aria-label="Tüm manşetler">T</a>
-      </section>
 
       </div>
 
@@ -1987,13 +1974,12 @@
           if (heroImage) { heroImage.src = imageValue(hero); heroImage.alt = titleValue(hero); }
           setText("heroTitle", titleValue(hero));
           setText("heroSummary", summaryValue(hero));
-          setText("heroCategory", categoryValue(hero).toUpperCase());
           setText("heroDate", formatDate(dateValue(hero)));
           if (heroBreaking) heroBreaking.hidden = !(hero.breaking === true || hero.breaking === "true");
           const heroElement = document.getElementById("heroNews");
           if (heroElement) { heroElement.onclick = function(){ openNews(hero); }; heroElement.style.cursor = "pointer"; }
           const counter = document.getElementById("headlineCounter");
-          if (counter) counter.textContent = (headlineIndex + 1) + " / " + headlineItems.length;
+          if (counter) counter.textContent = (headlineIndex + 1) + "/" + headlineItems.length;
           document.querySelectorAll(".headline-tab").forEach(function(tab, i){
             tab.classList.toggle("is-active", i === headlineIndex);
             tab.setAttribute("aria-selected", i === headlineIndex ? "true" : "false");
@@ -2018,19 +2004,6 @@
               Number(b.headline_order || b.headlineOrder);
           }).slice(0,10);
           if (!headlineItems.length) return;
-          const track = document.getElementById("headlineTrack");
-          if (track) {
-            track.innerHTML = headlineItems.map(function(item, i){
-              return `<button class="headline-tab" type="button" role="tab" aria-selected="${i===0?'true':'false'}" data-headline-index="${i}">
-                <span class="headline-number">${String(i+1).padStart(2,'0')}</span>
-                <img src="${escapeHtml(imageValue(item))}" alt="" loading="lazy">
-                <span class="headline-tab-copy"><small>${escapeHtml(categoryValue(item).toUpperCase())}</small><b>${escapeHtml(titleValue(item))}</b></span>
-              </button>`;
-            }).join("");
-            track.querySelectorAll(".headline-tab").forEach(function(tab){
-              tab.addEventListener("click", function(){ showHeadline(Number(tab.dataset.headlineIndex)); restartHeadlineTimer(); });
-            });
-          }
           const prev = document.getElementById("headlinePrev");
           const next = document.getElementById("headlineNext");
           if (prev) prev.onclick = function(){ showHeadline(headlineIndex - 1); restartHeadlineTimer(); };

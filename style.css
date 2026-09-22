@@ -1439,3 +1439,13 @@ body{background:#edf1f4;color:#111827}
   .headline-number{font-size:12px}
   .headline-deck{grid-template-columns:minmax(0,1fr) 30px}
 }
+
+/* Sayı şeridi olmayan temiz manşet; sayaç yalnızca sol üstte. */
+.headline-main-column{display:block;position:relative;background:transparent}
+.headline-main-column .hero-news{border-radius:12px;overflow:hidden;box-shadow:0 14px 40px rgba(7,27,54,.18)}
+.headline-main-column .hero-image-wrap::after{background:linear-gradient(180deg,rgba(2,10,22,.08) 25%,rgba(2,10,22,.88) 100%)}
+.headline-main-column .hero-category{display:none!important}
+.headline-overlay-controls span{left:12px;right:auto;top:14px;border-radius:6px;background:rgba(7,26,51,.82);font-size:12px;letter-spacing:.03em}
+.headline-overlay-controls button{border-radius:7px;background:rgba(7,26,51,.7)}
+.headline-deck{display:none!important}
+@media(max-width:780px){.headline-main-column .hero-news{border-radius:9px}.headline-overlay-controls span{left:11px;top:10px}.headline-main-column .hero-content{padding-bottom:22px}}
