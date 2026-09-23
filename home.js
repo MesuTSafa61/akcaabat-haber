@@ -6,15 +6,9 @@
     const CATEGORY_PRIORITY = ["Akçaabat", "Trabzon", "Trabzonspor"];
     const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideNewsId: "", selectedSideNews: null };
 
-    function curatedNews() {
-        return Array.isArray(window.AKCAABAT_CURRENT_NEWS)
-            ? window.AKCAABAT_CURRENT_NEWS.map(normalize)
-            : [];
-    }
-
     function mergeNews(items) {
         const seen = new Set();
-        return curatedNews().concat(Array.isArray(items) ? items : [])
+        return (Array.isArray(items) ? items : [])
             .filter(function (item) {
                 const slug = String(item && item.slug || "").toLowerCase();
                 if (!slug || slug.indexOf("demo-") === 0 || seen.has(slug)) return false;
@@ -82,17 +76,6 @@
             created_at: row.created_at || row.createdAt || "",
             categories: row.categories || { name: row.category || "Gündem", slug: "" }
         };
-    }
-
-    function localNews() {
-        try {
-            const parsed = JSON.parse(localStorage.getItem("akcaabat_haberler") || "[]");
-            return Array.isArray(parsed) ? mergeNews(parsed.map(normalize)).filter(function (item) {
-                return item.status === "published";
-            }) : [];
-        } catch (_) {
-            return [];
-        }
     }
 
     async function cloudNews() {
@@ -393,20 +376,17 @@
                 console.warn("Çevrimdışı destek başlatılamadı:", error);
             });
         }
-        const cached = localNews();
-        if (cached.length) renderAll(cached);
+        // The published database is the only news source. Clear old server markup immediately.
+        renderAll([]);
         const sideSelectionPromise = loadSideSelection();
         try {
             const fresh = await cloudNews();
-            if (fresh.length) {
-                renderAll(fresh);
-                try { localStorage.setItem("akcaabat_haberler", JSON.stringify(fresh)); } catch (_) {}
-            } else if (!cached.length) {
-                renderAll(curatedNews());
-            }
+            renderAll(fresh);
         } catch (error) {
             console.error("Ana sayfa haberleri yüklenemedi:", error);
-            if (!cached.length) renderAll(curatedNews());
+            renderAll([]);
+            const grid = document.getElementById("newsGrid");
+            if (grid) grid.textContent = "Haberler şu anda yüklenemiyor. Biraz sonra yeniden deneyin.";
         }
         await sideSelectionPromise;
     }
