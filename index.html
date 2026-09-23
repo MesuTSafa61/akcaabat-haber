@@ -20,7 +20,7 @@
   <meta property="og:url" content="https://akcaabathaber.com.tr/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="style.css?v=20260922-2">
+  <link rel="stylesheet" href="style.css?v=20260923-1">
   <link rel="stylesheet" href="portal-shell.css?v=21">
 
 </head>
@@ -392,43 +392,9 @@
           >
 
 
-          <span
-            class="hero-breaking"
-            id="heroBreaking"
-            hidden
-          >
-            SON DAKİKA
-          </span>
-
         </div>
 
-
-        <div class="hero-content">
-
-          <div class="news-meta">
-
-            <span id="heroDate">
-              12 Eylül 2026
-            </span>
-
-          </div>
-
-
-          <h2 id="heroTitle">
-            Akçaabat ve Trabzon'dan günün öne çıkan gelişmeleri
-          </h2>
-
-
-          <p id="heroSummary">
-            Akçaabat Haber, bölgedeki gelişmeleri hızlı ve güvenilir şekilde okuyucularına ulaştırıyor.
-          </p>
-
-
-          <span class="read-more">
-            Haberin devamı →
-          </span>
-
-        </div>
+        <a class="hero-full-link" id="heroLink" href="haber.html" aria-label="Manşetteki haberi oku"></a>
 
         <div class="headline-overlay-controls" aria-label="Manşet kontrolleri">
           <button type="button" id="headlinePrev" aria-label="Önceki manşet">‹</button>
@@ -1974,12 +1940,9 @@
           const heroImage = document.getElementById("heroImage");
           const heroBreaking = document.getElementById("heroBreaking");
           if (heroImage) { heroImage.src = imageValue(hero); heroImage.alt = titleValue(hero); }
-          setText("heroTitle", titleValue(hero));
-          setText("heroSummary", summaryValue(hero));
-          setText("heroDate", formatDate(dateValue(hero)));
           if (heroBreaking) heroBreaking.hidden = !(hero.breaking === true || hero.breaking === "true");
-          const heroElement = document.getElementById("heroNews");
-          if (heroElement) { heroElement.onclick = function(){ openNews(hero); }; heroElement.style.cursor = "pointer"; }
+          const heroLink = document.getElementById("heroLink");
+          if (heroLink) { heroLink.href = getNewsUrl(hero); heroLink.setAttribute("aria-label", "Haberi oku: " + titleValue(hero)); }
           const counter = document.getElementById("headlineCounter");
           if (counter) counter.textContent = (headlineIndex + 1) + "/" + headlineItems.length;
           document.querySelectorAll(".headline-tab").forEach(function(tab, i){
@@ -2938,7 +2901,7 @@
 
   </script>
   <script src="current-news.js?v=20260916-5"></script>
-  <script src="home.js?v=20260923-1"></script>
+  <script src="home.js?v=20260923-2"></script>
   <script src="portal-shell.js?v=21"></script>
 
 </body>

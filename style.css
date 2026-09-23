@@ -1456,3 +1456,11 @@ body{background:#edf1f4;color:#111827}
 .headline-progress .headline-tab:hover,.headline-progress .headline-tab.is-active{background:#1594ca}
 .headline-progress .headline-tab:focus-visible{outline:3px solid #1594ca;outline-offset:3px}
 @media(max-width:780px){.headline-main-column .hero-news{border-radius:9px 9px 0 0}.headline-progress{gap:5px;padding:12px 10px;border-radius:0 0 9px 9px}.headline-progress .headline-tab{height:5px}}
+
+/* Manşet görseli tek başına haber bağlantısıdır; sayaç sağ üstte kalır. */
+.headline-main-column .hero-image-wrap::after{display:none}
+.headline-main-column .hero-content,.headline-main-column .hero-breaking{display:none!important}
+.headline-main-column .hero-full-link{position:absolute;inset:0;z-index:3;display:block}
+.headline-main-column .hero-full-link:focus-visible{outline:4px solid #1594ca;outline-offset:-6px}
+.headline-main-column .headline-overlay-controls span{left:auto;right:12px;top:14px}
+@media(max-width:780px){.headline-main-column .headline-overlay-controls span{left:auto;right:11px;top:10px}}

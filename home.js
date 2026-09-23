@@ -161,9 +161,6 @@
         const image = document.getElementById("heroImage");
         if (image) { image.src = imageUrl(item); image.alt = item.title; }
         const values = {
-            heroTitle: item.title,
-            heroSummary: item.summary,
-            heroDate: publishedDate(item),
             headlineCounter: (state.headlineIndex + 1) + "/" + state.headlines.length
         };
         Object.keys(values).forEach(function (id) {
@@ -172,8 +169,11 @@
         });
         const breaking = document.getElementById("heroBreaking");
         if (breaking) breaking.hidden = !item.is_breaking;
-        const hero = document.getElementById("heroNews");
-        if (hero) hero.onclick = function () { openItem(item); };
+        const heroLink = document.getElementById("heroLink");
+        if (heroLink) {
+            heroLink.href = newsUrl(item);
+            heroLink.setAttribute("aria-label", "Haberi oku: " + item.title);
+        }
         const tabs = document.querySelectorAll(".headline-tab");
         tabs.forEach(function (tab, index) {
             tab.classList.toggle("is-active", index === state.headlineIndex);
