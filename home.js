@@ -4,7 +4,7 @@
     const FALLBACK_IMAGE =
         "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=78";
     const CATEGORY_PRIORITY = ["Akçaabat", "Trabzon", "Trabzonspor"];
-    const state = { news: [], headlines: [], headlineIndex: 0, timer: null };
+    const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideNewsId: "", selectedSideNews: null };
 
     function curatedNews() {
         return Array.isArray(window.AKCAABAT_CURRENT_NEWS)
@@ -116,6 +116,27 @@
         }
         if (result.error) throw result.error;
         return mergeNews((result.data || []).map(normalize));
+    }
+
+    async function loadSideSelection() {
+        if (!window.supabase || !window.AKCAABAT_SUPABASE) return;
+        try {
+            const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+            const { data: setting, error } = await client.from("site_settings")
+                .select("value").eq("key", "homepage_featured_side").maybeSingle();
+            if (error) throw error;
+            state.sideNewsId = String(setting?.value?.news_id || "");
+            if (state.sideNewsId) {
+                const { data: selected, error: newsError } = await client.from("news")
+                    .select("id,title,slug,summary,image_url,status,is_breaking,is_headline,headline_order,views,published_at,created_at,categories(id,name,slug)")
+                    .eq("id", state.sideNewsId).eq("status", "published").maybeSingle();
+                if (newsError) throw newsError;
+                state.selectedSideNews = selected ? normalize(selected) : null;
+            }
+            if (state.news.length) renderSideNews();
+        } catch (error) {
+            console.warn("Yan haber seçimi alınamadı, otomatik seçim kullanılacak:", error);
+        }
     }
 
     function sortPriority(items) {
@@ -259,7 +280,13 @@
         const target = document.getElementById("heroSideNews");
         if (!target) return;
         const headlineIds = new Set(state.headlines.map(function (item) { return item.id; }));
-        const items = sortPriority(state.news.filter(function (item) { return !headlineIds.has(item.id); })).slice(0, 3);
+        const available = state.news.filter(function (item) { return !headlineIds.has(item.id) && !item.is_headline; });
+        const selected = state.selectedSideNews && !state.selectedSideNews.is_headline && !headlineIds.has(state.selectedSideNews.id)
+            ? state.selectedSideNews : null;
+        const pinned = state.sideNewsId && (available.find(function (item) { return item.id === state.sideNewsId; }) || selected);
+        const items = (pinned ? [pinned] : []).concat(sortPriority(available.filter(function (item) {
+            return !pinned || item.id !== pinned.id;
+        }))).slice(0, 3);
         target.innerHTML = items.map(function (item) {
             return '<article class="side-news" data-url="' + escapeHtml(newsUrl(item)) + '">' +
                 '<div class="side-news-image"><img src="' + escapeHtml(imageUrl(item)) + '" alt="' +
@@ -368,6 +395,7 @@
         }
         const cached = localNews();
         if (cached.length) renderAll(cached);
+        const sideSelectionPromise = loadSideSelection();
         try {
             const fresh = await cloudNews();
             if (fresh.length) {
@@ -380,6 +408,7 @@
             console.error("Ana sayfa haberleri yüklenemedi:", error);
             if (!cached.length) renderAll(curatedNews());
         }
+        await sideSelectionPromise;
     }
 
     if (document.readyState === "loading") {
