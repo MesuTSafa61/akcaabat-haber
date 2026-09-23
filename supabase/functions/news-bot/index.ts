@@ -381,7 +381,7 @@ Deno.serve(async (request) => {
         const isFanatikSource = source.feed_url.includes("fanatik.com.tr");
         const isDhaSource = source.feed_url.includes("dha.com.tr/haberleri/");
         const sourceDisplayName = isFanatikSource ? "Fanatik" : isDhaSource ? "DHA" : source.name;
-        const response = await fetch(source.feed_url, {
+        const requestSource = () => fetch(source.feed_url, {
           signal: AbortSignal.timeout(8000),
           redirect: "follow",
           headers: {
@@ -392,6 +392,12 @@ Deno.serve(async (request) => {
             "User-Agent": "AkcaabatHaberBot/1.0 (+https://akcaabathaber.com)",
           },
         });
+        let response = await requestSource();
+        if (response.status === 429 || response.status >= 500) {
+          await response.body?.cancel();
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          response = await requestSource();
+        }
         if (!response.ok) throw new Error("Kaynak HTTP " + response.status);
         const contentType = response.headers.get("content-type") || "";
         const responseBody = await response.text();
