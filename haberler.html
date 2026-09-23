@@ -8,6 +8,59 @@
     <link rel="stylesheet" href="style.css?v=3">
 
     <style>
+        .admin-page-heading {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:18px;
+            margin:0 0 16px;
+            padding:20px 22px;
+            border:1px solid #e1e8f0;
+            border-left:4px solid #1594ca;
+            border-radius:12px;
+            background:#fff;
+            box-shadow:0 4px 18px rgba(7,26,51,.04);
+        }
+
+        .admin-page-heading > div { min-width:0; }
+        .admin-page-heading .breadcrumb {
+            margin:0 0 6px;
+            color:#68809b;
+            font-size:12px;
+            font-weight:700;
+        }
+        .admin-page-heading h1 {
+            margin:0;
+            color:#10233e;
+            font-size:clamp(22px,3vw,30px);
+            line-height:1.2;
+        }
+        .admin-page-heading p {
+            margin:7px 0 0;
+            color:#66758a;
+            font-size:14px;
+            line-height:1.4;
+        }
+        .admin-page-heading .admin-primary-btn {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            flex:none;
+            min-height:42px;
+            padding:10px 16px;
+            border-radius:8px;
+            background:#0e2949;
+            color:#fff;
+            font-size:14px;
+            font-weight:800;
+            text-decoration:none;
+            white-space:nowrap;
+        }
+        .admin-page-heading .admin-primary-btn:hover,
+        .admin-page-heading .admin-primary-btn:focus-visible {
+            background:#15426d;
+        }
+
         .news-toolbar {
             display:flex;
             gap:12px;
@@ -42,18 +95,20 @@
             display:flex;
             align-items:center;
             gap:8px;
-            margin-bottom:18px;
-            padding:11px 14px;
-            border:1px solid #e5e7eb;
-            border-radius:10px;
-            background:#f8fafc;
+            margin-bottom:16px;
+            padding:9px 13px;
+            border:1px solid #d9e8e1;
+            border-radius:8px;
+            background:#f7fbf8;
             color:#475569;
-            font-size:13px;
+            font-size:12px;
+            line-height:1.4;
         }
 
         .cloud-dot {
             width:9px;
             height:9px;
+            flex:0 0 9px;
             border-radius:50%;
             background:#16a34a;
         }
@@ -240,13 +295,28 @@
         }
 
         @media (max-width:700px) {
+            .admin-page-heading {
+                align-items:stretch;
+                flex-direction:column;
+                gap:14px;
+                padding:16px;
+            }
+            .admin-page-heading .breadcrumb { font-size:11px; }
+            .admin-page-heading h1 { font-size:23px; }
+            .admin-page-heading p { font-size:13px; }
+            .admin-page-heading .admin-primary-btn { width:100%; }
+            .news-toolbar { gap:10px; padding:13px; }
             .news-filter {
-                width:100%;
+                width:calc(50% - 5px);
             }
 
             .news-search {
                 flex-basis:100%;
             }
+        }
+
+        @media (max-width:360px) {
+            .news-filter { width:100%; }
         }
     </style>
   <link rel="stylesheet" href="admin-shell.css?v=4">
@@ -683,12 +753,7 @@
                     ? result.data
                     : [];
 
-            status(
-                "Supabase bağlantısı aktif • " +
-                allNews.length +
-                " haber bulundu.",
-                "success"
-            );
+            status(allNews.length + " haber listelendi.", "success");
 
             applyFilters();
         }
