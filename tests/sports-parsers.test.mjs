@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+const require=createRequire(import.meta.url);
+const dependency=process.env.SPORTS_LINKEDOM_MODULE||require.resolve('linkedom');
+const code=(await readFile(new URL('../supabase/functions/sync-sports/parsers.js',import.meta.url),'utf8')).replace('npm:linkedom@0.18.12',pathToFileURL(dependency).href);
+const {parseSebat,parseTFFDetail,dateTR}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
+const fixtures=Array.from({length:10},(_,i)=>`<a class="match-list-item" href="https://sebatspor.org/maclar/${i+1}"><div class="match-list-item__meta">20.09.2026 · 15:30 · ${i+1}. Hafta <span class="badge">Bitti</span></div><div class="match-list-item__team"><span class="match-list-item__name">Rakip ${i+1}</span><strong>3</strong></div><div class="match-list-item__team"><span class="match-list-item__name">Sebat Spor Klübü</span><strong>2</strong></div></a>`).join('');
+const standings=Array.from({length:10},(_,i)=>`<tr>${[i+1,i===0?'Sebat Spor Klübü':'Kulüp '+i,3,1,1,1,3,4,-1,i===9?-44:4].map(x=>'<td>'+x+'</td>').join('')}</tr>`).join('');
+const html=`<select id="mc-sezon"><option value="2026-2027" selected></option></select>${fixtures}<table class="standings-table"><tbody>${standings}</tbody></table>`;
+test('deplasman maçında takım ve skor sırası korunur',()=>{const d=parseSebat(html);assert.equal(d.matches[0].home,'Rakip 1');assert.equal(d.matches[0].away,'Sebat Spor Klübü');assert.equal(d.matches[0].home_score,3);assert.equal(d.matches[0].away_score,2);assert.equal(d.matches[0].id,'sebat:1');});
+test('sezon, sıra ve puan cezaları kaynaktan korunur',()=>{const d=parseSebat(html);assert.equal(d.season,'2026-2027');assert.equal(d.standings[9].points,-44);});
+test('eksik ve tutarsız puan tablosu kabul edilmez',()=>{assert.throws(()=>parseSebat(html.replace(standings,standings.slice(0,100))));assert.throws(()=>parseSebat(html.replace('<td>3</td><td>1</td>','<td>9</td><td>1</td>')));});
+test('boş veya değişen kaynak sayfası veri diye kaydedilmez',()=>assert.throws(()=>parseSebat('<html>Kaynak kullanılamıyor</html>')));
+test('saat açıklanmamışsa gece yarısı uydurulmaz',()=>{assert.equal(dateTR('03.10.2026 · 5. Hafta'),null);assert.equal(dateTR('20.09.2026 · 15:30'),'2026-09-20T15:30:00+03:00');});
+test('başka maça ait detay reddedilir',()=>assert.throws(()=>parseTFFDetail('<a id="x_lnkTakim1">Yanlış takım</a><a id="x_lnkTakim2">Rakip</a>',{home:'Trabzonspor',away:'Rakip'})));
