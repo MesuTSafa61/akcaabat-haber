@@ -39,7 +39,39 @@
     sideSearch.addEventListener("input",renderSide);
     sideSelect.addEventListener("change",()=>{sideNewsId=sideSelect.value;renderSide()});
     sideSave.addEventListener("click",async()=>{sideSave.disabled=true;try{const selected=sideNewsId?news.find(n=>n.id===sideNewsId&&!n.is_headline):null;if(sideNewsId&&!selected)throw new Error("Yan kart için manşette olmayan, yayınlanmış bir haber seçin.");const{data,error}=await client.from("site_settings").upsert({key:"homepage_featured_side",value:{news_id:selected?.id||null},updated_at:new Date().toISOString()},{onConflict:"key"}).select("value").single();if(error)throw error;if(String(data?.value?.news_id||"")!==sideNewsId)throw new Error("Seçim doğrulanamadı.");message(selected?"Yan haber kaydedildi: "+selected.title:"Yan haber otomatik seçime alındı.");renderSide()}catch(err){message(err.message||"Yan haber kaydedilemedi.",true)}finally{sideSave.disabled=false}});
-    slots.addEventListener("click",async e=>{const save=e.target.dataset.saveSlot,clear=e.target.dataset.clearSlot;if(!save&&!clear)return;try{const order=Number(save||clear),current=news.find(n=>n.is_headline&&Number(n.headline_order)===order);if(clear){if(!current)return;const{error}=await client.from("news").update({is_headline:false,headline_order:null,updated_at:new Date().toISOString()}).eq("id",current.id);if(error)throw error;message(order+". sıradaki haber manşetten çıkarıldı.");await load();return}const select=slots.querySelector('[data-slot-select="'+order+'"]'),selected=news.find(n=>n.id===select.value);if(!selected)throw new Error("Bu sıra için yayınlanmış bir haber seçin.");if(current&&current.id!==selected.id&&!confirm(order+". sıradaki mevcut manşet değiştirilsin mi?"))return;const{error:setError}=await client.from("news").update({is_headline:true,headline_order:order,updated_at:new Date().toISOString()}).eq("id",selected.id).eq("status","published");if(setError)throw setError;if(current&&current.id!==selected.id){const{error:clearError}=await client.from("news").update({is_headline:false,headline_order:null,updated_at:new Date().toISOString()}).eq("id",current.id);if(clearError)throw clearError}message(selected.title+" manşette "+order+". sıraya alındı.");await load()}catch(err){message(err.message||"Manşet güncellenemedi.",true)}});
+    slots.addEventListener("click", async (event) => {
+      const save = event.target.dataset.saveSlot;
+      const clear = event.target.dataset.clearSlot;
+      if (!save && !clear) return;
+      const order = Number(save || clear);
+      const current = news.find(n => n.is_headline && Number(n.headline_order) === order);
+      const selected = save ? news.find(n => n.id === slots.querySelector('[data-slot-select="' + order + '"]').value) : null;
+      if (save && !selected) { message("Bu sıra için yayınlanmış bir haber seçin.", true); return; }
+      if (clear && !current) return;
+      if (save && current && current.id !== selected.id &&
+          !confirm(order + ". sıradaki mevcut manşet değiştirilsin mi?")) return;
+
+      const buttons = [...slots.querySelectorAll("button")];
+      const disabledBefore = buttons.map(button => button.disabled);
+      buttons.forEach(button => { button.disabled = true; });
+      try {
+        const { error } = await client.rpc("set_news_headline_slot", {
+          p_order: order,
+          p_news_id: selected ? selected.id : null
+        });
+        if (error) throw error;
+        await load();
+        message(clear
+          ? order + ". sıradaki haber manşetten çıkarıldı."
+          : selected.title + " manşette " + order + ". sıraya alındı.");
+      } catch (err) {
+        message(err.code === "23505"
+          ? "Manşet sırası aynı anda değişti. Sayfayı yenileyip tekrar deneyin."
+          : err.message || "Manşet güncellenemedi.", true);
+      } finally {
+        buttons.forEach((button, index) => { button.disabled = disabledBefore[index]; });
+      }
+    });
     (async()=>{if(!window.supabase||!window.AKCAABAT_SUPABASE)throw Error("Bağlantı ayarları bulunamadı.");client=window.supabase.createClient(window.AKCAABAT_SUPABASE.url,window.AKCAABAT_SUPABASE.key);if(!await staff()){location.replace("admin-giris.html");return}page.hidden=false;await load()})().catch(e=>{page.hidden=false;message(e.message||"Manşet yönetimi açılamadı.",true)})
   })();
   </script>
