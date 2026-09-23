@@ -38,11 +38,15 @@
  renderOverview(list,table);renderFixtures(list);renderStandings(table);showView(state.view);
  if(dialogMatch&&$('mcDialog').open){const m=list.find(m=>m.id===dialogMatch);if(m)renderDialog(m);}
  }
- function detailItem(value,kind){const raw=typeof value==='string'?value:value?.text||'';let icon='';let label='';let content=esc(raw);
-  if(kind==='cards') {const type=typeof value==='object'?value?.type:null;const known=['yellow','red','second_yellow'].includes(type);if(known){label=type==='red'?'Kırmızı kart':type==='yellow'?'Sarı kart':'İkinci sarı kart';icon=`<span class="mc-event-icon mc-card-${type}" role="img" aria-label="${label}" title="${label}"></span>`;}}
-  if(kind==='goals'){label='Gol';icon='<span class="mc-event-icon mc-goal-icon" role="img" aria-label="Gol">⚽</span>'}
-  if(kind==='substitutions_in'){label='Oyuna girdi';icon='<span class="mc-event-icon mc-sub-in" role="img" aria-label="Oyuna girdi">↑</span>'}
-  if(kind==='substitutions_out'){label='Oyundan çıktı';icon='<span class="mc-event-icon mc-sub-out" role="img" aria-label="Oyundan çıktı">↓</span>'}
+ function detailItem(value,kind){const raw=typeof value==='string'?value:value?.text||'';let icon='';let content=esc(raw);
+  if(kind==='cards'){const type=typeof value==='object'?value?.type:null;const known=['yellow','red','second_yellow'].includes(type);if(known){const label=type==='red'?'Kırmızı kart':type==='yellow'?'Sarı kart':'İkinci sarı kart';icon=`<span class="mc-event-icon mc-card-${type}" role="img" aria-label="${label}" title="${label}"></span>`;}}
+  if(kind==='goals')icon='<span class="mc-event-icon mc-goal-icon" role="img" aria-label="Gol">⚽</span>';
+  if(kind==='substitutions_in')icon='<span class="mc-event-icon mc-sub-in" role="img" aria-label="Oyuna girdi">↑</span>';
+  if(kind==='substitutions_out')icon='<span class="mc-event-icon mc-sub-out" role="img" aria-label="Oyundan çıktı">↓</span>';
+  if(['goals','cards','substitutions_in','substitutions_out'].includes(kind)){
+   const match=raw.match(/^(.*?)\s*,?\s*(\d{1,3}(?:\+\d{1,2})?)\.dk(?:\s*\(([FHKPS])\))?\s*$/i);
+   if(match){const goalKinds={F:'Ayak',H:'Kafa',K:'Kendi kalesine',P:'Penaltı',S:'Seri penaltı'};const goalKind=kind==='goals'&&match[3]?goalKinds[match[3].toUpperCase()]:null;content=`<span class="mc-event-main">${esc(match[1].replace(/,\s*$/,''))}</span><span class="mc-event-time">${esc(match[2])}′</span>${goalKind?`<span class="mc-goal-kind">${esc(goalKind)}</span>`:''}`;}
+  }
   if(kind==='referees'){const match=raw.match(/^(.*?)\s*\(([^()]+)\)\s*$/);if(match)content=`${esc(match[1])}<span class="mc-ref-role">${esc(match[2])}</span>`;}
   return `<li class="mc-detail-entry">${icon}<span>${content}</span></li>`;
  }
