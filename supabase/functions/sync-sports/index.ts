@@ -1,8 +1,8 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2.57.0';
-import { TS, SS, parseTFF, parseTFFDetail, parseSebat, parseSebatDetail } from './parsers.js';
+import { TS, SS, parseTFF, parseTFFDetail } from './parsers.js';
 const db=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false}});
-const sources=[{team:TS,url:'https://www.tff.org/default.aspx?pageID=198',parse:parseTFF,detail:parseTFFDetail},{team:SS,url:'https://sebatspor.org/mac-merkezi',parse:parseSebat,detail:parseSebatDetail}];
+const sources=[{team:TS,url:'https://www.tff.org/default.aspx?pageID=198',parse:parseTFF,detail:parseTFFDetail},{team:SS,url:'https://www.tff.org/Default.aspx?grupID=3541&pageID=976',parse:(html:string)=>parseTFF(html,{club:'SEBAT SPOR KULÜBÜ',competition:'Nesine 2. Lig Beyaz Grup',source_url:'https://www.tff.org/Default.aspx?grupID=3541&pageID=976'}),detail:parseTFFDetail}];
 async function get(url:string){
  const target=new URL(url);if(!['www.tff.org','sebatspor.org'].includes(target.hostname))throw Error('Kaynak adresi geçersiz');
  let failure=new Error('Kaynak alınamadı');
@@ -19,7 +19,7 @@ async function sync(source:typeof sources[number]){
   const feed=source.parse(await get(source.url));
   const cache=new Map((old.season===feed.season?old.matches||[]:[]).map((m:any)=>[m.id,m]));
   const now=Date.now();
-  for(const m of feed.matches){const p:any=cache.get(m.id);if(!p)continue;for(const key of ['venue','details','detail_fetched_at'])m[key]=p[key];if(source.team===TS){m.date=p.date;m.home_logo=p.home_logo;m.away_logo=p.away_logo;}}
+  for(const m of feed.matches){const p:any=cache.get(m.id);if(!p)continue;for(const key of ['venue','details','detail_fetched_at','date','home_logo','away_logo'])m[key]=p[key];}
   const due=feed.matches.filter((m:any)=>{const age=now-new Date(m.detail_fetched_at||0).getTime();const near=m.date&&Math.abs(now-new Date(m.date).getTime())<86400000;return !m.detail_fetched_at||age>(near?120000:86400000);}).sort((a:any,b:any)=>Number(!!a.detail_fetched_at)-Number(!!b.detail_fetched_at)||(new Date(a.detail_fetched_at||0).getTime()-new Date(b.detail_fetched_at||0).getTime())).slice(0,8);
   const errors:string[]=[];
   // Three requests at a time; a slow detail page never discards the validated standings.

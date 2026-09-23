@@ -1,39 +1,4 @@
--- Atomic official sports snapshots; all writes are server-only.
-alter table public.sports_standings add column if not exists is_manual boolean not null default false;
-create table if not exists public.sports_feeds (
- team_id uuid primary key references public.sports_teams(id) on delete cascade,
- data jsonb not null default '{}'::jsonb,
- status text not null default 'pending' check(status in ('pending','running','completed','partial','failed')),
- last_attempt_at timestamptz,
- last_success_at timestamptz,
- error_summary text,
- lease_until timestamptz not null default '-infinity'
-);
-alter table public.sports_feeds enable row level security;
-drop policy if exists sports_feeds_read on public.sports_feeds;
-create policy sports_feeds_read on public.sports_feeds for select to anon,authenticated using(true);
-grant select on public.sports_feeds to anon,authenticated;
-grant all on public.sports_feeds to service_role;
-insert into public.sports_feeds(team_id) select id from public.sports_teams where is_active on conflict do nothing;
-
-create or replace function public.sports_sync_authorized(p_token text) returns boolean
-language sql security definer set search_path='' as $$
- select coalesce((select (auth.jwt()->>'role')='service_role' and length(p_token)>20 and decrypted_secret=p_token
- from vault.decrypted_secrets where name='akcaabat_haber_sports_sync_secret'),false);
-$$;
-revoke all on function public.sports_sync_authorized(text) from public,anon,authenticated;
-grant execute on function public.sports_sync_authorized(text) to service_role;
-
-create or replace function public.sports_sync_claim(p_team uuid) returns boolean
-language plpgsql security invoker set search_path='' as $$
-begin
- update public.sports_feeds set status='running',last_attempt_at=now(),lease_until=now()+interval '3 minutes'
- where team_id=p_team and lease_until<now();
- return found;
-end $$;
-revoke all on function public.sports_sync_claim(uuid) from public,anon,authenticated;
-grant execute on function public.sports_sync_claim(uuid) to service_role;
-
+-- Use the official TFF Beyaz Grup table and full Sebat league schedule.
 create or replace function public.sports_sync_save(p_team uuid,p_data jsonb,p_error text default null) returns void
 language plpgsql security invoker set search_path='' as $$
 declare m jsonb; r jsonb; home boolean; source text; tracked_name text;
@@ -66,12 +31,3 @@ begin
 end $$;
 revoke all on function public.sports_sync_save(uuid,jsonb,text) from public,anon,authenticated;
 grant execute on function public.sports_sync_save(uuid,jsonb,text) to service_role;
--- A league snapshot has one row for every club, not one row per followed club.
-drop index if exists public.sports_standings_team_competition_season_uidx;
-do $$ begin
- if not exists(select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='sports_feeds') then
-  alter publication supabase_realtime add table public.sports_feeds;
- end if;
-end $$;
--- Existing one-minute job; the secret stays in Vault, not the URL or repository.
-select cron.alter_job(2,command := $job$select net.http_post(url:='https://wokgvwffbootbhqxfttm.supabase.co/functions/v1/sync-sports',headers:=jsonb_build_object('Content-Type','application/json','x-sync-secret',(select decrypted_secret from vault.decrypted_secrets where name='akcaabat_haber_sports_sync_secret')),body:='{}'::jsonb,timeout_milliseconds:=120000);$job$);

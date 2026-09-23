@@ -6,14 +6,15 @@ const url=(s,base)=>s?new URL(s.replace(/\\/g,'/'),base).href:null;
 const num=s=>/^-?\d+$/.test(String(s).trim())?Number(s):null;
 export function dateTR(s){const m=s.match(/(\d{2})\.(\d{2})\.(\d{4})(?:\s*[·-]?\s*(\d{1,2}):(\d{2}))?/);if(!m)return null;return m[4]?`${m[3]}-${m[2]}-${m[1]}T${m[4].padStart(2,'0')}:${m[5]}:00+03:00`:null;}
 function checkStandings(rows){if(rows.length<10||rows.length>24||new Set(rows.map(r=>r.name)).size!==rows.length)throw Error('Puan tablosu eksik veya tekrarlı');for(const r of rows){if([r.position,r.played,r.won,r.drawn,r.lost,r.gf,r.ga,r.gd,r.points].some(n=>!Number.isInteger(n))||r.played!==r.won+r.drawn+r.lost||r.gd!==r.gf-r.ga)throw Error('Puan tablosu doğrulaması başarısız');}return rows;}
-export function parseTFF(html){
+export function parseTFF(html,config={club:'TRABZONSPOR',competition:'Trendyol Süper Lig',source_url:'https://www.tff.org/default.aspx?pageID=198'}){
  const d=parseHTML(html).document, base='https://www.tff.org/';
  const season=[...d.querySelectorAll('.moduleTitle')].map(text).join(' ').match(/(20\d{2}-20\d{2}) Sezonu/ )?.[1];
  if(!season)throw Error('TFF sezon bilgisi bulunamadı');
  const rows=[...d.querySelectorAll('a[id$="lnkTakim"]')].map(a=>{const c=[...a.closest('tr').children].map(text),name=text(a).replace(/^\d+\./,'');const n=c.slice(1).map(num);return {name,position:Number(text(a).match(/^\d+/)?.[0]),played:n[0],won:n[1],drawn:n[2],lost:n[3],gf:n[4],ga:n[5],gd:n[6],points:n[7],logo:null};});
+ if(!rows.some(r=>r.name.includes(config.club)))throw Error('TFF puan tablosunda takip edilen takım yok');
  const matches=[];
  for(const r of d.querySelectorAll('.fiksturListesiTable tr')){
-  const c=[...r.children];if(c.length!==3||!text(r).includes('TRABZONSPOR'))continue;
+  const c=[...r.children];if(c.length!==3||!(text(c[0]).includes(config.club)||text(c[2]).includes(config.club)))continue;
   const home=text(c[0]),away=text(c[2]),a=c[1].querySelector('a'),href=a?.getAttribute('href');
   const id=href?.match(/macId=(\d+)/i)?.[1];if(!id)continue;
   const scores=text(c[1]).match(/^(\d+)\s*-\s*(\d+)$/),block=r.closest('table.softBG');
@@ -21,7 +22,7 @@ export function parseTFF(html){
  }
  const unique=[...new Map(matches.map(m=>[m.id,m])).values()];
  if(unique.length<20)throw Error('TFF sezon fikstürü eksik');
- return {season,competition:'Trendyol Süper Lig',source:'TFF',source_url:base+'default.aspx?pageID=198',matches:unique,standings:checkStandings(rows)};
+ return {season,competition:config.competition,source:'TFF',source_url:config.source_url,matches:unique,standings:checkStandings(rows)};
 }
 export function parseTFFDetail(html,expected){
  const d=parseHTML(html).document,base='https://www.tff.org/',get=s=>text(d.querySelector(s));
