@@ -782,6 +782,7 @@
             }
 
             function applyFilters() {
+                const breakingOnly = new URLSearchParams(window.location.search).get("breaking") === "1";
                 const search =
                     document
                         .getElementById(
@@ -834,10 +835,7 @@
                                 news.category_slug ===
                                     category;
 
-                            return (
-                                matchesSearch &&
-                                matchesCategory
-                            );
+                            return matchesSearch && matchesCategory && (!breakingOnly || news.is_breaking);
                         }
                     );
 
@@ -1290,10 +1288,16 @@
             }
 
             function initialize() {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get("breaking") === "1") {
+                    document.querySelector(".news-page-header h1").textContent = "Son Dakika Haberleri";
+                    document.querySelector(".news-page-header p").textContent = "Son dakika olarak işaretlenen güncel haberler.";
+                }
                 const search =
                     document.getElementById(
                         "news-search"
                     );
+                if (search && params.get("search")) search.value = params.get("search");
 
                 const category =
                     document.getElementById(

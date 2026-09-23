@@ -142,6 +142,43 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
   }
 }
 
+// RSS akışı yalnızca spot sağlıyorsa haberin kendi sayfasından gövdeyi ara.
+// Yönlendirmeleri izlememek kaynak dışı adreslere istek yapılmasını önler.
+async function enrichArticleItem(item: Item, source: Source): Promise<Item> {
+  try {
+    const articleUrl = new URL(item.url);
+    const feedHost = new URL(source.feed_url).hostname.replace(/^www\./, "");
+    const articleHost = articleUrl.hostname.replace(/^www\./, "");
+    if (articleUrl.protocol !== "https:" ||
+      !(articleHost === feedHost || articleHost.endsWith("." + feedHost) || feedHost.endsWith("." + articleHost))) return item;
+    const response = await fetch(articleUrl.href, {
+      signal: AbortSignal.timeout(4500), redirect: "error",
+      headers: { Accept: "text/html", "Accept-Language": "tr-TR,tr;q=0.9" },
+    });
+    if (!response.ok || !(response.headers.get("content-type") || "").includes("html")) return item;
+    const doc = new DOMParser().parseFromString(await response.text(), "text/html");
+    if (!doc) return item;
+    let body = "";
+    for (const script of [...doc.querySelectorAll("script[type='application/ld+json']")]) {
+      try {
+        const schema = newsArticleSchema(JSON.parse(script.textContent || ""));
+        if (typeof schema?.articleBody === "string" && schema.articleBody.length > body.length) body = schema.articleBody;
+      } catch { /* geçersiz JSON-LD */ }
+    }
+    for (const selector of ["[itemprop='articleBody']", ".article-content", ".news-detail-content", ".detail-content", ".news-content", "article"]) {
+      const container = doc.querySelector(selector);
+      if (!container) continue;
+      const paragraphs = [...container.querySelectorAll("h2, h3, p")]
+        .map((node) => clean(node.textContent, 1500))
+        .filter((part) => part.length >= 35 && !/^(reklam|ilgili haber|son dakika)$/i.test(part));
+      const candidate = paragraphs.join("\n\n");
+      if (candidate.length > body.length) body = candidate;
+    }
+    const content = distinctDetails(body, item.summary);
+    return content.length >= 90 ? { ...item, content } : item;
+  } catch { return item; }
+}
+
 function rssItems(xml: string): Item[] {
   const doc = new DOMParser().parseFromString(xml, "text/xml");
   if (!doc || doc.querySelector("parsererror")) throw new Error("Geçersiz RSS/XML");
@@ -373,7 +410,8 @@ Deno.serve(async (request) => {
           items = await Promise.all(items.map(enrichFanatikItem));
         }
 
-        for (const item of items) {
+        let articleFetches = 0;
+        for (let item of items) {
           totals.found_count++;
           // Yalnızca başlık ve bağlantıdan oluşan eksik haberleri hiçbir kaynaktan yayımlama.
           const normalizedTitle = clean(item.title, 700).toLocaleLowerCase("tr-TR");
@@ -388,6 +426,10 @@ Deno.serve(async (request) => {
             (isFanatikSource ? { scope: "trabzonspor" as Scope, score: 2, tags: ["Trabzonspor"] } : null);
           if (!match) { totals.skipped_count++; continue; }
           const itemScope: Scope = isFanatikSource ? "trabzonspor" : match.scope;
+          if (!item.content && !isFanatikSource && articleFetches < 2) {
+            articleFetches++;
+            item = await enrichArticleItem(item, source);
+          }
           const fingerprint = await sha256([item.url, item.title.toLocaleLowerCase("tr-TR"), item.publishedAt || ""].join("|"));
           const recentCutoff = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString();
           const duplicateChecks = await Promise.all([
@@ -405,7 +447,7 @@ Deno.serve(async (request) => {
                 .select("id,status,published_at,content,source_summary")
                 .eq("id", duplicate.news_id).maybeSingle();
               if (existing) {
-                const placeholder = !existing.source_summary ||
+                const placeholder = !clean(existing.content || "") || !existing.source_summary ||
                   /kaynağından alınan haber başlığı|Orijinal haber:/i.test(existing.content || "");
                 const botManagedContent = placeholder || clean(existing.content || "", 1200) ===
                   clean(contentFromSummary(existing.source_summary || ""), 1200) ||
@@ -444,12 +486,18 @@ Deno.serve(async (request) => {
             .eq("title", item.title).gte("created_at", recentCutoff).limit(1);
           if (sameTitle?.length) { totals.duplicate_count++; continue; }
 
-          const status = item.content && settings.default_mode === "auto_publish" && source.auto_publish
+          // Yayımlanamayacak boş gövdeli taslakları da veritabanına ekleme.
+          if (!item.content || clean(item.content, 3000).length < 90) {
+            totals.skipped_count++;
+            continue;
+          }
+
+          const status = settings.default_mode === "auto_publish" && source.auto_publish
             ? "published" : "draft";
           const summary = item.summary;
           const payload = {
             title: item.title, slug: slugify(item.title) + "-" + fingerprint.slice(0, 8),
-            summary, content: item.content || "",
+            summary, content: item.content,
             category_id: categoryId(itemScope), image_url: source.allow_remote_image ? item.imageUrl : null,
             status, published_at: status === "published" ? new Date().toISOString() : null,
             origin_type: "automated", source_id: source.id, source_name: sourceDisplayName,

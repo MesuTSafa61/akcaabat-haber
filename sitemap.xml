@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    <url>
-        <loc>https://akcaabathaber.com.tr/</loc>
-        <lastmod>2026-09-13</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>1.0</priority>
-    </url>
-
-    <url>
-        <loc>https://akcaabathaber.com.tr/haberler.html</loc>
-        <lastmod>2026-09-16</lastmod>
-        <changefreq>hourly</changefreq>
-        <priority>0.9</priority>
-    </url>
-
-    <url><loc>https://akcaabathaber.com.tr/mac-merkezi.html</loc><lastmod>2026-09-16</lastmod><changefreq>hourly</changefreq><priority>0.8</priority></url>
-    <url><loc>https://akcaabathaber.com.tr/kameralar.html</loc><lastmod>2026-09-16</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-    <url><loc>https://akcaabathaber.com.tr/trafik.html</loc><lastmod>2026-09-16</lastmod><changefreq>hourly</changefreq><priority>0.7</priority></url>
-    <url><loc>https://akcaabathaber.com.tr/hava-durumu.html</loc><lastmod>2026-09-16</lastmod><changefreq>hourly</changefreq><priority>0.7</priority></url>
-    <url><loc>https://akcaabathaber.com.tr/yazarlar.html</loc><lastmod>2026-09-16</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-
+  <url><loc>https://akcaabathaber.com.tr/</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/haber.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/mac-merkezi.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/kameralar.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/trafik.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/hava-durumu.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/hakkimizda.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/iletisim.html</loc></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=s%C3%BCper-lig-in-en-pahal%C4%B1-10-transferi-listesi-de%C4%9Fi%C5%9Fti-313f9c1f</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=gedson-fernandes-i%C3%A7in-resmi-a%C3%A7%C4%B1klama-1c62aedb</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzon-dan-muhtar-hayat%C4%B1n%C4%B1-kaybetti-f7a60507</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzonspor-un-sezon-ba%C5%9F%C4%B1nda-istedi%C4%9Fi-golc%C3%BCden-transfer-itiraf%C4%B1-937c798a</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzon-d%C3%BCzk%C3%B6y-de-i%C3%A7me-suyu-yat%C4%B1r%C4%B1m%C4%B1-tamamland%C4%B1-10-bin-metre-hat-d%C3%B6%C5%9Fendi-5e4258e8</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzon-g%C3%BCney-%C3%A7evre-yolu-nda-son-durum-14-portal%C4%B1n-10-u-tamamland%C4%B1-8dda468f</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=kt%C3%BC-%C3%B6%C4%9Frencilerinden-sanayi-odakl%C4%B1-ar-ge-projesinde-birincilik-03040c0b</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzon-da-ihracat%C3%A7%C4%B1lara-12-%C3%BClke-i%C3%A7in-yeni-kap%C4%B1-168-g%C3%B6r%C3%BC%C5%9Fme-yap%C4%B1ld%C4%B1-abbc7c4d</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=ortahisar-belediyesi-nden-okullara-geri-d%C3%B6n%C3%BC%C5%9F%C3%BCm-potas%C4%B1-2d735449</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=25-%C3%BClkeden-2-bin-970-hasta-trabzon-da-%C5%9Fifa-buldu-bedb9510</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzon-da-sivil-kat%C4%B1l%C4%B1m-zirvesi-ger%C3%A7ekle%C5%9Fti-760a254f</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzonsporlu-mustafa-eskihella%C3%A7-a-milli-tak%C4%B1m-kadrosuna-%C3%A7a%C4%9Fr%C4%B1ld%C4%B1-b190fde7</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=dsp-trabzon-il-ba%C5%9Fkan%C4%B1-ali-ayaz-dan-sanatevi-%C3%A7a%C4%9Fr%C4%B1s%C4%B1-sanat-haf%C4%B1zas%C4%B1-yok-edilmesin-a727bb4a</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=trabzonspor-da-hesaplar-tutmad%C4%B1-ilk-3-haftada-3-beraberlik-227b7470</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=s%C3%BCper-lig-in-tart%C4%B1%C5%9Fmas%C4%B1z-kalecisi-onana-df58b866</loc><lastmod>2026-09-23</lastmod></url>
+  <url><loc>https://akcaabathaber.com.tr/haber-detay.html?slug=thomas-reis-in-2-yard%C4%B1mc%C4%B1s%C4%B1-belli-oldu-debd44c8</loc><lastmod>2026-09-23</lastmod></url>
 </urlset>

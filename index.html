@@ -568,62 +568,10 @@
 
         <!-- HAVA DURUMU -->
 
-        <section class="weather-box">
-
-          <div class="weather-header">
-
-            <div>
-
-              <span>
-                AKÇAABAT
-              </span>
-
-              <strong>
-                Hava Durumu
-              </strong>
-
-            </div>
-
-            <span class="weather-icon">
-              ☀️
-            </span>
-
-          </div>
-
-
-          <div class="weather-main">
-
-            <strong>
-              22°
-            </strong>
-
-            <div>
-
-              <span>
-                Parçalı Bulutlu
-              </span>
-
-              <small>
-                Bugün
-              </small>
-
-            </div>
-
-          </div>
-
-
-          <div class="weather-details">
-
-            <span>
-              🌡️ Hissedilen 23°
-            </span>
-
-            <span>
-              💨 8 km/s
-            </span>
-
-          </div>
-
+        <section class="weather-box" aria-label="Akçaabat hava durumu">
+          <div class="weather-header"><div><span>AKÇAABAT</span><strong>Hava Durumu</strong></div><span class="weather-icon" id="homeWeatherIcon" aria-hidden="true">☁️</span></div>
+          <div class="weather-main"><strong id="homeWeatherTemperature">—</strong><div><span id="homeWeatherCondition">Yükleniyor...</span><small>Şu an</small></div></div>
+          <div class="weather-details"><span id="homeWeatherFeelsLike">🌡️ —</span><span id="homeWeatherWind">💨 —</span></div>
         </section>
 
 
@@ -867,7 +815,7 @@
         </a>
 
 
-        <a href="yeni-haber.html">
+        <a href="iletisim.html">
           Haber Gönder
         </a>
 

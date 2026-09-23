@@ -18,13 +18,13 @@
         <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button><a href="admin.html" class="admin-link">Yönetim</a></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
-        <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a><a href="yazarlar.html" class="nav-link" data-page="yazarlar.html">Yazarlar</a>
+        <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a>
       </div></nav>
     </header>
     <nav class="portal-category-rail" aria-label="Öne çıkan kategoriler"><div class="container portal-category-links"><a href="index.html" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" data-category="trabzonspor">Trabzonspor</a></div></nav>
     <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a></div></nav>
-    <section class="breaking-bar" aria-label="Son dakika"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content"><a href="haber.html?breaking=1">Akçaabat ve Trabzon'dan son dakika gelişmeleri</a></div></div></section>
+    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
   [":scope > header", ":scope > nav", ":scope > .top-bar", ":scope > .topbar", ":scope > .market-strip", ":scope > .service-strip", ":scope > .breaking-bar", ":scope > .search-panel"].forEach(function (selector) {
@@ -41,7 +41,7 @@
   footer.innerHTML = `<div class="container footer-grid">
     <div class="footer-brand"><a href="index.html" class="brand footer-logo" aria-label="Akçaabat Haber Ana Sayfa"><img data-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="121"></a><p>Akçaabat'ın sesi, Karadeniz'in gücü. Akçaabat ve Trabzon'dan doğru, hızlı ve güncel haberler.</p></div>
     <div class="footer-column"><h3>Kategoriler</h3><a href="kategori.html?kategori=Akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem">Gündem</a></div>
-    <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a><a href="yazarlar.html">Yazarlar</a></div>
+    <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a></div>
     <div class="footer-column"><h3>Kurumsal</h3><a href="hakkimizda.html">Hakkımızda</a><a href="kunye.html">Künye</a><a href="iletisim.html">İletişim</a><a href="basin-ilkeleri.html">Basın İlkeleri</a><a href="etik-ilkeler.html">Etik İlkeler</a></div>
     <div class="footer-column"><h3>Yasal ve İlkeler</h3><a href="kvkk.html">KVKK Aydınlatma Metni</a><a href="gizlilik.html">Gizlilik Politikası</a><a href="cerez-politikasi.html">Çerez Politikası</a><a href="sorumlu-yayincilik.html">Sorumlu Yayıncılık</a><a href="sorun-bildir.html">Sorun Bildir</a></div>
   </div><div class="footer-bottom"><div class="container footer-bottom-inner"><span>© <span id="currentYear">${now.getFullYear()}</span> Akçaabat Haber<span id="footerYear" hidden>${now.getFullYear()}</span></span><span>Akçaabat • Trabzon</span></div></div>`;
@@ -121,7 +121,41 @@
       if (target && data.current) target.textContent = "☁ Trabzon " + Math.round(Number(data.current.temperature_2m)) + "°";
     } catch (_) {}
   }
-  loadMarketData(); loadHeaderWeather();
+  async function loadBreakingNews() {
+    try {
+      await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
+      const config = window.AKCAABAT_SUPABASE;
+      const response = await fetch(config.url + "/rest/v1/news?select=title,slug&status=eq.published&is_breaking=eq.true&order=published_at.desc&limit=1", {
+        headers: { apikey: config.key, Authorization: "Bearer " + config.key }
+      });
+      if (!response.ok) return;
+      const news = (await response.json())[0];
+      if (!news || !news.title || !news.slug) return;
+      const link = document.getElementById("portalBreakingLink");
+      const bar = document.getElementById("portalBreakingBar");
+      link.textContent = news.title;
+      link.href = "haber-detay.html?slug=" + encodeURIComponent(news.slug);
+      bar.style.display = "";
+    } catch (_) { /* Veri yoksa boş son dakika bandı gösterilmez. */ }
+  }
+  async function loadAkcaabatWeather() {
+    const temperature = document.getElementById("homeWeatherTemperature");
+    if (!temperature) return;
+    try {
+      const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.0197&longitude=39.5716&current=temperature_2m,apparent_temperature,wind_speed_10m,weather_code,is_day&timezone=Europe%2FIstanbul");
+      if (!response.ok) throw new Error("Hava durumu alınamadı");
+      const current = (await response.json()).current;
+      if (!current || !Number.isFinite(Number(current.temperature_2m))) throw new Error("Hava durumu eksik");
+      const code = Number(current.weather_code);
+      const condition = code === 0 ? "Açık" : code <= 3 ? "Parçalı bulutlu" : code <= 48 ? "Sisli" : code <= 67 ? "Yağmurlu" : code <= 77 ? "Karlı" : code <= 82 ? "Sağanak yağışlı" : code <= 86 ? "Karlı" : code >= 95 ? "Gök gürültülü" : "Bulutlu";
+      temperature.textContent = Math.round(Number(current.temperature_2m)) + "°";
+      document.getElementById("homeWeatherCondition").textContent = condition;
+      document.getElementById("homeWeatherFeelsLike").textContent = "🌡️ Hissedilen " + Math.round(Number(current.apparent_temperature)) + "°";
+      document.getElementById("homeWeatherWind").textContent = "💨 " + Math.round(Number(current.wind_speed_10m)) + " km/sa";
+      document.getElementById("homeWeatherIcon").textContent = code >= 95 ? "⛈️" : (code >= 71 && code <= 77) || (code >= 85 && code <= 86) ? "🌨️" : code >= 51 && code <= 82 ? "🌧️" : code <= 3 && current.is_day ? "☀️" : "☁️";
+    } catch (_) { document.getElementById("homeWeatherCondition").textContent = "Veri alınamadı"; }
+  }
+  loadMarketData(); loadHeaderWeather(); loadBreakingNews(); loadAkcaabatWeather();
 
   const menuButton = document.getElementById("portalMobileMenuButton");
   const mainNav = document.getElementById("portalMainNav");
