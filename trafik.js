@@ -15,7 +15,27 @@
   const locate = document.getElementById("trafficLocate");
   const googleLink = document.getElementById("trafficGoogleLink");
   const locationStatus = document.getElementById("trafficLocationStatus");
-  let locationRequest = 0;
+  let watchId = null;
+  let tracking = false;
+  let trackingGeneration = 0;
+  let lastRenderedPosition = null;
+  let lastRenderedAt = 0;
+  function distanceMeters(a, b) {
+    const lat = (a.lat - b.lat) * Math.PI / 180;
+    const lon = (a.lon - b.lon) * Math.PI / 180;
+    const meanLat = (a.lat + b.lat) * Math.PI / 360;
+    return Math.hypot(lat * 6371000, lon * 6371000 * Math.cos(meanLat));
+  }
+  function stopTracking() {
+    trackingGeneration++;
+    tracking = false;
+    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    watchId = null;
+    lastRenderedPosition = null;
+    lastRenderedAt = 0;
+    locate.textContent = "⌖ Konumum";
+    locate.setAttribute("aria-pressed", "false");
+  }
   function urlFor(key) {
     const {lat, lon, zoom} = locations[key];
     return `https://yandex.com/map-widget/v1/?ll=${lon}%2C${lat}&z=${zoom}&l=${mapType}%2Ctrf&lang=tr_TR${key === "myLocation" ? `&pt=${lon},${lat},pm2blm` : ""}`;
@@ -40,9 +60,7 @@
     map.replaceChildren(frame);
   }
   buttons.forEach(button => button.addEventListener("click", () => {
-    locationRequest++;
-    locate.disabled = false;
-    locate.setAttribute("aria-pressed", "false");
+    if (tracking) stopTracking();
     locationStatus.textContent = "";
     current = button.dataset.location;
     buttons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
@@ -56,32 +74,50 @@
   document.getElementById("trafficRefresh").addEventListener("click", render);
   locate.addEventListener("click", () => {
     if (!enabled) return;
+    if (tracking) {
+      stopTracking();
+      locationStatus.textContent = "Canlı konum takibi durduruldu.";
+      return;
+    }
     if (!navigator.geolocation) {
       locationStatus.textContent = "Tarayıcınız konum özelliğini desteklemiyor.";
       return;
     }
-    const request = ++locationRequest;
-    locate.disabled = true;
+    const generation = ++trackingGeneration;
+    tracking = true;
+    locate.textContent = "■ Takibi durdur";
+    locate.setAttribute("aria-pressed", "true");
     locationStatus.textContent = "Konumunuz alınıyor; istenirse konum izni verin.";
-    navigator.geolocation.getCurrentPosition(position => {
-      if (request !== locationRequest) return;
-      locate.disabled = false;
+    try {
+      watchId = navigator.geolocation.watchPosition(position => {
+      if (generation !== trackingGeneration || !tracking) return;
       if (!enabled) return;
-      locations.myLocation = {lat: position.coords.latitude, lon: position.coords.longitude, zoom: 16};
+      const next = {lat: position.coords.latitude, lon: position.coords.longitude, zoom: 16};
+      if (!Number.isFinite(next.lat) || !Number.isFinite(next.lon)) return;
+      locations.myLocation = next;
       current = "myLocation";
       buttons.forEach(item => item.setAttribute("aria-pressed", "false"));
-      locate.setAttribute("aria-pressed", "true");
-      locationStatus.textContent = `Konumunuz işaretlendi. Yaklaşık doğruluk: ${Math.round(position.coords.accuracy)} metre. Yenilemek için Konumum'a tekrar dokunun.`;
-      render();
+      locationStatus.textContent = `Canlı konum takibi açık. Yaklaşık doğruluk: ${Math.round(position.coords.accuracy)} metre.`;
+      const now = Date.now();
+      if (!lastRenderedPosition || (now - lastRenderedAt >= 4000 && distanceMeters(next, lastRenderedPosition) >= 12)) {
+        lastRenderedPosition = next;
+        lastRenderedAt = now;
+        render();
+      }
     }, error => {
-      if (request !== locationRequest) return;
-      locate.disabled = false;
+      if (generation !== trackingGeneration || !tracking) return;
+      if (error.code === 1) stopTracking();
       locationStatus.textContent = error.code === 1
         ? "Konum izni verilmedi. Tarayıcınızın site ayarlarından konuma izin verip tekrar deneyin."
-        : error.code === 3 ? "Konum alınması zaman aşımına uğradı. Tekrar deneyin."
-        : "Konum bulunamadı. Cihazınızın konum servislerini açıp tekrar deneyin.";
-    }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 0});
+        : error.code === 3 ? "Konum sinyali bekleniyor; takip açık. Cihazınızın konum servislerini kontrol edin."
+        : "Konum bulunamadı; takip açık. Cihazınızın konum servislerini kontrol edin.";
+      }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 0});
+    } catch (_) {
+      stopTracking();
+      locationStatus.textContent = "Konum takibi başlatılamadı. Tarayıcı ve site konum izinlerini kontrol edin.";
+    }
   });
+  window.addEventListener("pagehide", stopTracking);
   render();
   // The map remains available if the settings service is temporarily unreachable.
   if (window.supabase && window.AKCAABAT_SUPABASE) {
@@ -89,6 +125,7 @@
     client.from("live_service_settings").select("value").eq("key", "traffic").maybeSingle().then(({data, error}) => {
       if (error || !data?.value || data.value.enabled !== false) return;
       enabled = false;
+      if (tracking) stopTracking();
       render();
     });
   }
