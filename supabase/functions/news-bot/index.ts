@@ -18,8 +18,27 @@ const json = (body: unknown, status = 200) =>
     status, headers: { "Content-Type": "application/json; charset=utf-8" },
   });
 
+function decodeHtmlEntities(value: string): string {
+  const named: Record<string, string> = {
+    amp: "&", apos: "'", quot: '"', lt: "<", gt: ">", nbsp: " ",
+    rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", ndash: "–",
+    mdash: "—", hellip: "…", bull: "•", euro: "€",
+  };
+  let decoded = value;
+  // Bazı RSS kaynakları &#039; değerini &amp;#039; biçiminde iki kez kodluyor.
+  for (let pass = 0; pass < 2; pass++) {
+    decoded = decoded.replace(/&(#(?:x[0-9a-f]{1,6}|[0-9]{1,7})|[a-z][a-z0-9]{1,12});/gi, (whole, entity: string) => {
+      if (entity[0] !== "#") return named[entity.toLowerCase()] ?? whole;
+      const numeric = entity[1].toLowerCase() === "x" ? parseInt(entity.slice(2), 16) : Number(entity.slice(1));
+      return numeric >= 32 && numeric <= 0x10ffff && !(numeric >= 0xd800 && numeric <= 0xdfff)
+        ? String.fromCodePoint(numeric) : whole;
+    });
+  }
+  return decoded;
+}
+
 const clean = (value: string | null | undefined, limit = 1000) =>
-  String(value || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, limit);
+  decodeHtmlEntities(String(value || "").replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim().slice(0, limit);
 
 const dateValue = (value: string | null | undefined) => {
   const date = new Date(String(value || ""));

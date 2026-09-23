@@ -82,6 +82,7 @@
 
     <script src="supabase-config.js"></script>
     <script src="news-sources.js?v=1"></script>
+    <script src="article-format.js?v=1"></script>
     <script src="current-news.js?v=20260923-clean"></script>
 
     <script
@@ -249,6 +250,10 @@
         .article-content p {
             margin: 0 0 20px;
         }
+
+        .article-content ul,
+        .article-content ol { margin: 0 0 20px; padding-left: 28px; }
+        .article-content li { margin-bottom: 7px; }
 
         .article-content h2 {
             margin: 32px 0 14px;
@@ -1051,6 +1056,10 @@
                     return "<p>Bu haber için içerik bulunmuyor.</p>";
                 }
 
+                if (window.AkcaabatArticleFormat) {
+                    return window.AkcaabatArticleFormat.render(text);
+                }
+
                 return text
                     .split(/\n{2,}/)
                     .map(function (paragraph) {
@@ -1085,7 +1094,9 @@
             }
 
             function calculateReadingTime(text) {
-                const cleanText = String(text || "")
+                const cleanText = String(window.AkcaabatArticleFormat
+                    ? window.AkcaabatArticleFormat.plainText(text)
+                    : text || "")
                     .replace(/<[^>]*>/g, " ")
                     .replace(/\s+/g, " ")
                     .trim();

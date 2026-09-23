@@ -345,8 +345,59 @@
             line-height: 1.6;
         }
 
-        #content {
+        .article-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 9px;
+            background: #f4f7fb;
+            border: 1px solid #d1dbe8;
+            border-radius: 9px 9px 0 0;
+        }
+
+        .article-toolbar button,
+        .article-toolbar select {
+            width: auto;
+            min-height: 35px;
+            padding: 5px 9px;
+            border: 1px solid #d5dfeb;
+            border-radius: 6px;
+            background: #fff;
+            color: #14263f;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .article-toolbar button:hover,
+        .article-toolbar button:focus-visible,
+        .article-toolbar select:focus-visible {
+            border-color: #1186ba;
+            outline: 2px solid #b7e1f6;
+        }
+
+        .article-editor {
             min-height: 380px;
+            padding: 15px;
+            border: 1px solid #d1dbe8;
+            border-top: 0;
+            border-radius: 0 0 9px 9px;
+            outline: 0;
+            background: #fff;
+            color: #19283a;
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .article-editor:focus { box-shadow: inset 0 0 0 2px #b7e1f6; }
+        .article-editor:empty::before { content: attr(data-placeholder); color: #9ca3af; }
+        .article-editor p { margin: 0 0 1em; }
+        .article-editor h2, .article-editor h3 { margin: 1em 0 .5em; line-height: 1.3; }
+        .article-editor blockquote { margin: 1em 0; padding: .5em 1em; border-left: 4px solid #1989b8; background: #f4f7fb; }
+
+        #content[hidden] {
+            display: none;
         }
 
         .hint {
@@ -760,19 +811,45 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="content">
+                                <label for="articleEditor">
                                     Haber Metni
                                     <span class="required">*</span>
                                 </label>
 
-                                <textarea
-                                    id="content"
-                                    required
-                                    placeholder="Haber metnini buraya yazın..."
-                                ></textarea>
+                                <div class="article-toolbar" role="toolbar" aria-label="Haber metni biçimlendirme">
+                                    <select id="editorFont" aria-label="Yazı tipi" title="Yazı tipi">
+                                        <option value="">Yazı tipi</option>
+                                        <option value="Arial">Arial</option>
+                                        <option value="Georgia">Georgia</option>
+                                        <option value="Verdana">Verdana</option>
+                                        <option value="Times New Roman">Times New Roman</option>
+                                    </select>
+                                    <select id="editorSize" aria-label="Yazı boyutu" title="Yazı boyutu">
+                                        <option value="">Punto</option>
+                                        <option value="2">14</option>
+                                        <option value="3">16</option>
+                                        <option value="4">18</option>
+                                        <option value="5">24</option>
+                                        <option value="6">32</option>
+                                    </select>
+                                    <button type="button" data-editor-command="bold" title="Kalın" aria-label="Kalın"><strong>K</strong></button>
+                                    <button type="button" data-editor-command="italic" title="İtalik" aria-label="İtalik"><em>İ</em></button>
+                                    <button type="button" data-editor-command="underline" title="Altı çizili" aria-label="Altı çizili"><u>A</u></button>
+                                    <button type="button" data-editor-block="h2" title="Büyük başlık">Başlık</button>
+                                    <button type="button" data-editor-block="h3" title="Ara başlık">Ara başlık</button>
+                                    <button type="button" data-editor-command="insertUnorderedList" title="Madde işaretleri" aria-label="Madde işaretleri">• Liste</button>
+                                    <button type="button" data-editor-command="insertOrderedList" title="Numaralı liste" aria-label="Numaralı liste">1. Liste</button>
+                                    <button type="button" data-editor-block="blockquote" title="Alıntı">❝</button>
+                                    <button type="button" id="editorLink" title="Bağlantı ekle">Bağlantı</button>
+                                    <button type="button" data-editor-command="removeFormat" title="Biçimi temizle">Temizle</button>
+                                    <button type="button" data-editor-command="undo" title="Geri al" aria-label="Geri al">↶</button>
+                                    <button type="button" data-editor-command="redo" title="İleri al" aria-label="İleri al">↷</button>
+                                </div>
+                                <div id="articleEditor" class="article-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Haber metnini buraya yazın..."></div>
+                                <textarea id="content" hidden></textarea>
 
                                 <div class="hint">
-                                    Paragrafları boş satır bırakarak ayırabilirsiniz.
+                                    Metni seçip yazı tipini, puntosunu veya biçimini değiştirebilirsiniz.
                                 </div>
                             </div>
 
@@ -1002,6 +1079,7 @@
 
 <script src="supabase-config.js"></script>
 <script src="news-sources.js?v=1"></script>
+<script src="article-format.js?v=1"></script>
 
 <script>
 (function () {
@@ -1067,6 +1145,75 @@
 
     const contentInput =
         document.getElementById("content");
+
+    const articleEditor = document.getElementById("articleEditor");
+    const articleFormat = window.AkcaabatArticleFormat;
+    let editorRange = null;
+
+    function rememberEditorRange() {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount && articleEditor.contains(selection.anchorNode)) {
+            editorRange = selection.getRangeAt(0).cloneRange();
+        }
+    }
+
+    function restoreEditorRange() {
+        articleEditor.focus();
+        if (!editorRange || !articleEditor.contains(editorRange.commonAncestorContainer)) return;
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(editorRange);
+    }
+
+    function applyEditorCommand(command, value) {
+        restoreEditorRange();
+        document.execCommand(command, false, value || null);
+        rememberEditorRange();
+    }
+
+    document.addEventListener("selectionchange", rememberEditorRange);
+    document.querySelectorAll("[data-editor-command], [data-editor-block]").forEach(function (button) {
+        button.addEventListener("pointerdown", function (event) { event.preventDefault(); });
+        button.addEventListener("click", function () {
+            if (button.dataset.editorBlock) {
+                applyEditorCommand("formatBlock", "<" + button.dataset.editorBlock + ">");
+            } else {
+                applyEditorCommand(button.dataset.editorCommand);
+            }
+        });
+    });
+    document.getElementById("editorFont").addEventListener("change", function (event) {
+        if (event.target.value) applyEditorCommand("fontName", event.target.value);
+        event.target.value = "";
+    });
+    document.getElementById("editorSize").addEventListener("change", function (event) {
+        if (event.target.value) applyEditorCommand("fontSize", event.target.value);
+        event.target.value = "";
+    });
+    document.getElementById("editorLink").addEventListener("click", function () {
+        restoreEditorRange();
+        const url = prompt("Bağlantı adresi (https://...):");
+        if (!url) return;
+        try {
+            const parsed = new URL(url);
+            if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+            applyEditorCommand("createLink", parsed.href);
+        } catch (_) { alert("Geçerli bir http veya https bağlantısı girin."); }
+    });
+    articleEditor.addEventListener("paste", function (event) {
+        event.preventDefault();
+        const html = event.clipboardData.getData("text/html");
+        const plain = event.clipboardData.getData("text/plain");
+        const safe = html ? articleFormat.sanitize(html) :
+            articleFormat.render(plain);
+        document.execCommand("insertHTML", false, safe);
+    });
+
+    function syncEditorContent() {
+        const safe = articleFormat.sanitize(articleEditor.innerHTML);
+        contentInput.value = articleFormat.plainText(safe).trim() ? safe : "";
+        return contentInput.value;
+    }
 
     const categoryInput =
         document.getElementById("category");
@@ -1471,6 +1618,7 @@
 
         contentInput.value =
             currentNews.content || "";
+        articleEditor.innerHTML = articleFormat.render(contentInput.value);
 
         categoryInput.value =
             currentNews.category_id || "";
@@ -1748,7 +1896,7 @@
                 summaryInput.value.trim(),
 
             content:
-                contentInput.value.trim(),
+                syncEditorContent(),
 
             category_id:
                 categoryInput.value,
