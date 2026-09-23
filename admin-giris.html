@@ -145,37 +145,11 @@
         }
 
         .brand-logo {
-            width: 68px;
-            height: 68px;
-
+            display: block;
+            width: min(100%, 260px);
+            height: 82px;
             margin: 0 auto 15px;
-
-            border-radius: 18px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #d71920,
-                    #ff4a50
-                );
-
-            color: #ffffff;
-
-            font-size: 25px;
-            font-weight: 900;
-
-            box-shadow:
-                0 10px 25px
-                rgba(
-                    215,
-                    25,
-                    32,
-                    0.25
-                );
+            object-fit: contain;
         }
 
         .brand h1 {
@@ -474,12 +448,7 @@
 
             <div class="brand">
 
-                <div
-                    class="brand-logo"
-                    aria-hidden="true"
-                >
-                    AH
-                </div>
+                <img class="brand-logo" src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber logosu" width="260" height="82">
 
                 <h1>
                     Akçaabat Haber
