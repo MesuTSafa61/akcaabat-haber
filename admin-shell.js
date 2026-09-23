@@ -10,7 +10,7 @@
     "admin-panel.html": ["Dashboard", "Genel durum ve hızlı işlemler"],
     "admin.html": ["Yönetim Ana Sayfası", "Akçaabat Haber içerik yönetimi"],
     "haberler.html": ["Haberler", "Yayınlanan ve planlanan haberleri yönetin"],
-    "manset-yonetimi.html": ["Manşet Yönetimi", "Ana sayfadaki 1–10 manşet sırasını yönetin"],
+    "manset-yonetimi.html": ["Manşet Yönetimi", "Ana sayfadaki 1–15 manşet sırasını yönetin"],
     "yeni-haber.html": ["Yeni Haber", "Yeni içerik oluşturun veya mevcut haberi düzenleyin"],
     "taslaklar.html": ["Taslaklar", "Yayınlanmamış içerikleri yönetin"],
     "kategoriler.html": ["Kategoriler", "Haber kategorilerini düzenleyin"],

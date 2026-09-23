@@ -892,8 +892,11 @@
                                     <option value="5">5</option><option value="6">6</option>
                                     <option value="7">7</option><option value="8">8</option>
                                     <option value="9">9</option><option value="10">10</option>
+                                    <option value="11">11</option><option value="12">12</option>
+                                    <option value="13">13</option><option value="14">14</option>
+                                    <option value="15">15</option>
                                 </select>
-                                <div class="hint">Yalnızca yayınlanmış haberler manşette gösterilir.</div>
+                                <div class="hint">Dolu sıra seçilirse mevcut manşetler bir sıra kayar. 15. sıradan taşan haber yayında kalır.</div>
                             </div>
 
                             <div class="form-group">
@@ -1774,22 +1777,10 @@
         if (!headlineInput.checked) headlineOrderInput.value = "";
     });
 
-    async function validateHeadlineSlot(data, status) {
+    function validateHeadlineSlot(data, status) {
         if (status !== "published" || !data.is_headline) return;
-        if (!data.headline_order || data.headline_order < 1 || data.headline_order > 10) {
-            throw new Error("Manşet için 1-10 arasında bir sıra seçin.");
-        }
-        let query = client.from("news")
-            .select("id,title")
-            .eq("status", "published")
-            .eq("is_headline", true)
-            .eq("headline_order", data.headline_order)
-            .limit(1);
-        if (currentNews && currentNews.id) query = query.neq("id", currentNews.id);
-        const result = await query;
-        if (result.error) throw result.error;
-        if (result.data && result.data.length) {
-            throw new Error("Bu manşet sırası dolu: “" + result.data[0].title + "”. Önce diğer haberi manşetten çıkarın.");
+        if (!Number.isInteger(data.headline_order) || data.headline_order < 1 || data.headline_order > 15) {
+            throw new Error("Manşet için 1-15 arasında bir sıra seçin.");
         }
     }
 
@@ -1839,7 +1830,7 @@
 
             validateForm(data);
 
-            await validateHeadlineSlot(data, status);
+            validateHeadlineSlot(data, status);
 
             setSaving(
                 "Kaydediliyor...",
@@ -1879,6 +1870,8 @@
                         : null
                 );
 
+            const keepCurrentHeadline = status === "published" && data.is_headline &&
+                currentNews && currentNews.is_headline && currentNews.headline_order;
             const payload = {
                 title:
                     data.title,
@@ -1908,12 +1901,10 @@
                     data.is_breaking,
 
                 is_headline:
-                    status === "published" ? data.is_headline : false,
+                    Boolean(keepCurrentHeadline),
 
                 headline_order:
-                    status === "published" && data.is_headline
-                        ? data.headline_order
-                        : null,
+                    keepCurrentHeadline ? currentNews.headline_order : null,
 
                 author_id:
                     currentNews && currentNews.author_id ? currentNews.author_id : currentUser.id,
@@ -1963,8 +1954,23 @@
                 throw result.error;
             }
 
-            currentNews =
-                result.data;
+            let savedNews = result.data;
+            if (status === "published" && data.is_headline &&
+                (!keepCurrentHeadline || Number(currentNews.headline_order) !== data.headline_order)) {
+                const placement = await client.rpc("insert_news_headline_slot", {
+                    p_order: data.headline_order,
+                    p_news_id: savedNews.id
+                });
+                if (placement.error) {
+                    currentNews = savedNews;
+                    window.history.replaceState({}, "", "yeni-haber.html?edit=" +
+                        encodeURIComponent(savedNews.id));
+                    throw new Error("Haber kaydedildi ancak manşete yerleştirilemedi: " + placement.error.message);
+                }
+                savedNews = { ...savedNews, is_headline: true, headline_order: data.headline_order };
+            }
+
+            currentNews = savedNews;
 
             isEditMode = true;
 

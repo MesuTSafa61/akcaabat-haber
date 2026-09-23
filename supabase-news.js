@@ -66,10 +66,10 @@
         if (
             !Number.isInteger(order) ||
             order < 1 ||
-            order > 10
+            order > 15
         ) {
             throw new Error(
-                "Manşet sırası 1 ile 10 arasında olmalıdır."
+                "Manşet sırası 1 ile 15 arasında olmalıdır."
             );
         }
 
@@ -117,7 +117,7 @@
             payload.headline_order === null
         ) {
             throw new Error(
-                "Manşete eklenen haber için 1-10 arasında sıra seçilmelidir."
+                "Manşete eklenen haber için 1-15 arasında sıra seçilmelidir."
             );
         }
 

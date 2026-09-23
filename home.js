@@ -98,7 +98,11 @@
                 .limit(120);
         }
         if (result.error) throw result.error;
-        return mergeNews((result.data || []).map(normalize));
+        const headlineResult = await client.from("news").select(fullSelect)
+            .eq("status", "published").eq("is_headline", true)
+            .order("headline_order", { ascending: true }).limit(15);
+        if (headlineResult.error) console.warn("Manşet listesi alınamadı:", headlineResult.error);
+        return mergeNews([...(result.data || []), ...(headlineResult.data || [])].map(normalize));
     }
 
     async function loadSideSelection() {
@@ -182,14 +186,14 @@
     function renderHeadlines() {
         const eligibleHeadlines = state.news.filter(function (item) {
             return item.status === "published" && item.is_headline === true &&
-                item.headline_order >= 1 && item.headline_order <= 10;
+                item.headline_order >= 1 && item.headline_order <= 15;
         });
         const adminHeadlines = eligibleHeadlines.filter(function (item) {
             return String(item.id || "").indexOf("curated-") !== 0;
         });
         state.headlines = (adminHeadlines.length ? adminHeadlines : eligibleHeadlines)
             .sort(function (a, b) { return a.headline_order - b.headline_order; })
-            .slice(0, 10);
+            .slice(0, 15);
 
         const hero = document.getElementById("heroSection");
         const deck = document.querySelector(".headline-deck");
