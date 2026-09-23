@@ -10,7 +10,7 @@
   const buttons = [...document.querySelectorAll("[data-location]")];
   const typeButtons = [...document.querySelectorAll("[data-map-type]")];
   let current = "corridor";
-  let mapType = "sat";
+  let mapType = "map";
   let enabled = true;
   const locate = document.getElementById("trafficLocate");
   const googleLink = document.getElementById("trafficGoogleLink");
