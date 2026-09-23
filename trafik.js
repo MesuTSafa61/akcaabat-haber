@@ -12,9 +12,12 @@
   let current = "corridor";
   let mapType = "sat";
   let enabled = true;
+  const locate = document.getElementById("trafficLocate");
+  const locationStatus = document.getElementById("trafficLocationStatus");
+  let locationRequest = 0;
   function urlFor(key) {
     const {lat, lon, zoom} = locations[key];
-    return `https://yandex.com/map-widget/v1/?ll=${lon}%2C${lat}&z=${zoom}&l=${mapType}%2Ctrf&lang=tr_TR`;
+    return `https://yandex.com/map-widget/v1/?ll=${lon}%2C${lat}&z=${zoom}&l=${mapType}%2Ctrf&lang=tr_TR${key === "myLocation" ? `&pt=${lon},${lat},pm2blm` : ""}`;
   }
   function render() {
     if (!enabled) {
@@ -22,13 +25,18 @@
       return;
     }
     const frame = document.createElement("iframe");
-    frame.title = "Yandex canlı trafik haritası – " + buttons.find(item => item.dataset.location === current).textContent.trim();
+    frame.title = "Yandex canlı trafik haritası – " + (current === "myLocation" ? "Konumum" : buttons.find(item => item.dataset.location === current).textContent.trim());
     frame.src = urlFor(current);
     frame.allowFullscreen = true;
+    frame.allow = "geolocation";
     frame.loading = "eager";
     map.replaceChildren(frame);
   }
   buttons.forEach(button => button.addEventListener("click", () => {
+    locationRequest++;
+    locate.disabled = false;
+    locate.setAttribute("aria-pressed", "false");
+    locationStatus.textContent = "";
     current = button.dataset.location;
     buttons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
     render();
@@ -39,6 +47,34 @@
     render();
   }));
   document.getElementById("trafficRefresh").addEventListener("click", render);
+  locate.addEventListener("click", () => {
+    if (!enabled) return;
+    if (!navigator.geolocation) {
+      locationStatus.textContent = "Tarayıcınız konum özelliğini desteklemiyor.";
+      return;
+    }
+    const request = ++locationRequest;
+    locate.disabled = true;
+    locationStatus.textContent = "Konumunuz alınıyor; istenirse konum izni verin.";
+    navigator.geolocation.getCurrentPosition(position => {
+      if (request !== locationRequest) return;
+      locate.disabled = false;
+      if (!enabled) return;
+      locations.myLocation = {lat: position.coords.latitude, lon: position.coords.longitude, zoom: 16};
+      current = "myLocation";
+      buttons.forEach(item => item.setAttribute("aria-pressed", "false"));
+      locate.setAttribute("aria-pressed", "true");
+      locationStatus.textContent = `Konumunuz işaretlendi. Yaklaşık doğruluk: ${Math.round(position.coords.accuracy)} metre. Yenilemek için Konumum'a tekrar dokunun.`;
+      render();
+    }, error => {
+      if (request !== locationRequest) return;
+      locate.disabled = false;
+      locationStatus.textContent = error.code === 1
+        ? "Konum izni verilmedi. Tarayıcınızın site ayarlarından konuma izin verip tekrar deneyin."
+        : error.code === 3 ? "Konum alınması zaman aşımına uğradı. Tekrar deneyin."
+        : "Konum bulunamadı. Cihazınızın konum servislerini açıp tekrar deneyin.";
+    }, {enableHighAccuracy: true, timeout: 15000, maximumAge: 0});
+  });
   render();
   // The map remains available if the settings service is temporarily unreachable.
   if (window.supabase && window.AKCAABAT_SUPABASE) {
