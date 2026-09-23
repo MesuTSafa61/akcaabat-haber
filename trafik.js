@@ -3,7 +3,7 @@
   const locations = {
     corridor: {lat: 41.0120, lon: 39.6200, zoom: 13},
     akcaabat: {lat: 41.0209, lon: 39.5716, zoom: 15},
-    sogutlu: {lat: 41.0078, lon: 39.6500, zoom: 15},
+    sogutlu: {lat: 41.0075, lon: 39.6200, zoom: 14},
     trabzon: {lat: 41.0027, lon: 39.7168, zoom: 14}
   };
   const map = document.getElementById("trafficMap");
