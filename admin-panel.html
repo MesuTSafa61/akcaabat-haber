@@ -237,6 +237,39 @@
             line-height: 1;
         }
 
+        .visitor-section {
+            margin-bottom:24px;
+            padding:23px;
+            border:1px solid #dce6f1;
+            border-radius:16px;
+            background:linear-gradient(145deg,#fff,#f8fbff);
+            box-shadow:0 8px 26px rgba(15,23,42,.05);
+        }
+        .visitor-heading { display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px; }
+        .visitor-heading h2 { margin:0;color:#102a49;font-size:20px; }
+        .visitor-heading p { margin:5px 0 0;color:#64748b;font-size:12px;line-height:1.5; }
+        .visitor-updated { flex:none;color:#6b7b90;font-size:11px; }
+        .visitor-metrics { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px; }
+        .visitor-metric { padding:16px;border:1px solid #e1e8f1;border-radius:11px;background:#fff; }
+        .visitor-metric span { display:block;color:#617188;font-size:12px;font-weight:700; }
+        .visitor-metric strong { display:block;margin:10px 0 6px;color:#112d4f;font-size:29px;line-height:1;font-weight:850; }
+        .visitor-metric small { color:#8491a2;font-size:11px; }
+        .visitor-metric.live { background:#f4fcf8;border-color:#bfe7d0; }
+        .visitor-metric.live strong { color:#18804b; }
+        .visitor-detail { display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:15px;margin-top:17px; }
+        .visitor-panel { min-width:0;padding:16px;border:1px solid #e1e8f1;border-radius:11px;background:#fff; }
+        .visitor-panel h3 { margin:0 0 13px;color:#233a57;font-size:14px; }
+        .visitor-chart { display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;align-items:end;height:140px; }
+        .visitor-day { display:grid;grid-template-rows:auto 1fr auto;justify-items:center;height:100%;gap:5px;color:#69798f;font-size:11px; }
+        .visitor-day b { color:#203c5c;font-size:12px; }
+        .visitor-track { display:flex;align-items:end;width:min(100%,42px);height:100%;overflow:hidden;border-radius:5px;background:#eef3f9; }
+        .visitor-bar { width:100%;min-height:3px;border-radius:5px;background:#1594ca; }
+        .visitor-day:last-child .visitor-bar { background:#d71920; }
+        .visitor-page { display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #eef2f6;color:#51627a;font-size:12px; }
+        .visitor-page:last-child { border:0; }
+        .visitor-page strong { color:#1b385a; }
+        .visitor-note { margin:13px 0 0;color:#78879b;font-size:11px;line-height:1.5; }
+
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1.5fr 1fr;
@@ -487,6 +520,7 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+            .visitor-detail { grid-template-columns:1fr; }
         }
 
         @media (max-width: 800px) {
@@ -534,6 +568,12 @@
         }
 
         @media (max-width: 520px) {
+            .visitor-section { padding:15px; }
+            .visitor-metrics { grid-template-columns:repeat(2,minmax(0,1fr));gap:8px; }
+            .visitor-metric { padding:12px; }
+            .visitor-metric strong { font-size:24px; }
+            .visitor-heading { flex-direction:column; }
+            .visitor-chart { gap:5px; }
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
@@ -700,6 +740,27 @@
                 <p>
                     Akçaabat Haber yönetim panelinden içeriklerini ve sitenin genel durumunu yönetebilirsin.
                 </p>
+            </section>
+
+            <section class="visitor-section" aria-labelledby="visitorHeading">
+                <div class="visitor-heading">
+                    <div>
+                        <h2 id="visitorHeading">Ziyaretçi İstatistikleri</h2>
+                        <p>Türkiye saatiyle günlük ziyaretler ve son 5 dakikadaki aktif tarayıcılar.</p>
+                    </div>
+                    <span class="visitor-updated" id="visitorUpdated">Yükleniyor...</span>
+                </div>
+                <div class="visitor-metrics">
+                    <div class="visitor-metric live"><span>Şu an aktif</span><strong id="activeVisitors">—</strong><small>Son 5 dakika</small></div>
+                    <div class="visitor-metric"><span>Bugün ziyaretçi</span><strong id="todayVisitors">—</strong><small>Tekil tarayıcı</small></div>
+                    <div class="visitor-metric"><span>Bugün sayfa açılışı</span><strong id="todayPageViews">—</strong><small>Tüm site</small></div>
+                    <div class="visitor-metric"><span>Dün ziyaretçi</span><strong id="yesterdayVisitors">—</strong><small>Tekil tarayıcı</small></div>
+                </div>
+                <div class="visitor-detail">
+                    <div class="visitor-panel"><h3>Son 7 gün</h3><div id="visitorChart" class="visitor-chart" aria-label="Son yedi günün ziyaretçileri"></div></div>
+                    <div class="visitor-panel"><h3>Bugün en çok açılan sayfalar</h3><div id="visitorTopPages">Henüz veri yok.</div></div>
+                </div>
+                <p class="visitor-note">Yalnızca istatistik izni veren tarayıcılar sayılır. Aktif sayı son 5 dakikadaki harekete göre yaklaşık değerdir; ölçümün başlamasından önceki ziyaretler dahil değildir.</p>
             </section>
 
             <section class="stats-grid">
@@ -1175,7 +1236,41 @@
         renderPopularNews(news);
         renderDrafts(news);
         renderCategories(news);
+        loadVisitorAnalytics();
 
+    }
+
+    async function loadVisitorAnalytics() {
+        var updated = document.getElementById("visitorUpdated");
+        try {
+            var result = await client.rpc("site_analytics_summary");
+            if (result.error) throw result.error;
+            var data = result.data || {};
+            ["activeVisitors", "todayVisitors", "todayPageViews", "yesterdayVisitors"].forEach(function (id) {
+                document.getElementById(id).textContent = formatNumber(data[id] || 0);
+            });
+            var days = Array.isArray(data.lastSevenDays) ? data.lastSevenDays : [];
+            var maximum = Math.max(1, ...days.map(function (day) { return Number(day.visitors) || 0; }));
+            document.getElementById("visitorChart").innerHTML = days.map(function (day) {
+                var count = Math.max(0, Number(day.visitors) || 0);
+                var height = count ? Math.max(6, Math.round(count / maximum * 100)) : 2;
+                var label = new Date(day.day + "T12:00:00+03:00").toLocaleDateString("tr-TR", { weekday: "short" });
+                return '<div class="visitor-day"><b>' + formatNumber(count) + '</b><div class="visitor-track"><div class="visitor-bar" style="height:' + height + '%"></div></div><span>' + escapeHtml(label) + '</span></div>';
+            }).join("");
+            var labels = {
+                "/index.html":"Ana Sayfa", "/haber-detay.html":"Haber Detayı", "/haber.html":"Haberler",
+                "/kategori.html":"Kategori", "/mac-merkezi.html":"Maç Merkezi", "/trafik.html":"Trafik",
+                "/kameralar.html":"Kameralar", "/hava-durumu.html":"Hava Durumu"
+            };
+            var pages = Array.isArray(data.topPages) ? data.topPages : [];
+            document.getElementById("visitorTopPages").innerHTML = pages.length ? pages.map(function (item) {
+                return '<div class="visitor-page"><span>' + escapeHtml(labels[item.page] || item.page) + '</span><strong>' + formatNumber(item.views) + '</strong></div>';
+            }).join("") : '<div class="visitor-page">Henüz izin verilmiş ziyaret yok.</div>';
+            updated.textContent = "Güncellendi: " + new Date().toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" });
+        } catch (error) {
+            updated.textContent = "İstatistikler yüklenemedi";
+            console.error("Ziyaret istatistiği:", error);
+        }
     }
 
     function renderStats(news) {
@@ -1598,6 +1693,9 @@
             setupMobileMenu();
             setupRefresh();
             setupLogout();
+            window.setInterval(function () {
+                if (document.visibilityState === "visible") loadVisitorAnalytics();
+            }, 60000);
 
             authLoading.style.display = "none";
             adminShell.style.display = "flex";

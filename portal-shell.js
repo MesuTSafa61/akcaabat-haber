@@ -46,6 +46,13 @@
     <div class="footer-column"><h3>Yasal ve İlkeler</h3><a href="kvkk.html">KVKK Aydınlatma Metni</a><a href="gizlilik.html">Gizlilik Politikası</a><a href="cerez-politikasi.html">Çerez Politikası</a><a href="sorumlu-yayincilik.html">Sorumlu Yayıncılık</a><a href="sorun-bildir.html">Sorun Bildir</a></div>
   </div><div class="footer-bottom"><div class="container footer-bottom-inner"><span>© <span id="currentYear">${now.getFullYear()}</span> Akçaabat Haber<span id="footerYear" hidden>${now.getFullYear()}</span></span><span>Akçaabat • Trabzon</span></div></div>`;
   body.appendChild(footer);
+  const analyticsStyle = document.createElement("link");
+  analyticsStyle.rel = "stylesheet";
+  analyticsStyle.href = "site-analytics.css?v=1";
+  document.head.appendChild(analyticsStyle);
+  const analyticsScript = document.createElement("script");
+  analyticsScript.src = "site-analytics.js?v=1";
+  document.head.appendChild(analyticsScript);
 
   function safeBrandUrl(value) {
     if (!value) return "";
