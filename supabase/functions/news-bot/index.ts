@@ -10,6 +10,7 @@ type Source = {
 type Item = {
   guid: string | null; url: string; title: string; summary: string;
   publishedAt: string | null; imageUrl: string | null; content?: string;
+  creditedSource?: string;
 };
 
 const json = (body: unknown, status = 200) =>
@@ -95,6 +96,31 @@ function newsArticleSchema(value: unknown): Record<string, unknown> | null {
   return newsArticleSchema(object["@graph"]);
 }
 
+// Yayıncının kendisi, sosyal medya alanı veya içerikteki rastgele bir isim
+// kaynak sayılmaz: yalnızca açıkça "Kaynak: ..." biçimindeki kredi alınır.
+function explicitSourceCredit(value: string | null | undefined): string {
+  const lines = String(value || "")
+    .replace(/<br\s*\/?\s*>|<\/p>/gi, "\n")
+    .replace(/<[^>]*>/g, " ").split(/\n+/);
+  for (const line of lines) {
+    const match = line.trim().match(/^(?:haber\s+)?kaynak\s*[:：]\s*([^|•]{2,90})/iu);
+    if (!match) continue;
+    const name = clean(match[1], 90).replace(/\s*(?:[|•]|\s+-\s+).*/, "").trim();
+    if (name.length >= 2 && name.length <= 80 && !/^(belirtilmedi|yok|editör|haber merkezi)$/iu.test(name)) return name;
+  }
+  return "";
+}
+
+function sourceCreditFromArticle(doc: Document): string {
+  const selectors = "article [class*='source'], [itemprop='sourceOrganization'], article p, .article-content p, .news-content p";
+  const nodes = [...doc.querySelectorAll(selectors)].slice(-70);
+  for (const node of nodes) {
+    const credit = explicitSourceCredit(node.textContent);
+    if (credit) return credit;
+  }
+  return "";
+}
+
 async function enrichFanatikItem(item: Item): Promise<Item> {
   try {
     const response = await fetch(item.url, {
@@ -135,6 +161,7 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
       ...item,
       summary: summary || item.summary,
       content: distinctDetails(articleBody, summary || item.summary),
+      creditedSource: sourceCreditFromArticle(doc) || item.creditedSource,
       imageUrl: detailImage && /^https:\/\//i.test(detailImage) ? detailImage : item.imageUrl,
     };
   } catch {
@@ -175,7 +202,11 @@ async function enrichArticleItem(item: Item, source: Source): Promise<Item> {
       if (candidate.length > body.length) body = candidate;
     }
     const content = distinctDetails(body, item.summary);
-    return content.length >= 90 ? { ...item, content } : item;
+    return {
+      ...item,
+      content: content.length >= 90 ? content : item.content,
+      creditedSource: sourceCreditFromArticle(doc) || item.creditedSource,
+    };
   } catch { return item; }
 }
 
@@ -197,6 +228,7 @@ function rssItems(xml: string): Item[] {
       title: clean(text("title"), 300),
       summary: clean(rawSummary, 700),
       content: distinctDetails(fullBody, rawSummary),
+      creditedSource: explicitSourceCredit(rawSummary) || explicitSourceCredit(fullBody),
       publishedAt: dateValue(text("pubDate") || text("published") || text("updated")),
       imageUrl: image && /^https:\/\//i.test(image) ? image : null,
     };
@@ -432,7 +464,7 @@ Deno.serve(async (request) => {
             (isFanatikSource ? { scope: "trabzonspor" as Scope, score: 2, tags: ["Trabzonspor"] } : null);
           if (!match) { totals.skipped_count++; continue; }
           const itemScope: Scope = isFanatikSource ? "trabzonspor" : match.scope;
-          if (!item.content && !isFanatikSource && articleFetches < 2) {
+          if (!isFanatikSource && articleFetches < 2) {
             articleFetches++;
             item = await enrichArticleItem(item, source);
           }
@@ -463,6 +495,7 @@ Deno.serve(async (request) => {
                   updates.category_id = categoryId("trabzonspor");
                   updates.source_name = sourceDisplayName;
                 }
+                if (item.creditedSource) updates.credited_source_name = item.creditedSource;
                 if (botManagedContent && item.content) {
                   updates.summary = item.summary;
                   updates.content = item.content;
@@ -507,6 +540,7 @@ Deno.serve(async (request) => {
             category_id: categoryId(itemScope), image_url: source.allow_remote_image ? item.imageUrl : null,
             status, published_at: status === "published" ? new Date().toISOString() : null,
             origin_type: "automated", source_id: source.id, source_name: sourceDisplayName,
+            credited_source_name: item.creditedSource || null,
             source_url: item.url, source_guid: item.guid, source_published_at: item.publishedAt,
             source_summary: item.summary || null, source_fingerprint: fingerprint, imported_at: new Date().toISOString(),
           };

@@ -304,6 +304,7 @@
         }
 
         .article-source-card[hidden] { display: none; }
+        .article-source-card.no-logo { grid-template-columns: minmax(0, 1fr); }
         .article-source-logo { width: 150px; height: 52px; object-fit: contain; object-position: left center; }
         .article-source-copy { min-width: 0; }
         .article-source-copy small { display: block; margin-bottom: 3px; color: #667085; font-size: 9px; font-weight: 900; letter-spacing: .1em; }
@@ -1405,6 +1406,8 @@
                         row.origin_type || "manual",
                     source_name:
                         row.source_name || "",
+                    credited_source_name:
+                        row.credited_source_name || "",
                     source_url:
                         row.source_url || ""
                 };
@@ -1456,6 +1459,7 @@
                         updated_at,
                         origin_type,
                         source_name,
+                        credited_source_name,
                         source_url,
                         category:categories(
                             id,
@@ -1653,26 +1657,30 @@
 
                 source.replaceChildren();
                 source.hidden = true;
-                if (news.source_name) {
+                const isAutomated = news.origin_type === "automated";
+                const displayedSource = isAutomated
+                    ? news.credited_source_name
+                    : news.source_name;
+                if (displayedSource) {
                     const sourceInfo = window.AkcaabatNewsSources &&
-                        window.AkcaabatNewsSources.find(news.source_name);
-                    const logo = document.createElement("img");
-                    logo.className = "article-source-logo";
-                    logo.src = sourceInfo && window.AkcaabatNewsSources.logoFor
-                        ? window.AkcaabatNewsSources.logoFor(sourceInfo)
-                        : "assets/akcaabat-haber-logo.svg";
-                    logo.alt = sourceInfo ? sourceInfo.name : news.source_name;
-                    logo.loading = "lazy";
+                        window.AkcaabatNewsSources.find(displayedSource);
                     const copy = document.createElement("div");
                     copy.className = "article-source-copy";
                     const kicker = document.createElement("small");
                     kicker.textContent = "KAYNAK";
                     const name = document.createElement("strong");
-                    name.textContent = sourceInfo ? sourceInfo.name : news.source_name;
-                    const note = document.createElement("span");
-                    note.textContent = "Kaynak bilgisi editör tarafından belirtilmiştir.";
-                    copy.append(kicker, name, note);
-                    source.append(logo, copy);
+                    name.textContent = sourceInfo ? sourceInfo.name : displayedSource;
+                    copy.append(kicker, name);
+                    source.classList.toggle("no-logo", !sourceInfo);
+                    if (sourceInfo && window.AkcaabatNewsSources.logoFor) {
+                        const logo = document.createElement("img");
+                        logo.className = "article-source-logo";
+                        logo.src = window.AkcaabatNewsSources.logoFor(sourceInfo);
+                        logo.alt = sourceInfo.name;
+                        logo.loading = "lazy";
+                        source.append(logo);
+                    }
+                    source.append(copy);
                     source.hidden = false;
                 }
 
