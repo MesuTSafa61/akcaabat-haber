@@ -13,7 +13,6 @@
   let mapType = "map";
   let enabled = true;
   const locate = document.getElementById("trafficLocate");
-  const googleLink = document.getElementById("trafficGoogleLink");
   const locationStatus = document.getElementById("trafficLocationStatus");
   let watchId = null;
   let tracking = false;
@@ -40,13 +39,7 @@
     const {lat, lon, zoom} = locations[key];
     return `https://yandex.com/map-widget/v1/?ll=${lon}%2C${lat}&z=${zoom}&l=${mapType}%2Ctrf&lang=tr_TR${key === "myLocation" ? `&pt=${lon},${lat},pm2blm` : ""}`;
   }
-  function updateGoogleLink() {
-    const {lat, lon, zoom} = locations[current];
-    const params = new URLSearchParams({api: "1", map_action: "map", center: `${lat},${lon}`, zoom: String(zoom), basemap: mapType === "sat" ? "satellite" : "roadmap", layer: "traffic"});
-    googleLink.href = `https://www.google.com/maps/@?${params}`;
-  }
   function render() {
-    updateGoogleLink();
     if (!enabled) {
       map.innerHTML = '<div class="traffic-empty"><strong>Canlı trafik yayını kapalı</strong>Harita yönetim panelinden yeniden açılabilir.</div>';
       return;
