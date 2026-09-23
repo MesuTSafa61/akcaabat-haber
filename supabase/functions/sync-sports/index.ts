@@ -20,7 +20,8 @@ async function sync(source:typeof sources[number]){
   const cache=new Map((old.season===feed.season?old.matches||[]:[]).map((m:any)=>[m.id,m]));
   const now=Date.now();
   for(const m of feed.matches){const p:any=cache.get(m.id);if(!p)continue;for(const key of ['venue','details','detail_fetched_at','date','home_logo','away_logo'])m[key]=p[key];}
-  const due=feed.matches.filter((m:any)=>{const age=now-new Date(m.detail_fetched_at||0).getTime();const near=m.date&&Math.abs(now-new Date(m.date).getTime())<86400000;return !m.detail_fetched_at||age>(near?120000:86400000);}).sort((a:any,b:any)=>Number(!!a.detail_fetched_at)-Number(!!b.detail_fetched_at)||(new Date(a.detail_fetched_at||0).getTime()-new Date(b.detail_fetched_at||0).getTime())).slice(0,8);
+  const oldCardFormat=(m:any)=>['home','away'].some(side=>m.details?.[side]?.cards?.some((card:any)=>typeof card==='string'));
+  const due=feed.matches.filter((m:any)=>{const age=now-new Date(m.detail_fetched_at||0).getTime();const near=m.date&&Math.abs(now-new Date(m.date).getTime())<86400000;return oldCardFormat(m)||!m.detail_fetched_at||age>(near?120000:86400000);}).sort((a:any,b:any)=>Number(oldCardFormat(b))-Number(oldCardFormat(a))||Number(!!a.detail_fetched_at)-Number(!!b.detail_fetched_at)||(new Date(a.detail_fetched_at||0).getTime()-new Date(b.detail_fetched_at||0).getTime())).slice(0,8);
   const errors:string[]=[];
   // Three requests at a time; a slow detail page never discards the validated standings.
   for(let i=0;i<due.length;i+=3){await Promise.all(due.slice(i,i+3).map(async(m:any)=>{try{Object.assign(m,source.detail(await get(m.url),m));}catch{errors.push(m.id);}}));}

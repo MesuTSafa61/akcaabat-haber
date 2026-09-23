@@ -32,7 +32,13 @@ export function parseTFFDetail(html,expected){
  for(const [i,side] of [[1,'home'],[2,'away']]){
   const prefix=`[id*="grdTakim${i}_"]`;
   const collect=(group,suffix)=>[...d.querySelectorAll(`${prefix}[id*="${group}"][id$="${suffix}"]`)].map(n=>text(n.parentElement));
-  details[side]={lineup:collect('rptKadrolar','lnkOyuncu'),bench:collect('rptYedekler','lnkOyuncu'),goals:collect('rptGoller','lblGol'),cards:collect('rptKartlar','lblKart'),substitutions_in:collect('rptGirenler','lblGiren'),substitutions_out:collect('rptCikanlar','lblCikan')};
+  const cards=[...d.querySelectorAll(`${prefix}[id*="rptKartlar"][id$="lblKart"]`)].map(n=>{
+   const row=n.parentElement,icon=row?.querySelector('img');
+   const marker=`${icon?.getAttribute('alt')||''} ${icon?.getAttribute('src')||''}`;
+   const type=/k[ıi]rm[ıi]z[ıi]|kirmizi|red/i.test(marker)?'red':/ikinci\s+sar[ıi]|second\s+yellow/i.test(marker)?'second_yellow':/sar[ıi]|yellow/i.test(marker)?'yellow':null;
+   return {text:text(row),type};
+  });
+  details[side]={lineup:collect('rptKadrolar','lnkOyuncu'),bench:collect('rptYedekler','lnkOyuncu'),goals:collect('rptGoller','lblGol'),cards,substitutions_in:collect('rptGirenler','lblGiren'),substitutions_out:collect('rptCikanlar','lblCikan')};
  }
  return {date:dateTR(get('[id$="dtMacBilgisi_lblTarih"]')),venue:get('[id$="lnkStad"]')||null,home_logo:url(d.querySelector('[id$="imgTakim1Logo"] img')?.getAttribute('src'),base),away_logo:url(d.querySelector('[id$="imgTakim2Logo"] img')?.getAttribute('src'),base),details,detail_fetched_at:new Date().toISOString()};
 }
