@@ -7,8 +7,7 @@
 
   const page = (location.pathname.split("/").pop() || "admin-panel.html").toLowerCase();
   const pageData = {
-    "admin-panel.html": ["Dashboard", "Genel durum ve hızlı işlemler"],
-    "admin.html": ["Yönetim Ana Sayfası", "Akçaabat Haber içerik yönetimi"],
+    "admin-panel.html": ["Genel Bakış", "Haberler, ziyaretçiler ve sistem durumu"],
     "haberler.html": ["Haberler", "Yayınlanan ve planlanan haberleri yönetin"],
     "manset-yonetimi.html": ["Manşet Yönetimi", "Ana sayfadaki 1–15 manşet sırasını yönetin"],
     "yeni-haber.html": ["Yeni Haber", "Yeni içerik oluşturun veya mevcut haberi düzenleyin"],
@@ -26,8 +25,7 @@
   };
   const current = pageData[page] || ["Yönetim Paneli", "Akçaabat Haber yönetim merkezi"];
   const links = [
-    ["admin-panel.html", "▦", "Dashboard", "PANEL"],
-    ["admin.html", "⌂", "Yönetim Ana Sayfası"],
+    ["admin-panel.html", "▦", "Genel Bakış", "PANEL"],
     ["haberler.html", "▤", "Haberler", "İÇERİK"],
     ["manset-yonetimi.html", "★", "Manşet Yönetimi"],
     ["yeni-haber.html", "＋", "Yeni Haber"],
