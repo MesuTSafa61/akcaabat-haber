@@ -20,6 +20,7 @@
   const routeNames = ["Akçaabat → Söğütlü", "Söğütlü → Akçaabat", "Akçaabat → Trabzon", "Trabzon → Akçaabat"];
   const roadworksList = document.getElementById("roadworksList");
   const roadworksUpdated = document.getElementById("roadworksUpdated");
+  const roadworksCount = document.getElementById("roadworksCount");
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   })[char]);
@@ -61,11 +62,13 @@
       if (!response.ok) throw new Error("unavailable");
       const data = await response.json();
       if (!Array.isArray(data.items)) throw new Error("invalid");
+      roadworksCount.textContent = data.items.length ? data.items.length + " kayıt" : "Kayıt yok";
       roadworksList.innerHTML = data.items.length ? data.items.map(item =>
         `<article class="roadwork"><strong>${escapeHtml(item.road)}</strong><p>${escapeHtml(item.description)}</p><small>KGM güncellemesi: ${escapeHtml(item.updated || "Belirtilmedi")}</small></article>`
       ).join("") : '<p>Akçaabat–Trabzon hattı için listelenen çalışma bulunamadı. KGM kaynağını ayrıca kontrol edin.</p>';
       roadworksUpdated.textContent = "Son kontrol: " + new Date(data.fetchedAt).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" });
     } catch (_) {
+      roadworksCount.textContent = "Erişilemiyor";
       roadworksList.innerHTML = '<p>Yol çalışmaları şu anda yüklenemiyor. <a href="https://www.kgm.gov.tr/Sayfalar/KGM/SiteTr/YolDanisma/CalismaYapilanYollarYeni.aspx?Bolge=10" target="_blank" rel="noopener noreferrer">KGM kayıtlarını aç ↗</a></p>';
       roadworksUpdated.textContent = "Kayıtlara erişilemedi";
     }
