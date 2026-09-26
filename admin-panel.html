@@ -249,7 +249,7 @@
         .visitor-heading h2 { margin:0;color:#102a49;font-size:20px; }
         .visitor-heading p { margin:5px 0 0;color:#64748b;font-size:12px;line-height:1.5; }
         .visitor-updated { flex:none;color:#6b7b90;font-size:11px; }
-        .visitor-metrics { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px; }
+        .visitor-metrics { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px; }
         .visitor-metric { padding:16px;border:1px solid #e1e8f1;border-radius:11px;background:#fff; }
         .visitor-metric span { display:block;color:#617188;font-size:12px;font-weight:700; }
         .visitor-metric strong { display:block;margin:10px 0 6px;color:#112d4f;font-size:29px;line-height:1;font-weight:850; }
@@ -740,22 +740,20 @@
             <section class="visitor-section" aria-labelledby="visitorHeading">
                 <div class="visitor-heading">
                     <div>
-                        <h2 id="visitorHeading">Ziyaretçi İstatistikleri</h2>
-                        <p>Türkiye saatiyle günlük ziyaretler ve son 5 dakikadaki aktif tarayıcılar.</p>
+                        <h2 id="visitorHeading">Sayfa Görüntülenmeleri</h2>
+                        <p>Türkiye saatiyle günlük toplam sayfa açılışları.</p>
                     </div>
                     <span class="visitor-updated" id="visitorUpdated">Yükleniyor...</span>
                 </div>
                 <div class="visitor-metrics">
-                    <div class="visitor-metric live"><span>Şu an aktif</span><strong id="activeVisitors">—</strong><small>Son 5 dakika</small></div>
-                    <div class="visitor-metric"><span>Bugün ziyaretçi</span><strong id="todayVisitors">—</strong><small>Tekil tarayıcı</small></div>
                     <div class="visitor-metric"><span>Bugün sayfa açılışı</span><strong id="todayPageViews">—</strong><small>Tüm site</small></div>
-                    <div class="visitor-metric"><span>Dün ziyaretçi</span><strong id="yesterdayVisitors">—</strong><small>Tekil tarayıcı</small></div>
+                    <div class="visitor-metric"><span>Dün sayfa açılışı</span><strong id="yesterdayPageViews">—</strong><small>Tüm site</small></div>
                 </div>
                 <div class="visitor-detail">
-                    <div class="visitor-panel"><h3>Son 7 gün</h3><div id="visitorChart" class="visitor-chart" aria-label="Son yedi günün ziyaretçileri"></div></div>
+                    <div class="visitor-panel"><h3>Son 7 gün</h3><div id="visitorChart" class="visitor-chart" aria-label="Son yedi günün sayfa açılışları"></div></div>
                     <div class="visitor-panel"><h3>Bugün en çok açılan sayfalar</h3><div id="visitorTopPages">Henüz veri yok.</div></div>
                 </div>
-                <p class="visitor-note">Yalnızca istatistik izni veren tarayıcılar sayılır. Aktif sayı son 5 dakikadaki harekete göre yaklaşık değerdir; ölçümün başlamasından önceki ziyaretler dahil değildir.</p>
+                <p class="visitor-note">Her sayfa açılışı bir kez sayılır. Tekil ziyaretçi ve aktif kullanıcı ölçülmez. Geçiş öncesindeki sayılar yalnızca izin veren tarayıcıları kapsar.</p>
             </section>
 
             <section class="stats-grid">
@@ -1241,13 +1239,13 @@
             var result = await client.rpc("site_analytics_summary");
             if (result.error) throw result.error;
             var data = result.data || {};
-            ["activeVisitors", "todayVisitors", "todayPageViews", "yesterdayVisitors"].forEach(function (id) {
+            ["todayPageViews", "yesterdayPageViews"].forEach(function (id) {
                 document.getElementById(id).textContent = formatNumber(data[id] || 0);
             });
             var days = Array.isArray(data.lastSevenDays) ? data.lastSevenDays : [];
-            var maximum = Math.max(1, ...days.map(function (day) { return Number(day.visitors) || 0; }));
+            var maximum = Math.max(1, ...days.map(function (day) { return Number(day.views) || 0; }));
             document.getElementById("visitorChart").innerHTML = days.map(function (day) {
-                var count = Math.max(0, Number(day.visitors) || 0);
+                var count = Math.max(0, Number(day.views) || 0);
                 var height = count ? Math.max(6, Math.round(count / maximum * 100)) : 2;
                 var label = new Date(day.day + "T12:00:00+03:00").toLocaleDateString("tr-TR", { weekday: "short" });
                 return '<div class="visitor-day"><b>' + formatNumber(count) + '</b><div class="visitor-track"><div class="visitor-bar" style="height:' + height + '%"></div></div><span>' + escapeHtml(label) + '</span></div>';
@@ -1260,7 +1258,7 @@
             var pages = Array.isArray(data.topPages) ? data.topPages : [];
             document.getElementById("visitorTopPages").innerHTML = pages.length ? pages.map(function (item) {
                 return '<div class="visitor-page"><span>' + escapeHtml(labels[item.page] || item.page) + '</span><strong>' + formatNumber(item.views) + '</strong></div>';
-            }).join("") : '<div class="visitor-page">Henüz izin verilmiş ziyaret yok.</div>';
+            }).join("") : '<div class="visitor-page">Henüz sayfa açılışı yok.</div>';
             updated.textContent = "Güncellendi: " + new Date().toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" });
         } catch (error) {
             updated.textContent = "İstatistikler yüklenemedi";
