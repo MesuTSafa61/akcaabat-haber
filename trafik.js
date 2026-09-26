@@ -48,7 +48,7 @@
         const detail = available ? (Number.isFinite(delay) && delay >= 60 ? "+" + Math.round(delay / 60) + " dk gecikme" : "Normal akış") : "Canlı süre yok";
         return `<div class="eta-card" data-state="${state}"><strong>${escapeHtml(route.name || "")}</strong><span>${available ? minutes + " dk" : "—"}</span><small>${detail}</small></div>`;
       }).join("");
-      etaStatus.textContent = "Tahmini yolculuk süreleri; gerçek yol ve hava koşullarına göre değişebilir. Kaynak: Trabzon Trafik.";
+      etaStatus.textContent = "Tahmini yolculuk süreleri; gerçek yol ve hava koşullarına göre değişebilir.";
       etaUpdated.textContent = "Güncelleme: " + new Date(result.updatedAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
     } catch (_) { unavailable("Canlı güzergâh süreleri şu anda alınamıyor."); }
   }
@@ -64,7 +64,7 @@
       if (!Array.isArray(data.items)) throw new Error("invalid");
       roadworksCount.textContent = data.items.length ? data.items.length + " kayıt" : "Kayıt yok";
       roadworksList.innerHTML = data.items.length ? data.items.map(item =>
-        `<article class="roadwork"><strong>${escapeHtml(item.road)}</strong><p>${escapeHtml(item.description)}</p><small>KGM güncellemesi: ${escapeHtml(item.updated || "Belirtilmedi")}</small></article>`
+        `<article class="roadwork"><strong>Yol kesim kodu: ${escapeHtml(item.road)}</strong><p>${escapeHtml(item.description)}</p><small>KGM güncellemesi: ${escapeHtml(item.updated || "Belirtilmedi")}</small></article>`
       ).join("") : '<p>Akçaabat–Trabzon hattı için listelenen çalışma bulunamadı. KGM kaynağını ayrıca kontrol edin.</p>';
       roadworksUpdated.textContent = "Son kontrol: " + new Date(data.fetchedAt).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" });
     } catch (_) {
