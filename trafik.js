@@ -14,6 +14,41 @@
   let enabled = true;
   const locate = document.getElementById("trafficLocate");
   const locationStatus = document.getElementById("trafficLocationStatus");
+  const etaRoutes = document.getElementById("etaRoutes");
+  const etaStatus = document.getElementById("etaStatus");
+  const etaUpdated = document.getElementById("etaUpdated");
+  const routeNames = ["Akçaabat → Söğütlü", "Söğütlü → Akçaabat", "Akçaabat → Trabzon", "Trabzon → Akçaabat"];
+  const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+  function unavailable(message) {
+    etaRoutes.innerHTML = routeNames.map(name => `<div class="eta-card"><strong>${escapeHtml(name)}</strong><span>—</span><small>Canlı süre yok</small></div>`).join("");
+    etaStatus.textContent = message;
+    etaUpdated.textContent = "Harita üzerinden yoğunluğu izleyebilirsiniz.";
+  }
+  async function updateEtas() {
+    const config = window.AKCAABAT_SUPABASE;
+    if (!config?.url || !config?.key) return unavailable("Süre servisi yapılandırılmadı.");
+    try {
+      const response = await fetch(config.url + "/functions/v1/traffic-eta", {
+        headers: { apikey: config.key }, signal: AbortSignal.timeout(12000)
+      });
+      if (!response.ok) throw new Error("unavailable");
+      const result = await response.json();
+      if (!Array.isArray(result.routes)) throw new Error("invalid");
+      etaRoutes.innerHTML = result.routes.map(route => {
+        const seconds = Number(route.seconds);
+        const delay = Number(route.delaySeconds);
+        const available = route.available && Number.isFinite(seconds) && seconds > 0;
+        const minutes = available ? Math.max(1, Math.round(seconds / 60)) : 0;
+        const state = !available ? "" : delay >= 600 ? "heavy" : delay >= 180 ? "slow" : "clear";
+        const detail = available ? (Number.isFinite(delay) && delay >= 60 ? "+" + Math.round(delay / 60) + " dk gecikme" : "Normal akış") : "Canlı süre yok";
+        return `<div class="eta-card" data-state="${state}"><strong>${escapeHtml(route.name || "")}</strong><span>${available ? minutes + " dk" : "—"}</span><small>${detail}</small></div>`;
+      }).join("");
+      etaStatus.textContent = "Tahmini yolculuk süreleri; gerçek yol ve hava koşullarına göre değişebilir. Kaynak: Apple Haritalar.";
+      etaUpdated.textContent = "Güncelleme: " + new Date(result.updatedAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+    } catch (_) { unavailable("Canlı güzergâh süreleri şu anda alınamıyor."); }
+  }
   let watchId = null;
   let tracking = false;
   let trackingGeneration = 0;
@@ -64,7 +99,7 @@
     typeButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
     render();
   }));
-  document.getElementById("trafficRefresh").addEventListener("click", render);
+  document.getElementById("trafficRefresh").addEventListener("click", () => { render(); updateEtas(); });
   locate.addEventListener("click", () => {
     if (!enabled) return;
     if (tracking) {
@@ -112,6 +147,8 @@
   });
   window.addEventListener("pagehide", stopTracking);
   render();
+  updateEtas();
+  setInterval(() => { if (!document.hidden) updateEtas(); }, 180000);
   // The map remains available if the settings service is temporarily unreachable.
   if (window.supabase && window.AKCAABAT_SUPABASE) {
     const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);

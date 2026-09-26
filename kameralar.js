@@ -25,15 +25,21 @@
   const curatedNames = new Set([...akcaabat, ...trabzon].map(item => item.name.toLocaleLowerCase("tr-TR")));
   const extra = [];
   let filter = "all";
+  const favoriteKey = "akcaabat-haber-camera-favorites";
+  let favorites = [];
+  try { favorites = JSON.parse(localStorage.getItem(favoriteKey) || "[]"); } catch (_) { /* Private mode. */ }
+  if (!Array.isArray(favorites)) favorites = [];
+  const cameraKey = camera => camera.city + ":" + camera.name;
   function card(camera) {
     const image = camera.id ? `<img src="https://www.trabzon.bel.tr/img/kameralar/${camera.id}.webp" alt="${escapeHtml(camera.name)} kamera önizlemesi" loading="lazy" onerror="this.remove()">` : "";
-    return `<article class="camera-card"><div class="camera-image">📹${image}<span>${escapeHtml(camera.city)} Belediyesi</span></div><div class="camera-body"><small>RESMÎ ŞEHİR KAMERASI</small><h3>${escapeHtml(camera.name)}</h3><a href="${escapeHtml(camera.url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(camera.name)} kamerasını belediye sitesinde aç">Belediyenin yayınında izle ↗</a></div></article>`;
+    const active = favorites.includes(cameraKey(camera));
+    return `<article class="camera-card"><div class="camera-image">📹${image}<span>${escapeHtml(camera.city)} Belediyesi</span></div><div class="camera-body"><small>RESMÎ ŞEHİR KAMERASI</small><h3>${escapeHtml(camera.name)}</h3><div class="camera-actions"><a href="${escapeHtml(camera.url)}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(camera.name)} kamerasını belediye sitesinde aç">Canlı yayını aç ↗</a><button type="button" class="camera-favorite" data-favorite="${escapeHtml(cameraKey(camera))}" aria-pressed="${active}" aria-label="${escapeHtml(camera.name)} kamerasını favorilere ${active ? "kaldır" : "ekle"}">${active ? "★" : "☆"}</button></div></div></article>`;
   }
   function render() {
     const term = search.value.trim().toLocaleLowerCase("tr-TR");
     const groups = [{name: "Akçaabat Belediyesi", city: "Akçaabat", rows: [...akcaabat, ...extra.filter(item => item.city === "Akçaabat")]}, {name: "Trabzon Büyükşehir Belediyesi", city: "Trabzon", rows: [...trabzon, ...extra.filter(item => item.city === "Trabzon")]}];
-    const shown = groups.filter(group => filter === "all" || group.city === filter).map(group => {
-      const rows = group.rows.filter(item => (item.name + " " + item.city).toLocaleLowerCase("tr-TR").includes(term));
+    const shown = groups.filter(group => filter === "all" || filter === "favorites" || group.city === filter).map(group => {
+      const rows = group.rows.filter(item => (filter !== "favorites" || favorites.includes(cameraKey(item))) && (item.name + " " + item.city).toLocaleLowerCase("tr-TR").includes(term));
       return rows.length ? `<section aria-label="${group.name}"><h2 class="camera-heading">${group.name} · ${rows.length} kamera</h2><div class="camera-grid">${rows.map(card).join("")}</div></section>` : "";
     }).join("");
     grid.innerHTML = shown || '<p class="camera-empty">Bu aramayla eşleşen kamera bulunamadı.</p>';
@@ -44,6 +50,14 @@
     render();
   }));
   search.addEventListener("input", render);
+  grid.addEventListener("click", event => {
+    const button = event.target.closest("[data-favorite]");
+    if (!button) return;
+    const key = button.dataset.favorite;
+    favorites = favorites.includes(key) ? favorites.filter(item => item !== key) : [...favorites, key];
+    try { localStorage.setItem(favoriteKey, JSON.stringify(favorites)); } catch (_) { /* Private mode. */ }
+    render();
+  });
   render();
   if (window.supabase && window.AKCAABAT_SUPABASE) {
     const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
