@@ -45,7 +45,7 @@
         const detail = available ? (Number.isFinite(delay) && delay >= 60 ? "+" + Math.round(delay / 60) + " dk gecikme" : "Normal akış") : "Canlı süre yok";
         return `<div class="eta-card" data-state="${state}"><strong>${escapeHtml(route.name || "")}</strong><span>${available ? minutes + " dk" : "—"}</span><small>${detail}</small></div>`;
       }).join("");
-      etaStatus.textContent = "Tahmini yolculuk süreleri; gerçek yol ve hava koşullarına göre değişebilir. Kaynak: Apple Haritalar.";
+      etaStatus.textContent = "Tahmini yolculuk süreleri; gerçek yol ve hava koşullarına göre değişebilir. Kaynak: Trabzon Trafik.";
       etaUpdated.textContent = "Güncelleme: " + new Date(result.updatedAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
     } catch (_) { unavailable("Canlı güzergâh süreleri şu anda alınamıyor."); }
   }

@@ -173,6 +173,7 @@
     if (cached && Date.now() - cached.time < 10 * 60 * 1000) return cached.data;
     const params = new URLSearchParams({ latitude: String(coords[0]), longitude: String(coords[1]),
       current: "temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,snowfall,visibility",
+      hourly: "temperature_2m,precipitation_probability,weather_code",
       daily: "weather_code,temperature_2m_max,temperature_2m_min,snowfall_sum", timezone: "Europe/Istanbul", forecast_days: "5" });
     const response = await fetch("https://api.open-meteo.com/v1/forecast?" + params);
     if (!response.ok) throw new Error("Hava tahmini şu anda alınamıyor.");
@@ -193,6 +194,12 @@
       (Number(current.temperature_2m) <= 0 ? '🧊 Sıfırın altında sıcaklık; yol koşullarını kontrol edin. ' : '') +
       (!snow && !(visibility < 1000) && Number(current.temperature_2m) > 0 ? 'Belirgin kar, sis veya don uyarısı görünmüyor. ' : '') +
       '<small>Bu bir meteorolojik tahmindir; yolun açık olduğunu göstermez.</small></div>' : '';
+    const hours = (data.hourly?.time || []).map((time, index) => ({ time, index }))
+      .filter(item => item.time >= (current.time || "").slice(0, 13)).slice(0, 8);
+    const hourly = hours.length ? '<div class="weather-hourly"><h4>Önümüzdeki saatler</h4><div class="weather-hour-list">' +
+      hours.map(({time, index}) => '<div><strong>' + esc(time.slice(11, 16)) + '</strong><span>' + icon(data.hourly.weather_code[index]) + '</span><b>' +
+        Math.round(Number(data.hourly.temperature_2m[index])) + '°</b><small>Yağış %' +
+        Math.round(Number(data.hourly.precipitation_probability[index] || 0)) + '</small></div>').join("") + '</div></div>' : '';
     return '<article class="weather-card"><div class="weather-head"><div><h3>' + esc(label) +
       '</h3><small>Güncelleme: ' + esc((current.time || "").replace("T", " ")) + '</small></div><span class="weather-icon" aria-hidden="true">' +
       icon(current.weather_code) + '</span></div><div class="weather-current"><span class="weather-temp">' +
@@ -202,7 +209,7 @@
       Math.round(Number(current.wind_speed_10m)) + ' km/sa</span></span></div><div class="forecast">' +
       daily.time.map((date, i) => '<div>' + day(date) + '<br>' + icon(daily.weather_code[i]) + '<strong>' +
         Math.round(Number(daily.temperature_2m_max[i])) + '° / ' + Math.round(Number(daily.temperature_2m_min[i])) + '°</strong></div>').join("") +
-      '</div>' + risk + '</article>';
+      '</div>' + hourly + risk + '</article>';
   }
 
   async function update(type, selector, target) {

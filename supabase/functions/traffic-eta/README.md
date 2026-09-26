@@ -1,13 +1,5 @@
 # Canlı güzergâh süreleri
 
-Bu fonksiyon Apple Maps Server API'den dört sabit güzergâhın tahmini yolculuk ve trafik gecikme sürelerini alır. Anahtarlar tarayıcıya gönderilmez.
+`traffic-eta`, Trabzon Trafik uygulamasının `getRoute` servisine dört sabit güzergâhı sorar. İki dakika boyunca yanıtı Edge Function belleğinde saklar; sağlayıcı erişilemezse tahmini süre uydurmaz. JWT denetimi kapalı, GET ile erişilen bir fonksiyondur. CORS yalnızca sitedeki tanımlı alan adlarına açıktır.
 
-Supabase projesindeki Edge Function secrets bölümünde şu değerleri tanımlayın:
-
-- `APPLE_MAPS_TEAM_ID`: Apple Developer takım kimliği
-- `APPLE_MAPS_KEY_ID`: Maps özel anahtarının kimliği
-- `APPLE_MAPS_PRIVATE_KEY`: İndirilen `.p8` dosyasının PEM içeriği
-
-Fonksiyonu `traffic-eta` adıyla, JWT denetimi kapalı bir herkese açık GET servisi olarak dağıtın. CORS yalnızca kaynakta tanımlı site alan adlarına izin verir. Trafik sayfası fonksiyon devrede değilken süre uydurmaz; mevcut Yandex yoğunluk haritasını göstermeye devam eder.
-
-Apple Maps Server API kullanımı ve kota koşullarını kendi Apple Developer hesabınızda doğrulayın. Bu fonksiyonun Apple ile gerçek uçtan uca testi ancak hesap anahtarı eklendikten sonra yapılabilir.
+Bu bağlantı üçüncü tarafın servis sürekliliğine bağlıdır. Sağlayıcı erişimi değiştirirse güzergâh kartları canlı süreyi kapatır; Yandex yoğunluk haritası açık kalır.
