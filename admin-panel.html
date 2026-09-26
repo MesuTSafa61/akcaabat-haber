@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0f172a">
     <meta name="robots" content="noindex,nofollow">
-    <title>Admin Paneli | Akçaabat Haber</title>
+    <title>Genel Bakış | Akçaabat Haber Yönetim</title>
 
     <link rel="stylesheet" href="style.css">
 
@@ -636,12 +636,7 @@
 
             <a href="admin-panel.html" class="active">
                 <span class="admin-nav-icon">▦</span>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="admin.html">
-                <span class="admin-nav-icon">⚙</span>
-                <span>Yönetim Ana Sayfası</span>
+                <span>Genel Bakış</span>
             </a>
 
             <div class="admin-nav-title">İçerik</div>
@@ -707,7 +702,7 @@
                 </button>
 
                 <div>
-                    <h1>Dashboard</h1>
+                    <h1>Genel Bakış</h1>
                     <div class="admin-user" id="adminUserEmail">
                         Yönetici
                     </div>
@@ -1452,7 +1447,7 @@
 
                     '<div class="news-info">' +
 
-                        '<a class="news-title" href="admin.html">' +
+                        ''<a class="news-title" href="yeni-haber.html?edit=' + encodeURIComponent(item.id) + '">' +
                             escapeHtml(item.title || "Başlıksız taslak") +
                         '</a>' +
 
@@ -1625,7 +1620,7 @@
                 console.error(error);
 
                 alert(
-                    "Dashboard yenilenirken bir hata oluştu."
+                    "Genel bakış yenilenirken bir hata oluştu."
                 );
 
             }
@@ -1722,6 +1717,6 @@
 })();
 </script>
 
-  <script src="admin-shell.js?v=4"></script>
+  <script src="admin-shell.js?v=5"></script>
 </body>
 </html>
