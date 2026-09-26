@@ -1312,6 +1312,7 @@
             name: item.name || item.title || "Kategori",
             slug: item.slug || makeSlug(item.name || item.title || "kategori"),
             status: item.status === "passive" ? "passive" : "active",
+            newsCount: Number(item.newsCount) || 0,
             createdAt: item.createdAt || new Date().toISOString()
         };
     }

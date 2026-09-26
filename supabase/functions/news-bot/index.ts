@@ -140,6 +140,16 @@ function sourceCreditFromArticle(doc: Document): string {
   return "";
 }
 
+function articleImage(doc: Document, baseUrl: string): string | null {
+  const raw = doc.querySelector("meta[property='og:image:secure_url'], meta[property='og:image'], meta[name='twitter:image'], link[rel='image_src']")?.getAttribute("content") ||
+    doc.querySelector("link[rel='image_src']")?.getAttribute("href");
+  if (!raw) return null;
+  try {
+    const url = new URL(raw, baseUrl);
+    return url.protocol === "https:" ? url.href : null;
+  } catch { return null; }
+}
+
 async function enrichFanatikItem(item: Item): Promise<Item> {
   try {
     const response = await fetch(item.url, {
@@ -175,13 +185,13 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
     const articleSections = [...doc.querySelectorAll(".nd-article-content h2, .nd-article-content h3, .nd-article-content p")]
       .map((section) => clean(section.textContent, 2000)).filter(Boolean);
     if (articleSections.length > 1) articleBody = articleSections.join("\n\n");
-    const detailImage = doc.querySelector("meta[property='og:image']")?.getAttribute("content");
+    const detailImage = articleImage(doc, item.url);
     return {
       ...item,
       summary: summary || item.summary,
       content: distinctDetails(articleBody, summary || item.summary),
       creditedSource: sourceCreditFromArticle(doc) || item.creditedSource,
-      imageUrl: detailImage && /^https:\/\//i.test(detailImage) ? detailImage : item.imageUrl,
+      imageUrl: detailImage || item.imageUrl,
     };
   } catch {
     return item;
@@ -193,13 +203,14 @@ async function enrichFanatikItem(item: Item): Promise<Item> {
 async function enrichArticleItem(item: Item, source: Source): Promise<Item> {
   try {
     const articleUrl = new URL(item.url);
-    const feedHost = new URL(source.feed_url).hostname.replace(/^www\./, "");
-    const articleHost = articleUrl.hostname.replace(/^www\./, "");
+    const feedHost = new URL(source.feed_url).hostname.replace(/^(?:www|rss)\./, "");
+    const articleHost = articleUrl.hostname.replace(/^(?:www|rss)\./, "");
     if (articleUrl.protocol !== "https:" ||
       !(articleHost === feedHost || articleHost.endsWith("." + feedHost) || feedHost.endsWith("." + articleHost))) return item;
     const response = await fetch(articleUrl.href, {
       signal: AbortSignal.timeout(4500), redirect: "error",
-      headers: { Accept: "text/html", "Accept-Language": "tr-TR,tr;q=0.9" },
+      headers: { Accept: "text/html", "Accept-Language": "tr-TR,tr;q=0.9",
+        "User-Agent": "Mozilla/5.0 (compatible; AkcaabatHaberBot/1.0)" },
     });
     if (!response.ok || !(response.headers.get("content-type") || "").includes("html")) return item;
     const doc = new DOMParser().parseFromString(await response.text(), "text/html");
@@ -225,6 +236,7 @@ async function enrichArticleItem(item: Item, source: Source): Promise<Item> {
       ...item,
       content: content.length >= 90 ? content : item.content,
       creditedSource: sourceCreditFromArticle(doc) || item.creditedSource,
+      imageUrl: articleImage(doc, item.url) || item.imageUrl,
     };
   } catch { return item; }
 }
@@ -241,6 +253,8 @@ function rssItems(xml: string): Item[] {
     const embeddedImage = rawSummary.match(/<img[^>]+(?:src|data-src)=["']([^"']+)["']/i)?.[1];
     const image = node.querySelector("enclosure[type^='image']")?.getAttribute("url") ||
       node.querySelector("media\\:content, media\\:thumbnail, content[url]")?.getAttribute("url") || embeddedImage || null;
+    let imageUrl: string | null = null;
+    try { if (image) { const parsed = new URL(image, link); if (parsed.protocol === "https:") imageUrl = parsed.href; } } catch { /* bozuk görsel adresi */ }
     return {
       guid: clean(text("guid") || text("id"), 500) || null,
       url: clean(link, 2000),
@@ -249,7 +263,7 @@ function rssItems(xml: string): Item[] {
       content: distinctDetails(fullBody, rawSummary),
       creditedSource: explicitSourceCredit(rawSummary) || explicitSourceCredit(fullBody),
       publishedAt: dateValue(text("pubDate") || text("published") || text("updated")),
-      imageUrl: image && /^https:\/\//i.test(image) ? image : null,
+      imageUrl,
     };
   }).filter((item) => item.url && item.title);
 }
@@ -467,8 +481,27 @@ Deno.serve(async (request) => {
           items = await Promise.all(items.map(enrichFanatikItem));
         }
 
+        // Görselsiz RSS kayıtlarının haber sayfasındaki kapak görselini sınırlı
+        // eşzamanlı isteklerle tamamla; her çalışmada aynı ilk birkaç kayda takılma.
+        const enrichedIndexes = new Set<number>();
+        if (!isFanatikSource && source.allow_remote_image) {
+          const candidates = items.map((item, index) => ({ item, index }))
+            .filter(({ item }) => !item.imageUrl && clean(item.summary, 700).length >= 40 &&
+              !!classify(item, settings.keywords || {})).slice(0, 12);
+          for (let start = 0; start < candidates.length; start += 4) {
+            const batch = candidates.slice(start, start + 4);
+            const enriched = await Promise.all(batch.map(({ item }) => enrichArticleItem(item, source)));
+            enriched.forEach((item, offset) => {
+              const index = batch[offset].index;
+              items[index] = item;
+              enrichedIndexes.add(index);
+            });
+          }
+        }
+
         let articleFetches = 0;
-        for (let item of items) {
+        for (const [itemIndex, initialItem] of items.entries()) {
+          let item = initialItem;
           totals.found_count++;
           // Yalnızca başlık ve bağlantıdan oluşan eksik haberleri hiçbir kaynaktan yayımlama.
           const normalizedTitle = clean(item.title, 700).toLocaleLowerCase("tr-TR");
@@ -483,7 +516,7 @@ Deno.serve(async (request) => {
             (isFanatikSource ? { scope: "trabzonspor" as Scope, score: 2, tags: ["Trabzonspor"] } : null);
           if (!match) { totals.skipped_count++; continue; }
           const itemScope: Scope = isFanatikSource ? "trabzonspor" : match.scope;
-          if (!isFanatikSource && articleFetches < 2) {
+          if (!isFanatikSource && articleFetches < 2 && !enrichedIndexes.has(itemIndex)) {
             articleFetches++;
             item = await enrichArticleItem(item, source);
           }
@@ -501,7 +534,7 @@ Deno.serve(async (request) => {
             totals.duplicate_count++;
             if (duplicate.news_id) {
               const { data: existing } = await client.from("news")
-                .select("id,status,published_at,content,source_summary")
+                .select("id,status,published_at,content,source_summary,image_url")
                 .eq("id", duplicate.news_id).maybeSingle();
               if (existing) {
                 const placeholder = !clean(existing.content || "") || !existing.source_summary ||
@@ -515,6 +548,7 @@ Deno.serve(async (request) => {
                   updates.source_name = sourceDisplayName;
                 }
                 if (item.creditedSource) updates.credited_source_name = item.creditedSource;
+                if (source.allow_remote_image && item.imageUrl && !existing.image_url) updates.image_url = item.imageUrl;
                 if (botManagedContent && item.content) {
                   updates.summary = item.summary;
                   updates.content = item.content;
