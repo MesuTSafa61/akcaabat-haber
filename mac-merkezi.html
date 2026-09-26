@@ -4,13 +4,13 @@
  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
  <title>Maç Merkezi | Akçaabat Haber</title>
  <meta name="description" content="Trabzonspor ve Sebatspor fikstürü, maç sonuçları, puan tabloları ve resmî maç detayları.">
- <link rel="stylesheet" href="style.css?v=9"><link rel="stylesheet" href="portal-shell.css?v=21"><link rel="stylesheet" href="mac-merkezi.css?v=6">
+ <link rel="stylesheet" href="style.css?v=9"><link rel="stylesheet" href="portal-shell.css?v=21"><link rel="stylesheet" href="mac-merkezi.css?v=7">
 </head>
 <body>
 <main class="mc-app container">
  <header class="mc-intro"><small>CANLI SERVİSLER</small><h1>Maç Merkezi</h1><p>Trabzonspor ve Sebatspor'un fikstürünü, maç sonuçlarını ve puan durumunu tek ekranda takip edin.</p></header>
  <div class="mc-freshness"><span id="mcUpdated">Veriler yükleniyor…</span><button id="mcRefresh" type="button">↻ Yenile</button></div>
- <div class="mc-teams" role="group" aria-label="Takım seçimi"><button type="button" data-team="trabzonspor" aria-pressed="true"><img id="mcTsLogo" alt="" hidden><span><strong>Trabzonspor</strong><small>Süper Lig</small></span></button><button type="button" data-team="sebat" aria-pressed="false"><img id="mcSebatLogo" alt="" hidden><span><strong>Sebatspor</strong><small>TFF 2. Lig</small></span></button></div>
+ <div class="mc-teams" role="group" aria-label="Takım seçimi"><button type="button" data-team="trabzonspor" aria-pressed="true"><img id="mcTsLogo" alt="" hidden><span><strong>Trabzonspor</strong><small>Süper Lig</small></span></button><button type="button" data-team="sebat" aria-pressed="false"><img id="mcSebatLogo" alt="" hidden><span><strong>SEBATSPOR</strong><small>TFF 2. Lig</small></span></button></div>
  <div class="mc-season"><span id="mcCompetition">Sezon bilgisi yükleniyor…</span><span id="mcRecordCount"></span></div>
  <div id="mcNotice" class="mc-notice" role="status" hidden></div>
  <nav class="mc-tabs" role="tablist" aria-label="Maç bilgileri"><button id="mcTabOverview" role="tab" aria-controls="mcOverview" aria-selected="true" data-view="overview">Genel bakış</button><button id="mcTabFixtures" role="tab" aria-controls="mcFixtures" aria-selected="false" tabindex="-1" data-view="fixtures">Fikstür & sonuçlar</button><button id="mcTabStandings" role="tab" aria-controls="mcStandings" aria-selected="false" tabindex="-1" data-view="standings">Puan durumu</button></nav>
@@ -20,6 +20,6 @@
  <footer class="mc-data-note"><span id="mcSource"></span><p>Sonuç ve puan tabloları düzenli kontrol edilir. Kaynağın yayımlama hızı nedeniyle gecikme olabilir; saniyelik canlı skor garantisi yoktur.</p></footer>
 </main>
 <dialog id="mcDialog" class="mc-dialog"><header><div><span class="mc-eyebrow">MAÇ DETAYI</span><h2 id="mcDialogTitle"></h2></div><button id="mcDialogClose" type="button" aria-label="Maç detayını kapat">×</button></header><div id="mcDialogBody"></div></dialog>
-<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="mac-merkezi.js?v=7" defer></script><script src="portal-shell.js?v=22" defer></script>
+<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="mac-merkezi.js?v=8" defer></script><script src="portal-shell.js?v=22" defer></script>
 </body>
 </html>

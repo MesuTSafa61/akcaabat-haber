@@ -1579,6 +1579,8 @@
                     content,
                     category_id,
                     source_name,
+                    editor_source_name,
+                    origin_type,
                     image_url,
                     status,
                     is_breaking,
@@ -1624,7 +1626,8 @@
             currentNews.category_id || "";
 
         const selectedSource = window.AkcaabatNewsSources &&
-            window.AkcaabatNewsSources.find(currentNews.source_name);
+            window.AkcaabatNewsSources.find(currentNews.origin_type === "automated"
+                ? currentNews.editor_source_name : currentNews.source_name);
         const selectedSourceName = selectedSource ? selectedSource.name : "";
         sourceInputs.forEach(function (input) {
             input.checked = input.value === selectedSourceName;
@@ -2037,7 +2040,12 @@
                     data.category_id,
 
                 source_name:
-                    data.source_name || null,
+                    currentNews && currentNews.origin_type === "automated"
+                        ? currentNews.source_name : data.source_name || null,
+
+                editor_source_name:
+                    currentNews && currentNews.origin_type === "automated"
+                        ? data.source_name : null,
 
                 image_url:
                     imageUrl,

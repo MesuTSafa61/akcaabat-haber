@@ -1417,6 +1417,8 @@
                         row.origin_type || "manual",
                     source_name:
                         row.source_name || "",
+                    editor_source_name:
+                        row.editor_source_name,
                     credited_source_name:
                         row.credited_source_name || "",
                     source_url:
@@ -1470,6 +1472,7 @@
                         updated_at,
                         origin_type,
                         source_name,
+                        editor_source_name,
                         credited_source_name,
                         source_url,
                         category:categories(
@@ -1670,7 +1673,8 @@
                 source.hidden = true;
                 const isAutomated = news.origin_type === "automated";
                 const displayedSource = isAutomated
-                    ? news.credited_source_name
+                    ? (news.editor_source_name !== null
+                        ? news.editor_source_name : news.credited_source_name)
                     : news.source_name;
                 if (displayedSource) {
                     const sourceInfo = window.AkcaabatNewsSources &&

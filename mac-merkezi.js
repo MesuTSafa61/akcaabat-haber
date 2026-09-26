@@ -10,10 +10,10 @@
  const time=s=>Number.isFinite(stamp(s))?new Intl.DateTimeFormat('tr-TR',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Istanbul'}).format(new Date(s)):'';
  const own=(name,team=state.team)=>team==='trabzonspor'?/trabzonspor/i.test(name):/sebat/i.test(name);
  const teamName=()=>state.team==='trabzonspor'?'Trabzonspor':'Sebatspor';
- const name=s=>/^sebat spor k[üu]l[üu]b[üu]$/i.test(String(s||'').trim())?'Sebatspor':s;
+ const name=s=>/^(?:sebatspor|sebat spor k[üu]l[üu]b[üu])$/i.test(String(s||'').trim())?'SEBATSPOR':s;
  const currentFeed=()=>state.feeds.find(f=>f.team_id===ids[state.team]);
  function image(src,alt,cls=''){const u=safeUrl(src);return u?`<img src="${esc(u)}" alt="${esc(alt)}" class="${cls}" loading="lazy" onerror="this.hidden=true">`:'';}
- const sebatClass=n=>n==='Sebatspor'?' mc-sebat-name':'';
+ const sebatClass=n=>n==='SEBATSPOR'?' mc-sebat-name':'';
  function club(m,side){const n=name(m[side]);return `<div class="mc-club">${image(m[side+'_logo'],'')||'<span class="mc-crest-fallback" aria-hidden="true">'+esc(n.split(' ').map(s=>s[0]).slice(0,2).join(''))+'</span>'}<strong class="${sebatClass(n).trim()}">${esc(n)}</strong></div>`;}
  function status(m){if(m.status==='finished')return 'Maç sonu';if(m.status==='postponed')return 'Ertelendi';if(m.status==='cancelled')return 'İptal';if(m.status==='live'){return Date.now()-stamp(currentFeed()?.last_success_at)<180000?'Canlı':'Güncelleniyor';}if(stamp(m.date)<Date.now())return 'Sonuç bekleniyor';return 'Planlandı';}
  function score(m){return m.home_score!==null&&m.home_score!==undefined&&m.away_score!==null&&m.away_score!==undefined?`${esc(m.home_score)} – ${esc(m.away_score)}`:time(m.date)||'–';}
