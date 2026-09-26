@@ -18,12 +18,6 @@
   const etaStatus = document.getElementById("etaStatus");
   const etaUpdated = document.getElementById("etaUpdated");
   const routeNames = ["Akçaabat → Söğütlü", "Söğütlü → Akçaabat", "Akçaabat → Trabzon", "Trabzon → Akçaabat"];
-  const appleRoutes = {
-    "akcaabat-sogutlu": "https://maps.apple.com/?saddr=41.0197,39.5716&daddr=41.0064,39.6138&dirflg=d",
-    "sogutlu-akcaabat": "https://maps.apple.com/?saddr=41.0064,39.6138&daddr=41.0197,39.5716&dirflg=d",
-    "akcaabat-trabzon": "https://maps.apple.com/?saddr=41.0197,39.5716&daddr=41.0027,39.7168&dirflg=d",
-    "trabzon-akcaabat": "https://maps.apple.com/?saddr=41.0027,39.7168&daddr=41.0197,39.5716&dirflg=d"
-  };
   const roadworksList = document.getElementById("roadworksList");
   const roadworksUpdated = document.getElementById("roadworksUpdated");
   const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({
@@ -51,8 +45,7 @@
         const minutes = available ? Math.max(1, Math.round(seconds / 60)) : 0;
         const state = !available ? "" : delay >= 600 ? "heavy" : delay >= 180 ? "slow" : "clear";
         const detail = available ? (Number.isFinite(delay) && delay >= 60 ? "+" + Math.round(delay / 60) + " dk gecikme" : "Normal akış") : "Canlı süre yok";
-        const link = appleRoutes[route.id] ? `<a href="${appleRoutes[route.id]}" target="_blank" rel="noopener noreferrer">Apple Haritalar'da rota ↗</a>` : "";
-        return `<div class="eta-card" data-state="${state}"><strong>${escapeHtml(route.name || "")}</strong><span>${available ? minutes + " dk" : "—"}</span><small>${detail}</small>${link}</div>`;
+        return `<div class="eta-card" data-state="${state}"><strong>${escapeHtml(route.name || "")}</strong><span>${available ? minutes + " dk" : "—"}</span><small>${detail}</small></div>`;
       }).join("");
       etaStatus.textContent = "Tahmini yolculuk süreleri; gerçek yol ve hava koşullarına göre değişebilir. Kaynak: Trabzon Trafik.";
       etaUpdated.textContent = "Güncelleme: " + new Date(result.updatedAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
@@ -70,7 +63,7 @@
       if (!Array.isArray(data.items)) throw new Error("invalid");
       roadworksList.innerHTML = data.items.length ? data.items.map(item =>
         `<article class="roadwork"><strong>${escapeHtml(item.road)}</strong><p>${escapeHtml(item.description)}</p><small>KGM güncellemesi: ${escapeHtml(item.updated || "Belirtilmedi")}</small></article>`
-      ).join("") : '<p>Trabzon güzergâhları için listelenen çalışma bulunamadı. KGM kaynağını ayrıca kontrol edin.</p>';
+      ).join("") : '<p>Akçaabat–Trabzon hattı için listelenen çalışma bulunamadı. KGM kaynağını ayrıca kontrol edin.</p>';
       roadworksUpdated.textContent = "Son kontrol: " + new Date(data.fetchedAt).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" });
     } catch (_) {
       roadworksList.innerHTML = '<p>Yol çalışmaları şu anda yüklenemiyor. <a href="https://www.kgm.gov.tr/Sayfalar/KGM/SiteTr/YolDanisma/CalismaYapilanYollarYeni.aspx?Bolge=10" target="_blank" rel="noopener noreferrer">KGM kayıtlarını aç ↗</a></p>';
@@ -108,7 +101,6 @@
       return;
     }
     const frame = document.createElement("iframe");
-    document.getElementById("appleMapLink").href = `https://maps.apple.com/?ll=${locations[current].lat},${locations[current].lon}&z=${locations[current].zoom}`;
     frame.title = "Yandex canlı trafik haritası – " + (current === "myLocation" ? "Konumum" : buttons.find(item => item.dataset.location === current).textContent.trim());
     frame.src = urlFor(current);
     frame.allowFullscreen = true;

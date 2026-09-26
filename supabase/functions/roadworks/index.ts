@@ -1,6 +1,6 @@
 const source = "https://www.kgm.gov.tr/Sayfalar/KGM/SiteTr/YolDanisma/CalismaYapilanYollarYeni.aspx?Bolge=10";
 const origins = new Set(["https://akcaabathaber.com.tr", "https://www.akcaabathaber.com.tr", "https://mesutsafa61.github.io", "http://localhost:8000", "http://127.0.0.1:8000"]);
-const places = /Trabzon|Akçaabat|Söğütlü|Yıldızlı|Maçka|Uzungöl|Çaykara|Beşikdüzü|Çarşıbaşı|Vakfıkebir|Araklı|Arsin|Sürmene|Yomra|Şalpazarı|Düzköy|Tonya|Dernekpazarı|Hıdırnebi/i;
+const corridor = /Akçaabat Şehir geçişi|Trabzon Şehir geçişi|Söğütlü\s+Yıldızlı/i;
 let cache: { until: number; body: unknown } | null = null;
 let pending: Promise<unknown> | null = null;
 function clean(value: string) {
@@ -18,9 +18,8 @@ async function refresh() {
   const html = await response.text();
   const rows = [...html.matchAll(/<tr\b[^>]*class="trCalismaYapilanYollarDatas"[^>]*>([\s\S]*?)<\/tr>/gi)];
   const items = rows.map(([, row]) => [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map(([, cell]) => clean(cell)))
-    .filter(cells => cells.length >= 4 && /^(?:61-\d{2}|010-21|010-22|885-01|915-01)$/.test(cells[0]) && places.test(cells[1]))
+    .filter(cells => cells.length >= 4 && /^(?:010-21|61-83)$/.test(cells[0]) && corridor.test(cells[1]))
     .map(([road, description, announced, updated]) => ({ road, description: description.slice(0, 900), announced, updated }))
-    .sort((a, b) => Number(/Akçaabat|Söğütlü|Yıldızlı/i.test(b.description)) - Number(/Akçaabat|Söğütlü|Yıldızlı/i.test(a.description)))
     .slice(0, 30);
   if (!rows.length) throw new Error("source_format_changed");
   const body = { source: "Karayolları Genel Müdürlüğü", sourceUrl: source, fetchedAt: new Date().toISOString(), items };
