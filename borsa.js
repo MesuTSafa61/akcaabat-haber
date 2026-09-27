@@ -17,7 +17,11 @@
   function renderOptions(config) {
     const selected = select.value;
     const enabled = Array.isArray(config && config.enabled) ? config.enabled : catalog.map(item => item.id);
-    const ordered = [...new Set(enabled)].map(id => catalog.find(item => item.id === id)).filter(Boolean);
+    const sequence = Array.isArray(config && config.order) ? config.order : catalog.map(item => item.id);
+    const allowed = new Set(enabled);
+    const ordered = [...new Set([...sequence, ...catalog.map(item => item.id)])]
+      .filter(id => allowed.has(id))
+      .map(id => catalog.find(item => item.id === id)).filter(Boolean);
     select.replaceChildren(new Option("Bir piyasa seç", ""));
     for (const groupName of ["Döviz", "Kripto"]) {
       const group = document.createElement("optgroup"); group.label = groupName;
@@ -25,17 +29,17 @@
       if (group.children.length) select.append(group);
     }
     if (ordered.some(item => item.id === selected)) select.value = selected;
-    else if (selected) extra.hidden = true;
+    else { select.value = ""; extra.hidden = true; ++selectionRequest; }
   }
 
   async function loadOptions(config) {
     renderOptions();
     try {
       const response = await fetch(config.url + "/rest/v1/site_settings?key=eq.market_display&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
-      if (!response.ok) return;
+      if (!response.ok) throw new Error("Piyasa seçenekleri alınamadı");
       const rows = await response.json();
       if (rows[0]) renderOptions(rows[0].value);
-    } catch (_) { /* Varsayılan seçenekler görünür kalır. */ }
+    } catch (_) { /* Bağlantı kesilirse varsayılan seçenekler görünür kalır. */ }
   }
 
   async function json(url) {
