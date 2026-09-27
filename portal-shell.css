@@ -163,6 +163,29 @@ html[data-theme="dark"] .headline-category-story small{color:#adbed0!important}
 html[data-theme="dark"] .headline-progress .headline-tab{background:#536982}
 html[data-theme="dark"] .headline-progress .headline-tab.is-active{background:#31add6}
 
+/* Ortak kabuk, sayfalara ait genel header/footer kurallarından etkilenmez. */
+.portal-shell-top{width:100%;max-width:none;line-height:1.35}
+.portal-shell-top .portal-site-header{width:100%;padding:0!important;margin:0!important}
+.unified-site-footer{width:100%;padding:0!important;margin-inline:0!important;background:#071426!important;color:#aebbc9!important;line-height:1.5}
+.unified-site-footer .footer-brand,.unified-site-footer .footer-brand p{color:#b7c7d9!important;font-weight:400!important}
+.unified-site-footer .footer-column h3,.unified-site-footer .footer-social>strong{color:#fff!important}
+.unified-site-footer .footer-column a{color:#b7c7d9!important}
+.unified-site-footer .footer-column a:hover{color:#fff!important}
+.unified-site-footer .footer-bottom{color:#aebbc9!important}
+
+/* Son dakika etiketi ile kayan başlık arasındaki açık renk aralığı kaldır. */
+#portalBreakingBar{padding:0!important;margin:0!important}
+#portalBreakingBar .breaking-inner{display:flex!important;align-items:center;flex-wrap:nowrap;gap:0!important;min-width:0;overflow:hidden}
+#portalBreakingBar .breaking-label{clip-path:none!important;min-height:43px;margin:0!important;padding:0 13px!important}
+#portalBreakingBar .breaking-content{display:flex;align-items:center;flex:1 1 auto;min-width:0;margin:0!important;padding:0 0 0 8px!important}
+#portalBreakingBar .breaking-controls{display:flex;align-items:center;flex:0 0 auto;gap:4px;white-space:nowrap;margin:0!important;padding:0 0 0 6px!important}
+#portalBreakingBar .breaking-controls button{display:grid;place-items:center;flex:0 0 27px;min-width:27px;max-width:27px;height:27px;min-height:27px;margin:0!important;padding:0!important}
+@media(max-width:560px){#portalBreakingBar .breaking-label{min-height:38px;padding-inline:8px!important}#portalBreakingBar .breaking-controls button{flex-basis:23px;min-width:23px;max-width:23px;height:25px;min-height:25px}}
+
+/* Aynı sağlık simgesi menüde, ana sayfada ve eczane kartlarında kullanılır. */
+.portal-shell-top .service-pharmacy-icon{display:inline-block;width:18px;height:18px;vertical-align:-.22em;object-fit:contain}
+.portal-shell-top .mobile-menu-link .pharmacy-heart-icon{display:block;flex:none;width:22px;height:22px;object-fit:contain}
+
 /* Mobil menü: simgeli tek sütun, açılır kategoriler ve sosyal hesaplar. */
 .portal-shell-top .mobile-menu-content,.portal-shell-top .mobile-menu-backdrop{display:none}
 .unified-site-footer .footer-social{margin-top:22px}

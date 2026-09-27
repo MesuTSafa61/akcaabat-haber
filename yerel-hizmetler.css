@@ -37,6 +37,11 @@
 .pharmacy-panel .pharmacy-card{display:flex;flex-direction:column;min-width:0;padding:21px;border-color:#dbe7e1;background:#fff;box-shadow:0 6px 19px rgba(14,65,52,.055)}
 .pharmacy-card-top{display:flex;align-items:center;gap:13px}
 .pharmacy-card-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:12px;background:#e9f7f0;color:#0c8c5c;font-size:25px;font-weight:900}
+.local-service-tile.pharmacy .local-service-symbol img{display:block;width:33px;height:33px;object-fit:contain}
+.local-hero-icon img{display:block;width:60px;height:60px;object-fit:contain}
+.pharmacy-heading-icon img{display:block;width:37px;height:37px;object-fit:contain}
+.pharmacy-card-icon img{display:block;width:30px;height:30px;object-fit:contain}
+@media(max-width:820px){.local-hero-icon img{width:47px;height:47px}}
 .pharmacy-card-top small{font-size:10px;color:#0a8258}.pharmacy-card-top h3{margin:3px 0 0;font-size:clamp(18px,2vw,22px);line-height:1.2}
 .pharmacy-panel .pharmacy-address{display:flex;gap:10px;align-items:flex-start;min-height:0;margin:19px 0 20px;color:#41566b;font-size:14px;line-height:1.5}
 .pharmacy-address span:first-child{color:#12805b;font-size:23px;line-height:1}

@@ -14,6 +14,7 @@
   const localTime = () => new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date());
   const dateLabel = date => new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long", timeZone: "Europe/Istanbul" }).format(new Date(date + "T12:00:00+03:00"));
   function tag(name, className, value) { const node = document.createElement(name); if (className) node.className = className; if (value !== undefined) node.textContent = value; return node; }
+  function pharmacyIcon(className) { const image = tag("img", className); image.src = "assets/pharmacy-heart.svg"; image.alt = ""; image.setAttribute("aria-hidden", "true"); return image; }
   function link(label, href, secondary = false) { const a = tag("a", "local-button" + (secondary ? " secondary" : ""), label); a.href = href; if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener noreferrer"; } return a; }
   function sourceNote(label, url) { const p = tag("p", "local-source", "Kaynak: "); p.append(link(label + " ↗", url, true)); return p; }
   function empty(message, url, label) { const box = tag("div", "local-empty"); box.append(tag("strong", "", message)); box.append(tag("p", "", "Bilgileri doğrudan resmî sayfadan kontrol edebilirsiniz.")); box.append(link(label, url)); return box; }
@@ -67,7 +68,7 @@
     const districtNames = ["Akçaabat", "Ortahisar", "Araklı", "Arsin", "Beşikdüzü", "Çarşıbaşı", "Çaykara", "Dernekpazarı", "Düzköy", "Hayrat", "Köprübaşı", "Maçka", "Of", "Sürmene", "Şalpazarı", "Tonya", "Vakfıkebir", "Yomra"];
     const section = tag("section", "local-panel pharmacy-panel");
     const heading = tag("div", "pharmacy-heading");
-    const headingIcon = tag("span", "pharmacy-heading-icon", "✚"); headingIcon.setAttribute("aria-hidden", "true");
+    const headingIcon = tag("span", "pharmacy-heading-icon"); headingIcon.append(pharmacyIcon("pharmacy-heart-icon")); headingIcon.setAttribute("aria-hidden", "true");
     const headingText = tag("div"); headingText.append(tag("span", "pharmacy-eyebrow", "TRABZON • BUGÜN"), tag("h2", "", "Nöbetçi eczaneler"));
     heading.append(headingIcon, headingText); section.append(heading);
     const picker = tag("div", "pharmacy-picker");
@@ -92,7 +93,7 @@
       list.replaceChildren();
       for (const item of entries) {
       const card = tag("article", "pharmacy-card");
-      const cardTop = tag("div", "pharmacy-card-top"); const cardIcon = tag("span", "pharmacy-card-icon", "✚"); cardIcon.setAttribute("aria-hidden", "true");
+      const cardTop = tag("div", "pharmacy-card-top"); const cardIcon = tag("span", "pharmacy-card-icon"); cardIcon.append(pharmacyIcon("pharmacy-heart-icon")); cardIcon.setAttribute("aria-hidden", "true");
       const starts = item.startsAt ? new Date(item.startsAt) : null;
       const ends = item.endsAt ? new Date(item.endsAt) : null;
       const isUpcoming = starts && starts > now;
