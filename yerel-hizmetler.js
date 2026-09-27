@@ -112,7 +112,14 @@
   }
   function renderObituaries(data) {
     const section = tag("section", "local-panel obituary-panel");
-    section.append(tag("h2", "", "Vefat edenler"));
+    const heading = tag("div", "obituary-heading");
+    const icon = tag("span", "obituary-heading-icon");
+    const mosque = tag("img"); mosque.src = "assets/mosque.svg"; mosque.alt = ""; mosque.width = 34; mosque.height = 34;
+    icon.append(mosque);
+    const title = tag("div");
+    title.append(tag("span", "obituary-eyebrow", "AKÇAABAT • BUGÜN"), tag("h2", "", "Vefat edenler"));
+    heading.append(icon, title);
+    section.append(heading);
     const todayKey = today();
     const availableDates = Array.from({ length: 7 }, (_, index) => {
       const date = new Date(todayKey + "T12:00:00+03:00");

@@ -3,7 +3,11 @@
 @media(max-width:820px){.local-services-grid{grid-template-columns:1fr}.local-page{padding-top:17px}.local-hero{padding:24px}.local-hero-icon{width:72px;height:72px;font-size:38px}.pharmacy-list{grid-template-columns:1fr}}@media(max-width:560px){.local-panel{padding:18px}.local-hero-icon{display:none}.prayer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prayer-next time{font-size:26px}.local-heading-row{align-items:flex-start;flex-direction:column}}
 
 .obituary-panel{padding:clamp(18px,3vw,34px)}
-.obituary-panel h2{text-align:center;margin-bottom:22px;font-size:clamp(23px,3vw,30px)}
+.obituary-heading{display:flex;align-items:center;gap:15px;margin-bottom:19px}
+.obituary-heading-icon{display:grid;place-items:center;flex:none;width:54px;height:54px;border-radius:16px;background:#eaf3f8}
+.obituary-heading-icon img{display:block;width:34px;height:34px}
+.obituary-eyebrow{display:block;color:#27628a;font-size:11px;font-weight:900;letter-spacing:.14em}
+.obituary-panel .obituary-heading h2{text-align:left;margin:4px 0 0;font-size:clamp(22px,3vw,29px)}
 .obituary-date-nav{display:flex;align-items:center;justify-content:center;gap:clamp(10px,3vw,30px);margin-bottom:20px}
 .obituary-date-label{text-align:center;color:#1b314b;font-size:clamp(15px,2.5vw,21px);font-weight:800;text-transform:uppercase}
 .obituary-date-arrow{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #d6e2ec;border-radius:12px;background:#f2f7fb;color:#126f9b;font-size:26px;cursor:pointer}
