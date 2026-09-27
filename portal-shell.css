@@ -213,6 +213,27 @@ html[data-theme="dark"] .headline-progress .headline-tab.is-active{background:#3
 }
 @media(prefers-reduced-motion:reduce){.breaking-clock-hour,.breaking-clock-minute{animation:none}.breaking-clock-hour{transform:rotate(25deg)}.breaking-clock-minute{transform:rotate(150deg)}}
 
+/* Hızlı servislerde yalnız açık sayfanın adı ve alt çizgisi bordo olur. */
+.portal-shell-top .service-inner a.is-active{color:#b72132!important;border-bottom-color:#b72132!important}
+@media(hover:none){.portal-shell-top .service-inner a:not(.is-active):hover{color:#213953!important;border-bottom-color:#d5dfe6!important}}
+html[data-theme="dark"] .portal-shell-top .service-inner a.is-active{color:#ff8290!important;border-bottom-color:#ff8290!important}
+@media(hover:none){html[data-theme="dark"] .portal-shell-top .service-inner a:not(.is-active):hover{color:#edf4fb!important;border-bottom-color:#d5dfe6!important}}
+
+/* Gerçek yön bilgisiyle sürekli ve kesintisiz ilerleyen piyasa bandı. */
+.portal-shell-top .portal-top-market .market-scroll{overflow:hidden}
+.portal-shell-top .portal-top-market .market-track{display:flex;width:max-content;align-items:center}
+.portal-shell-top .portal-top-market .market-track.is-moving{animation:market-crawl var(--market-duration,32s) linear infinite}
+.portal-shell-top .portal-top-market .market-track .market-list{flex:none;justify-content:flex-start}
+@keyframes market-crawl{to{transform:translateX(calc(-1 * var(--market-distance,0px)))}}
+.portal-shell-top .portal-top-bar .portal-top-market .market-trend.flat{background:#28415a!important;color:#d5e1ea!important}
+.portal-shell-top .portal-top-bar .portal-top-market .market-trend{font-style:normal;font-weight:900}
+@media(prefers-reduced-motion:reduce){.portal-shell-top .portal-top-market .market-track.is-moving{animation:none}.portal-shell-top .portal-top-market .market-scroll{overflow-x:auto}}
+
+/* Saat ve başlık korunurken kırmızı etiketin boş kuyruğu kısalır. */
+#portalBreakingBar .breaking-label{flex:0 0 149px;min-width:149px;gap:6px;padding:5px 17px 5px 7px!important;clip-path:polygon(0 0,88% 0,100% 50%,88% 100%,0 100%)!important}
+#portalBreakingBar .breaking-controls #portalBreakingCount{display:none!important}
+@media(max-width:560px){#portalBreakingBar .breaking-label{flex-basis:119px;min-width:119px;gap:4px;padding:4px 13px 4px 5px!important}}
+
 /* Mobil menü: simgeli tek sütun, açılır kategoriler ve sosyal hesaplar. */
 .portal-shell-top .mobile-menu-content,.portal-shell-top .mobile-menu-backdrop{display:none}
 .unified-site-footer .footer-social{margin-top:22px}

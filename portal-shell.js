@@ -52,7 +52,7 @@
       </div></nav><button type="button" class="mobile-menu-backdrop" id="portalMenuBackdrop" aria-label="Menüyü kapat" hidden></button>
     </header>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="namaz-vakitleri.html">☪ Namaz Vakitleri</a><a href="nobetci-eczaneler.html"><img class="service-pharmacy-icon" src="assets/pharmacy-heart.svg" alt="" width="18" height="18"> Nöbetçi Eczaneler</a><a href="vefat-edenler.html"><img class="service-mosque-icon" src="assets/mosque.svg" alt="" width="17" height="17"> Vefat Duyuruları</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
-    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-clock" aria-hidden="true"><i class="breaking-clock-hour"></i><i class="breaking-clock-minute"></i></span><span class="breaking-wordmark"><span>SON</span><span>DAKİKA</span></span></div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
+    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-clock" aria-hidden="true"><i class="breaking-clock-hour"></i><i class="breaking-clock-minute"></i></span><span class="breaking-wordmark"><span>SON</span><span>DAKİKA</span></span></div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
   [":scope > header", ":scope > nav", ":scope > .top-bar", ":scope > .topbar", ":scope > .market-strip", ":scope > .service-strip", ":scope > .breaking-bar", ":scope > .search-panel"].forEach(function (selector) {
@@ -147,12 +147,34 @@
   function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value) && value > 0) element.textContent = money.format(value) + (suffix || ""); }
   function setTrend(id, movement) {
     const element = document.getElementById(id);
-    if (!element || !movement || !["up", "down"].includes(movement.direction)) return;
+    if (!element || !movement || !["up", "down", "flat"].includes(movement.direction)) return;
     const percent = Number(movement.percent || 0);
     element.className = "market-trend " + movement.direction;
-    element.textContent = (movement.direction === "up" ? "▲" : "▼") + (percent ? " %" + money.format(percent) : "");
+    element.textContent = (movement.direction === "up" ? "▲" : movement.direction === "down" ? "▼" : "→") + (percent ? " %" + money.format(percent) : "");
     element.hidden = false;
-    element.setAttribute("aria-label", movement.direction === "up" ? "Yükseldi" : "Düştü");
+    element.setAttribute("aria-label", movement.direction === "up" ? "Yükseldi" : movement.direction === "down" ? "Düştü" : "Değişmedi");
+  }
+  function updateMarketTicker() {
+    const list = document.getElementById("portalMarketList");
+    if (!list || !list.parentElement || !list.querySelector("em:not(:empty)")) return;
+    const scroll = list.parentElement;
+    let track = scroll.querySelector(".market-track");
+    if (!track) {
+      track = document.createElement("div");
+      track.className = "market-track";
+      scroll.insertBefore(track, list);
+      track.appendChild(list);
+    }
+    track.querySelectorAll(".market-list-copy").forEach(copy => copy.remove());
+    const copy = list.cloneNode(true);
+    copy.id = "";
+    copy.classList.add("market-list-copy");
+    copy.setAttribute("aria-hidden", "true");
+    copy.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+    track.appendChild(copy);
+    track.style.setProperty("--market-distance", list.scrollWidth + "px");
+    track.style.setProperty("--market-duration", Math.max(22, list.scrollWidth / 18) + "s");
+    track.classList.add("is-moving");
   }
   function showMarket(data) {
     if (!data) return;
@@ -165,6 +187,7 @@
     setTrend("marketEurTrend", changes.eur);
     setTrend("marketGoldTrend", changes.gold);
     setTrend("marketSilverTrend", changes.silver);
+    requestAnimationFrame(updateMarketTicker);
   }
   async function loadMarketData() {
     try {
@@ -207,7 +230,6 @@
       const bar = document.getElementById("portalBreakingBar");
       const content = document.getElementById("portalBreakingContent");
       const controls = document.getElementById("portalBreakingControls");
-      const count = document.getElementById("portalBreakingCount");
       let index = 0;
       let rotationTimer = null;
       function restartScroll() {
@@ -220,7 +242,6 @@
         index = (index + offset + news.length) % news.length;
         link.textContent = news[index].title;
         link.href = "haber-detay.html?slug=" + encodeURIComponent(news[index].slug);
-        count.textContent = (index + 1) + "/" + news.length;
         requestAnimationFrame(restartScroll);
       }
       function restartRotation() {
@@ -311,6 +332,11 @@
   if (searchForm && searchInput) searchForm.addEventListener("submit", function (event) { event.preventDefault(); const query = searchInput.value.trim(); if (query) window.location.href = "haber.html?search=" + encodeURIComponent(query); });
 
   const path = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+  document.querySelectorAll(".portal-shell-top .service-inner a").forEach(function (link) {
+    const selected = new URL(link.href, location.href).pathname.split("/").pop().toLowerCase() === path;
+    link.classList.toggle("is-active", selected);
+    if (selected) link.setAttribute("aria-current", "page");
+  });
   const params = new URLSearchParams(window.location.search);
   const category = (params.get("kategori") || "").toLocaleLowerCase("tr-TR");
   if (mainNav) mainNav.querySelectorAll(".nav-link").forEach(function (link) {
