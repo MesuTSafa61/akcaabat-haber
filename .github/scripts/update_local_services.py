@@ -99,6 +99,17 @@ def refresh_obituaries():
     print('Vefat script adları:', [s.get('src') for s in soup.select('script[src]')])
     print('Vefat veri betiği:', [s.get_text()[max(0,s.get_text().find('function fetchData')-300):s.get_text().find('function fetchData')+9000] for s in soup.select('script:not([src])') if 'function fetchData' in s.get_text()])
     print('Vefat işaretleri:', [(str(m.start()), soup.get_text(' ', strip=True)[m.start():m.start()+160]) for m in list(re.finditer('vefat', soup.get_text(' ', strip=True), re.I))[-4:]])
+    from urllib.parse import urljoin
+    for day in (datetime.now(timezone(timedelta(hours=3))).date(), datetime.now(timezone(timedelta(hours=3))).date() - timedelta(days=1)):
+        payload = json.dumps({'tarih': day.strftime('%d.%m.%Y')}).encode('utf-8')
+        endpoint = urljoin(data['obituaries']['source'], 'vefat-edenler.aspx/GetVerileri')
+        req = Request(endpoint, data=payload, headers={**HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'Accept': 'application/json', 'Referer': data['obituaries']['source']}, method='POST')
+        try:
+            with urlopen(req, timeout=25) as response:
+                body = response.read().decode('utf-8-sig')
+                print('Vefat servis', day, response.status, len(body), body[:6000])
+        except Exception as error:
+            print('Vefat servis hatası', type(error).__name__, str(error))
     # Source currently renders an empty heading; do not invent names or reuse old notices.
     # Populate only if structured dates and names are published in an identifiable table.
     items = []
