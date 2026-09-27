@@ -322,7 +322,7 @@
 
     function cardHtml(item) {
         return '<article class="news-card" data-url="' + escapeHtml(newsUrl(item)) + '">' +
-            '<div class="news-card-image"><img src="' + escapeHtml(imageUrl(item)) + '" alt="' +
+            '<div class="news-card-image"><img class="news-card-backdrop" src="' + escapeHtml(imageUrl(item)) + '" alt="" aria-hidden="true" loading="lazy"><img src="' + escapeHtml(imageUrl(item)) + '" alt="' +
             escapeHtml(item.title) + '" loading="lazy" width="520" height="300"><span class="news-card-category">' +
             escapeHtml(categoryName(item).toUpperCase()) + '</span></div><div class="news-card-body"><div class="news-card-meta">' +
             escapeHtml(publishedDate(item)) + '</div><h3>' + escapeHtml(item.title) + '</h3><p>' +

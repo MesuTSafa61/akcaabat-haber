@@ -1559,11 +1559,15 @@ body{background:#edf1f4;color:#111827}
 /* Son Haberler: küçük görseli kırpmadan kompakt kartta göster. */
 .news-card-image{background:#eef2f6}
 .news-card-image img{display:block;object-fit:contain}
+.news-card-image .news-card-backdrop{display:none}
 .news-card:hover .news-card-image img{transform:none}
 @media(max-width:560px){
   .news-card{display:grid;grid-template-columns:42% minmax(0,1fr);align-items:center;min-height:110px}
-  .news-card-image{min-height:0;background:#fff}
-  .news-card-image img{position:static;width:100%;height:auto;max-height:138px;min-height:0}
+  .news-card-image{align-self:stretch;min-height:110px;background:#dde6ec}
+  .news-card-image img{position:absolute;inset:0;z-index:1;width:100%;height:100%;max-height:none;min-height:0;object-fit:contain}
+  .news-card-image .news-card-backdrop{display:block;z-index:0;object-fit:cover;filter:blur(10px) brightness(.75);transform:scale(1.15)}
+  .news-card:hover .news-card-image .news-card-backdrop{transform:scale(1.15)}
+  .news-card-image .news-card-category{z-index:2}
   .news-card-body{padding:11px 12px}
   .news-card h3{font-size:14px}
 }
