@@ -5,7 +5,66 @@
   const updated = document.getElementById("financeUpdated");
   const error = document.getElementById("financeError");
   const refresh = document.getElementById("financeRefresh");
+  const select = document.getElementById("financeSelect");
+  const extra = document.getElementById("financeExtra");
+  const extraName = document.getElementById("financeExtraName");
+  const extraValue = document.getElementById("financeExtraValue");
+  const extraMeta = document.getElementById("financeExtraMeta");
+  let selectionRequest = 0;
   let hasData = false;
+
+  async function json(url) {
+    const response = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error("Veri alınamadı");
+    return response.json();
+  }
+
+  function showExtra(value, percent, source, when) {
+    extraValue.textContent = formatter.format(value) + " ₺";
+    const direction = Number.isFinite(percent) && percent > 0 ? "up" : Number.isFinite(percent) && percent < 0 ? "down" : "flat";
+    extra.dataset.state = direction;
+    const change = direction === "up" ? "▲ %" + formatter.format(percent) : direction === "down" ? "▼ %" + formatter.format(Math.abs(percent)) : "Değişim yok";
+    extraMeta.textContent = change + " · " + source + (when ? " · " + when : "");
+  }
+
+  async function loadExtra() {
+    const key = select.value;
+    const request = ++selectionRequest;
+    if (!key) { extra.hidden = true; return; }
+    extra.hidden = false;
+    extraName.textContent = select.selectedOptions[0].textContent;
+    extraValue.textContent = "Yükleniyor…";
+    extraMeta.textContent = "";
+    extra.dataset.state = "flat";
+    try {
+      if (["GBP", "CHF", "JPY"].includes(key)) {
+        const base = "https://api.frankfurter.dev/v1/";
+        const latest = await json(base + "latest?base=" + key + "&symbols=TRY");
+        const value = Number(latest.rates && latest.rates.TRY);
+        if (!Number.isFinite(value) || value <= 0) throw new Error("Kur bulunamadı");
+        const priorDate = new Date(latest.date + "T12:00:00Z");
+        priorDate.setUTCDate(priorDate.getUTCDate() - 1);
+        const previous = await json(base + priorDate.toISOString().slice(0, 10) + "?base=" + key + "&symbols=TRY");
+        const before = Number(previous.rates && previous.rates.TRY);
+        if (request !== selectionRequest) return;
+        const percent = before > 0 ? (value - before) / before * 100 : NaN;
+        showExtra(value, percent, "Frankfurter", latest.date);
+      } else {
+        const data = await json("https://api.coingecko.com/api/v3/simple/price?ids=" + key + "&vs_currencies=try&include_24hr_change=true&include_last_updated_at=true");
+        if (request !== selectionRequest) return;
+        const item = data[key];
+        const value = Number(item && item.try);
+        if (!Number.isFinite(value) || value <= 0) throw new Error("Fiyat bulunamadı");
+        const percent = Number(item.try_24h_change);
+        const when = item.last_updated_at ? new Intl.DateTimeFormat("tr-TR", { dateStyle: "short", timeStyle: "short", timeZone: "Europe/Istanbul" }).format(new Date(item.last_updated_at * 1000)) : "";
+        showExtra(value, percent, "CoinGecko · 24 saat", when);
+      }
+    } catch (_) {
+      if (request !== selectionRequest) return;
+      extraValue.textContent = "Veri alınamadı";
+      extraMeta.textContent = "Bu piyasanın güncel verisine ulaşılamıyor. Daha sonra tekrar deneyin.";
+    }
+  }
 
   function render(data) {
     if (!data || typeof data !== "object") return;
@@ -47,6 +106,7 @@
       if (!hasData) updated.textContent = "Veri alınamadı";
     } finally { refresh.disabled = false; }
   }
-  refresh.addEventListener("click", load);
+  refresh.addEventListener("click", function () { load(); if (select.value) loadExtra(); });
+  select.addEventListener("change", loadExtra);
   load();
 })();
