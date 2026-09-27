@@ -141,3 +141,24 @@ html[data-theme="dark"] :is(.article-card,.article-source-card,.article-share,.a
 html[data-theme="dark"] :is(.article-title,.article-summary,.article-content,.article-content p,.article-content h2,.article-content h3,.gallery-card h2,.gallery-card h3,.gallery-video-card p,.local-panel h2,.pharmacy-card h3,.obituary-name,.obituary-field dt,.obituary-field dd){color:#edf4fb!important}
 html[data-theme="dark"] :is(.article-meta,.article-breadcrumb,.news-card p,.category-story-body time,.pharmacy-address,.obituary-body,.local-note){color:#b7c7d8!important}
 html[data-theme="dark"] .portal-shell-top .portal-top-market .market-item{color:#e4eff8!important}
+/* Üstteki piyasa verilerinde eski açık renk bant kurallarını tamamen sıfırla. */
+.portal-shell-top .portal-top-bar .portal-top-market,.portal-shell-top .portal-top-bar .portal-top-market .market-scroll,.portal-shell-top .portal-top-bar .portal-top-market .market-list,.portal-shell-top .portal-top-bar .portal-top-market .market-item{background:transparent!important}
+.portal-shell-top .portal-top-bar .portal-top-market .market-scroll{margin:0;padding:0}
+.portal-shell-top .portal-top-bar .portal-top-market .market-item{display:inline-flex!important;align-items:center;gap:5px;color:#dce8f4!important;border-color:#ffffff26}
+.portal-shell-top .portal-top-bar .portal-top-market .market-item b{color:#8ed1ed;letter-spacing:.04em}
+.portal-shell-top .portal-top-bar .portal-top-market .market-item em{color:#fff;font-weight:750}
+.portal-shell-top .portal-top-bar .portal-top-market .market-trend.up{background:#123d38!important;color:#8ff0be!important}
+.portal-shell-top .portal-top-bar .portal-top-market .market-trend.down{background:#492839!important;color:#ffa2af!important}
+/* Bağlantı kendi tam genişliğinde kalır; animasyon tüm başlığı gösterebilir. */
+#portalBreakingBar .breaking-content a{display:block;flex:0 0 auto;width:max-content;max-width:none!important;overflow:visible!important;text-overflow:clip!important}
+@media(prefers-reduced-motion:reduce){#portalBreakingBar .breaking-content a{width:auto;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}}
+/* Logonun koyu yazısı için başlık beyaz kalır; içerik kartları koyu temaya uyar. */
+html[data-theme="dark"] .portal-shell-top .portal-site-header{background:#fff!important}
+html[data-theme="dark"] .portal-shell-top .header-search-button{color:#1b3554!important}
+html[data-theme="dark"] .portal-shell-top .portal-theme-button{background:#eaf1f7;color:#154267;border-color:#bed1df}
+html[data-theme="dark"] :is(.headline-main-column,.headline-progress,.headline-category-panel,.headline-category-tabs,.headline-category-tabs button,.headline-category-story,.headline-empty){background:#17263b!important;color:#edf4fb!important;border-color:#344a62!important}
+html[data-theme="dark"] .headline-category-tabs button[aria-selected="true"]{color:#ff7888!important}
+html[data-theme="dark"] .headline-category-story:hover{background:#233c56!important}
+html[data-theme="dark"] .headline-category-story small{color:#adbed0!important}
+html[data-theme="dark"] .headline-progress .headline-tab{background:#536982}
+html[data-theme="dark"] .headline-progress .headline-tab.is-active{background:#31add6}
