@@ -61,11 +61,6 @@ body.portal-unified{margin:0;background:var(--page);color:var(--ink);font-family
   .portal-shell-top .main-nav .nav-inner{display:grid;height:auto!important;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));padding:10px 12px!important;max-height:65vh;overflow-y:auto}
   .portal-shell-top .main-nav .nav-link{color:#fff!important;border-color:#ffffff26;padding:15px 12px;font-size:12px}
   .portal-shell-top .main-nav .nav-link:hover,.portal-shell-top .main-nav .nav-link.active{background:#253c58;color:#ff8897!important}
-  .portal-shell-top .portal-category-rail{display:block;background:#101f35;color:#fff}
-  .portal-shell-top .portal-category-links{display:flex;gap:22px;align-items:center;min-height:49px;white-space:nowrap;overflow-x:auto;scrollbar-width:none}
-  .portal-shell-top .portal-category-links::-webkit-scrollbar{display:none}
-  .portal-shell-top .portal-category-links a{flex:0 0 auto;display:flex;align-items:center;min-height:49px;color:#fff;font-size:12px;font-weight:850;text-decoration:none}
-  .portal-shell-top .portal-category-links a.active{color:#ff697b}
   .portal-shell-top .service-inner{justify-content:flex-start;gap:14px;scrollbar-width:none}
   .portal-shell-top .service-inner::-webkit-scrollbar{display:none}
   .portal-shell-top .service-inner a{flex:0 0 auto;white-space:nowrap}

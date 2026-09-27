@@ -21,7 +21,6 @@
         <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a>
       </div></nav>
     </header>
-    <nav class="portal-category-rail" aria-label="Öne çıkan kategoriler"><div class="container portal-category-links"><a href="index.html" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" data-category="trabzonspor">Trabzonspor</a></div></nav>
     <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
     <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
@@ -231,11 +230,6 @@
   const category = (params.get("kategori") || "").toLocaleLowerCase("tr-TR");
   if (mainNav) mainNav.querySelectorAll(".nav-link").forEach(function (link) {
     const active = (link.dataset.page && link.dataset.page === path) || (link.dataset.category && path === "kategori.html" && link.dataset.category === category) || (link.dataset.breaking && path === "haber.html" && params.get("breaking") === "1");
-    link.classList.toggle("active", Boolean(active));
-    if (active) link.setAttribute("aria-current", "page");
-  });
-  shell.querySelectorAll(".portal-category-links a").forEach(function (link) {
-    const active = (link.dataset.page && link.dataset.page === path) || (link.dataset.category && path === "kategori.html" && link.dataset.category === category);
     link.classList.toggle("active", Boolean(active));
     if (active) link.setAttribute("aria-current", "page");
   });
