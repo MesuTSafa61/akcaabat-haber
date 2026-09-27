@@ -202,6 +202,11 @@
       if (!current || !Number.isFinite(Number(current.temperature_2m))) throw new Error("Hava durumu eksik");
       const code = Number(current.weather_code);
       const condition = code === 0 ? "Açık" : code <= 3 ? "Parçalı bulutlu" : code <= 48 ? "Sisli" : code <= 67 ? "Yağmurlu" : code <= 77 ? "Karlı" : code <= 82 ? "Sağanak yağışlı" : code <= 86 ? "Karlı" : code >= 95 ? "Gök gürültülü" : "Bulutlu";
+      const weatherCard = temperature.closest(".weather-box");
+      if (weatherCard) {
+        weatherCard.dataset.weather = code >= 95 ? "storm" : code >= 71 && code <= 77 || code >= 85 && code <= 86 ? "snow" : code >= 51 && code <= 82 ? "rain" : code >= 45 && code <= 48 ? "fog" : code === 0 ? "clear" : "cloud";
+        weatherCard.dataset.day = current.is_day ? "true" : "false";
+      }
       temperature.textContent = Math.round(Number(current.temperature_2m)) + "°";
       document.getElementById("homeWeatherCondition").textContent = condition;
       document.getElementById("homeWeatherFeelsLike").textContent = "🌡️ Hissedilen " + Math.round(Number(current.apparent_temperature)) + "°";

@@ -1512,3 +1512,40 @@ body{background:#edf1f4;color:#111827}
 .home-gallery-section .gallery-empty{grid-column:1/-1}
 @media(max-width:900px){.home-gallery-section .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.home-gallery-section{margin-top:22px}.home-gallery-section .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.home-gallery-section .gallery-card-copy{padding:10px}.home-gallery-section .gallery-card-copy h2{font-size:14px}.home-gallery-links{gap:9px;margin-top:6px}.home-gallery-links a{font-size:11px}.home-gallery-section .gallery-card-image .gallery-badge{left:6px;bottom:6px;font-size:9px;padding:4px 6px}}
+
+/* Ana sayfa hava kartı ve hızlı menü. */
+.sidebar .weather-box{position:relative;isolation:isolate;overflow:hidden;border-radius:15px;padding:19px 20px 17px;background:linear-gradient(120deg,#0c467c,#167fbd,#0a538e);background-size:220% 220%;box-shadow:0 12px 28px rgba(7,77,130,.22);animation:weather-sky 16s ease-in-out infinite}
+.sidebar .weather-box::before{content:"";position:absolute;z-index:-1;right:-45px;top:-68px;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(255,241,157,.27),rgba(255,255,255,.12) 30%,transparent 68%);animation:weather-glow 6s ease-in-out infinite}
+.sidebar .weather-box::after{content:"";position:absolute;z-index:-1;left:-25%;right:-25%;bottom:-75px;height:140px;border-radius:50%;background:rgba(255,255,255,.055);transform:rotate(-10deg)}
+.sidebar .weather-box[data-weather="clear"]{background-image:linear-gradient(125deg,#115ea2,#1999d0,#efab55)}
+.sidebar .weather-box[data-weather="rain"],.sidebar .weather-box[data-weather="storm"]{background-image:linear-gradient(125deg,#102b52,#12618f,#24597c)}
+.sidebar .weather-box[data-weather="snow"]{background-image:linear-gradient(125deg,#337da8,#8cbfd8,#397bad)}
+.sidebar .weather-box[data-weather="fog"]{background-image:linear-gradient(125deg,#355c79,#7aa4b5,#3a7195)}
+.sidebar .weather-box[data-day="false"]{background-image:linear-gradient(125deg,#0b254e,#155787,#1b3b70)}
+.sidebar .weather-header{position:relative;z-index:1}
+.sidebar .weather-header>div{gap:3px}
+.sidebar .weather-header>div span{letter-spacing:.12em;font-weight:900;opacity:.75}
+.sidebar .weather-header strong{font-size:16px}
+.sidebar .weather-icon{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.14);font-size:31px!important;filter:drop-shadow(0 4px 8px rgba(0,0,0,.16));animation:weather-float 4s ease-in-out infinite}
+.sidebar .weather-main{position:relative;z-index:1;padding:16px 0 19px}
+.sidebar .weather-main>strong{font-size:46px;letter-spacing:-.05em;line-height:1}
+.sidebar .weather-main div{gap:4px}
+.sidebar .weather-main div span{font-size:13px;font-weight:800}
+.sidebar .weather-main div small{font-size:10px;opacity:.8}
+.sidebar .weather-details{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:8px;padding-top:13px}
+.sidebar .weather-details span{display:inline-block;padding:6px 9px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(255,255,255,.1);font-size:10px;white-space:nowrap}
+.sidebar .quick-box{border:1px solid #e3eaf0;border-radius:15px;box-shadow:0 9px 24px rgba(7,27,54,.08)}
+.sidebar .quick-box .sidebar-title{padding:16px 17px 10px;border:0;border-top:4px solid #c7192b}
+.sidebar .quick-box .sidebar-title span{letter-spacing:.11em}
+.sidebar .quick-box .sidebar-title strong{font-size:16px}
+.sidebar .quick-links{display:grid;gap:7px;padding:9px 12px 14px}
+.sidebar .quick-links a{display:flex;align-items:center;gap:11px;min-width:0;padding:9px 11px;border:1px solid #e7edf3!important;border-radius:10px;background:#f8fafc;color:#1c344d;font-size:12px;font-weight:800;transition:background .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+.sidebar .quick-links a::after{content:"›";margin-left:auto;color:#8697a8;font-size:23px;font-weight:500;line-height:1}
+.sidebar .quick-links a:hover,.sidebar .quick-links a:focus-visible{background:#edf7fb;border-color:#9ccde0!important;color:#0a5b86;transform:translateX(3px);box-shadow:0 4px 12px rgba(20,106,151,.09)}
+.sidebar .quick-links a:focus-visible{outline:2px solid #1594ca;outline-offset:2px}
+.sidebar .quick-links .quick-icon{flex:0 0 33px;display:grid;place-items:center;width:33px;height:33px;border-radius:8px;background:#e7f1f7;font-size:17px}
+@keyframes weather-sky{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes weather-glow{0%,100%{opacity:.68;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes weather-float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+@media(max-width:560px){.sidebar .weather-box{padding:17px}.sidebar .weather-main>strong{font-size:42px}.sidebar .quick-links{grid-template-columns:1fr}.sidebar .quick-links a{min-height:52px}}
+@media(prefers-reduced-motion:reduce){.sidebar .weather-box,.sidebar .weather-box::before,.sidebar .weather-icon{animation:none}.sidebar .quick-links a{transition:none}}
