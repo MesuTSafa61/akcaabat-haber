@@ -53,8 +53,8 @@ def refresh_pharmacies():
     full = clean(soup.get_text(' ', strip=True))
     today_tr = datetime.now(timezone(timedelta(hours=3))).strftime('%d.%m.%Y')
     print('Eczacı Odası HTML:', len(str(soup)), 'karakter; tarih', today_tr, 'var mı:', today_tr in full)
-    print('Eczacı örnek:', full[full.find(today_tr)-100:full.find(today_tr)+1600])
-    print('Eczacı adayları:', [(tag.name, tag.get('class'), clean(tag.get_text(' ', strip=True))[:130]) for tag in soup.find_all(string=re.compile('ECZANESİ|ECZANESI', re.I))[:8] for tag in [tag.parent]])
+    print('Eczacı liste:', full[full.find('TRABZON AKÇAABAT NÖBETÇİ ECZANELER'):][:3100])
+    print('Eczacı blok:', [(tag.parent.name, tag.parent.get('class'), clean(tag.parent.get_text(' ', strip=True))[:500]) for tag in soup.find_all(string=re.compile('ECZANESİ|ECZANESI', re.I))[-4:]])
     cards = []
     if today_tr not in full:
         return
