@@ -176,8 +176,8 @@ html[data-theme="dark"] .headline-progress .headline-tab.is-active{background:#3
 /* Son dakika etiketi ile kayan başlık arasındaki açık renk aralığı kaldır. */
 #portalBreakingBar{padding:0!important;margin:0!important}
 #portalBreakingBar .breaking-inner{display:flex!important;align-items:center;flex-wrap:nowrap;gap:0!important;min-width:0;overflow:hidden}
-#portalBreakingBar .breaking-label{clip-path:none!important;min-height:43px;margin:0!important;padding:0 13px!important}
-#portalBreakingBar .breaking-content{display:flex;align-items:center;flex:1 1 auto;min-width:0;margin:0!important;padding:0 0 0 8px!important}
+#portalBreakingBar .breaking-label{clip-path:polygon(0 0,90% 0,100% 50%,90% 100%,0 100%)!important;min-height:43px;margin:0!important;padding:0 13px!important}
+#portalBreakingBar .breaking-content{display:flex;align-items:center;flex:1 1 auto;min-width:0;margin:0!important;padding:0!important}
 #portalBreakingBar .breaking-controls{display:flex;align-items:center;flex:0 0 auto;gap:4px;white-space:nowrap;margin:0!important;padding:0 0 0 6px!important}
 #portalBreakingBar .breaking-controls button{display:grid;place-items:center;flex:0 0 27px;min-width:27px;max-width:27px;height:27px;min-height:27px;margin:0!important;padding:0!important}
 @media(max-width:560px){#portalBreakingBar .breaking-label{min-height:38px;padding-inline:8px!important}#portalBreakingBar .breaking-controls button{flex-basis:23px;min-width:23px;max-width:23px;height:25px;min-height:25px}}
