@@ -48,3 +48,25 @@
 .pharmacy-select:focus-visible{outline:3px solid #55bf91;outline-offset:2px}
 .pharmacy-no-results{grid-column:1/-1;margin:0!important;padding:24px;border:1px dashed #c7dacf;border-radius:13px;background:#f7fbf9;color:#526779}
 .pharmacy-panel .pharmacy-shift{margin:-9px 0 16px;color:#60778a;font-size:12px;font-weight:700}
+
+.prayer-panel{padding:clamp(18px,3vw,32px)}
+.prayer-heading{display:flex;align-items:center;gap:15px;margin-bottom:18px}
+.prayer-heading-icon{display:grid;place-items:center;flex:none;width:54px;height:54px;border-radius:16px;background:#f0e9fa;color:#7652a2;font-size:31px}
+.prayer-eyebrow{display:block;color:#7759a0;font-size:11px;font-weight:900;letter-spacing:.14em}
+.prayer-heading h2{margin:4px 0 0;font-size:clamp(22px,3vw,29px)}
+.prayer-picker .pharmacy-select{border-color:#d6cae6;background:#fbf8fe}
+.prayer-picker .pharmacy-select:focus-visible{outline-color:#a886d0}
+.prayer-status{padding:13px 17px;border-radius:13px;background:#f2ecfa;color:#60467f;font-size:13px;font-weight:800}
+.prayer-panel .prayer-next{margin:16px 0;padding:24px;border:0;border-radius:18px;background:linear-gradient(125deg,#182947,#283b65);color:#fff}
+.prayer-panel .prayer-next[hidden]{display:none}
+.prayer-panel .prayer-next small{color:#bcafe1;font-size:11px;letter-spacing:.12em}
+.prayer-panel .prayer-next strong,.prayer-panel .prayer-next time{color:#fff}
+.prayer-panel .prayer-next strong{font-size:clamp(19px,3vw,24px)}
+.prayer-panel .prayer-next time{font-size:clamp(26px,4vw,36px)}
+.prayer-panel .prayer-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.prayer-panel .prayer-slot{border-color:#e1e5ee;border-radius:15px;background:#f9fafc}
+.prayer-panel .prayer-slot.active{border-color:#9873c4;background:#f2eafd;box-shadow:inset 0 0 0 1px #9873c4}
+.prayer-panel .prayer-slot strong{font-size:clamp(19px,3vw,25px)}
+.prayer-countdown{margin:16px 0 0!important;color:#50657b;font-size:13px;font-weight:650}
+.prayer-source{border-top:1px solid #e5eaf1;padding-top:14px;font-weight:700}
+@media(max-width:560px){.prayer-panel .prayer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.prayer-panel .prayer-slot{padding:15px}.prayer-panel .prayer-next{padding:19px}}

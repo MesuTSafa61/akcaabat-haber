@@ -2,6 +2,7 @@
 import json
 import re
 from datetime import datetime, timezone, timedelta
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
@@ -23,29 +24,59 @@ def clean(value):
 
 
 def refresh_prayer():
-    soup = fetch(data['prayer']['source'])
     months = {'Ocak': 1, 'Şubat': 2, 'Mart': 3, 'Nisan': 4, 'Mayıs': 5, 'Haziran': 6,
               'Temmuz': 7, 'Ağustos': 8, 'Eylül': 9, 'Ekim': 10, 'Kasım': 11, 'Aralık': 12}
-    days = {}
-    for row in soup.select('tr'):
-        cells = [clean(cell.get_text(' ', strip=True)) for cell in row.select('td')]
-        if len(cells) < 8:
-            continue
-        date = re.search(r'\b(\d{1,2})\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(20\d{2})\b', cells[0])
-        if not date:
-            continue
-        times = [re.search(r'\b([01]\d|2[0-3]):[0-5]\d\b', cell) for cell in cells[2:8]]
-        if not all(times):
-            continue
-        key = f'{int(date[3]):04d}-{months[date[2]]:02d}-{int(date[1]):02d}'
-        days[key] = {'date': key, 'times': [match[0] for match in times]}
-    if today not in days:
-        raise ValueError(f'Diyanet tablosunda bugün yok; {len(days)} gün ayrıştırıldı')
-    fresh = [days[key] for key in sorted(days) if key >= today][:31]
-    if fresh != data['prayer'].get('days'):
-        data['prayer']['days'] = fresh
-        data['prayer']['updatedAt'] = datetime.now(timezone.utc).isoformat()
-    print('Diyanet:', len(data['prayer']['days']), 'gün')
+    locations = {
+        'Akçaabat': (9891, 'akcaabat'), 'Ortahisar': (9905, 'trabzon'),
+        'Araklı': (9892, 'arakli'), 'Arsin': (9893, 'arsin'),
+        'Beşikdüzü': (9894, 'besikduzu'), 'Çarşıbaşı': (9895, 'carsibasi'),
+        'Çaykara': (9896, 'caykara'), 'Dernekpazarı': (9897, 'dernekpazari'),
+        'Düzköy': (9898, 'duzkoy'), 'Hayrat': (9899, 'hayrat'),
+        'Köprübaşı': (9900, 'koprubasi-t'), 'Of': (9901, 'of'),
+        'Şalpazarı': (9902, 'salpazari'), 'Sürmene': (9903, 'surmene'),
+        'Tonya': (9904, 'tonya'), 'Vakfıkebir': (9906, 'vakfikebir'),
+        'Yomra': (9907, 'yomra'),
+    }
+
+    def fetch_days(location):
+        city_id, slug = locations[location]
+        url = f'https://namazvakitleri.diyanet.gov.tr/tr-TR/{city_id}/{slug}-namaz-vakitleri'
+        soup = fetch(url)
+        days = {}
+        for row in soup.select('tr'):
+            cells = [clean(cell.get_text(' ', strip=True)) for cell in row.select('td')]
+            if len(cells) < 8:
+                continue
+            date = re.search(r'\b(\d{1,2})\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+(20\d{2})\b', cells[0])
+            if not date:
+                continue
+            times = [re.search(r'\b([01]\d|2[0-3]):[0-5]\d\b', cell) for cell in cells[2:8]]
+            if not all(times):
+                continue
+            key = f'{int(date[3]):04d}-{months[date[2]]:02d}-{int(date[1]):02d}'
+            days[key] = {'date': key, 'times': [match[0] for match in times]}
+        if today not in days:
+            raise ValueError(f'{location}: bugünkü Diyanet vakitleri bulunamadı')
+        return [days[key] for key in sorted(days) if key >= today][:31]
+
+    current = data['prayer']
+    previous = current.get('districts') or {'Akçaabat': current.get('days', [])}
+    grouped = {name: days for name, days in previous.items() if isinstance(days, list) and any(item.get('date') == today for item in days)}
+    errors = []
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        jobs = {pool.submit(fetch_days, name): name for name in locations}
+        for job in as_completed(jobs):
+            name = jobs[job]
+            try:
+                grouped[name] = job.result()
+            except Exception as exc:
+                errors.append(f'{name}: {type(exc).__name__}')
+    if 'Akçaabat' not in grouped:
+        raise ValueError('Akçaabat için doğrulanmış güncel vakit bulunamadı')
+    fresh = {'days': grouped['Akçaabat'], 'districts': grouped}
+    if any(current.get(key) != value for key, value in fresh.items()):
+        current.update(fresh, updatedAt=datetime.now(timezone.utc).isoformat())
+    print('Diyanet:', len(grouped), '/', len(locations), 'konum;', ', '.join(errors) if errors else 'tüm konumlar alındı')
 
 
 def refresh_pharmacies():

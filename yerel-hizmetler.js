@@ -18,27 +18,50 @@
   function sourceNote(label, url) { const p = tag("p", "local-source", "Kaynak: "); p.append(link(label + " ↗", url, true)); return p; }
   function empty(message, url, label) { const box = tag("div", "local-empty"); box.append(tag("strong", "", message)); box.append(tag("p", "", "Bilgileri doğrudan resmî sayfadan kontrol edebilirsiniz.")); box.append(link(label, url)); return box; }
   function renderPrayer(data) {
-    const section = tag("section", "local-panel");
-    section.append(tag("h2", "", "Bugünün namaz vakitleri"));
-    const day = (data.days || []).find(item => item.date === today() && Array.isArray(item.times) && item.times.length === 6 && item.times.every(time => /^\d{2}:\d{2}$/.test(time)));
-    if (!day) { section.append(empty("Bugünün doğrulanmış vakitleri henüz alınamadı.", sourceUrls.prayer, "Diyanet'te vakitleri aç ↗")); output.replaceChildren(section); return; }
-    section.append(tag("div", "local-meta", dateLabel(day.date) + "  •  Akçaabat / Trabzon"));
-    const next = tag("div", "prayer-next"); const nextTitle = tag("div"); const small = tag("small", "", "SIRADAKİ VAKİT"); const nextName = tag("strong"); const nextTime = tag("time"); nextTitle.append(small, nextName); next.append(nextTitle, nextTime); section.append(next);
-    const grid = tag("div", "prayer-grid"); const slots = day.times.map((time, i) => { const card = tag("div", "prayer-slot"); card.append(tag("span", "", prayerNames[i]), tag("strong", "", time)); grid.append(card); return card; }); section.append(grid);
-    const countdown = tag("p", "local-note"); section.append(countdown);
-    function update() {
-      const clock = localTime(); const index = day.times.findIndex(time => time > clock); slots.forEach((slot, i) => slot.classList.toggle("active", i === index));
-      if (index < 0) { nextName.textContent = "Yarınki İmsak"; nextTime.textContent = "—"; countdown.textContent = "Yarınki vakitleri Diyanet'ten kontrol edin."; return; }
-      nextName.textContent = prayerNames[index]; nextTime.textContent = day.times[index];
-      const [hour, minute] = day.times[index].split(":").map(Number); const now = new Date(); const currentMinutes = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(now).split(":")[0]) * 60 + Number(localTime().split(":")[1]);
-      const remaining = hour * 60 + minute - currentMinutes; countdown.textContent = `Sıradaki vakte yaklaşık ${Math.floor(remaining / 60)} saat ${remaining % 60} dakika kaldı.`;
+    const districtNames = ["Akçaabat", "Ortahisar", "Araklı", "Arsin", "Beşikdüzü", "Çarşıbaşı", "Çaykara", "Dernekpazarı", "Düzköy", "Hayrat", "Köprübaşı", "Maçka", "Of", "Sürmene", "Şalpazarı", "Tonya", "Vakfıkebir", "Yomra"];
+    const grouped = data.districts && typeof data.districts === "object" ? data.districts : { Akçaabat: data.days || [] };
+    const section = tag("section", "local-panel prayer-panel");
+    const heading = tag("div", "prayer-heading"); const symbol = tag("span", "prayer-heading-icon", "☪"); symbol.setAttribute("aria-hidden", "true");
+    const title = tag("div"); title.append(tag("span", "prayer-eyebrow", "TRABZON • BUGÜN"), tag("h2", "", "Namaz vakitleri")); heading.append(symbol, title); section.append(heading);
+    const picker = tag("div", "pharmacy-picker prayer-picker"); const pickerLabel = tag("label", "", "İlçe seç"); pickerLabel.htmlFor = "prayerDistrict";
+    const select = tag("select", "pharmacy-select"); select.id = "prayerDistrict";
+    districtNames.forEach(name => { const option = tag("option", "", name === "Ortahisar" ? "Trabzon Merkez (Ortahisar)" : name); option.value = name; select.append(option); });
+    picker.append(pickerLabel, select); section.append(picker);
+    const status = tag("div", "prayer-status");
+    const next = tag("div", "prayer-next"); const nextTitle = tag("div"); const small = tag("small", "", "SIRADAKİ VAKİT"); const nextName = tag("strong"); const nextTime = tag("time"); nextTitle.append(small, nextName); next.append(nextTitle, nextTime);
+    const grid = tag("div", "prayer-grid"); const countdown = tag("p", "prayer-countdown");
+    section.append(status, next, grid, countdown, tag("p", "local-source prayer-source", "Kaynak: Diyanet İşleri Başkanlığı"));
+    let selectedDay = null, selectedDays = [], slots = [];
+    function renderDistrict() {
+      selectedDays = Array.isArray(grouped[select.value]) ? grouped[select.value] : [];
+      selectedDay = selectedDays.find(item => item.date === today() && Array.isArray(item.times) && item.times.length === 6 && item.times.every(time => /^\d{2}:\d{2}$/.test(time))) || null;
+      status.textContent = selectedDay ? dateLabel(selectedDay.date) + " · " + (select.value === "Ortahisar" ? "Trabzon Merkez" : select.value) : select.value;
+      next.hidden = !selectedDay; grid.replaceChildren(); slots = [];
+      if (!selectedDay) {
+        countdown.textContent = select.value === "Maçka" ? "Maçka için Diyanet'in ayrı bir ilçe vakit tablosu bulunmuyor." : "Bu ilçe için bugünün doğrulanmış vakitleri henüz alınamadı.";
+        return;
+      }
+      for (let i = 0; i < prayerNames.length; i++) {
+        const card = tag("div", "prayer-slot"); card.append(tag("span", "", prayerNames[i]), tag("strong", "", selectedDay.times[i])); grid.append(card); slots.push(card);
+      }
+      update();
     }
-    update(); setInterval(() => { if (today() !== day.date) location.reload(); else update(); }, 30000);
-    section.append(sourceNote("Diyanet İşleri Başkanlığı", sourceUrls.prayer));
-    const weekly = tag("section", "local-panel"); weekly.append(tag("h2", "", "Yaklaşan günler"));
-    const future = (data.days || []).filter(item => item.date > today()).slice(0, 5);
-    if (future.length) { const list = tag("div", "memorial-list"); for (const item of future) { const row = tag("div", "memorial-card"); row.append(tag("strong", "", dateLabel(item.date))); row.append(tag("p", "", "İmsak " + item.times[0] + " · Öğle " + item.times[2] + " · Akşam " + item.times[4])); list.append(row); } weekly.append(list); } else weekly.append(tag("p", "", "Yeni vakitler resmî kaynaktan güncellendiğinde burada görüntülenecek."));
-    output.replaceChildren(section, weekly);
+    function update() {
+      if (!selectedDay) return;
+      const index = selectedDay.times.findIndex(time => time > localTime());
+      slots.forEach((slot, i) => slot.classList.toggle("active", i === index));
+      const tomorrow = selectedDays.find(item => item.date > selectedDay.date && Array.isArray(item.times) && item.times.length === 6);
+      if (index < 0 && !tomorrow) { nextName.textContent = "Yarınki İmsak"; nextTime.textContent = "—"; countdown.textContent = "Yarınki vakitler güncellendiğinde burada görünecek."; return; }
+      const name = index < 0 ? "Yarınki İmsak" : prayerNames[index];
+      const time = index < 0 ? tomorrow.times[0] : selectedDay.times[index];
+      const date = index < 0 ? tomorrow.date : selectedDay.date;
+      nextName.textContent = name; nextTime.textContent = time;
+      const minutes = Math.max(0, Math.ceil((new Date(date + "T" + time + ":00+03:00") - Date.now()) / 60000));
+      countdown.textContent = `Sıradaki vakte ${Math.floor(minutes / 60)} saat ${minutes % 60} dakika kaldı.`;
+    }
+    select.addEventListener("change", renderDistrict);
+    renderDistrict(); setInterval(() => { if (selectedDay && today() !== selectedDay.date) location.reload(); else update(); }, 30000);
+    output.replaceChildren(section);
   }
   function renderPharmacy(data) {
     const districtNames = ["Akçaabat", "Ortahisar", "Araklı", "Arsin", "Beşikdüzü", "Çarşıbaşı", "Çaykara", "Dernekpazarı", "Düzköy", "Hayrat", "Köprübaşı", "Maçka", "Of", "Sürmene", "Şalpazarı", "Tonya", "Vakfıkebir", "Yomra"];
@@ -156,5 +179,5 @@
     if (kind === "prayer") renderPrayer(data.prayer || {});
     if (kind === "pharmacy") renderPharmacy(data.pharmacies || {});
     if (kind === "obituaries") renderObituaries(data.obituaries || {});
-  }).catch(() => { const section = tag("section", "local-panel"); if (kind === "obituaries") section.append(tag("p", "local-empty", "Vefat duyuruları şu anda yüklenemiyor."), tag("p", "local-source", "Kaynak: Akçaabat Belediyesi")); else section.append(empty("Bilgiler şu anda yüklenemiyor.", sourceUrls[kind], "Resmî kaynağı aç ↗")); output.replaceChildren(section); });
+  }).catch(() => { const section = tag("section", "local-panel"); if (kind === "obituaries") section.append(tag("p", "local-empty", "Vefat duyuruları şu anda yüklenemiyor."), tag("p", "local-source", "Kaynak: Akçaabat Belediyesi")); else if (kind === "prayer") section.append(tag("p", "local-empty", "Namaz vakitleri şu anda yüklenemiyor."), tag("p", "local-source", "Kaynak: Diyanet İşleri Başkanlığı")); else section.append(empty("Bilgiler şu anda yüklenemiyor.", sourceUrls[kind], "Resmî kaynağı aç ↗")); output.replaceChildren(section); });
 })();
