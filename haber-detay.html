@@ -107,9 +107,9 @@
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 22px;
-            color: #777;
-            font-size: 14px;
+            margin-bottom: 18px;
+            color: #667085;
+            font-size: 13px;
         }
 
         .article-breadcrumb a {
@@ -119,6 +119,11 @@
 
         .article-breadcrumb a:hover {
             text-decoration: underline;
+        }
+
+        .article-breadcrumb [aria-current="page"] {
+            color: #44546b;
+            font-weight: 700;
         }
 
         .article-layout {
@@ -175,11 +180,11 @@
 
         .article-title {
             margin: 0;
-            color: #171717;
-            font-size: clamp(30px, 4vw, 48px);
-            line-height: 1.12;
+            color: #14233a;
+            font-size: clamp(28px, 3.1vw, 40px);
+            line-height: 1.2;
             font-weight: 800;
-            letter-spacing: -1px;
+            letter-spacing: -.025em;
         }
 
         .article-summary {
@@ -635,8 +640,8 @@
             }
 
             .article-title {
-                font-size: 31px;
-                letter-spacing: -.5px;
+                font-size: clamp(25px, 7vw, 31px);
+                line-height: 1.25;
             }
 
             .article-summary {
@@ -714,7 +719,7 @@
 
             <span>›</span>
 
-            <span id="breadcrumb-title">Haber</span>
+            <span id="breadcrumb-title" aria-current="page">Haber</span>
         </nav>
 
         <div id="article-loading" class="article-loading">
@@ -1760,7 +1765,7 @@
                     );
 
                 breadcrumb.textContent =
-                    news.title;
+                    news.category_name || "Haber";
 
                 const articleBodyText = String(news.content || "").replace(/\s+/g, " ").trim();
                 const articleSummaryText = String(news.summary || "").replace(/\s+/g, " ").trim();
