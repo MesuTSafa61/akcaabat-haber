@@ -4,7 +4,7 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v156";
+const CACHE_NAME = "akcaabat-haber-v157";
 
 const STATIC_FILES = [
   "./",
@@ -32,6 +32,11 @@ const STATIC_FILES = [
   "./kameralar.html",
   "./trafik.html",
   "./hava-durumu.html",
+  "./namaz-vakitleri.html",
+  "./nobetci-eczaneler.html",
+  "./vefat-edenler.html",
+  "./yerel-hizmetler.css",
+  "./yerel-hizmetler.js",
   "./yazarlar.html",
   "./supabase-config.js",
   "./favicon.svg",
@@ -71,6 +76,7 @@ self.addEventListener("fetch", event => {
 
   const isFreshAsset =
     event.request.mode === "navigate" ||
+    requestUrl.pathname.endsWith("/data/yerel-hizmetler.json") ||
     /\.(?:css|js)(?:\?|$)/i.test(requestUrl.pathname + requestUrl.search);
 
   const updateCache = networkResponse => {
