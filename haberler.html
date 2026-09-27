@@ -433,7 +433,7 @@
                 <h1>Haberler</h1>
 
                 <p>
-                    Yayındaki ve taslak haberlerinizi yönetin.
+                    Yayındaki ve arşivlenen haberlerinizi yönetin. Taslaklar ayrı bölümde.
                 </p>
             </div>
 
@@ -472,9 +472,7 @@
 
             <div class="news-filter">
                 <select id="statusFilter">
-                    <option value="">Tüm durumlar</option>
                     <option value="published">Yayında</option>
-                    <option value="draft">Taslak</option>
                     <option value="archived">Arşiv</option>
                 </select>
             </div>
@@ -740,6 +738,7 @@
                     .select(
                         "id,title,slug,summary,image_url,status,is_breaking,views,published_at,created_at,updated_at,category_id,author_id,content_type,categories(id,name,slug)"
                     )
+                    .neq("status", "draft")
                     .order("created_at", {
                         ascending: false
                     });
@@ -752,8 +751,6 @@
                 Array.isArray(result.data)
                     ? result.data
                     : [];
-
-            status(allNews.length + " haber listelendi.", "success");
 
             applyFilters();
         }
@@ -816,6 +813,7 @@
                     );
                 });
 
+            status(filteredNews.length + " haber listelendi.", "success");
             currentPage = 1;
 
             render();
