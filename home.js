@@ -346,7 +346,8 @@
             .sort(function (a, b) { return b.views - a.views; }).slice(0, 5);
         target.innerHTML = items.length ? items.map(function (item, index) {
             return '<article class="popular-item" data-url="' + escapeHtml(newsUrl(item)) + '"><span class="popular-number">' +
-                String(index + 1).padStart(2, "0") + '</span><div><small>' + escapeHtml(categoryName(item).toUpperCase()) +
+                String(index + 1).padStart(2, "0") + '</span><img class="popular-image" src="' + escapeHtml(imageUrl(item)) +
+                '" alt="" loading="lazy" width="76" height="68"><div class="popular-copy"><small>' + escapeHtml(categoryName(item).toUpperCase()) +
                 '</small><h3>' + escapeHtml(item.title) + '</h3></div></article>';
         }).join("") : '<div class="empty-inline">Okunma verisi oluştuğunda liste burada yayınlanır.</div>';
         target.querySelectorAll("[data-url]").forEach(function (item) {
