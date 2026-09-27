@@ -4,7 +4,8 @@
     const FALLBACK_IMAGE =
         "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=78";
     const CATEGORY_PRIORITY = ["Akçaabat", "Trabzon", "Trabzonspor"];
-    const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideNewsId: "", selectedSideNews: null };
+    const DEFAULT_SIDE_CATEGORIES = ["Akçaabat", "Trabzon", "Trabzonspor", "Gündem", "Spor"];
+    const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideCategories: DEFAULT_SIDE_CATEGORIES.map(name => ({ name, pinned: [] })), activeSideCategory: "Akçaabat", sideExtras: [] };
 
     function mergeNews(items) {
         const seen = new Set();
@@ -105,24 +106,29 @@
         return mergeNews([...(result.data || []), ...(headlineResult.data || [])].map(normalize));
     }
 
-    async function loadSideSelection() {
+    async function loadSideCategories() {
         if (!window.supabase || !window.AKCAABAT_SUPABASE) return;
         try {
             const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
             const { data: setting, error } = await client.from("site_settings")
-                .select("value").eq("key", "homepage_featured_side").maybeSingle();
+                .select("value").eq("key", "homepage_side_categories").maybeSingle();
             if (error) throw error;
-            state.sideNewsId = String(setting?.value?.news_id || "");
-            if (state.sideNewsId) {
-                const { data: selected, error: newsError } = await client.from("news")
-                    .select("id,title,slug,summary,image_url,status,is_breaking,is_headline,headline_order,views,published_at,created_at,categories(id,name,slug)")
-                    .eq("id", state.sideNewsId).eq("status", "published").maybeSingle();
-                if (newsError) throw newsError;
-                state.selectedSideNews = selected ? normalize(selected) : null;
+            const configured = setting?.value?.tabs;
+            if (Array.isArray(configured)) {
+                state.sideCategories = configured.filter(tab => tab && typeof tab.name === "string" && tab.name.trim())
+                    .slice(0, 8).map(tab => ({ name: tab.name.trim(), pinned: Array.isArray(tab.pinned) ? tab.pinned.slice(0, 4).filter(id => typeof id === "string") : [] }));
             }
-            if (state.news.length) renderSideNews();
+            const ids = [...new Set(state.sideCategories.flatMap(tab => tab.pinned))].filter(id => !state.news.some(item => item.id === id));
+            if (ids.length) {
+                const { data, error: newsError } = await client.from("news")
+                    .select("id,title,slug,summary,image_url,status,is_breaking,is_headline,headline_order,views,published_at,created_at,categories(id,name,slug)")
+                    .eq("status", "published").in("id", ids);
+                if (newsError) throw newsError;
+                state.sideExtras = (data || []).map(normalize);
+            }
+            renderSideCategories();
         } catch (error) {
-            console.warn("Yan haber seçimi alınamadı, otomatik seçim kullanılacak:", error);
+            console.warn("Manşet yanı kategoriler yüklenemedi, varsayılan sekmeler kullanılacak:", error);
         }
     }
 
@@ -266,27 +272,26 @@
         }).join('<span class="breaking-separator">•</span>');
     }
 
-    function renderSideNews() {
-        const target = document.getElementById("heroSideNews");
-        if (!target) return;
-        const headlineIds = new Set(state.headlines.map(function (item) { return item.id; }));
-        const available = state.news.filter(function (item) { return !headlineIds.has(item.id) && !item.is_headline; });
-        const selected = state.selectedSideNews && !state.selectedSideNews.is_headline && !headlineIds.has(state.selectedSideNews.id)
-            ? state.selectedSideNews : null;
-        const pinned = state.sideNewsId && (available.find(function (item) { return item.id === state.sideNewsId; }) || selected);
-        const items = (pinned ? [pinned] : []).concat(sortPriority(available.filter(function (item) {
-            return !pinned || item.id !== pinned.id;
-        }))).slice(0, 3);
-        target.innerHTML = items.map(function (item) {
-            return '<article class="side-news" data-url="' + escapeHtml(newsUrl(item)) + '">' +
-                '<div class="side-news-image"><img src="' + escapeHtml(imageUrl(item)) + '" alt="' +
-                escapeHtml(item.title) + '" loading="lazy"><span>' + escapeHtml(categoryName(item).toUpperCase()) +
-                '</span></div><div class="side-news-content"><small>' + escapeHtml(publishedTime(item)) +
-                '</small><h3>' + escapeHtml(item.title) + '</h3></div></article>';
-        }).join("");
-        target.querySelectorAll("[data-url]").forEach(function (card) {
-            card.onclick = function () { window.location.href = card.dataset.url; };
-        });
+    function renderSideCategories() {
+        const tabs = document.getElementById("headlineCategoryTabs");
+        const target = document.getElementById("headlineCategoryList");
+        const panel = document.getElementById("headlineCategoryPanel");
+        if (!tabs || !target || !panel) return;
+        if (!state.sideCategories.length) { panel.hidden = true; return; }
+        panel.hidden = false;
+        if (!state.sideCategories.some(tab => tab.name === state.activeSideCategory)) state.activeSideCategory = state.sideCategories[0].name;
+        tabs.innerHTML = state.sideCategories.map((tab, index) => '<button type="button" role="tab" id="side-tab-' + index + '" aria-controls="headlineCategoryList" aria-selected="' + (tab.name === state.activeSideCategory) + '" tabindex="' + (tab.name === state.activeSideCategory ? 0 : -1) + '" data-side-index="' + index + '">' + escapeHtml(tab.name) + '</button>').join("");
+        tabs.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+            state.activeSideCategory = state.sideCategories[Number(button.dataset.sideIndex)].name;
+            renderSideCategories();
+        }));
+        const active = state.sideCategories.find(tab => tab.name === state.activeSideCategory);
+        target.setAttribute("aria-labelledby", "side-tab-" + state.sideCategories.indexOf(active));
+        const candidates = state.news.concat(state.sideExtras).filter(item => item.status === "published" && categoryName(item).toLocaleLowerCase("tr-TR") === active.name.toLocaleLowerCase("tr-TR"));
+        const pinned = active.pinned.map(id => candidates.find(item => item.id === id)).filter(Boolean);
+        const ids = new Set(pinned.map(item => item.id));
+        const items = pinned.concat(candidates.filter(item => !ids.has(item.id))).slice(0, 5);
+        target.innerHTML = items.length ? items.map(item => '<a class="headline-category-story" href="' + escapeHtml(newsUrl(item)) + '"><img src="' + escapeHtml(imageUrl(item)) + '" alt="" loading="lazy"><span><strong>' + escapeHtml(item.title) + '</strong><small>' + escapeHtml(publishedTime(item)) + '</small></span></a>').join("") : '<p class="headline-category-empty">Bu kategoride yayınlanmış haber bulunmuyor.</p>';
     }
 
     function cardHtml(item) {
@@ -354,7 +359,7 @@
         state.news = mergeNews(news).filter(function (item) { return item.status === "published"; });
         renderHeadlines();
         renderBreaking();
-        renderSideNews();
+        renderSideCategories();
         renderNewsGrid();
         renderPopular();
         renderCategorySections();
@@ -386,7 +391,7 @@
         }
         // The published database is the only news source. Clear old server markup immediately.
         renderAll([]);
-        const sideSelectionPromise = loadSideSelection();
+        const sideSelectionPromise = loadSideCategories();
         try {
             const fresh = await cloudNews();
             renderAll(fresh);

@@ -1486,6 +1486,24 @@ body{background:#edf1f4;color:#111827}
 @media(prefers-reduced-motion:reduce){#portalBreakingBar .breaking-label,#portalBreakingBar .breaking-label::after,#portalBreakingBar .breaking-dot{animation:none}}
 
 /* Ana sayfa galerileri. */
+.headline-category-panel{min-width:0;min-height:0;background:#fff;border:1px solid #e1e7ee;border-radius:10px;box-shadow:0 8px 25px rgba(7,27,54,.08);display:flex;flex-direction:column;overflow:hidden}
+.headline-category-panel[hidden]{display:none}
+.hero-layout .headline-category-panel[hidden]{display:none}
+.headline-category-tabs{display:flex;flex:none;overflow-x:auto;scrollbar-width:thin;border-bottom:2px solid #e7ecf2}
+.headline-category-tabs button{position:relative;flex:none;border:0;background:#fff;padding:13px 10px;color:#344054;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.headline-category-tabs button[aria-selected="true"]{color:#c61125}
+.headline-category-tabs button[aria-selected="true"]::after{content:"";position:absolute;height:3px;bottom:-2px;left:0;right:0;background:#c61125}
+.headline-category-tabs button:focus-visible{outline:2px solid #1594ca;outline-offset:-2px}
+.headline-category-list{min-height:0;flex:1;display:flex;flex-direction:column;overflow:auto}
+.headline-category-story{min-height:0;flex:1;display:grid;grid-template-columns:75px minmax(0,1fr);align-items:center;gap:10px;padding:8px 11px;border-bottom:1px solid #ecf0f4;color:#17283e}
+.headline-category-story:last-child{border-bottom:0}
+.headline-category-story:hover{background:#f5f8fb;color:#bc0e22}
+.headline-category-story img{width:75px;height:56px;object-fit:cover;border-radius:4px;background:#eef1f5}
+.headline-category-story span{min-width:0;display:grid;gap:3px}
+.headline-category-story strong{font-size:13px;line-height:1.27;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.headline-category-story small{font-size:10px;color:#667085}
+.headline-category-empty{padding:20px;color:#667085;font-size:13px}
+@media(max-width:780px){.hero-layout .headline-category-panel{display:flex;margin-top:12px}.headline-category-panel{max-height:390px}.headline-category-story{flex:initial;min-height:69px}.headline-category-tabs button{padding:12px;font-size:12px}}
 .home-gallery-section{margin-top:30px;min-width:0}
 .home-gallery-section .gallery-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .home-gallery-section .gallery-card-copy h2{font-size:16px}
