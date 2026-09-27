@@ -128,11 +128,15 @@
     try {
       await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
       const config = window.AKCAABAT_SUPABASE;
-      const response = await fetch(config.url + "/rest/v1/news?select=title,slug&status=eq.published&is_breaking=eq.true&order=published_at.desc&limit=12", {
-        headers: { apikey: config.key, Authorization: "Bearer " + config.key }
-      });
+      const headers = { apikey: config.key, Authorization: "Bearer " + config.key };
+      const [response, settingsResponse] = await Promise.all([
+        fetch(config.url + "/rest/v1/news?select=title,slug&status=eq.published&is_breaking=eq.true&breaking_visible=eq.true&order=breaking_order.asc,published_at.desc&limit=12", { headers }),
+        fetch(config.url + "/rest/v1/site_settings?key=eq.breaking_news_limit&select=value", { headers })
+      ]);
       if (!response.ok) return;
-      const news = (await response.json()).filter(item => item.title && item.slug);
+      const configured = settingsResponse.ok ? (await settingsResponse.json())[0]?.value?.limit : 5;
+      const limit = Math.max(1, Math.min(12, Number(configured) || 5));
+      const news = (await response.json()).filter(item => item.title && item.slug).slice(0, limit);
       if (!news.length) return;
       const link = document.getElementById("portalBreakingLink");
       const bar = document.getElementById("portalBreakingBar");

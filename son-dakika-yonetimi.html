@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Son Dakika Yönetimi | Akçaabat Haber</title>
+<link rel="stylesheet" href="admin-shell.css?v=4"><link rel="stylesheet" href="editorial-sort.css?v=1">
+<style>.breaking-admin-tools{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.breaking-admin-tools label{display:grid;gap:6px;font-weight:800}.breaking-admin-tools select,.breaking-admin-tools input{padding:10px;border:1px solid #cfd7e1;border-radius:7px;max-width:100%}.breaking-admin-tools input{min-width:min(100%,280px)}.breaking-admin-tools button{padding:10px 16px;border:0;border-radius:7px;background:#10294a;color:#fff;font-weight:800;cursor:pointer}.breaking-visible{display:flex;gap:5px;align-items:center;font-size:12px;white-space:nowrap}.breaking-remove{color:#a32929!important}</style>
+</head><body>
+<main class="admin-tool-page" id="breakingAdmin" hidden>
+<div class="admin-tool-status" id="breakingStatus" role="status">Son dakika haberleri yükleniyor…</div>
+<section class="admin-tool-card"><h2>Son Dakika Şeridi</h2><p>Haberleri tutamacından sürükleyerek veya oklarla sırala. Değişiklik hemen kaydedilir. Yeni son dakika haberi otomatik olarak ilk sıraya gelir.</p>
+<div class="breaking-admin-tools"><label>Şeritte en fazla kaç haber görünsün?<select id="breakingLimit"></select></label><button type="button" id="saveBreakingLimit">Sayacı Kaydet</button></div>
+<div id="breakingList" class="editorial-sort-list" aria-label="Son dakika sıralaması"></div></section>
+<section class="admin-tool-card"><h2>Son Dakika Haberi Ekle</h2><p>Yayımlanmış haberi seç. Haberin mevcut başlığı ve bağlantısı şeritte kullanılır.</p>
+<div class="breaking-admin-tools"><label>Haber ara<input type="search" id="breakingSearch" placeholder="Haber başlığı…"></label><label>Yayındaki haber<select id="breakingNewsSelect"></select></label><button type="button" id="addBreaking">Son Dakikaya Ekle</button></div></section>
+</main>
+<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="editorial-sort.js?v=1" defer></script><script src="son-dakika-yonetimi.js?v=1" defer></script><script src="admin-shell.js?v=7" defer></script>
+</body></html>
