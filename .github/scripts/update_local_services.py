@@ -53,6 +53,8 @@ def refresh_pharmacies():
     full = clean(soup.get_text(' ', strip=True))
     today_tr = datetime.now(timezone(timedelta(hours=3))).strftime('%d.%m.%Y')
     print('Eczacı Odası HTML:', len(str(soup)), 'karakter; tarih', today_tr, 'var mı:', today_tr in full)
+    print('Eczacı örnek:', full[full.find(today_tr)-100:full.find(today_tr)+1600])
+    print('Eczacı adayları:', [(tag.name, tag.get('class'), clean(tag.get_text(' ', strip=True))[:130]) for tag in soup.find_all(string=re.compile('ECZANESİ|ECZANESI', re.I))[:8] for tag in [tag.parent]])
     cards = []
     if today_tr not in full:
         return
@@ -80,6 +82,7 @@ def refresh_pharmacies():
 def refresh_obituaries():
     soup = fetch(data['obituaries']['source'])
     print('Belediye vefat HTML:', len(str(soup)), 'karakter')
+    print('Belediye tabloları:', [(len(t.select('tr')), clean(t.get_text(' ', strip=True))[:170]) for t in soup.select('table')[:8]])
     # Source currently renders an empty heading; do not invent names or reuse old notices.
     # Populate only if structured dates and names are published in an identifiable table.
     items = []
