@@ -107,7 +107,7 @@
       const direction = change && ["up", "down"].includes(change.direction) ? change.direction : "flat";
       const percent = Number(change && change.percent);
       card.dataset.state = direction;
-      card.querySelector(".finance-change").textContent = direction === "up" ? "▲ Yükseliş" + (percent > 0 ? " %" + formatter.format(percent) : "") : direction === "down" ? "▼ Düşüş" + (percent > 0 ? " %" + formatter.format(percent) : "") : "Değişim yok";
+      card.querySelector(".finance-change").textContent = direction === "up" ? "▲ Yükseliş" + (percent > 0 ? " %" + formatter.format(percent) : "") : direction === "down" ? "▼ Düşüş" + (percent > 0 ? " %" + formatter.format(percent) : "") : direction === "flat" && !data.market_closed ? "Değişim yok" : data.market_closed ? "Piyasa kapalı" : "Karşılaştırma bekleniyor";
       count++;
     });
     if (!count) return;
