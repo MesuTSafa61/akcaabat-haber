@@ -348,7 +348,7 @@
   },
   "pharmacies": {
     "date": "2026-09-27",
-    "updatedAt": "2026-09-27T12:37:45.995312+00:00",
+    "updatedAt": "2026-09-27T12:39:47.929045+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61/1113",
     "items": [
       {
@@ -361,7 +361,9 @@
         "address": "ORTA MAH.İNÖNÜ CAD.NO:141/A",
         "phone": "04622281340"
       }
-    ]
+    ],
+    "startsAt": "2026-09-27T08:00:00+03:00",
+    "endsAt": "2026-09-28T08:00:00+03:00"
   },
   "obituaries": {
     "updatedAt": "2026-09-27T12:37:47.276830+00:00",
