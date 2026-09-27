@@ -54,15 +54,73 @@
     section.append(list, tag("p", "local-note", "Nöbet bilgileri değişebilir. Gitmeden önce eczaneyi telefonla arayarak teyit edin."), sourceNote("Trabzon Eczacı Odası", sourceUrls.pharmacy)); output.replaceChildren(section);
   }
   function renderObituaries(data) {
-    const section = tag("section", "local-panel"); const heading = tag("div", "local-heading-row"); heading.append(tag("h2", "", "Vefat duyuruları"), link("Belediye sayfası ↗", sourceUrls.obituaries, true)); section.append(heading);
-    const items = Array.isArray(data.items) ? data.items.filter(item => item.name && item.date && item.date >= new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(Date.now() - 6 * 86400000))).slice(0, 20) : [];
-    if (!items.length) section.append(empty("Son yedi gün için belediyeden duyuru alınamadı.", sourceUrls.obituaries, "Akçaabat Belediyesinde görüntüle ↗"));
-    else { const list = tag("div", "memorial-list"); for (const item of items) { const card = tag("article", "memorial-card"); card.append(tag("h3", "", item.name)); if (item.details) card.append(tag("p", "", item.details)); card.append(tag("small", "", dateLabel(item.date))); list.append(card); } section.append(list); }
-    section.append(sourceNote("Akçaabat Belediyesi", sourceUrls.obituaries)); output.replaceChildren(section);
+    const section = tag("section", "local-panel obituary-panel");
+    section.append(tag("h2", "", "Vefat edenler"));
+    const todayKey = today();
+    const availableDates = Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(todayKey + "T12:00:00+03:00");
+      date.setUTCDate(date.getUTCDate() - index);
+      return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+    });
+    const items = Array.isArray(data.items) ? data.items.filter(item => item && item.name && availableDates.includes(item.date)) : [];
+    let selected = 0;
+    const navigation = tag("div", "obituary-date-nav");
+    const previous = tag("button", "obituary-date-arrow", "←"); previous.type = "button"; previous.setAttribute("aria-label", "Önceki gün");
+    const current = tag("strong", "obituary-date-label");
+    const next = tag("button", "obituary-date-arrow", "→"); next.type = "button"; next.setAttribute("aria-label", "Sonraki gün");
+    navigation.append(previous, current, next);
+    const list = tag("div", "obituary-list");
+    section.append(navigation, list, tag("p", "local-source obituary-source", "Kaynak: Akçaabat Belediyesi"));
+    function field(parent, label, value) {
+      if (!value) return;
+      const row = tag("div", "obituary-field");
+      row.append(tag("dt", "", label), tag("dd", "", value));
+      parent.append(row);
+    }
+    function renderDay() {
+      const date = availableDates[selected];
+      current.textContent = dateLabel(date);
+      previous.disabled = selected === availableDates.length - 1;
+      next.disabled = selected === 0;
+      const dayItems = items.filter(item => item.date === date);
+      if (!dayItems.length) {
+        list.replaceChildren(tag("p", "obituary-no-results", "Bu tarihe ait vefat duyurusu bulunmuyor."));
+        return;
+      }
+      const cards = dayItems.map(item => {
+        const card = tag("details", "obituary-entry");
+        const title = tag("summary", "obituary-summary");
+        const icon = tag("img", "obituary-mosque"); icon.src = "assets/mosque.svg"; icon.alt = ""; icon.width = 38; icon.height = 38;
+        title.append(icon, tag("span", "obituary-name", item.name), tag("span", "obituary-chevron", "⌄"));
+        const body = tag("div", "obituary-body"); const fields = tag("dl", "obituary-fields");
+        field(fields, "Defin tarihi", dateLabel(item.date));
+        field(fields, "Namaz vakti", item.prayerTime);
+        field(fields, "Namaz yeri", item.mosque);
+        field(fields, "Mezarlık", item.cemetery);
+        field(fields, "Yakın bilgisi", item.relative);
+        if (fields.childElementCount) body.append(fields);
+        else body.append(tag("p", "", item.details || "Ayrıntı henüz paylaşılmadı."));
+        const latitude = Number(item.latitude), longitude = Number(item.longitude);
+        const hasCoordinates = item.latitude !== "" && item.longitude !== "" && Number.isFinite(latitude) && Number.isFinite(longitude) && Math.abs(latitude) <= 90 && Math.abs(longitude) <= 180;
+        if (hasCoordinates || item.mosque) {
+          const query = hasCoordinates ? `${latitude},${longitude}` : `${item.mosque} Akçaabat Trabzon`;
+          body.append(link(hasCoordinates ? "⌖ Konumu haritada aç" : "⌖ Namaz yerini haritada ara", "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(query), true));
+        }
+        card.append(title, body);
+        card.addEventListener("toggle", () => {
+          if (card.open) for (const other of list.querySelectorAll("details[open]")) if (other !== card) other.open = false;
+        });
+        return card;
+      });
+      list.replaceChildren(...cards);
+    }
+    previous.addEventListener("click", () => { if (selected < availableDates.length - 1) { selected++; renderDay(); } });
+    next.addEventListener("click", () => { if (selected > 0) { selected--; renderDay(); } });
+    renderDay(); output.replaceChildren(section);
   }
   fetch("data/yerel-hizmetler.json?ts=" + Math.floor(Date.now() / 300000), { cache: "no-store" }).then(response => { if (!response.ok) throw Error("Veri alınamadı"); return response.json(); }).then(data => {
     if (kind === "prayer") renderPrayer(data.prayer || {});
     if (kind === "pharmacy") renderPharmacy(data.pharmacies || {});
     if (kind === "obituaries") renderObituaries(data.obituaries || {});
-  }).catch(() => { const section = tag("section", "local-panel"); section.append(empty("Bilgiler şu anda yüklenemiyor.", sourceUrls[kind], "Resmî kaynağı aç ↗")); output.replaceChildren(section); });
+  }).catch(() => { const section = tag("section", "local-panel"); if (kind === "obituaries") section.append(tag("p", "local-empty", "Vefat duyuruları şu anda yüklenemiyor."), tag("p", "local-source", "Kaynak: Akçaabat Belediyesi")); else section.append(empty("Bilgiler şu anda yüklenemiyor.", sourceUrls[kind], "Resmî kaynağı aç ↗")); output.replaceChildren(section); });
 })();

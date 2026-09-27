@@ -117,12 +117,28 @@ def refresh_obituaries():
             prayer = re.search(r'Namaz Vakti\s*:\s*(.*?)\s+Namaz Yeri\s*:', body, re.I)
             mosque = re.search(r'Namaz Yeri\s*:\s*(.*?)\s*(?:-\s*Haritada Göster|Mezarlık\s*:)', body, re.I)
             cemetery = re.search(r'Mezarlık\s*:\s*(.*?)\s+Yakın Bilgisi\s*:', body, re.I)
+            relative = re.search(r'Yakın Bilgisi\s*:\s*(.*)$', body, re.I)
+            map_node = body_node.select_one('.open-map')
+            latitude = clean(map_node.get('data-lat')) if map_node else ''
+            longitude = clean(map_node.get('data-lng')) if map_node else ''
+            try:
+                if not (-90 <= float(latitude) <= 90 and -180 <= float(longitude) <= 180):
+                    latitude = longitude = ''
+            except ValueError:
+                latitude = longitude = ''
             details = ' • '.join(part for part in (
                 clean(prayer[1]) if prayer else '',
                 clean(mosque[1]) if mosque else '',
                 clean(cemetery[1]) if cemetery else ''
             ) if part)
-            entry = {'name': name[:150], 'date': date.isoformat(), 'details': details[:300]}
+            entry = {
+                'name': name[:150], 'date': date.isoformat(), 'details': details[:300],
+                'prayerTime': clean(prayer[1])[:80] if prayer else '',
+                'mosque': clean(mosque[1])[:180] if mosque else '',
+                'cemetery': clean(cemetery[1])[:180] if cemetery else '',
+                'relative': clean(relative[1])[:180] if relative else '',
+                'latitude': latitude, 'longitude': longitude,
+            }
             if entry not in notices:
                 notices.append(entry)
     if notices != data['obituaries'].get('items'):
