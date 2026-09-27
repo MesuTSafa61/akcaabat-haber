@@ -48,41 +48,35 @@ def refresh_prayer():
 
 def refresh_pharmacies():
     soup = fetch(data['pharmacies']['source'])
-    # Only publish if the official page explicitly includes today's date and identifiable
-    # Akçaabat pharmacy records with address + phone. No guessed records.
-    full = clean(soup.get_text(' ', strip=True))
+    text = clean(soup.get_text(' ', strip=True))
     today_tr = datetime.now(timezone(timedelta(hours=3))).strftime('%d.%m.%Y')
-    print('Eczacı Odası HTML:', len(str(soup)), 'karakter; tarih', today_tr, 'var mı:', today_tr in full)
-    print('Eczacı liste:', full[full.find('TRABZON AKÇAABAT NÖBETÇİ ECZANELER'):][:3100])
-    print('Eczacı blok:', [(tag.parent.name, tag.parent.get('class'), clean(tag.parent.get_text(' ', strip=True))[:500]) for tag in soup.find_all(string=re.compile('ECZANESİ|ECZANESI', re.I))[-4:]])
+    marker = 'TRABZON AKÇAABAT NÖBETÇİ ECZANELER'
+    if marker not in text:
+        raise ValueError('Akçaabat listesi bulunamadı')
+    text = text.split(marker, 1)[1]
+    pattern = re.compile(
+        r'AKÇAABAT\s+(?P<name>[A-ZÇĞİÖŞÜ][A-ZÇĞİÖŞÜ ]{2,55} ECZANESİ)\s+'
+        r'(?P=name)\s+(?P<date>\d{2}\.\d{2}\.20\d{2})\s+\d{2}:\d{2}\s*-\s*'
+        r'\d{2}\.\d{2}\.20\d{2}\s+\d{2}:\d{2}\s+arası nöbetçidir\.\s+'
+        r'AKÇAABAT\s+(?P<address>.{10,250}?)\s+(?P<phone>0\d{10})\s+Haritada görüntülemek', re.I
+    )
     cards = []
-    if today_tr not in full:
-        return
-    for block in soup.select('tr, article, .eczane, .pharmacy, .nobetci-eczane, .eczane-item'):
-        text = clean(block.get_text(' ', strip=True))
-        if 'AKÇAABAT' not in text.upper() or len(text) > 900:
+    for match in pattern.finditer(text):
+        if match['date'] != today_tr:
             continue
-        phone = re.search(r'(?:\+90\s?)?0?\s?462[\s().-]*\d{3}[\s().-]*\d{2}[\s().-]*\d{2}|0?\s?5\d{2}[\s().-]*\d{3}[\s().-]*\d{2}[\s().-]*\d{2}', text)
-        name = re.search(r'([A-ZÇĞİÖŞÜ][\wÇĞİÖŞÜçğıöşü .-]{2,55}?)\s+ECZANES[İI]', text, re.I)
-        if not (phone and name):
-            continue
-        # This parser requires an explicit address field; ambiguous blocks are skipped.
-        address_node = block.select_one('[class*=adres], [class*=address], address')
-        address = clean(address_node.get_text(' ', strip=True)) if address_node else ''
-        if not address or len(address) > 220:
-            continue
-        record = {'name': clean(name[0]), 'address': address, 'phone': clean(phone[0])}
+        record = {'name': clean(match['name']), 'address': clean(match['address']), 'phone': match['phone']}
         if record not in cards:
             cards.append(record)
     if cards:
         data['pharmacies'].update(date=today, updatedAt=datetime.now(timezone.utc).isoformat(), items=cards[:15])
         print('Eczacı Odası:', len(cards), 'eczane')
+    else:
+        print('Eczacı Odası: bugün için ayrıştırılabilir kayıt bulunamadı')
 
 
 def refresh_obituaries():
     soup = fetch(data['obituaries']['source'])
     print('Belediye vefat HTML:', len(str(soup)), 'karakter')
-    print('Belediye tabloları:', [(len(t.select('tr')), clean(t.get_text(' ', strip=True))[:170]) for t in soup.select('table')[:8]])
     # Source currently renders an empty heading; do not invent names or reuse old notices.
     # Populate only if structured dates and names are published in an identifiable table.
     items = []
