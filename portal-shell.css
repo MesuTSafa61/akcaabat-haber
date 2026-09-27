@@ -234,6 +234,16 @@ html[data-theme="dark"] .portal-shell-top .service-inner a.is-active{color:#ff82
 #portalBreakingBar .breaking-controls #portalBreakingCount{display:none!important}
 @media(max-width:560px){#portalBreakingBar .breaking-label{flex-basis:119px;min-width:119px;gap:4px;padding:4px 13px 4px 5px!important}}
 
+/* Etiket, içindeki saat ve iki satır yazı kadar yer kaplar; ok için yalnız uç payı kalır. */
+#portalBreakingBar .breaking-label{width:max-content;flex:0 0 auto;min-width:0;gap:6px;padding:5px 21px 5px 7px!important;clip-path:polygon(0 0,calc(100% - 17px) 0,100% 50%,calc(100% - 17px) 100%,0 100%)!important}
+@media(max-width:560px){#portalBreakingBar .breaking-label{width:max-content;flex:0 0 auto;min-width:0;gap:4px;padding:4px 17px 4px 5px!important}.breaking-clock{flex-basis:27px;width:27px;height:27px}.breaking-wordmark{font-size:9.5px;padding-left:4px}}
+
+/* Bandın her fiyatı piyasa sayfasına gider. Sadece gerçek artış/azalış yön oku taşır. */
+.portal-shell-top .portal-top-market .market-item{cursor:pointer;text-decoration:none}
+.portal-shell-top .portal-top-market .market-item:hover,.portal-shell-top .portal-top-market .market-item:focus-visible{background:#ffffff18!important;outline:0}
+.portal-shell-top .portal-top-market .market-track:hover,.portal-shell-top .portal-top-market .market-track:focus-within{animation-play-state:paused}
+.portal-shell-top .portal-top-bar .portal-top-market .market-trend{border-radius:5px;padding:2px 4px;font-size:10px}
+
 /* Mobil menü: simgeli tek sütun, açılır kategoriler ve sosyal hesaplar. */
 .portal-shell-top .mobile-menu-content,.portal-shell-top .mobile-menu-backdrop{display:none}
 .unified-site-footer .footer-social{margin-top:22px}

@@ -15,6 +15,7 @@
     video: '<rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
     pen: '<path d="m4 20 5-.8L20 8a2 2 0 0 0-4-4L5 15zM14 6l4 4"/>',
     clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    chart: '<path d="M3 19h18M5 16l5-5 4 3 5-7M16 7h3v3"/>',
     pharmacy: '<path d="M12 3v18M3 12h18"/>',
     mosque: '<path d="M4 21V9m16 12V9M2 9h4m12 0h4M7 21v-8l5-4 5 4v8M10 21v-5h4v5M4 7V4m16 3V4"/>',
     contact: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
@@ -24,7 +25,7 @@
   const shell = document.createElement("div");
   shell.className = "portal-shell-top";
   shell.innerHTML = `
-    <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span><time id="portalCurrentTime">--:--</time></div><div class="portal-top-market" aria-label="Piyasa ve hava bilgileri"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Trabzon</a></div></div></div>
+    <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span><time id="portalCurrentTime">--:--</time></div><div class="portal-top-market" aria-label="Piyasa ve hava bilgileri"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><a class="market-item" href="borsa.html" aria-label="Dolar kuru ve piyasa verileri"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></a><a class="market-item" href="borsa.html" aria-label="Euro kuru ve piyasa verileri"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></a><a class="market-item" href="borsa.html" aria-label="Gram altın ve piyasa verileri"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></a><a class="market-item" href="borsa.html" aria-label="Gram gümüş ve piyasa verileri"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></a></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Trabzon</a></div></div></div>
     <header class="site-header portal-site-header" id="unifiedSiteHeader">
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
@@ -44,6 +45,7 @@
           <a href="video-galeri.html" class="mobile-menu-link">${menuIcon("video")}<span>Video Galeri</span></a>
           <a href="yazarlar.html" class="mobile-menu-link">${menuIcon("pen")}<span>Yazarlar</span></a>
           <div class="mobile-menu-section">Günlük yaşam</div>
+          <a href="borsa.html" class="mobile-menu-link">${menuIcon("chart")}<span>Piyasalar</span></a>
           <a href="namaz-vakitleri.html" class="mobile-menu-link">${menuIcon("clock")}<span>Namaz Vakitleri</span></a>
           <a href="nobetci-eczaneler.html" class="mobile-menu-link"><img class="pharmacy-heart-icon" src="assets/pharmacy-heart.svg" alt=""><span>Nöbetçi Eczaneler</span></a>
           <a href="vefat-edenler.html" class="mobile-menu-link">${menuIcon("mosque")}<span>Vefat Duyuruları</span></a>
@@ -69,7 +71,7 @@
   footer.innerHTML = `<div class="container footer-grid">
     <div class="footer-brand"><a href="index.html" class="brand footer-logo" aria-label="Akçaabat Haber Ana Sayfa"><img data-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="121"></a><p>Akçaabat'ın sesi, Karadeniz'in gücü. Akçaabat ve Trabzon'dan doğru, hızlı ve güncel haberler.</p><div class="footer-social"><strong>Bizi takip edin</strong><div class="social-links" data-social-links></div></div></div>
     <div class="footer-column"><h3>Kategoriler</h3><a href="kategori.html?kategori=Akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem">Gündem</a><a href="kategori.html?kategori=Spor">Spor</a><a href="kategori.html?kategori=Asayiş">Asayiş</a><a href="kategori.html?kategori=Ekonomi">Ekonomi</a><a href="kategori.html?kategori=Siyaset">Siyaset</a><a href="kategori.html?kategori=Kültür">Kültür &amp; Sanat</a></div>
-    <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a><a href="namaz-vakitleri.html">Namaz Vakitleri</a><a href="nobetci-eczaneler.html">Nöbetçi Eczaneler</a><a href="vefat-edenler.html">Vefat Duyuruları</a><a href="foto-galeri.html">Foto Galeri</a><a href="video-galeri.html">Video Galeri</a></div>
+    <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="borsa.html">Piyasalar</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a><a href="namaz-vakitleri.html">Namaz Vakitleri</a><a href="nobetci-eczaneler.html">Nöbetçi Eczaneler</a><a href="vefat-edenler.html">Vefat Duyuruları</a><a href="foto-galeri.html">Foto Galeri</a><a href="video-galeri.html">Video Galeri</a></div>
     <div class="footer-column"><h3>Kurumsal</h3><a href="hakkimizda.html">Hakkımızda</a><a href="kunye.html">Künye</a><a href="iletisim.html">İletişim</a><a href="basin-ilkeleri.html">Basın İlkeleri</a><a href="etik-ilkeler.html">Etik İlkeler</a></div>
     <div class="footer-column"><h3>Yasal ve İlkeler</h3><a href="kvkk.html">KVKK Aydınlatma Metni</a><a href="gizlilik.html">Gizlilik Politikası</a><a href="cerez-politikasi.html">Çerez Politikası</a><a href="sorumlu-yayincilik.html">Sorumlu Yayıncılık</a><a href="sorun-bildir.html">Sorun Bildir</a></div>
   </div><div class="footer-bottom"><div class="container footer-bottom-inner"><span>© <span id="currentYear">${now.getFullYear()}</span> Akçaabat Haber<span id="footerYear" hidden>${now.getFullYear()}</span></span><span>Akçaabat • Trabzon</span></div></div>`;
@@ -147,12 +149,12 @@
   function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value) && value > 0) element.textContent = money.format(value) + (suffix || ""); }
   function setTrend(id, movement) {
     const element = document.getElementById(id);
-    if (!element || !movement || !["up", "down", "flat"].includes(movement.direction)) return;
+    if (!element || !movement || !["up", "down"].includes(movement.direction)) { if (element) element.hidden = true; return; }
     const percent = Number(movement.percent || 0);
     element.className = "market-trend " + movement.direction;
-    element.textContent = (movement.direction === "up" ? "▲" : movement.direction === "down" ? "▼" : "→") + (percent ? " %" + money.format(percent) : "");
+    element.textContent = (movement.direction === "up" ? "▲" : "▼") + (percent ? " %" + money.format(percent) : "");
     element.hidden = false;
-    element.setAttribute("aria-label", movement.direction === "up" ? "Yükseldi" : movement.direction === "down" ? "Düştü" : "Değişmedi");
+    element.setAttribute("aria-label", movement.direction === "up" ? "Yükseldi" : "Düştü");
   }
   function updateMarketTicker() {
     const list = document.getElementById("portalMarketList");
@@ -171,6 +173,7 @@
     copy.classList.add("market-list-copy");
     copy.setAttribute("aria-hidden", "true");
     copy.querySelectorAll("[id]").forEach(node => node.removeAttribute("id"));
+    copy.querySelectorAll("a").forEach(link => { link.tabIndex = -1; });
     track.appendChild(copy);
     track.style.setProperty("--market-distance", list.scrollWidth + "px");
     track.style.setProperty("--market-duration", Math.max(22, list.scrollWidth / 18) + "s");
