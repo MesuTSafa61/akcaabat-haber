@@ -344,16 +344,27 @@
         ]
       }
     ],
-    "updatedAt": "2026-09-27T12:35:57.677267+00:00"
+    "updatedAt": "2026-09-27T12:37:44.567242+00:00"
   },
   "pharmacies": {
-    "date": null,
-    "updatedAt": null,
+    "date": "2026-09-27",
+    "updatedAt": "2026-09-27T12:37:45.995312+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61/1113",
-    "items": []
+    "items": [
+      {
+        "name": "YILDIZ ECZANESİ",
+        "address": "YAYLACIK MAH.ADNAN MENDERES CAD.NO.14",
+        "phone": "04622280418"
+      },
+      {
+        "name": "NUHOĞLU ECZANESİ",
+        "address": "ORTA MAH.İNÖNÜ CAD.NO:141/A",
+        "phone": "04622281340"
+      }
+    ]
   },
   "obituaries": {
-    "updatedAt": "2026-09-27T12:36:00.738223+00:00",
+    "updatedAt": "2026-09-27T12:37:47.276830+00:00",
     "source": "https://www.akcaabat.bel.tr/vefat-edenler.aspx",
     "items": []
   }
