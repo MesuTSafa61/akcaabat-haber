@@ -1549,3 +1549,9 @@ body{background:#edf1f4;color:#111827}
 @keyframes weather-float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
 @media(max-width:560px){.sidebar .weather-box{padding:17px}.sidebar .weather-main>strong{font-size:42px}.sidebar .quick-links{grid-template-columns:1fr}.sidebar .quick-links a{min-height:52px}}
 @media(prefers-reduced-motion:reduce){.sidebar .weather-box,.sidebar .weather-box::before,.sidebar .weather-icon{animation:none}.sidebar .quick-links a{transition:none}}
+
+/* Ana sayfada kart köşeleri hava durumu ve hızlı menüyle uyumlu. */
+.news-card,.category-story,.portal-service-card,.author-card,.empty-inline,.headline-empty,.local-highlight{border-radius:14px;overflow:hidden}
+.sidebar .sidebar-box{border-radius:15px}
+.headline-category-panel{border-radius:14px}
+.category-chip{border-radius:9px}
