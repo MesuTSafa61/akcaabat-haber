@@ -309,6 +309,19 @@
         }
 
         .article-source-card[hidden] { display: none; }
+        .article-media-gallery{margin:20px 32px 28px;padding:20px;border:1px solid #e1e8f0;border-radius:12px;background:#f8fafc}
+        .article-media-gallery[hidden]{display:none}
+        .article-media-gallery h2{margin:0 0 15px;font-size:21px;color:#10294a}
+        .article-media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+        .article-media-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;background:#e8edf3}
+        .article-media-grid figure{margin:0}.article-media-grid figcaption{margin-top:5px;color:#52657e;font-size:12px}
+        .article-media-grid video,.article-media-grid iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:8px;background:#0b1f3a}
+        .article-media-grid .video-play{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:16/9;border:0;border-radius:8px;background:#0b1f3a;color:#fff;font-size:34px;cursor:pointer;overflow:hidden}
+        .article-media-grid .video-play img{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;opacity:.7}
+        .article-media-grid .video-play span{position:relative;z-index:1}
+        .article-media-gallery>a{display:inline-block;margin-top:14px;color:#1266a2;font-weight:800}
+        @media(max-width:700px){.article-media-gallery{margin:18px;padding:15px}.article-media-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:420px){.article-media-grid{grid-template-columns:1fr}}
         .article-source-card.no-logo { grid-template-columns: minmax(0, 1fr); }
         .article-source-logo { width: 150px; height: 52px; object-fit: contain; object-position: left center; }
         .article-source-copy { min-width: 0; }
@@ -825,6 +838,9 @@
                             id="article-content"
                             class="article-content"
                         ></div>
+
+                        <section class="article-media-gallery" id="article-photo-gallery" aria-label="Haber fotoğraf galerisi" hidden></section>
+                        <section class="article-media-gallery" id="article-video-gallery" aria-label="Haber video galerisi" hidden></section>
 
                         <aside id="article-source" class="article-source-card" aria-label="Haber kaynağı" hidden></aside>
 
@@ -1422,7 +1438,9 @@
                     credited_source_name:
                         row.credited_source_name || "",
                     source_url:
-                        row.source_url || ""
+                        row.source_url || "",
+                    photo_gallery_id: row.photo_gallery_id || null,
+                    video_gallery_id: row.video_gallery_id || null
                 };
             }
 
@@ -1475,6 +1493,8 @@
                         editor_source_name,
                         credited_source_name,
                         source_url,
+                        photo_gallery_id,
+                        video_gallery_id,
                         category:categories(
                             id,
                             name,
@@ -1548,6 +1568,85 @@
                             );
                     }
                 }
+            }
+
+            async function renderAttachedGalleries(news) {
+                const blocks = [
+                    { id: news.photo_gallery_id, kind: "photo", target: "article-photo-gallery" },
+                    { id: news.video_gallery_id, kind: "video", target: "article-video-gallery" }
+                ];
+                blocks.forEach(block => {
+                    const target = document.getElementById(block.target);
+                    target.hidden = true;
+                    target.replaceChildren();
+                });
+                if (!blocks.some(block => block.id)) return;
+                try {
+                    const client = await getSupabase();
+                    if (!client) return;
+                    for (const block of blocks) {
+                        if (!block.id) continue;
+                        const result = await client.from("media_galleries")
+                            .select("id,title,kind,items").eq("id", block.id)
+                            .eq("kind", block.kind).eq("status", "published").maybeSingle();
+                        const gallery = result.data;
+                        if (result.error || !gallery || !Array.isArray(gallery.items)) continue;
+                        const target = document.getElementById(block.target);
+                        const title = document.createElement("h2");
+                        title.textContent = gallery.title;
+                        const grid = document.createElement("div");
+                        grid.className = "article-media-grid";
+                        const detailUrl = "galeri-detay.html?id=" + encodeURIComponent(gallery.id);
+                        const safe = value => {
+                            try { const url = new URL(value); return url.protocol === "https:" ? url.href : ""; }
+                            catch (_) { return ""; }
+                        };
+                        gallery.items.slice(0, 6).forEach(item => {
+                            const url = safe(item.url);
+                            if (!url) return;
+                            const figure = document.createElement("figure");
+                            if (block.kind === "photo") {
+                                const link = document.createElement("a"); link.href = detailUrl;
+                                const image = document.createElement("img"); image.src = url;
+                                image.alt = item.caption || gallery.title; image.loading = "lazy";
+                                link.append(image); figure.append(link);
+                            } else {
+                                let youtubeId = "";
+                                try {
+                                    const parsed = new URL(url), host = parsed.hostname.replace(/^www\./, "");
+                                    const candidate = host === "youtu.be" ? parsed.pathname.slice(1) :
+                                        ["youtube.com", "m.youtube.com"].includes(host) ?
+                                            (parsed.pathname === "/watch" ? parsed.searchParams.get("v") : parsed.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1]) : "";
+                                    if (/^[A-Za-z0-9_-]{11}$/.test(candidate || "")) youtubeId = candidate;
+                                } catch (_) {}
+                                if (youtubeId) {
+                                    const play = document.createElement("button"); play.type = "button";
+                                    play.className = "video-play"; play.setAttribute("aria-label", "Videoyu oynat: " + (item.caption || gallery.title));
+                                    const poster = safe(item.poster_url);
+                                    if (poster) { const image = document.createElement("img"); image.src = poster; image.alt = ""; play.append(image); }
+                                    const icon = document.createElement("span"); icon.textContent = "▶"; play.append(icon);
+                                    play.addEventListener("click", () => {
+                                        const frame = document.createElement("iframe");
+                                        frame.src = "https://www.youtube-nocookie.com/embed/" + youtubeId + "?autoplay=1";
+                                        frame.title = item.caption || gallery.title;
+                                        frame.allow = "autoplay; encrypted-media; picture-in-picture"; frame.allowFullscreen = true;
+                                        play.replaceWith(frame);
+                                    });
+                                    figure.append(play);
+                                } else if (/\.(mp4|webm)$/i.test(new URL(url).pathname)) {
+                                    const video = document.createElement("video"); video.controls = true; video.preload = "none";
+                                    video.src = url; video.poster = safe(item.poster_url); figure.append(video);
+                                } else return;
+                            }
+                            if (item.caption) { const caption = document.createElement("figcaption"); caption.textContent = item.caption; figure.append(caption); }
+                            grid.append(figure);
+                        });
+                        if (!grid.childElementCount) continue;
+                        const more = document.createElement("a"); more.href = detailUrl;
+                        more.textContent = block.kind === "photo" ? "Tüm fotoğrafları gör →" : "Tüm videoları izle →";
+                        target.append(title, grid, more); target.hidden = false;
+                    }
+                } catch (error) { console.warn("Haber galerileri yüklenemedi:", error); }
             }
 
             function renderArticle(news) {
@@ -1668,6 +1767,8 @@
                 content.innerHTML = articleBodyText && articleBodyText !== articleSummaryText
                     ? formatArticleContent(news.content)
                     : "<p>Haberin ayrıntılı metni henüz eklenmedi.</p>";
+
+                renderAttachedGalleries(news);
 
                 source.replaceChildren();
                 source.hidden = true;

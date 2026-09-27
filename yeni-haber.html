@@ -941,6 +941,19 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="photoGallery">Habere Foto Galeri Ekle</label>
+                                <select id="photoGallery"><option value="">Foto galeri yok</option></select>
+                                <div class="hint">Yayımlanmış galeriler listelenir. <a href="galeri-yonetimi.html" target="_blank" rel="noopener">Fotoğraf yükle / galeri oluştur ↗</a></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="videoGallery">Habere Video Galeri Ekle</label>
+                                <select id="videoGallery"><option value="">Video galeri yok</option></select>
+                                <div class="hint">MP4, WebM veya YouTube videoları eklemek için <a href="galeri-yonetimi.html" target="_blank" rel="noopener">Galeri Yönetimi'ni aç ↗</a>. Yeni galeri oluşturduktan sonra buradaki listeyi yenile.</div>
+                                <button type="button" id="refreshGalleryList" class="btn btn-secondary">Galerileri Yenile</button>
+                            </div>
+
+                            <div class="form-group">
                                 <div class="check-row">
                                     <input
                                         type="checkbox"
@@ -1133,6 +1146,32 @@
 
     const form =
         document.getElementById("newsForm");
+
+    const photoGalleryInput = document.getElementById("photoGallery");
+    const videoGalleryInput = document.getElementById("videoGallery");
+
+    async function loadGalleryChoices() {
+        const selectedPhoto = photoGalleryInput.dataset.loaded ? photoGalleryInput.value : currentNews?.photo_gallery_id || "";
+        const selectedVideo = videoGalleryInput.dataset.loaded ? videoGalleryInput.value : currentNews?.video_gallery_id || "";
+        const result = await client.from("media_galleries")
+            .select("id,title,kind").eq("status", "published").order("updated_at", { ascending: false });
+        if (result.error) throw result.error;
+        for (const [input, kind, selected] of [
+            [photoGalleryInput, "photo", selectedPhoto], [videoGalleryInput, "video", selectedVideo]
+        ]) {
+            input.replaceChildren(new Option(kind === "photo" ? "Foto galeri yok" : "Video galeri yok", ""));
+            (result.data || []).filter(gallery => gallery.kind === kind).forEach(gallery => {
+                input.add(new Option(gallery.title, gallery.id));
+            });
+            input.value = selected;
+            input.dataset.loaded = "true";
+        }
+    }
+
+    document.getElementById("refreshGalleryList").addEventListener("click", async function () {
+        try { await loadGalleryChoices(); showMessage("Galeri listesi yenilendi.", "success"); }
+        catch (error) { showMessage(error.message || "Galeriler yüklenemedi.", "error"); }
+    });
 
     const titleInput =
         document.getElementById("title");
@@ -1580,6 +1619,8 @@
                     category_id,
                     source_name,
                     editor_source_name,
+                    photo_gallery_id,
+                    video_gallery_id,
                     origin_type,
                     image_url,
                     status,
@@ -1624,6 +1665,9 @@
 
         categoryInput.value =
             currentNews.category_id || "";
+
+        photoGalleryInput.value = currentNews.photo_gallery_id || "";
+        videoGalleryInput.value = currentNews.video_gallery_id || "";
 
         const selectedSource = window.AkcaabatNewsSources &&
             window.AkcaabatNewsSources.find(currentNews.origin_type === "automated"
@@ -1904,6 +1948,9 @@
             category_id:
                 categoryInput.value,
 
+            photo_gallery_id: photoGalleryInput.value || null,
+            video_gallery_id: videoGalleryInput.value || null,
+
             source_name:
                 (sourceInputs.find(function (input) { return input.checked; }) || {}).value || "",
 
@@ -2038,6 +2085,9 @@
 
                 category_id:
                     data.category_id,
+
+                photo_gallery_id: data.photo_gallery_id,
+                video_gallery_id: data.video_gallery_id,
 
                 source_name:
                     currentNews && currentNews.origin_type === "automated"
@@ -2426,6 +2476,8 @@
             await loadCategories();
 
             await loadExistingNews();
+
+            await loadGalleryChoices();
 
             if (!currentNews) {
                 setConnection(

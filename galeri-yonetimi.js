@@ -153,7 +153,12 @@
       $("galleryItemForm").addEventListener("submit", addItem);
       $("newGallery").addEventListener("click", resetForm);
       $("galleryKind").addEventListener("change", () => { $("galleryFile").accept = $("galleryKind").value === "photo" ? "image/jpeg,image/png,image/webp,image/gif" : "video/mp4,video/webm"; });
-      await refresh(null); message("Galeriler hazır.");
+      await refresh(null);
+      if (new URLSearchParams(location.search).get("kind") === "video") {
+        $("galleryKind").value = "video";
+        $("galleryFile").accept = "video/mp4,video/webm";
+      }
+      message("Galeriler hazır. Önce galeri oluştur, sonra medyaları ekle ve yayımla.");
     } catch (error) { page.hidden = false; message(error.message || "Galeriler yüklenemedi.", true); }
   }
   init();
