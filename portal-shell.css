@@ -186,6 +186,33 @@ html[data-theme="dark"] .headline-progress .headline-tab.is-active{background:#3
 .portal-shell-top .service-pharmacy-icon{display:inline-block;width:18px;height:18px;vertical-align:-.22em;object-fit:contain}
 .portal-shell-top .mobile-menu-link .pharmacy-heart-icon{display:block;flex:none;width:22px;height:22px;object-fit:contain}
 
+/* Hızlı servis simgeleri ve tema düğmesi aynı optik merkezde durur. */
+.portal-shell-top .service-inner a{display:inline-flex;align-items:center;gap:5px;line-height:20px}
+.portal-shell-top .service-inner a img{display:block;flex:none;width:19px;height:19px;object-fit:contain;vertical-align:middle}
+.portal-shell-top .portal-theme-button{display:grid;place-items:center;padding:0!important;line-height:0}
+.portal-shell-top .portal-theme-button svg{display:block;width:23px;height:23px;flex:none}
+@media(max-width:560px){.portal-shell-top .portal-theme-button svg{width:21px;height:21px}}
+
+/* Saatli son dakika etiketi: iki satır başlık ve dönen akrep-yelkovan. */
+#portalBreakingBar .breaking-inner{min-height:54px}
+#portalBreakingBar .breaking-label{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-width:164px;min-height:54px;padding:5px 22px 5px 9px!important;background:#df101d;color:#fff;clip-path:polygon(0 0,91% 0,100% 50%,91% 100%,0 100%)!important}
+.breaking-clock{position:relative;display:block;flex:0 0 39px;width:39px;height:39px;border:2.5px solid #fff;border-radius:50%}
+.breaking-clock::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}
+.breaking-clock-hour,.breaking-clock-minute{position:absolute;left:calc(50% - 1.4px);bottom:50%;width:2.8px;border-radius:3px;background:#fff;transform-origin:center bottom}
+.breaking-clock-hour{height:11px;animation:breaking-hour-spin 5s linear infinite}
+.breaking-clock-minute{height:16px;animation:breaking-minute-spin 1.2s linear infinite}
+.breaking-wordmark{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding-left:8px;border-left:2px solid #ffffffb0;color:#fff;font-size:13px;font-weight:950;line-height:1;letter-spacing:.045em;text-shadow:0 1px 1px #93000c55}
+@keyframes breaking-hour-spin{to{transform:rotate(360deg)}}
+@keyframes breaking-minute-spin{to{transform:rotate(360deg)}}
+@media(max-width:560px){
+  #portalBreakingBar .breaking-inner{min-height:46px}
+  #portalBreakingBar .breaking-label{min-width:129px;min-height:46px;gap:5px;padding:4px 16px 4px 5px!important}
+  .breaking-clock{flex-basis:29px;width:29px;height:29px;border-width:2px}
+  .breaking-clock-hour{height:8px}.breaking-clock-minute{height:12px}
+  .breaking-wordmark{padding-left:5px;font-size:10px;letter-spacing:0}
+}
+@media(prefers-reduced-motion:reduce){.breaking-clock-hour,.breaking-clock-minute{animation:none}.breaking-clock-hour{transform:rotate(25deg)}.breaking-clock-minute{transform:rotate(150deg)}}
+
 /* Mobil menü: simgeli tek sütun, açılır kategoriler ve sosyal hesaplar. */
 .portal-shell-top .mobile-menu-content,.portal-shell-top .mobile-menu-backdrop{display:none}
 .unified-site-footer .footer-social{margin-top:22px}

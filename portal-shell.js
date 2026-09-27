@@ -52,7 +52,7 @@
       </div></nav><button type="button" class="mobile-menu-backdrop" id="portalMenuBackdrop" aria-label="Menüyü kapat" hidden></button>
     </header>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="namaz-vakitleri.html">☪ Namaz Vakitleri</a><a href="nobetci-eczaneler.html"><img class="service-pharmacy-icon" src="assets/pharmacy-heart.svg" alt="" width="18" height="18"> Nöbetçi Eczaneler</a><a href="vefat-edenler.html"><img class="service-mosque-icon" src="assets/mosque.svg" alt="" width="17" height="17"> Vefat Duyuruları</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
-    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
+    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-clock" aria-hidden="true"><i class="breaking-clock-hour"></i><i class="breaking-clock-minute"></i></span><span class="breaking-wordmark"><span>SON</span><span>DAKİKA</span></span></div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
   [":scope > header", ":scope > nav", ":scope > .top-bar", ":scope > .topbar", ":scope > .market-strip", ":scope > .service-strip", ":scope > .breaking-bar", ":scope > .search-panel"].forEach(function (selector) {
@@ -132,7 +132,14 @@
   updateClock();
   window.setInterval(updateClock, 30000);
   const themeButton = document.getElementById("portalThemeButton");
-  function updateThemeButton() { const dark = document.documentElement.dataset.theme === "dark"; themeButton.textContent = dark ? "☀" : "☾"; themeButton.setAttribute("aria-label", dark ? "Açık temayı aç" : "Koyu temayı aç"); themeButton.setAttribute("aria-pressed", String(dark)); }
+  function updateThemeButton() {
+    const dark = document.documentElement.dataset.theme === "dark";
+    themeButton.innerHTML = dark
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="#ffba24"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6m11 11 1.6 1.6M19.1 4.9l-1.6 1.6m-11 11-1.6 1.6" fill="none" stroke="#ffba24" stroke-width="1.8" stroke-linecap="round"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z" fill="currentColor"/></svg>';
+    themeButton.setAttribute("aria-label", dark ? "Açık temayı aç" : "Koyu temayı aç");
+    themeButton.setAttribute("aria-pressed", String(dark));
+  }
   themeButton.addEventListener("click", function () { const dark = document.documentElement.dataset.theme !== "dark"; document.documentElement.dataset.theme = dark ? "dark" : "light"; try { localStorage.setItem("akcaabat-theme", dark ? "dark" : "light"); } catch (_) {} updateThemeButton(); });
   updateThemeButton();
 
