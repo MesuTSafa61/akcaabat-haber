@@ -348,8 +348,8 @@
   },
   "pharmacies": {
     "date": "2026-09-27",
-    "updatedAt": "2026-09-27T12:39:47.929045+00:00",
-    "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61/1113",
+    "updatedAt": "2026-09-27T13:48:58.981036+00:00",
+    "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
     "items": [
       {
         "name": "YILDIZ ECZANESİ",
@@ -363,7 +363,166 @@
       }
     ],
     "startsAt": "2026-09-27T08:00:00+03:00",
-    "endsAt": "2026-09-28T08:00:00+03:00"
+    "endsAt": "2026-09-28T08:00:00+03:00",
+    "districts": {
+      "Akçaabat": [
+        {
+          "name": "YILDIZ ECZANESİ",
+          "address": "YAYLACIK MAH.ADNAN MENDERES CAD.NO.14",
+          "phone": "04622280418",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        },
+        {
+          "name": "NUHOĞLU ECZANESİ",
+          "address": "ORTA MAH.İNÖNÜ CAD.NO:141/A",
+          "phone": "04622281340",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Araklı": [
+        {
+          "name": "KEFELİ ECZANESİ",
+          "address": "YOLGÖREN MAH. TRABZON CAD. NO:176/A",
+          "phone": "04628144190",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Arsin": [
+        {
+          "name": "HÜRRİYET ECZANESİ",
+          "address": "YEŞİLTEPE MAH.ŞHT.ATĞM.HALİL ALBAYRAK CAD. NO:74/A ziraat bankası karşısı",
+          "phone": "04627113746",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Beşikdüzü": [
+        {
+          "name": "SEHER ECZANESİ",
+          "address": "CUMHURİYET MAH. SABRİ DİLEK CAD. NO:34/A",
+          "phone": "04628713148",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Çarşıbaşı": [
+        {
+          "name": "HAYAT ECZANESİ",
+          "address": "MERKEZ MAH.AVNİ AKKAN CAD.NO:44A",
+          "phone": "04628214522",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Çaykara": [
+        {
+          "name": "BİLGE ECZANESİ",
+          "address": "IŞIKLI MAHALLESİ DEĞİRMEN1 SOKAK NO:1B ÇAYKARA HALK EĞİTİM MERKEZİ KARŞISI,SAĞLIK ECZANESİ ÇAPRAZINDAKİ TOKİ BİNASININ ALTINDAKİ ORTA DÜKKAN",
+          "phone": "04625025545",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Dernekpazarı": [],
+      "Düzköy": [],
+      "Hayrat": [],
+      "Köprübaşı": [],
+      "Maçka": [
+        {
+          "name": "MURATOĞLU ECZANESİ",
+          "address": "MERKEZ MAH.ATATÜRK CAD.NO.28/C",
+          "phone": "04625123054",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Of": [],
+      "Ortahisar": [
+        {
+          "name": "ÖNDER ECZANESİ",
+          "address": "KURTULUS MAH.MARAS CAD.NO.238/33 NUMUNE HASTANESİ ACİL ALTI CAMİİ KARŞISI ORTAHİSAR TRABZON",
+          "phone": "04622290408",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        },
+        {
+          "name": "AYLA ECZANESİ",
+          "address": "2 NOLU BEŞİRLİ MAH. EFENDİ SK. NO:5/B",
+          "phone": "04622250991",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        },
+        {
+          "name": "BURÇİN ECZANESİ",
+          "address": "KEMERKAYA MAH.KUNDURACILAR CAD. NO:41A McDonalds Arka Sokağı",
+          "phone": "04623211006",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        },
+        {
+          "name": "FAKÜLTE ECZANESİ",
+          "address": "KALKINMA MAH. FARABİ CAD. NO:43/A",
+          "phone": "04623250217",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Sürmene": [
+        {
+          "name": "SÜRMENE ECZANESİ",
+          "address": "SOĞUKSU MAH. SOĞUKSU CAD. NO:8G",
+          "phone": "04627464445",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Şalpazarı": [
+        {
+          "name": "HASTANE ECZANESİ",
+          "address": "KİREÇ MAH.HASTANE SOK.17/A",
+          "phone": "04628913313",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Tonya": [
+        {
+          "name": "TONYA ECZANESİ",
+          "address": "ORTA MAHALLE CUMHURİYET MAHALLESİ NO:11/A",
+          "phone": "04628813090",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Vakfıkebir": [
+        {
+          "name": "SAĞLIK ECZANESİ",
+          "address": "KEMALİYE MAH.HACI ZİYA HABİBOĞLU CAD.NO:8/B",
+          "phone": "04628415957",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ],
+      "Yomra": [
+        {
+          "name": "ŞAHİN ECZANESİ",
+          "address": "SANCAK MAH.TRABZON CAD.NO:127 YOMRA TRABZON",
+          "phone": "04623411424",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        },
+        {
+          "name": "BURCU ECZANESİ",
+          "address": "KAŞÜSTÜ MAH.TOPAL OSMAN CAD.NO:5/10 KAŞÜSTÜ HASTANESİ KARŞISI",
+          "phone": "04622296951",
+          "startsAt": "2026-09-27T08:00:00+03:00",
+          "endsAt": "2026-09-28T08:00:00+03:00"
+        }
+      ]
+    }
   },
   "obituaries": {
     "updatedAt": "2026-09-27T13:02:43.761796+00:00",
