@@ -58,7 +58,8 @@
   }
 
   function showExtra(value, percent, source, when) {
-    extraValue.textContent = formatter.format(value) + " ₺";
+    const priceFormatter = value < 1 ? new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 8 }) : formatter;
+    extraValue.textContent = (value > 0 && value < 0.00000001 ? "< 0,00000001" : priceFormatter.format(value)) + " ₺";
     const direction = Number.isFinite(percent) && percent > 0 ? "up" : Number.isFinite(percent) && percent < 0 ? "down" : "flat";
     extra.dataset.state = direction;
     const change = direction === "up" ? "▲ %" + formatter.format(percent) : direction === "down" ? "▼ %" + formatter.format(Math.abs(percent)) : "Değişim yok";
