@@ -162,3 +162,46 @@ html[data-theme="dark"] .headline-category-story:hover{background:#233c56!import
 html[data-theme="dark"] .headline-category-story small{color:#adbed0!important}
 html[data-theme="dark"] .headline-progress .headline-tab{background:#536982}
 html[data-theme="dark"] .headline-progress .headline-tab.is-active{background:#31add6}
+
+/* Mobil menü: simgeli tek sütun, açılır kategoriler ve sosyal hesaplar. */
+.portal-shell-top .mobile-menu-content,.portal-shell-top .mobile-menu-backdrop{display:none}
+.unified-site-footer .footer-social{margin-top:22px}
+.unified-site-footer .footer-social>strong{display:block;color:#fff;font-size:13px;margin-bottom:12px}
+.social-links{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+.social-link{display:grid;place-items:center;width:42px;height:42px;border:1px solid #ffffff30;border-radius:12px;background:#172c49;color:#fff!important;font-size:22px;font-weight:750;line-height:1;text-decoration:none;transition:background .2s,transform .2s}
+.social-link:hover{background:#198fbd;transform:translateY(-2px)}
+.social-link:focus-visible{outline:3px solid #24a3d2;outline-offset:2px}
+.social-youtube{font-size:18px}.social-tiktok{font-size:25px}
+.social-empty{font-size:12px;color:#aebbc9}
+@media(max-width:780px){
+  body.portal-menu-is-open{overflow:hidden}
+  .portal-shell-top .main-nav.mobile-open{position:fixed!important;inset:0 auto 0 0!important;top:0!important;width:min(86vw,380px)!important;height:100dvh!important;z-index:220;overflow-y:auto!important;border:0!important;background:#fff!important;box-shadow:12px 0 35px #07142655}
+  .portal-shell-top .main-nav .nav-inner{display:block!important;width:100%!important;height:auto!important;min-height:100%!important;max-height:none!important;padding:0!important;overflow:visible!important;white-space:normal}
+  .portal-shell-top .main-nav .nav-inner>.nav-link{display:none!important}
+  .portal-shell-top .main-nav .mobile-menu-content{display:block;background:#fff;color:#23364a;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+  .portal-shell-top .mobile-menu-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:210;width:100vw;height:100dvh;background:#071426aa;border:0;cursor:pointer}
+  .mobile-menu-heading{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;min-height:70px;padding:12px 24px;background:#fff;border-bottom:1px solid #e2e8ee;color:#132943}
+  .mobile-menu-heading strong{font-size:17px;letter-spacing:.11em}
+  .mobile-menu-heading button{width:42px;height:42px;border:0;border-radius:50%;background:#eef3f7;color:#183650;font-size:30px;line-height:1;cursor:pointer}
+  .mobile-menu-social{padding:19px 24px;border-bottom:1px solid #e4eaf0}
+  .mobile-menu-social>span{display:block;margin-bottom:10px;color:#61758a;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .mobile-menu-social .social-link{width:40px;height:40px;border:1px solid #d8e5ef;border-radius:50%;background:#f4f9fc;color:#118fca!important}
+  .mobile-menu-social .social-link:hover{background:#e5f4fc}
+  .mobile-menu-social .social-empty{color:#71859b}
+  .portal-shell-top .mobile-menu-link{display:flex;align-items:center;gap:17px;min-height:57px;margin:0 24px;padding:0 4px!important;border:0!important;border-bottom:1px solid #e4eaf0!important;border-radius:0!important;background:transparent!important;color:#263b50!important;font-size:16px!important;font-weight:700;line-height:1.25;cursor:pointer}
+  .portal-shell-top .mobile-menu-link:hover{color:#108fc7!important;background:#f4f9fc!important}
+  .mobile-menu-link svg{width:22px;height:22px;flex:none;color:#1696ca}
+  .mobile-menu-categories summary{list-style:none}.mobile-menu-categories summary::-webkit-details-marker{display:none}
+  .mobile-menu-categories summary svg:last-child{margin-left:auto;width:18px;height:18px;color:#8998a9;transition:transform .2s}
+  .mobile-menu-categories[open] summary svg:last-child{transform:rotate(90deg)}
+  .mobile-category-list{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:12px 24px 17px;background:#f4f8fb;border-bottom:1px solid #e2eaf0}
+  .mobile-category-list a{padding:11px 9px;border-radius:8px;color:#23425c!important;font-size:13px;font-weight:700}
+  .mobile-category-list a:hover{background:#e3f1f8;color:#087bb0!important}
+  .mobile-menu-section{padding:23px 28px 4px;color:#8091a3;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+  html[data-theme="dark"] .portal-shell-top .main-nav.mobile-open,html[data-theme="dark"] .portal-shell-top .main-nav .mobile-menu-content,html[data-theme="dark"] .mobile-menu-heading{background:#15263b!important;color:#eef4fb}
+  html[data-theme="dark"] .portal-shell-top .mobile-menu-link{color:#e7f0fa!important;border-color:#344a61!important}
+  html[data-theme="dark"] .mobile-menu-social,html[data-theme="dark"] .mobile-menu-heading,html[data-theme="dark"] .mobile-category-list{border-color:#344a61;background:#15263b}
+  html[data-theme="dark"] .mobile-category-list{background:#1b3048}
+  html[data-theme="dark"] .mobile-category-list a{color:#e8f2fb!important}
+  html[data-theme="dark"] .mobile-menu-heading button{background:#2b415a;color:#fff}
+}

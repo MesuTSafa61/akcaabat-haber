@@ -8,6 +8,19 @@
 
   const now = new Date();
   const dateText = now.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const iconPaths = {
+    home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
+    folder: '<path d="M3 6a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    photo: '<rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m4 17 5-4 3 2 3-4 6 6"/>',
+    video: '<rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
+    pen: '<path d="m4 20 5-.8L20 8a2 2 0 0 0-4-4L5 15zM14 6l4 4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    pharmacy: '<path d="M12 3v18M3 12h18"/>',
+    mosque: '<path d="M4 21V9m16 12V9M2 9h4m12 0h4M7 21v-8l5-4 5 4v8M10 21v-5h4v5M4 7V4m16 3V4"/>',
+    contact: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
+    chevron: '<path d="m9 18 6-6-6-6"/>'
+  };
+  function menuIcon(name) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + iconPaths[name] + '</svg>'; }
   const shell = document.createElement("div");
   shell.className = "portal-shell-top";
   shell.innerHTML = `
@@ -20,7 +33,23 @@
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
         <a href="index.html" class="nav-link" data-page="index.html"><span class="nav-icon" aria-hidden="true">⌂</span>Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat"><span class="nav-icon" aria-hidden="true">📍</span>Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon"><span class="nav-icon" aria-hidden="true">▥</span>Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor"><span class="nav-icon" aria-hidden="true">⚽</span>Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem"><span class="nav-icon" aria-hidden="true">◉</span>Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor"><span class="nav-icon" aria-hidden="true">🏆</span>Spor</a><a href="namaz-vakitleri.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">☪</span>Namaz Vakitleri</a><a href="nobetci-eczaneler.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">✚</span>Nöbetçi Eczaneler</a><a href="vefat-edenler.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">♧</span>Vefat Duyuruları</a><a href="foto-galeri.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">▣</span>Foto Galeri</a><a href="video-galeri.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">▶</span>Video Galeri</a>
-      </div></nav>
+        <div class="mobile-menu-content">
+          <div class="mobile-menu-heading"><strong>MENÜ</strong><button type="button" id="portalMenuClose" aria-label="Menüyü kapat">×</button></div>
+          <div class="mobile-menu-social"><span>Sosyal medya</span><div class="social-links" data-social-links></div></div>
+          <a href="index.html" class="mobile-menu-link">${menuIcon("home")}<span>Ana Sayfa</span></a>
+          <details class="mobile-menu-categories"><summary class="mobile-menu-link">${menuIcon("folder")}<span>Kategoriler</span>${menuIcon("chevron")}</summary>
+            <div class="mobile-category-list"><a href="kategori.html?kategori=Akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem">Gündem</a><a href="kategori.html?kategori=Spor">Spor</a><a href="kategori.html?kategori=Asayiş">Asayiş</a><a href="kategori.html?kategori=Ekonomi">Ekonomi</a><a href="kategori.html?kategori=Siyaset">Siyaset</a><a href="kategori.html?kategori=Kültür">Kültür &amp; Sanat</a></div>
+          </details>
+          <a href="foto-galeri.html" class="mobile-menu-link">${menuIcon("photo")}<span>Foto Galeri</span></a>
+          <a href="video-galeri.html" class="mobile-menu-link">${menuIcon("video")}<span>Video Galeri</span></a>
+          <a href="yazarlar.html" class="mobile-menu-link">${menuIcon("pen")}<span>Yazarlar</span></a>
+          <div class="mobile-menu-section">Günlük yaşam</div>
+          <a href="namaz-vakitleri.html" class="mobile-menu-link">${menuIcon("clock")}<span>Namaz Vakitleri</span></a>
+          <a href="nobetci-eczaneler.html" class="mobile-menu-link">${menuIcon("pharmacy")}<span>Nöbetçi Eczaneler</span></a>
+          <a href="vefat-edenler.html" class="mobile-menu-link">${menuIcon("mosque")}<span>Vefat Duyuruları</span></a>
+          <a href="iletisim.html" class="mobile-menu-link">${menuIcon("contact")}<span>İletişim</span></a>
+        </div>
+      </div></nav><button type="button" class="mobile-menu-backdrop" id="portalMenuBackdrop" aria-label="Menüyü kapat" hidden></button>
     </header>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="namaz-vakitleri.html">☪ Namaz Vakitleri</a><a href="nobetci-eczaneler.html"><span class="service-pharmacy-icon" aria-hidden="true">✚</span> Nöbetçi Eczaneler</a><a href="vefat-edenler.html"><img class="service-mosque-icon" src="assets/mosque.svg" alt="" width="17" height="17"> Vefat Duyuruları</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
     <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
@@ -38,7 +67,7 @@
   footer.className = "site-footer unified-site-footer";
   footer.id = "unifiedSiteFooter";
   footer.innerHTML = `<div class="container footer-grid">
-    <div class="footer-brand"><a href="index.html" class="brand footer-logo" aria-label="Akçaabat Haber Ana Sayfa"><img data-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="121"></a><p>Akçaabat'ın sesi, Karadeniz'in gücü. Akçaabat ve Trabzon'dan doğru, hızlı ve güncel haberler.</p></div>
+    <div class="footer-brand"><a href="index.html" class="brand footer-logo" aria-label="Akçaabat Haber Ana Sayfa"><img data-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="121"></a><p>Akçaabat'ın sesi, Karadeniz'in gücü. Akçaabat ve Trabzon'dan doğru, hızlı ve güncel haberler.</p><div class="footer-social"><strong>Bizi takip edin</strong><div class="social-links" data-social-links></div></div></div>
     <div class="footer-column"><h3>Kategoriler</h3><a href="kategori.html?kategori=Akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem">Gündem</a></div>
     <div class="footer-column"><h3>Hızlı Erişim</h3><a href="haber.html">Son Haberler</a><a href="mac-merkezi.html">Maç Merkezi</a><a href="kameralar.html">Kameralar</a><a href="trafik.html">Trafik Merkezi</a><a href="namaz-vakitleri.html">Namaz Vakitleri</a><a href="nobetci-eczaneler.html">Nöbetçi Eczaneler</a><a href="vefat-edenler.html">Vefat Duyuruları</a><a href="foto-galeri.html">Foto Galeri</a><a href="video-galeri.html">Video Galeri</a></div>
     <div class="footer-column"><h3>Kurumsal</h3><a href="hakkimizda.html">Hakkımızda</a><a href="kunye.html">Künye</a><a href="iletisim.html">İletişim</a><a href="basin-ilkeleri.html">Basın İlkeleri</a><a href="etik-ilkeler.html">Etik İlkeler</a></div>
@@ -60,6 +89,37 @@
     const logoUrl = safeBrandUrl(value) || new URL("assets/akcaabat-haber-logo-final-v2.png?v=2", location.href).href;
     document.querySelectorAll("[data-brand-logo]").forEach(function (image) { image.src = logoUrl; });
   }
+  const socialPlatforms = [
+    { key: "socialFacebook", name: "Facebook", mark: "f" },
+    { key: "socialX", name: "X", mark: "𝕏" },
+    { key: "socialInstagram", name: "Instagram", mark: "◎" },
+    { key: "socialYoutube", name: "YouTube", mark: "▶" },
+    { key: "socialTikTok", name: "TikTok", mark: "♪" }
+  ];
+  function applySocialLinks(settings) {
+    document.querySelectorAll("[data-social-links]").forEach(function (container) {
+      container.replaceChildren();
+      let count = 0;
+      socialPlatforms.forEach(function (platform) {
+        const value = settings && settings[platform.key];
+        if (!value) return;
+        let url;
+        try { url = new URL(value); } catch (_) { return; }
+        if (url.protocol !== "https:") return;
+        const link = document.createElement("a");
+        link.href = url.href;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.className = "social-link social-" + platform.name.toLowerCase();
+        link.setAttribute("aria-label", "Akçaabat Haber " + platform.name + " hesabı");
+        link.title = platform.name;
+        link.textContent = platform.mark;
+        container.appendChild(link);
+        count++;
+      });
+      if (!count) { const message = document.createElement("span"); message.className = "social-empty"; message.textContent = "Hesap bağlantıları yakında"; container.appendChild(message); }
+    });
+  }
   async function loadBranding() {
     try {
       await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
@@ -67,8 +127,9 @@
       const response = await fetch(config.url + "/rest/v1/site_settings?key=eq.site&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
       if (!response.ok) throw new Error("Marka ayarları alınamadı.");
       const rows = await response.json();
-      if (rows && rows[0] && rows[0].value) applyBrandLogo(rows[0].value.brandLogoUrl);
-    } catch (_) { applyBrandLogo(""); }
+      if (rows && rows[0] && rows[0].value) { applyBrandLogo(rows[0].value.brandLogoUrl); applySocialLinks(rows[0].value); }
+      else applySocialLinks({});
+    } catch (_) { applyBrandLogo(""); applySocialLinks({}); }
   }
   loadBranding();
 
@@ -231,8 +292,14 @@
   const menuButton = document.getElementById("portalMobileMenuButton");
   const mainNav = document.getElementById("portalMainNav");
   if (menuButton && mainNav) {
-    menuButton.addEventListener("click", function () { const open = mainNav.classList.toggle("mobile-open"); menuButton.setAttribute("aria-expanded", String(open)); });
-    mainNav.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", function () { mainNav.classList.remove("mobile-open"); menuButton.setAttribute("aria-expanded", "false"); }); });
+    const backdrop = document.getElementById("portalMenuBackdrop");
+    const closeButton = document.getElementById("portalMenuClose");
+    function setMenuOpen(open) { mainNav.classList.toggle("mobile-open", open); backdrop.hidden = !open; menuButton.setAttribute("aria-expanded", String(open)); document.body.classList.toggle("portal-menu-is-open", open); if (open) closeButton.focus(); else menuButton.focus(); }
+    menuButton.addEventListener("click", function () { setMenuOpen(!mainNav.classList.contains("mobile-open")); });
+    closeButton.addEventListener("click", function () { setMenuOpen(false); });
+    backdrop.addEventListener("click", function () { setMenuOpen(false); });
+    document.addEventListener("keydown", function (event) { if (event.key === "Escape" && mainNav.classList.contains("mobile-open")) setMenuOpen(false); });
+    mainNav.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", function () { setMenuOpen(false); }); });
   }
 
   const searchButton = document.getElementById("portalHeaderSearchButton");
