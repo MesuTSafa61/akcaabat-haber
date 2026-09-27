@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Galeri Yönetimi | Akçaabat Haber</title><link rel="stylesheet" href="admin-shell.css?v=4">
+<style>
+.gallery-admin-list{display:grid;gap:9px}.gallery-admin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid #e3e8ef;border-radius:7px}.gallery-admin-row strong,.gallery-admin-row small{display:block}.gallery-admin-row small{margin-top:4px;color:#667085}.gallery-admin-row button,.gallery-admin-items button{border:0;border-radius:5px;padding:8px 11px;background:#e9eef4;color:#071a33;font-weight:800;cursor:pointer}
+.gallery-admin-items{display:grid;gap:9px}.gallery-admin-item{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border:1px solid #e3e8ef;border-radius:7px}.gallery-admin-thumb{width:80px;height:58px;display:grid;place-items:center;background:#e9eef4;color:#667085}.gallery-admin-thumb img{width:100%;height:100%;object-fit:cover}.gallery-admin-item strong{display:block;overflow-wrap:anywhere}.gallery-admin-item small{color:#667085}.gallery-admin-item .controls{display:flex;flex-wrap:wrap;gap:5px}
+.gallery-admin-help{color:#667085;line-height:1.5;font-size:12px}.gallery-admin-preview{display:block;width:min(100%,200px);max-height:130px;object-fit:cover;margin-top:8px;border-radius:6px}
+@media(max-width:640px){.gallery-admin-item{grid-template-columns:64px minmax(0,1fr)}.gallery-admin-thumb{width:64px;height:52px}.gallery-admin-item .controls{grid-column:1/-1}}
+</style></head><body>
+<main class="admin-tool-page" id="galleryAdmin" hidden>
+<div class="admin-tool-status" id="galleryStatus" role="status">Galeri yönetimi yükleniyor…</div>
+<div class="admin-tool-grid">
+<section class="admin-tool-card"><h2>Galeri oluştur / düzenle</h2><p>Yayımladığın galeriler ziyaretçilere Foto Galeri veya Video Galeri bölümünde görünür.</p>
+<form class="admin-tool-form" id="galleryForm">
+<label>Tür<select id="galleryKind"><option value="photo">Foto Galeri</option><option value="video">Video Galeri</option></select></label>
+<label>Durum<select id="galleryPublish"><option value="draft">Taslak</option><option value="published">Yayında</option></select></label>
+<label class="wide">Başlık<input id="galleryTitleInput" required minlength="3" maxlength="180" placeholder="Galeri başlığı"></label>
+<label class="wide">Açıklama<textarea id="galleryDescriptionInput" rows="3" maxlength="1000"></textarea></label>
+<label class="wide">Kapak görseli (isteğe bağlı)<input id="galleryCoverInput" type="url" placeholder="https://..."></label>
+<div class="admin-tool-actions"><button class="admin-tool-button" type="submit">Galeriyi Kaydet</button><button class="admin-tool-button light" type="button" id="newGallery">Yeni Galeri</button></div>
+</form></section>
+<section class="admin-tool-card"><h2>Galeriler</h2><p>Bir galeri seçerek fotoğraf veya video ekle.</p><div class="gallery-admin-list" id="galleryList"></div></section>
+</div>
+<section class="admin-tool-card" id="galleryItemsPanel" hidden><h2 id="galleryItemsTitle">Medya ekle</h2>
+<p class="gallery-admin-help">Fotoğraf: JPG, PNG, WebP, GIF (en çok 10 MB). Video: MP4 veya WebM (en çok 50 MB). Büyük videolar için YouTube bağlantısı kullanabilirsin.</p>
+<form class="admin-tool-form" id="galleryItemForm">
+<label class="wide">Dosya seç<input id="galleryFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+<label class="wide">Veya medya bağlantısı<input id="galleryItemUrl" type="url" placeholder="https://..."></label>
+<label class="wide" id="posterField" hidden>Video kapak fotoğrafı URL<input id="galleryPoster" type="url" placeholder="https://..."></label>
+<label class="wide">Açıklama / altyazı<input id="galleryCaption" maxlength="300"></label>
+<div class="admin-tool-actions"><button class="admin-tool-button" type="submit">Medyayı Ekle</button><a class="admin-tool-button light" id="galleryPublicLink" href="foto-galeri.html" target="_blank" rel="noopener">Sitede Gör</a></div>
+</form><div class="gallery-admin-items" id="galleryItems"></div>
+</section>
+</main>
+<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="galeri-yonetimi.js?v=1" defer></script><script src="admin-shell.js?v=6" defer></script>
+</body></html>
