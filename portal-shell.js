@@ -15,7 +15,7 @@
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
         <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" data-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="121"></a>
-        <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button><a href="admin.html" class="admin-link">Yönetim</a></div>
+        <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
         <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a>
