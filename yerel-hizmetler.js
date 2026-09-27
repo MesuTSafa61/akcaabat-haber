@@ -55,8 +55,8 @@
   }
   function renderObituaries(data) {
     const section = tag("section", "local-panel"); const heading = tag("div", "local-heading-row"); heading.append(tag("h2", "", "Vefat duyuruları"), link("Belediye sayfası ↗", sourceUrls.obituaries, true)); section.append(heading);
-    const items = Array.isArray(data.items) ? data.items.filter(item => item.name && item.date && item.date >= today().slice(0, 7) + "-01").slice(0, 20) : [];
-    if (!items.length) section.append(empty("Belediyeden doğrulanmış güncel duyuru alınamadı.", sourceUrls.obituaries, "Akçaabat Belediyesinde görüntüle ↗"));
+    const items = Array.isArray(data.items) ? data.items.filter(item => item.name && item.date && item.date >= new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(Date.now() - 6 * 86400000))).slice(0, 20) : [];
+    if (!items.length) section.append(empty("Son yedi gün için belediyeden duyuru alınamadı.", sourceUrls.obituaries, "Akçaabat Belediyesinde görüntüle ↗"));
     else { const list = tag("div", "memorial-list"); for (const item of items) { const card = tag("article", "memorial-card"); card.append(tag("h3", "", item.name)); if (item.details) card.append(tag("p", "", item.details)); card.append(tag("small", "", dateLabel(item.date))); list.append(card); } section.append(list); }
     section.append(sourceNote("Akçaabat Belediyesi", sourceUrls.obituaries)); output.replaceChildren(section);
   }

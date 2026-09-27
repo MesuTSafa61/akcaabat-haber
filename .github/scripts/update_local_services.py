@@ -88,49 +88,46 @@ def refresh_pharmacies():
 
 
 def refresh_obituaries():
-    soup = fetch(data['obituaries']['source'])
-    print('Belediye vefat HTML:', len(str(soup)), 'karakter')
-    heading = soup.find(string=lambda value: value and 'VEFAT EDENLER' in value.upper())
-    if heading:
-        node = heading.parent
-        print('Vefat başlık çevresi:', str(node.parent.parent)[:4500])
-        print('Vefat sonrası:', [str(item)[:3500] for item in list(node.parent.parent.next_siblings)[:8]])
-    print('Vefat iframe:', [(f.get('src'), f.get('id')) for f in soup.select('iframe')])
-    print('Vefat script adları:', [s.get('src') for s in soup.select('script[src]')])
-    print('Vefat veri betiği:', [s.get_text()[max(0,s.get_text().find('function fetchData')-300):s.get_text().find('function fetchData')+9000] for s in soup.select('script:not([src])') if 'function fetchData' in s.get_text()])
-    print('Vefat işaretleri:', [(str(m.start()), soup.get_text(' ', strip=True)[m.start():m.start()+160]) for m in list(re.finditer('vefat', soup.get_text(' ', strip=True), re.I))[-4:]])
-    from urllib.parse import urljoin
-    for day in (datetime.now(timezone(timedelta(hours=3))).date(), datetime.now(timezone(timedelta(hours=3))).date() - timedelta(days=1)):
-        payload = json.dumps({'tarih': day.strftime('%d.%m.%Y')}).encode('utf-8')
-        endpoint = urljoin(data['obituaries']['source'], 'vefat-edenler.aspx/GetVerileri')
-        req = Request(endpoint, data=payload, headers={**HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'Accept': 'application/json', 'Referer': data['obituaries']['source']}, method='POST')
-        try:
-            with urlopen(req, timeout=25) as response:
-                body = response.read().decode('utf-8-sig')
-                print('Vefat servis', day, response.status, len(body), body[:6000])
-        except Exception as error:
-            print('Vefat servis hatası', type(error).__name__, str(error))
-    # Source currently renders an empty heading; do not invent names or reuse old notices.
-    # Populate only if structured dates and names are published in an identifiable table.
-    items = []
-    for row in soup.select('table tr'):
-        cells = [clean(cell.get_text(' ', strip=True)) for cell in row.select('td')]
-        if len(cells) < 2:
-            continue
-        date_cell = next((c for c in cells if re.fullmatch(r'\d{2}[./-]\d{2}[./-]20\d{2}', c)), None)
-        name_cell = next((c for c in cells if re.fullmatch(r'[A-Za-zÇĞİÖŞÜçğıöşü\s]{5,70}', c) and c.lower() not in ('ad soyad', 'vefat edenler')), None)
-        if not (date_cell and name_cell):
-            continue
-        try:
-            date = datetime.strptime(date_cell.replace('/', '.').replace('-', '.'), '%d.%m.%Y').date().isoformat()
-        except ValueError:
-            continue
-        if date < today[:7] + '-01':
-            continue
-        items.append({'name': name_cell, 'date': date, 'details': ' • '.join(c for c in cells if c not in (date_cell, name_cell))[:250]})
-    if items[:30] != data['obituaries'].get('items'):
-        data['obituaries'].update(updatedAt=datetime.now(timezone.utc).isoformat(), items=items[:30])
-    print('Belediye:', len(items), 'duyuru')
+    # The municipality renders an empty shell and fetches the public notices
+    # through its own ASP.NET page method when a date is selected.
+    endpoint = data['obituaries']['source'].rsplit('/', 1)[0] + '/vefat-edenler.aspx/GetVerileri'
+    notices = []
+    today_local = datetime.now(timezone(timedelta(hours=3))).date()
+    for days_ago in range(7):
+        date = today_local - timedelta(days=days_ago)
+        payload = json.dumps({'tarih': date.strftime('%d.%m.%Y')}).encode('utf-8')
+        request = Request(endpoint, data=payload, headers={**HEADERS,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept': 'application/json',
+            'Referer': data['obituaries']['source']}, method='POST')
+        with urlopen(request, timeout=25) as response:
+            markup = json.load(response).get('d', '')
+        if not isinstance(markup, str):
+            raise ValueError('Belediye servisinden beklenmeyen yanıt')
+        for card in BeautifulSoup(markup, 'html.parser').select('.accordion-item'):
+            name_node = card.select_one('.accordion-button')
+            body_node = card.select_one('.accordion-body')
+            if not name_node or not body_node:
+                continue
+            name = clean(name_node.get_text(' ', strip=True))
+            body = clean(body_node.get_text(' ', strip=True))
+            date_match = re.search(r'Defin Tarihi\s*:\s*(\d{2}\.\d{2}\.20\d{2})', body, re.I)
+            if not name or not date_match or date_match[1] != date.strftime('%d.%m.%Y'):
+                continue
+            prayer = re.search(r'Namaz Vakti\s*:\s*(.*?)\s+Namaz Yeri\s*:', body, re.I)
+            mosque = re.search(r'Namaz Yeri\s*:\s*(.*?)\s*(?:-\s*Haritada Göster|Mezarlık\s*:)', body, re.I)
+            cemetery = re.search(r'Mezarlık\s*:\s*(.*?)\s+Yakın Bilgisi\s*:', body, re.I)
+            details = ' • '.join(part for part in (
+                clean(prayer[1]) if prayer else '',
+                clean(mosque[1]) if mosque else '',
+                clean(cemetery[1]) if cemetery else ''
+            ) if part)
+            entry = {'name': name[:150], 'date': date.isoformat(), 'details': details[:300]}
+            if entry not in notices:
+                notices.append(entry)
+    if notices != data['obituaries'].get('items'):
+        data['obituaries'].update(updatedAt=datetime.now(timezone.utc).isoformat(), items=notices[:60])
+    print('Akçaabat Belediyesi:', len(notices), 'vefat duyurusu')
 
 
 for label, refresh in [('namaz', refresh_prayer), ('eczane', refresh_pharmacies), ('vefat', refresh_obituaries)]:
