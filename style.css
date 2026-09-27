@@ -1571,3 +1571,11 @@ body{background:#edf1f4;color:#111827}
 /* Manşet yanındaki haberler görsel alanını doldurur. */
 .headline-category-story{grid-template-columns:80px minmax(0,1fr)}
 .headline-category-story img{width:80px;height:48px;object-fit:cover;object-position:center}
+
+/* Alt kategori kartları Son Haberler ile aynı etiket ve tarih düzenini kullanır. */
+.category-story-image{position:relative;overflow:hidden}
+.category-story-image img{display:block}
+.category-story-badge{position:absolute;left:0;bottom:0;padding:6px 10px;background:#1594ca;color:#fff;font-size:10px;font-weight:900;line-height:1.2}
+.category-story-body time{display:block;color:#7a8492;font-size:11px}
+.category-story-body h3{margin:6px 0 0}
+@media(max-width:560px){.category-story-badge{padding:5px 7px;font-size:9px}.category-story-body time{font-size:10px}}

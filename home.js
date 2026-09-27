@@ -367,10 +367,10 @@
             const items = state.news.filter(function (item) { return categoryMatches(item, category); }).slice(0, 4);
             if (!items.length) return "";
             const cards = items.map(function (item) {
-                return '<article class="category-story" data-url="' + escapeHtml(newsUrl(item)) + '"><img src="' +
-                    escapeHtml(imageUrl(item)) + '" alt="' + escapeHtml(item.title) + '" loading="lazy"><div class="category-story-body"><small>' +
-                    escapeHtml(category.toUpperCase()) + '</small><h3>' + escapeHtml(item.title) + '</h3><time>' +
-                    escapeHtml(publishedTime(item)) + '</time></div></article>';
+                return '<article class="category-story" data-url="' + escapeHtml(newsUrl(item)) + '"><div class="category-story-image"><img src="' +
+                    escapeHtml(imageUrl(item)) + '" alt="' + escapeHtml(item.title) + '" loading="lazy"><span class="category-story-badge">' +
+                    escapeHtml(categoryName(item).toUpperCase()) + '</span></div><div class="category-story-body"><time>' +
+                    escapeHtml(publishedDate(item)) + '</time><h3>' + escapeHtml(item.title) + '</h3></div></article>';
             }).join("");
             return '<section class="category-news-section"><div class="category-news-head"><h2>' + escapeHtml(category) +
                 '</h2><a href="kategori.html?kategori=' + encodeURIComponent(category === "Trabzonspor" ? "Spor" : category) +
