@@ -3,7 +3,8 @@
 <title>Galeri Yönetimi | Akçaabat Haber</title><link rel="stylesheet" href="admin-shell.css?v=4">
 <style>
 .gallery-admin-list{display:grid;gap:9px}.gallery-admin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid #e3e8ef;border-radius:7px}.gallery-admin-row strong,.gallery-admin-row small{display:block}.gallery-admin-row small{margin-top:4px;color:#667085}.gallery-admin-row button,.gallery-admin-items button{border:0;border-radius:5px;padding:8px 11px;background:#e9eef4;color:#071a33;font-weight:800;cursor:pointer}
-.gallery-admin-items{display:grid;gap:9px}.gallery-admin-item{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border:1px solid #e3e8ef;border-radius:7px}.gallery-admin-thumb{width:80px;height:58px;display:grid;place-items:center;background:#e9eef4;color:#667085}.gallery-admin-thumb img{width:100%;height:100%;object-fit:cover}.gallery-admin-item strong{display:block;overflow-wrap:anywhere}.gallery-admin-item small{color:#667085}.gallery-admin-item .controls{display:flex;flex-wrap:wrap;gap:5px}
+.gallery-admin-items{display:grid;gap:9px;min-width:0}.gallery-admin-item{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px;border:1px solid #e3e8ef;border-radius:7px;min-width:0;max-width:100%}.gallery-admin-item>div:nth-child(2){min-width:0;max-width:100%;overflow:hidden}.gallery-admin-thumb{width:80px;height:58px;display:grid;place-items:center;background:#e9eef4;color:#667085}.gallery-admin-thumb img{width:100%;height:100%;object-fit:cover}.gallery-admin-item strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gallery-admin-item small{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#667085}.gallery-admin-item .controls{display:flex;flex-wrap:wrap;gap:5px;min-width:0}
+.gallery-publish-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 20px}.gallery-publish-row button{border:0;border-radius:7px;padding:11px 18px;background:#0d765f;color:#fff;font-weight:850;cursor:pointer}.gallery-publish-row p{margin:0;color:#52657e;font-size:13px}.gallery-publish-row[hidden],#galleryPublicLink[hidden]{display:none}
 .gallery-admin-help{color:#667085;line-height:1.5;font-size:12px}.gallery-admin-preview{display:block;width:min(100%,200px);max-height:130px;object-fit:cover;margin-top:8px;border-radius:6px}
 @media(max-width:640px){.gallery-admin-item{grid-template-columns:64px minmax(0,1fr)}.gallery-admin-thumb{width:64px;height:52px}.gallery-admin-item .controls{grid-column:1/-1}}
 </style></head><body>
@@ -23,6 +24,7 @@
 <section class="admin-tool-card"><h2>Galeriler</h2><p>Bir galeri seçerek fotoğraf veya video ekle.</p><div class="gallery-admin-list" id="galleryList"></div></section>
 </div>
 <section class="admin-tool-card" id="galleryItemsPanel" hidden><h2 id="galleryItemsTitle">Medya ekle</h2>
+<div class="gallery-publish-row" id="galleryPublishRow" hidden><button type="button" id="galleryPublishNow">Yayına Al</button><p>Galeriyi yayımlayınca ana sayfada, galeri bölümünde ve haber editöründe görünür.</p></div>
 <p class="gallery-admin-help">Fotoğraf: JPG, PNG, WebP, GIF (en çok 10 MB). Video: MP4 veya WebM (en çok 50 MB). Büyük videolar için YouTube bağlantısı kullanabilirsin.</p>
 <form class="admin-tool-form" id="galleryItemForm">
 <label class="wide">Dosya seç<input id="galleryFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
@@ -33,5 +35,5 @@
 </form><div class="gallery-admin-items" id="galleryItems"></div>
 </section>
 </main>
-<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="galeri-yonetimi.js?v=2" defer></script><script src="admin-shell.js?v=6" defer></script>
+<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="galeri-yonetimi.js?v=3" defer></script><script src="admin-shell.js?v=7" defer></script>
 </body></html>

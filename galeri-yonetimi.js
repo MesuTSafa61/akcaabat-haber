@@ -34,10 +34,12 @@
     $("galleryDescriptionInput").value = gallery.description || "";
     $("galleryCoverInput").value = gallery.cover_url || "";
     $("galleryItemsPanel").hidden = false;
+    $("galleryPublishRow").hidden = gallery.status === "published" || !(gallery.items || []).length;
     $("galleryItemsTitle").textContent = gallery.title + " · Medyalar";
     $("galleryFile").accept = gallery.kind === "photo" ? "image/jpeg,image/png,image/webp,image/gif" : "video/mp4,video/webm";
     $("posterField").hidden = gallery.kind !== "video";
     $("galleryPublicLink").href = "galeri-detay.html?id=" + encodeURIComponent(gallery.id);
+    $("galleryPublicLink").hidden = gallery.status !== "published";
     renderList(); renderItems(); message(gallery.title + " seçildi.");
   }
   function renderList() {
@@ -63,7 +65,10 @@
       const imageUrl = safeUrl(current.kind === "photo" ? item.url : item.poster_url);
       if (imageUrl) { const image = document.createElement("img"); image.src = imageUrl; image.alt = ""; image.addEventListener("error", () => image.remove()); preview.append(image); }
       const copy = document.createElement("div"), label = document.createElement("strong"), sub = document.createElement("small");
-      label.textContent = item.caption || (index + 1) + ". medya"; sub.textContent = item.url; copy.append(label, sub);
+      label.textContent = item.caption || (index + 1) + ". medya";
+      let filename = "Medya bağlantısı";
+      try { filename = decodeURIComponent(new URL(item.url).pathname.split("/").pop()) || filename; } catch (_) {}
+      sub.textContent = filename; sub.title = item.url; copy.append(label, sub);
       const controls = document.createElement("div"); controls.className = "controls";
       controls.append(makeButton("↑", () => moveItem(index, -1)), makeButton("↓", () => moveItem(index, 1)), makeButton("Kaldır", () => removeItem(index)));
       row.append(preview, copy, controls); target.append(row);
@@ -152,6 +157,16 @@
       $("galleryForm").addEventListener("submit", saveGallery);
       $("galleryItemForm").addEventListener("submit", addItem);
       $("newGallery").addEventListener("click", resetForm);
+      $("galleryPublishNow").addEventListener("click", async () => {
+        if (!current || !(current.items || []).length) return;
+        const button = $("galleryPublishNow"); button.disabled = true;
+        try {
+          const { error } = await client.from("media_galleries").update({ status: "published", updated_at: new Date().toISOString() }).eq("id", current.id);
+          if (error) throw error;
+          await refresh(current.id); message("Galeri yayında. Ana sayfada ve galeri bölümünde görünecek.");
+        } catch (error) { message(error.message || "Galeri yayımlanamadı.", true); }
+        finally { button.disabled = false; }
+      });
       $("galleryKind").addEventListener("change", () => { $("galleryFile").accept = $("galleryKind").value === "photo" ? "image/jpeg,image/png,image/webp,image/gif" : "video/mp4,video/webm"; });
       await refresh(null);
       if (new URLSearchParams(location.search).get("kind") === "video") {

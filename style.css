@@ -1484,3 +1484,13 @@ body{background:#edf1f4;color:#111827}
 @keyframes breaking-dot{70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}}
 @media(max-width:560px){#portalBreakingBar .breaking-inner{gap:6px}#portalBreakingBar .breaking-label{padding:0 10px;font-size:10px}#portalBreakingBar .breaking-content{font-size:12px}#portalBreakingBar .breaking-controls{gap:2px}#portalBreakingBar .breaking-controls button{width:23px;height:25px}#portalBreakingBar .breaking-controls span{display:none}}
 @media(prefers-reduced-motion:reduce){#portalBreakingBar .breaking-label,#portalBreakingBar .breaking-label::after,#portalBreakingBar .breaking-dot{animation:none}}
+
+/* Ana sayfa galerileri. */
+.home-gallery-section{margin-top:30px;min-width:0}
+.home-gallery-section .gallery-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.home-gallery-section .gallery-card-copy h2{font-size:16px}
+.home-gallery-links{display:flex;gap:15px;flex-wrap:wrap}
+.home-gallery-links a{color:#0b4f9c;font-size:12px;font-weight:900;white-space:nowrap}
+.home-gallery-section .gallery-empty{grid-column:1/-1}
+@media(max-width:900px){.home-gallery-section .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.home-gallery-section{margin-top:22px}.home-gallery-section .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.home-gallery-section .gallery-card-copy{padding:10px}.home-gallery-section .gallery-card-copy h2{font-size:14px}.home-gallery-links{gap:9px;margin-top:6px}.home-gallery-links a{font-size:11px}.home-gallery-section .gallery-card-image .gallery-badge{left:6px;bottom:6px;font-size:9px;padding:4px 6px}}

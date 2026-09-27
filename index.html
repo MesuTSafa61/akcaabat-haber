@@ -20,7 +20,8 @@
   <meta property="og:url" content="https://akcaabathaber.com.tr/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="stylesheet" href="style.css?v=20260927-2">
+  <link rel="stylesheet" href="style.css?v=20260927-3">
+  <link rel="stylesheet" href="galeri.css?v=2">
   <link rel="stylesheet" href="portal-shell.css?v=21">
 
 </head>
@@ -633,6 +634,14 @@
 
     <div id="categorySections" class="category-sections" aria-live="polite"></div>
 
+    <section class="home-gallery-section" aria-labelledby="homeGalleryTitle">
+      <div class="section-heading compact portal-section-head">
+        <div><span class="section-kicker">GÖRSEL HABERLER</span><h2 id="homeGalleryTitle">Fotoğraf ve Video Galeri</h2></div>
+        <div class="home-gallery-links"><a href="foto-galeri.html">Tüm Fotoğraflar →</a><a href="video-galeri.html">Tüm Videolar →</a></div>
+      </div>
+      <div id="homeGalleryGrid" class="gallery-grid" aria-live="polite"><p class="gallery-empty">Galeriler yükleniyor…</p></div>
+    </section>
+
     <section class="portal-services" aria-labelledby="serviceTitle">
       <div class="section-heading compact portal-section-head">
         <div><span class="section-kicker">CANLI SERVİSLER</span><h2 id="serviceTitle">Akçaabat’ın Dijital Merkezi</h2></div>
@@ -872,6 +881,7 @@
        ANA SAYFA MOTORU
   ========================== -->
   <script src="home.js?v=20260927-2"></script>
+  <script src="home-galleries.js?v=1"></script>
   <script src="portal-shell.js?v=25"></script>
 
 </body>
