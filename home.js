@@ -171,14 +171,16 @@
             const track = document.getElementById("headlineTrack");
             const active = tabs[state.headlineIndex];
             if (track && track.scrollWidth > track.clientWidth) {
-                track.scrollTo({ left: Math.max(0, active.offsetLeft - 12), behavior: "smooth" });
+                const left = Math.max(0, active.offsetLeft - 12);
+                if (typeof track.scrollTo === "function") track.scrollTo({ left: left, behavior: "smooth" });
+                else track.scrollLeft = left;
             }
         }
     }
 
     function restartHeadlineTimer() {
         if (state.timer) clearInterval(state.timer);
-        if (state.headlines.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (state.headlines.length > 1 && !document.hidden) {
             state.timer = setInterval(function () { showHeadline(state.headlineIndex + 1, false); }, 5000);
         }
     }
@@ -375,6 +377,7 @@
 
     async function init() {
         initControls();
+        document.addEventListener("visibilitychange", restartHeadlineTimer);
         if ("serviceWorker" in navigator && window.isSecureContext) {
             navigator.serviceWorker.register("sw.js").catch(function (error) {
                 console.warn("Çevrimdışı destek başlatılamadı:", error);
