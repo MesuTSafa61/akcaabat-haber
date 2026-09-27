@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Borsa Yönetimi | Akçaabat Haber</title>
+<link rel="stylesheet" href="admin-shell.css?v=4">
+<style>
+.market-fixed{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.market-fixed span{padding:16px;border:1px solid #dbe4ec;border-radius:9px;background:#f7fafc;color:#10294a;font-weight:850}.market-list{display:grid;gap:9px;margin:18px 0}.market-row{display:flex;align-items:center;gap:14px;min-height:60px;padding:10px 14px;border:1px solid #dbe4ec;border-radius:9px;background:#fff}.market-row label{display:flex;align-items:center;gap:12px;flex:1;font-size:14px;font-weight:750;color:#10294a;cursor:pointer}.market-row input{width:18px;height:18px;accent-color:#1594ca}.market-row small{color:#66788a}.market-row button{padding:7px 10px;border:1px solid #cbd8e4;border-radius:7px;background:#eff5f9;color:#10294a;font-size:15px;font-weight:850;cursor:pointer}.market-row button:disabled{opacity:.35;cursor:default}.market-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.market-actions a{font-weight:750;color:#0879ad}@media(max-width:700px){.market-fixed{grid-template-columns:repeat(2,minmax(0,1fr))}.market-row{gap:7px}.market-row small{display:none}}
+</style></head><body>
+<main class="admin-tool-page" id="marketAdmin" hidden>
+  <div class="admin-tool-status" id="marketStatus" role="status">Piyasa ayarları yükleniyor…</div>
+  <section class="admin-tool-card"><h2>Sabit göstergeler</h2><p>Üst bantta ve borsa sayfasında bu dört gösterge her zaman görünür. Değerleri kaynaklardan otomatik güncellenir.</p><div class="market-fixed"><span>Dolar / TL</span><span>Euro / TL</span><span>Gram altın</span><span>Gram gümüş</span></div></section>
+  <section class="admin-tool-card"><h2>Diğer piyasalar</h2><p>Ziyaretçinin borsa sayfasında seçebileceği piyasaları işaretle. Oklarla sırasını değiştirip kaydet.</p><div class="market-list" id="marketList"></div><div class="market-actions"><button class="admin-tool-button" type="button" id="marketSave">Değişiklikleri Kaydet</button><a href="borsa.html" target="_blank" rel="noopener">Borsa sayfasını aç ↗</a></div></section>
+</main>
+<script src="supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js" defer></script><script src="market-options.js?v=1" defer></script><script src="borsa-yonetimi.js?v=1" defer></script><script src="admin-shell.js?v=8" defer></script>
+</body></html>

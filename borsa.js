@@ -12,6 +12,31 @@
   const extraMeta = document.getElementById("financeExtraMeta");
   let selectionRequest = 0;
   let hasData = false;
+  const catalog = window.AKCAABAT_MARKETS || [];
+
+  function renderOptions(config) {
+    const selected = select.value;
+    const enabled = Array.isArray(config && config.enabled) ? config.enabled : catalog.map(item => item.id);
+    const ordered = [...new Set(enabled)].map(id => catalog.find(item => item.id === id)).filter(Boolean);
+    select.replaceChildren(new Option("Bir piyasa seç", ""));
+    for (const groupName of ["Döviz", "Kripto"]) {
+      const group = document.createElement("optgroup"); group.label = groupName;
+      ordered.filter(item => item.group === groupName).forEach(item => group.append(new Option(item.name, item.id)));
+      if (group.children.length) select.append(group);
+    }
+    if (ordered.some(item => item.id === selected)) select.value = selected;
+    else if (selected) extra.hidden = true;
+  }
+
+  async function loadOptions(config) {
+    renderOptions();
+    try {
+      const response = await fetch(config.url + "/rest/v1/site_settings?key=eq.market_display&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
+      if (!response.ok) return;
+      const rows = await response.json();
+      if (rows[0]) renderOptions(rows[0].value);
+    } catch (_) { /* Varsayılan seçenekler görünür kalır. */ }
+  }
 
   async function json(url) {
     const response = await fetch(url, { headers: { Accept: "application/json" } });
@@ -37,15 +62,15 @@
     extraMeta.textContent = "";
     extra.dataset.state = "flat";
     try {
-      if (["GBP", "CHF", "JPY"].includes(key)) {
-        const base = "https://api.frankfurter.dev/v1/";
-        const latest = await json(base + "latest?base=" + key + "&symbols=TRY");
-        const value = Number(latest.rates && latest.rates.TRY);
+      if (catalog.some(item => item.id === key && item.group === "Döviz")) {
+        const base = "https://api.frankfurter.dev/v2/rate/" + key.toLowerCase() + "/try";
+        const latest = await json(base);
+        const value = Number(latest.rate);
         if (!Number.isFinite(value) || value <= 0) throw new Error("Kur bulunamadı");
         const priorDate = new Date(latest.date + "T12:00:00Z");
         priorDate.setUTCDate(priorDate.getUTCDate() - 1);
-        const previous = await json(base + priorDate.toISOString().slice(0, 10) + "?base=" + key + "&symbols=TRY");
-        const before = Number(previous.rates && previous.rates.TRY);
+        const previous = await json(base + "?date=" + priorDate.toISOString().slice(0, 10));
+        const before = Number(previous.rate);
         if (request !== selectionRequest) return;
         const percent = before > 0 ? (value - before) / before * 100 : NaN;
         showExtra(value, percent, "Frankfurter", latest.date);
@@ -95,6 +120,7 @@
         await new Promise((resolve, reject) => { const script = document.createElement("script"); script.src = "supabase-config.js"; script.onload = resolve; script.onerror = reject; document.head.appendChild(script); });
       }
       const config = window.AKCAABAT_SUPABASE;
+      await loadOptions(config);
       const cached = await fetch(config.url + "/rest/v1/site_settings?key=eq.market_data&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
       if (cached.ok) { const rows = await cached.json(); if (rows[0]) render(rows[0].value); }
       const live = await fetch(config.url + "/functions/v1/market-data", { headers: { Accept: "application/json" } });
