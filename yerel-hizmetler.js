@@ -42,9 +42,9 @@
   }
   function renderPharmacy(data) {
     const section = tag("section", "local-panel"); const heading = tag("div", "local-heading-row"); heading.append(tag("h2", "", "Bugün nöbetçi olanlar"), link("Resmî liste ↗", sourceUrls.pharmacy, true)); section.append(heading);
-    const valid = data.date === today() && Array.isArray(data.items) && data.items.length > 0;
+    const valid = Array.isArray(data.items) && data.items.length > 0 && (data.startsAt && data.endsAt ? new Date(data.startsAt) <= new Date() && new Date(data.endsAt) > new Date() : data.date === today());
     if (!valid) { section.append(empty("Bugünkü nöbet listesi doğrulanamadı.", sourceUrls.pharmacy, "Eczacı Odasında kontrol et ↗")); output.replaceChildren(section); return; }
-    section.append(tag("div", "local-meta", dateLabel(data.date) + "  •  Akçaabat"));
+    section.append(tag("div", "local-meta", dateLabel(data.date) + "  •  Akçaabat  •  Nöbet bitişi: " + (data.endsAt ? new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(data.endsAt)) : "resmî listede")));
     const list = tag("div", "pharmacy-list");
     for (const item of data.items) {
       const card = tag("article", "pharmacy-card"); card.append(tag("small", "", "NÖBETÇİ ECZANE"), tag("h3", "", item.name)); card.append(tag("address", "", item.address || "Adres için resmî listeyi inceleyin."));

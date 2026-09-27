@@ -41,8 +41,10 @@ def refresh_prayer():
         days[key] = {'date': key, 'times': [match[0] for match in times]}
     if today not in days:
         raise ValueError(f'Diyanet tablosunda bugün yok; {len(days)} gün ayrıştırıldı')
-    data['prayer']['days'] = [days[key] for key in sorted(days) if key >= today][:31]
-    data['prayer']['updatedAt'] = datetime.now(timezone.utc).isoformat()
+    fresh = [days[key] for key in sorted(days) if key >= today][:31]
+    if fresh != data['prayer'].get('days'):
+        data['prayer']['days'] = fresh
+        data['prayer']['updatedAt'] = datetime.now(timezone.utc).isoformat()
     print('Diyanet:', len(data['prayer']['days']), 'gün')
 
 
@@ -56,19 +58,30 @@ def refresh_pharmacies():
     text = text.split(marker, 1)[1]
     pattern = re.compile(
         r'AKÇAABAT\s+(?P<name>[A-ZÇĞİÖŞÜ][A-ZÇĞİÖŞÜ ]{2,55} ECZANESİ)\s+'
-        r'(?P=name)\s+(?P<date>\d{2}\.\d{2}\.20\d{2})\s+\d{2}:\d{2}\s*-\s*'
-        r'\d{2}\.\d{2}\.20\d{2}\s+\d{2}:\d{2}\s+arası nöbetçidir\.\s+'
+        r'(?P=name)\s+(?P<date>\d{2}\.\d{2}\.20\d{2})\s+(?P<start_time>\d{2}:\d{2})\s*-\s*'
+        r'(?P<end_date>\d{2}\.\d{2}\.20\d{2})\s+(?P<end_time>\d{2}:\d{2})\s+arası nöbetçidir\.\s+'
         r'AKÇAABAT\s+(?P<address>.{10,250}?)\s+(?P<phone>0\d{10})\s+Haritada görüntülemek', re.I
     )
     cards = []
+    starts_at = ends_at = None
     for match in pattern.finditer(text):
         if match['date'] != today_tr:
             continue
+        start = datetime.strptime(match['date'] + ' ' + match['start_time'], '%d.%m.%Y %H:%M').replace(tzinfo=timezone(timedelta(hours=3)))
+        end = datetime.strptime(match['end_date'] + ' ' + match['end_time'], '%d.%m.%Y %H:%M').replace(tzinfo=timezone(timedelta(hours=3)))
+        if end <= start:
+            continue
+        starts_at, ends_at = start.isoformat(), end.isoformat()
         record = {'name': clean(match['name']), 'address': clean(match['address']), 'phone': match['phone']}
         if record not in cards:
             cards.append(record)
-    if cards:
-        data['pharmacies'].update(date=today, updatedAt=datetime.now(timezone.utc).isoformat(), items=cards[:15])
+    current = data['pharmacies']
+    now = datetime.now(timezone(timedelta(hours=3)))
+    previous_end = datetime.fromisoformat(current['endsAt']) if current.get('endsAt') else None
+    if cards and starts_at and (datetime.fromisoformat(starts_at) <= now or not previous_end or previous_end <= now):
+        fresh = {'date': today, 'startsAt': starts_at, 'endsAt': ends_at, 'items': cards[:15]}
+        if any(current.get(key) != value for key, value in fresh.items()):
+            current.update(fresh, updatedAt=datetime.now(timezone.utc).isoformat())
         print('Eczacı Odası:', len(cards), 'eczane')
     else:
         print('Eczacı Odası: bugün için ayrıştırılabilir kayıt bulunamadı')
@@ -95,7 +108,8 @@ def refresh_obituaries():
         if date < today[:7] + '-01':
             continue
         items.append({'name': name_cell, 'date': date, 'details': ' • '.join(c for c in cells if c not in (date_cell, name_cell))[:250]})
-    data['obituaries'].update(updatedAt=datetime.now(timezone.utc).isoformat(), items=items[:30])
+    if items[:30] != data['obituaries'].get('items'):
+        data['obituaries'].update(updatedAt=datetime.now(timezone.utc).isoformat(), items=items[:30])
     print('Belediye:', len(items), 'duyuru')
 
 
@@ -104,7 +118,8 @@ for label, refresh in [('namaz', refresh_prayer), ('eczane', refresh_pharmacies)
         refresh()
     except Exception as exc:
         print(f'{label}: alınamadı ({type(exc).__name__}: {exc})')
-# Never retain yesterday's duty list, even when the official source is down.
-if data['pharmacies']['date'] != today:
-    data['pharmacies'].update(date=None, items=[])
+# Keep an overnight duty until its published end time; never show expired data.
+expiry = data['pharmacies'].get('endsAt')
+if (expiry and datetime.fromisoformat(expiry) <= datetime.now(timezone(timedelta(hours=3)))) or (not expiry and data['pharmacies'].get('date') != today):
+    data['pharmacies'].update(date=None, startsAt=None, endsAt=None, items=[])
 PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
