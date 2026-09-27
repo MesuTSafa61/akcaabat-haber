@@ -12,9 +12,18 @@
   const extraMeta = document.getElementById("financeExtraMeta");
   let selectionRequest = 0;
   let hasData = false;
-  const catalog = window.AKCAABAT_MARKETS || [];
+  let catalog = window.AKCAABAT_MARKETS || [];
 
   function renderOptions(config) {
+    const builtIn = window.AKCAABAT_MARKETS || [];
+    const normalize = window.AKCAABAT_NORMALIZE_MARKET;
+    const custom = Array.isArray(config?.custom) ? config.custom.slice(0, 80).map(normalize).filter(Boolean) : [];
+    const ids = new Set(builtIn.map(item => item.id.toLowerCase()));
+    catalog = [...builtIn, ...custom.filter(item => {
+      const key = item.id.toLowerCase();
+      if (ids.has(key)) return false;
+      ids.add(key); return true;
+    })];
     const selected = select.value;
     const enabled = Array.isArray(config && config.enabled) ? config.enabled : catalog.map(item => item.id);
     const sequence = Array.isArray(config && config.order) ? config.order : catalog.map(item => item.id);
@@ -33,7 +42,7 @@
   }
 
   async function loadOptions(config) {
-    renderOptions();
+    if (select.options.length <= 1) renderOptions();
     try {
       const response = await fetch(config.url + "/rest/v1/site_settings?key=eq.market_display&select=value", { headers: { apikey: config.key, Authorization: "Bearer " + config.key } });
       if (!response.ok) throw new Error("Piyasa seçenekleri alınamadı");
@@ -79,7 +88,7 @@
         const percent = before > 0 ? (value - before) / before * 100 : NaN;
         showExtra(value, percent, "Frankfurter", latest.date);
       } else {
-        const data = await json("https://api.coingecko.com/api/v3/simple/price?ids=" + key + "&vs_currencies=try&include_24hr_change=true&include_last_updated_at=true");
+        const data = await json("https://api.coingecko.com/api/v3/simple/price?ids=" + encodeURIComponent(key) + "&vs_currencies=try&include_24hr_change=true&include_last_updated_at=true");
         if (request !== selectionRequest) return;
         const item = data[key];
         const value = Number(item && item.try);
@@ -136,7 +145,7 @@
       if (!hasData) updated.textContent = "Veri alınamadı";
     } finally { refresh.disabled = false; }
   }
-  refresh.addEventListener("click", function () { load(); if (select.value) loadExtra(); });
+  refresh.addEventListener("click", async function () { await load(); if (select.value) loadExtra(); });
   select.addEventListener("change", loadExtra);
   load();
 })();
