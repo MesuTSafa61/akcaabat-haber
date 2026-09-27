@@ -49,21 +49,29 @@ def refresh_prayer():
 
 
 def refresh_pharmacies():
-    soup = fetch(data['pharmacies']['source'])
+    districts = {
+        'AKÇAABAT': 'Akçaabat', 'ARAKLI': 'Araklı', 'ARSİN': 'Arsin',
+        'BEŞİKDÜZÜ': 'Beşikdüzü', 'ÇARŞIBAŞI': 'Çarşıbaşı', 'ÇAYKARA': 'Çaykara',
+        'DERNEKPAZARI': 'Dernekpazarı', 'DÜZKÖY': 'Düzköy', 'HAYRAT': 'Hayrat',
+        'KÖPRÜBAŞI': 'Köprübaşı', 'MAÇKA': 'Maçka', 'OF': 'Of',
+        'ORTAHİSAR': 'Ortahisar', 'SÜRMENE': 'Sürmene', 'ŞALPAZARI': 'Şalpazarı',
+        'TONYA': 'Tonya', 'VAKFIKEBİR': 'Vakfıkebir', 'YOMRA': 'Yomra',
+    }
+    # The province list contains the district on each pharmacy card.
+    source = 'https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61'
+    soup = fetch(source)
     text = clean(soup.get_text(' ', strip=True))
     today_tr = datetime.now(timezone(timedelta(hours=3))).strftime('%d.%m.%Y')
-    marker = 'TRABZON AKÇAABAT NÖBETÇİ ECZANELER'
-    if marker not in text:
-        raise ValueError('Akçaabat listesi bulunamadı')
-    text = text.split(marker, 1)[1]
+    if 'TRABZON NÖBETÇİ ECZANELER' not in text:
+        raise ValueError('Trabzon nöbet listesi bulunamadı')
+    district_pattern = '|'.join(districts)
     pattern = re.compile(
-        r'AKÇAABAT\s+(?P<name>[A-ZÇĞİÖŞÜ][A-ZÇĞİÖŞÜ ]{2,55} ECZANESİ)\s+'
+        r'(?P<name>[A-ZÇĞİÖŞÜ][A-ZÇĞİÖŞÜ0-9 .\-]{2,55} ECZANESİ)\s+'
         r'(?P=name)\s+(?P<date>\d{2}\.\d{2}\.20\d{2})\s+(?P<start_time>\d{2}:\d{2})\s*-\s*'
         r'(?P<end_date>\d{2}\.\d{2}\.20\d{2})\s+(?P<end_time>\d{2}:\d{2})\s+arası nöbetçidir\.\s+'
-        r'AKÇAABAT\s+(?P<address>.{10,250}?)\s+(?P<phone>0\d{10})\s+Haritada görüntülemek', re.I
+        rf'(?P<district>{district_pattern})\s+(?P<address>.{{5,300}}?)\s+(?P<phone>0\d{{10}})\s+Haritada görüntülemek', re.I
     )
-    cards = []
-    starts_at = ends_at = None
+    grouped = {display: [] for display in districts.values()}
     for match in pattern.finditer(text):
         if match['date'] != today_tr:
             continue
@@ -71,18 +79,27 @@ def refresh_pharmacies():
         end = datetime.strptime(match['end_date'] + ' ' + match['end_time'], '%d.%m.%Y %H:%M').replace(tzinfo=timezone(timedelta(hours=3)))
         if end <= start:
             continue
-        starts_at, ends_at = start.isoformat(), end.isoformat()
-        record = {'name': clean(match['name']), 'address': clean(match['address']), 'phone': match['phone']}
-        if record not in cards:
-            cards.append(record)
+        display = districts.get(match['district'].upper())
+        if not display:
+            continue
+        record = {'name': clean(match['name']), 'address': clean(match['address']),
+                  'phone': match['phone'], 'startsAt': start.isoformat(), 'endsAt': end.isoformat()}
+        if record not in grouped[display]:
+            grouped[display].append(record)
     current = data['pharmacies']
     now = datetime.now(timezone(timedelta(hours=3)))
-    previous_end = datetime.fromisoformat(current['endsAt']) if current.get('endsAt') else None
-    if cards and starts_at and (datetime.fromisoformat(starts_at) <= now or not previous_end or previous_end <= now):
-        fresh = {'date': today, 'startsAt': starts_at, 'endsAt': ends_at, 'items': cards[:15]}
+    total = sum(map(len, grouped.values()))
+    if total:
+        grouped = {name: cards[:25] for name, cards in grouped.items()}
+        akcaabat = grouped['Akçaabat']
+        active = next((item for item in akcaabat if datetime.fromisoformat(item['startsAt']) <= now < datetime.fromisoformat(item['endsAt'])), None)
+        fresh = {'date': today, 'source': source, 'districts': grouped,
+                 'startsAt': active['startsAt'] if active else None,
+                 'endsAt': active['endsAt'] if active else None,
+                 'items': [{key: card[key] for key in ('name', 'address', 'phone')} for card in akcaabat]}
         if any(current.get(key) != value for key, value in fresh.items()):
             current.update(fresh, updatedAt=datetime.now(timezone.utc).isoformat())
-        print('Eczacı Odası:', len(cards), 'eczane')
+        print('Eczacı Odası:', total, 'eczane /', sum(bool(cards) for cards in grouped.values()), 'ilçe')
     else:
         print('Eczacı Odası: bugün için ayrıştırılabilir kayıt bulunamadı')
 
@@ -153,6 +170,8 @@ for label, refresh in [('namaz', refresh_prayer), ('eczane', refresh_pharmacies)
         print(f'{label}: alınamadı ({type(exc).__name__}: {exc})')
 # Keep an overnight duty until its published end time; never show expired data.
 expiry = data['pharmacies'].get('endsAt')
-if (expiry and datetime.fromisoformat(expiry) <= datetime.now(timezone(timedelta(hours=3)))) or (not expiry and data['pharmacies'].get('date') != today):
+if data['pharmacies'].get('date') != today:
+    data['pharmacies'].update(date=None, startsAt=None, endsAt=None, items=[], districts={})
+elif expiry and datetime.fromisoformat(expiry) <= datetime.now(timezone(timedelta(hours=3))) and not data['pharmacies'].get('districts'):
     data['pharmacies'].update(date=None, startsAt=None, endsAt=None, items=[])
 PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

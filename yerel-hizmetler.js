@@ -41,28 +41,51 @@
     output.replaceChildren(section, weekly);
   }
   function renderPharmacy(data) {
+    const districtNames = ["Akçaabat", "Ortahisar", "Araklı", "Arsin", "Beşikdüzü", "Çarşıbaşı", "Çaykara", "Dernekpazarı", "Düzköy", "Hayrat", "Köprübaşı", "Maçka", "Of", "Sürmene", "Şalpazarı", "Tonya", "Vakfıkebir", "Yomra"];
     const section = tag("section", "local-panel pharmacy-panel");
     const heading = tag("div", "pharmacy-heading");
     const headingIcon = tag("span", "pharmacy-heading-icon", "✚"); headingIcon.setAttribute("aria-hidden", "true");
-    const headingText = tag("div"); headingText.append(tag("span", "pharmacy-eyebrow", "AKÇAABAT • BUGÜN"), tag("h2", "", "Nöbetçi eczaneler"));
+    const headingText = tag("div"); headingText.append(tag("span", "pharmacy-eyebrow", "TRABZON • BUGÜN"), tag("h2", "", "Nöbetçi eczaneler"));
     heading.append(headingIcon, headingText); section.append(heading);
-    const valid = Array.isArray(data.items) && data.items.length > 0 && (data.startsAt && data.endsAt ? new Date(data.startsAt) <= new Date() && new Date(data.endsAt) > new Date() : data.date === today());
-    if (!valid) { section.append(tag("p", "local-empty", "Bugünkü nöbet listesi henüz doğrulanamadı. Biraz sonra yeniden deneyin."), tag("p", "pharmacy-credit", "Veri: Trabzon Eczacı Odası")); output.replaceChildren(section); return; }
-    const until = data.endsAt ? new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(data.endsAt)) : "—";
-    const status = tag("div", "pharmacy-status");
-    status.append(tag("span", "pharmacy-status-date", dateLabel(data.date)), tag("span", "pharmacy-status-end", "Nöbet bitişi: " + until)); section.append(status);
+    const picker = tag("div", "pharmacy-picker");
+    const pickerLabel = tag("label", "", "İlçe seç"); pickerLabel.htmlFor = "pharmacyDistrict";
+    const select = tag("select", "pharmacy-select"); select.id = "pharmacyDistrict";
+    districtNames.forEach(name => { const option = tag("option", "", name === "Ortahisar" ? "Trabzon Merkez (Ortahisar)" : name); option.value = name; select.append(option); });
+    picker.append(pickerLabel, select); section.append(picker);
+    const valid = data.date === today();
+    const grouped = data.districts && typeof data.districts === "object" ? data.districts : { Akçaabat: data.items || [] };
+    const status = tag("div", "pharmacy-status"); section.append(status);
     const list = tag("div", "pharmacy-list");
-    for (const item of data.items) {
+    section.append(list, tag("p", "pharmacy-advice", "Gitmeden önce eczaneyi arayıp nöbet durumunu teyit edin."), tag("p", "pharmacy-credit", "Veri: Trabzon Eczacı Odası"));
+    function renderDistrict() {
+      const district = select.value;
+      const now = new Date();
+      const entries = valid && Array.isArray(grouped[district]) ? grouped[district].filter(item => item && item.name && (!item.endsAt || new Date(item.endsAt) > now)) : [];
+      status.replaceChildren(tag("span", "pharmacy-status-date", valid ? dateLabel(data.date) : "Güncel veri bekleniyor"), tag("span", "pharmacy-status-end", district === "Ortahisar" ? "Trabzon Merkez" : district));
+      if (!entries.length) {
+        list.replaceChildren(tag("p", "pharmacy-no-results", valid ? "Bu ilçede bugün için doğrulanmış nöbetçi eczane kaydı bulunmuyor." : "Bugünkü nöbet listesi henüz doğrulanamadı. Biraz sonra yeniden deneyin."));
+        return;
+      }
+      list.replaceChildren();
+      for (const item of entries) {
       const card = tag("article", "pharmacy-card");
       const cardTop = tag("div", "pharmacy-card-top"); const cardIcon = tag("span", "pharmacy-card-icon", "✚"); cardIcon.setAttribute("aria-hidden", "true");
-      const cardTitle = tag("div"); cardTitle.append(tag("small", "", "ŞU AN NÖBETÇİ"), tag("h3", "", item.name)); cardTop.append(cardIcon, cardTitle); card.append(cardTop);
+      const starts = item.startsAt ? new Date(item.startsAt) : null;
+      const ends = item.endsAt ? new Date(item.endsAt) : null;
+      const isUpcoming = starts && starts > now;
+      const clock = value => new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" }).format(value);
+      const timing = isUpcoming ? clock(starts) + "'DE BAŞLAYACAK" : "ŞU AN NÖBETÇİ";
+      const cardTitle = tag("div"); cardTitle.append(tag("small", "", timing), tag("h3", "", item.name)); cardTop.append(cardIcon, cardTitle); card.append(cardTop);
       const address = tag("address", "pharmacy-address"); address.append(tag("span", "", "⌖"), tag("span", "", item.address || "Adres bilgisi bulunamadı")); card.append(address);
+      if (ends) card.append(tag("p", "pharmacy-shift", "Nöbet bitişi: " + new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(ends)));
       const actions = tag("div", "pharmacy-actions"); const phone = (item.phone || "").replace(/[^0-9+]/g, "");
       if (phone.length >= 10) actions.append(link("☎  " + item.phone, "tel:" + phone));
-      if (item.address) actions.append(link("➤  Yol tarifi", "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(item.name + " " + item.address + " Akçaabat Trabzon"), true));
+      if (item.address) actions.append(link("➤  Yol tarifi", "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(item.name + " " + item.address + " " + district + " Trabzon"), true));
       card.append(actions); list.append(card);
+      }
     }
-    section.append(list, tag("p", "pharmacy-advice", "Gitmeden önce eczaneyi arayıp nöbet durumunu teyit edin."), tag("p", "pharmacy-credit", "Veri: Trabzon Eczacı Odası")); output.replaceChildren(section);
+    select.addEventListener("change", renderDistrict);
+    renderDistrict(); output.replaceChildren(section);
   }
   function renderObituaries(data) {
     const section = tag("section", "local-panel obituary-panel");
