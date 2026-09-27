@@ -99,25 +99,19 @@
   function applySocialLinks(settings) {
     document.querySelectorAll("[data-social-links]").forEach(function (container) {
       container.replaceChildren();
-      let count = 0;
       socialPlatforms.forEach(function (platform) {
         const value = settings && settings[platform.key];
-        if (!value) return;
-        let url;
-        try { url = new URL(value); } catch (_) { return; }
-        if (url.protocol !== "https:") return;
-        const link = document.createElement("a");
-        link.href = url.href;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.className = "social-link social-" + platform.name.toLowerCase();
-        link.setAttribute("aria-label", "Akçaabat Haber " + platform.name + " hesabı");
-        link.title = platform.name;
-        link.textContent = platform.mark;
-        container.appendChild(link);
-        count++;
+        let url = null;
+        try { if (value) url = new URL(value); } catch (_) {}
+        if (url && url.protocol !== "https:") url = null;
+        const item = document.createElement(url ? "a" : "span");
+        if (url) { item.href = url.href; item.target = "_blank"; item.rel = "noopener noreferrer"; }
+        item.className = "social-link social-" + platform.name.toLowerCase() + (url ? "" : " social-disabled");
+        item.setAttribute("aria-label", "Akçaabat Haber " + platform.name + (url ? " hesabı" : " hesabı henüz eklenmedi"));
+        item.title = platform.name + (url ? "" : " · bağlantı yakında");
+        item.textContent = platform.mark;
+        container.appendChild(item);
       });
-      if (!count) { const message = document.createElement("span"); message.className = "social-empty"; message.textContent = "Hesap bağlantıları yakında"; container.appendChild(message); }
     });
   }
   async function loadBranding() {
