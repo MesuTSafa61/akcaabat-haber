@@ -262,8 +262,35 @@
             border-bottom: 0;
         }
 
+        .draft-news-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 260px;
+        }
+
+        .draft-thumb {
+            width: 68px;
+            height: 68px;
+            flex: 0 0 68px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e9eff4;
+        }
+
+        .draft-thumb-fallback {
+            display: grid;
+            place-items: center;
+            color: #72839a;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .draft-thumb-fallback[hidden] { display: none; }
+
         .news-title {
             max-width: 360px;
+            min-width: 0;
             font-weight: 700;
             color: #111827;
         }
@@ -875,6 +902,7 @@
                 title,
                 slug,
                 summary,
+                image_url,
                 status,
                 created_at,
                 updated_at,
@@ -902,6 +930,7 @@
                 title: item.title || "Başlıksız taslak",
                 slug: item.slug || "",
                 summary: item.summary || "",
+                image_url: item.image_url || "",
                 status: item.status || "draft",
                 created_at: item.created_at,
                 updated_at: item.updated_at,
@@ -1034,15 +1063,24 @@
     function renderRow(item) {
         const categoryName =
             getCategoryName(item);
+        let imageUrl = "";
+        try {
+            const parsed = new URL(item.image_url);
+            if (parsed.protocol === "https:") imageUrl = parsed.href;
+        } catch { /* Geçersiz görsel adresi. */ }
+        const thumbnail = imageUrl
+            ? `<img class="draft-thumb" src="${escapeHtml(imageUrl)}" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="draft-thumb draft-thumb-fallback" hidden aria-hidden="true">AH</span>`
+            : `<span class="draft-thumb draft-thumb-fallback" aria-hidden="true">AH</span>`;
 
         return `
             <tr>
                 <td>
-                    <div class="news-title">
-                        ${escapeHtml(item.title)}
-                        <small>
-                            ${escapeHtml(item.summary)}
-                        </small>
+                    <div class="draft-news-cell">
+                        ${thumbnail}
+                        <div class="news-title">
+                            ${escapeHtml(item.title)}
+                            <small>${escapeHtml(item.summary)}</small>
+                        </div>
                     </div>
                 </td>
 
