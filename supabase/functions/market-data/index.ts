@@ -38,11 +38,26 @@ Deno.serve(async (request) => {
   const perOunce = 31.1034768;
   const numberOrNull = (value: number) => Number.isFinite(value) && value > 0 ? Math.round(value * 100) / 100 : null;
   const previousValue = previous.status === "fulfilled" ? previous.value?.[0]?.value || {} : {};
+  const sourceDate = typeof fx?.date === "string" ? fx.date : "";
+  const previousDate = sourceDate ? new Date(sourceDate + "T12:00:00Z") : null;
+  previousDate?.setUTCDate(previousDate.getUTCDate() - 1);
+  const historical = previousDate
+    ? await json("https://api.frankfurter.app/" + previousDate.toISOString().slice(0, 10) + "?from=USD&to=TRY,EUR").catch(() => null)
+    : null;
+  const historicalUsd = Number(historical?.rates?.TRY);
+  const historicalEur = Number(historical?.rates?.EUR);
+  const day = new Date().toISOString().slice(0, 10);
+  const weekday = new Date().getUTCDay();
+  const storedReference = previousValue.reference || {};
+  const reference = previousValue.reference_date === day ? storedReference : {
+    gold_try_gram: previousValue.gold_try_gram,
+    silver_try_gram: previousValue.silver_try_gram,
+  };
   const movement = (current: number | null, old: unknown) => {
     const before = Number(old);
-    if (!current || !Number.isFinite(before) || before <= 0) return { direction: "flat", percent: 0 };
-    const percent = Math.round(((current - before) / before) * 10000) / 100;
-    return { direction: percent > 0 ? "up" : percent < 0 ? "down" : "flat", percent: Math.abs(percent) };
+    if (!current || !Number.isFinite(before) || before <= 0) return { direction: "unknown", percent: null };
+    const percent = ((current - before) / before) * 100;
+    return { direction: percent > 0 ? "up" : percent < 0 ? "down" : "flat", percent: Math.round(Math.abs(percent) * 100) / 100 };
   };
 
   const current = {
@@ -55,10 +70,16 @@ Deno.serve(async (request) => {
   const payload = {
     ...current,
     changes: {
-      usd: movement(current.usd_try, previousValue.usd_try),
-      eur: movement(current.eur_try, previousValue.eur_try),
-      gold: movement(current.gold_try_gram, previousValue.gold_try_gram),
-      silver: movement(current.silver_try_gram, previousValue.silver_try_gram),
+      usd: movement(current.usd_try, historicalUsd),
+      eur: movement(current.eur_try, historicalUsd / historicalEur),
+      gold: movement(current.gold_try_gram, reference.gold_try_gram),
+      silver: movement(current.silver_try_gram, reference.silver_try_gram),
+    },
+    reference_date: day,
+    market_closed: weekday === 0 || weekday === 6,
+    reference: {
+      gold_try_gram: numberOrNull(Number(reference.gold_try_gram)) || current.gold_try_gram,
+      silver_try_gram: numberOrNull(Number(reference.silver_try_gram)) || current.silver_try_gram,
     },
     updated_at: new Date().toISOString(),
   };
