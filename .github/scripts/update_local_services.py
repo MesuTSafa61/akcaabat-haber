@@ -90,6 +90,13 @@ def refresh_pharmacies():
 def refresh_obituaries():
     soup = fetch(data['obituaries']['source'])
     print('Belediye vefat HTML:', len(str(soup)), 'karakter')
+    heading = soup.find(string=lambda value: value and 'VEFAT EDENLER' in value.upper())
+    if heading:
+        node = heading.parent
+        print('Vefat başlık çevresi:', str(node.parent.parent)[:4500])
+    print('Vefat iframe:', [(f.get('src'), f.get('id')) for f in soup.select('iframe')])
+    print('Vefat script adları:', [s.get('src') for s in soup.select('script[src]') if any(k in (s.get('src') or '').lower() for k in ('vefat', 'cenaze', 'ajax', 'jquery', 'webservice'))])
+    print('Vefat işaretleri:', [(str(m.start()), soup.get_text(' ', strip=True)[m.start():m.start()+160]) for m in list(re.finditer('vefat', soup.get_text(' ', strip=True), re.I))[-4:]])
     # Source currently renders an empty heading; do not invent names or reuse old notices.
     # Populate only if structured dates and names are published in an identifiable table.
     items = []
