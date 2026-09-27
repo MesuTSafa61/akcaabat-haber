@@ -4,7 +4,7 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v147";
+const CACHE_NAME = "akcaabat-haber-v148";
 
 const STATIC_FILES = [
   "./",

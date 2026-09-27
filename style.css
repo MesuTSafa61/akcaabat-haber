@@ -1555,3 +1555,9 @@ body{background:#edf1f4;color:#111827}
 .sidebar .sidebar-box{border-radius:15px}
 .headline-category-panel{border-radius:14px}
 .category-chip{border-radius:9px}
+
+/* Son Haberler: görselin tamamını kart ölçüsünü değiştirmeden göster. */
+.news-card-image{background:#eef2f6}
+.news-card-image img{display:block;object-fit:contain}
+.news-card:hover .news-card-image img{transform:none}
+@media(max-width:560px){.news-card-image{min-height:135px}.news-card-image img{position:absolute;inset:0;width:100%;height:100%;min-height:0}}
