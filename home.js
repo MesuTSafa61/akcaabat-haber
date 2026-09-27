@@ -5,6 +5,8 @@
         "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=78";
     const CATEGORY_PRIORITY = ["Akçaabat", "Trabzon", "Trabzonspor"];
     const DEFAULT_SIDE_CATEGORIES = ["Akçaabat", "Trabzon", "Trabzonspor", "Gündem", "Spor"];
+    const CATEGORY_CHIP_ORDER = ["Akçaabat", "Trabzon", "Trabzonspor", "Spor", "Gündem", "Asayiş", "Ekonomi", "Siyaset", "Kültür & Sanat", "Yaşam", "Dünya", "Teknoloji"];
+    const CATEGORY_ICONS = { "Akçaabat": "📍", "Trabzon": "🏙️", "Trabzonspor": "🏆", "Spor": "⚽", "Gündem": "📰", "Asayiş": "🚨", "Ekonomi": "💰", "Siyaset": "🏛️", "Kültür & Sanat": "🎭", "Yaşam": "🌿", "Dünya": "🌍", "Teknoloji": "💻" };
     const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideCategories: DEFAULT_SIDE_CATEGORIES.map(name => ({ name, pinned: [] })), activeSideCategory: "Trabzon", sideExtras: [] };
 
     function mergeNews(items) {
@@ -104,6 +106,30 @@
             .order("headline_order", { ascending: true }).limit(15);
         if (headlineResult.error) console.warn("Manşet listesi alınamadı:", headlineResult.error);
         return mergeNews([...(result.data || []), ...(headlineResult.data || [])].map(normalize));
+    }
+
+    async function loadCategoryStrip() {
+        const target = document.getElementById("homeCategoryStrip");
+        if (!target || !window.supabase || !window.AKCAABAT_SUPABASE) return;
+        try {
+            const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+            const { data, error } = await client.from("categories").select("name,slug,is_active").eq("is_active", true).limit(100);
+            if (error) throw error;
+            if (!data || !data.length) return;
+            data.sort((a, b) => {
+                const ai = CATEGORY_CHIP_ORDER.indexOf(a.name), bi = CATEGORY_CHIP_ORDER.indexOf(b.name);
+                return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.name.localeCompare(b.name, "tr-TR");
+            });
+            target.replaceChildren(...data.filter(category => category.name && category.slug).map(category => {
+                const link = document.createElement("a");
+                link.className = "category-chip";
+                link.href = "kategori.html?slug=" + encodeURIComponent(category.slug);
+                link.textContent = (CATEGORY_ICONS[category.name] || "📰") + " " + category.name;
+                return link;
+            }));
+        } catch (error) {
+            console.warn("Kategoriler güncellenemedi, mevcut bağlantılar gösteriliyor:", error);
+        }
     }
 
     async function loadSideCategories() {
@@ -383,6 +409,7 @@
 
     async function init() {
         initControls();
+        loadCategoryStrip();
         document.addEventListener("visibilitychange", restartHeadlineTimer);
         if ("serviceWorker" in navigator && window.isSecureContext) {
             navigator.serviceWorker.register("sw.js").catch(function (error) {

@@ -144,17 +144,25 @@
       const controls = document.getElementById("portalBreakingControls");
       const count = document.getElementById("portalBreakingCount");
       let index = 0;
+      let rotationTimer = null;
       function show(offset) {
         index = (index + offset + news.length) % news.length;
         link.textContent = news[index].title;
         link.href = "haber-detay.html?slug=" + encodeURIComponent(news[index].slug);
         count.textContent = (index + 1) + "/" + news.length;
       }
+      function restartRotation() {
+        if (rotationTimer) clearInterval(rotationTimer);
+        if (news.length > 1 && !document.hidden) {
+          rotationTimer = setInterval(() => show(1), 10000);
+        }
+      }
+      function step(offset) { show(offset); restartRotation(); }
       show(0);
       controls.hidden = news.length < 2;
       if (news.length > 1) {
-        document.getElementById("portalBreakingPrev").addEventListener("click", () => show(-1));
-        document.getElementById("portalBreakingNext").addEventListener("click", () => show(1));
+        document.getElementById("portalBreakingPrev").addEventListener("click", () => step(-1));
+        document.getElementById("portalBreakingNext").addEventListener("click", () => step(1));
         let startX = null, dragged = false;
         content.addEventListener("pointerdown", event => {
           if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -166,7 +174,7 @@
           startX = null;
           if (Math.abs(delta) < 35) return;
           dragged = true;
-          show(delta < 0 ? 1 : -1);
+          step(delta < 0 ? 1 : -1);
         });
         content.addEventListener("pointercancel", () => { startX = null; });
         content.addEventListener("click", event => {
@@ -177,8 +185,10 @@
         content.setAttribute("aria-label", "Son dakika haberleri; sağ ve sol oklarla değiştir");
         content.addEventListener("keydown", event => {
           if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-          event.preventDefault(); show(event.key === "ArrowRight" ? 1 : -1);
+          event.preventDefault(); step(event.key === "ArrowRight" ? 1 : -1);
         });
+        document.addEventListener("visibilitychange", restartRotation);
+        restartRotation();
       }
       bar.style.display = "";
     } catch (_) { /* Veri yoksa boş son dakika bandı gösterilmez. */ }
