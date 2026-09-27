@@ -254,6 +254,7 @@
     }
 
     function renderBreaking() {
+        if (document.getElementById("portalBreakingBar")) return;
         const bar = document.querySelector(".breaking-bar");
         const target = document.getElementById("breakingContent");
         const items = state.news.filter(function (item) { return item.is_breaking; }).slice(0, 4);

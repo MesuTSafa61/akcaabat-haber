@@ -24,7 +24,7 @@
     <nav class="portal-category-rail" aria-label="Öne çıkan kategoriler"><div class="container portal-category-links"><a href="index.html" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" data-category="trabzonspor">Trabzonspor</a></div></nav>
     <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
-    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div></div></section>
+    <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
   [":scope > header", ":scope > nav", ":scope > .top-bar", ":scope > .topbar", ":scope > .market-strip", ":scope > .service-strip", ":scope > .breaking-bar", ":scope > .search-panel"].forEach(function (selector) {
@@ -128,16 +128,54 @@
     try {
       await loadDependency("supabase-config.js", function () { return Boolean(window.AKCAABAT_SUPABASE); });
       const config = window.AKCAABAT_SUPABASE;
-      const response = await fetch(config.url + "/rest/v1/news?select=title,slug&status=eq.published&is_breaking=eq.true&order=published_at.desc&limit=1", {
+      const response = await fetch(config.url + "/rest/v1/news?select=title,slug&status=eq.published&is_breaking=eq.true&order=published_at.desc&limit=12", {
         headers: { apikey: config.key, Authorization: "Bearer " + config.key }
       });
       if (!response.ok) return;
-      const news = (await response.json())[0];
-      if (!news || !news.title || !news.slug) return;
+      const news = (await response.json()).filter(item => item.title && item.slug);
+      if (!news.length) return;
       const link = document.getElementById("portalBreakingLink");
       const bar = document.getElementById("portalBreakingBar");
-      link.textContent = news.title;
-      link.href = "haber-detay.html?slug=" + encodeURIComponent(news.slug);
+      const content = document.getElementById("portalBreakingContent");
+      const controls = document.getElementById("portalBreakingControls");
+      const count = document.getElementById("portalBreakingCount");
+      let index = 0;
+      function show(offset) {
+        index = (index + offset + news.length) % news.length;
+        link.textContent = news[index].title;
+        link.href = "haber-detay.html?slug=" + encodeURIComponent(news[index].slug);
+        count.textContent = (index + 1) + "/" + news.length;
+      }
+      show(0);
+      controls.hidden = news.length < 2;
+      if (news.length > 1) {
+        document.getElementById("portalBreakingPrev").addEventListener("click", () => show(-1));
+        document.getElementById("portalBreakingNext").addEventListener("click", () => show(1));
+        let startX = null, dragged = false;
+        content.addEventListener("pointerdown", event => {
+          if (event.pointerType === "mouse" && event.button !== 0) return;
+          startX = event.clientX; dragged = false;
+        });
+        content.addEventListener("pointerup", event => {
+          if (startX === null) return;
+          const delta = event.clientX - startX;
+          startX = null;
+          if (Math.abs(delta) < 35) return;
+          dragged = true;
+          show(delta < 0 ? 1 : -1);
+        });
+        content.addEventListener("pointercancel", () => { startX = null; });
+        content.addEventListener("click", event => {
+          if (!dragged) return;
+          event.preventDefault(); event.stopPropagation(); dragged = false;
+        }, true);
+        content.tabIndex = 0;
+        content.setAttribute("aria-label", "Son dakika haberleri; sağ ve sol oklarla değiştir");
+        content.addEventListener("keydown", event => {
+          if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+          event.preventDefault(); show(event.key === "ArrowRight" ? 1 : -1);
+        });
+      }
       bar.style.display = "";
     } catch (_) { /* Veri yoksa boş son dakika bandı gösterilmez. */ }
   }

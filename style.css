@@ -1464,3 +1464,23 @@ body{background:#edf1f4;color:#111827}
 .headline-main-column .hero-full-link:focus-visible{outline:4px solid #1594ca;outline-offset:-6px}
 .headline-main-column .headline-overlay-controls span{left:auto;right:12px;top:14px}
 @media(max-width:780px){.headline-main-column .headline-overlay-controls span{left:auto;right:11px;top:10px}}
+
+/* Son dakika: kaydırılabilir haberler ve canlı yayın etiketi. */
+#portalBreakingBar .breaking-inner{gap:10px;min-width:0}
+#portalBreakingBar .breaking-label{position:relative;isolation:isolate;overflow:hidden;gap:5px;flex-shrink:0;animation:breaking-pulse 2.8s ease-in-out infinite}
+#portalBreakingBar .breaking-label::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.28) 48%,transparent 75%);transform:translateX(-120%);animation:breaking-shine 3.8s ease-in-out infinite}
+#portalBreakingBar .breaking-dot{margin:0;box-shadow:0 0 0 0 rgba(255,255,255,.75);animation:breaking-dot 1.8s ease-out infinite}
+#portalBreakingBar .breaking-content{flex:1;min-width:0;min-height:43px;touch-action:pan-y;cursor:grab;user-select:none}
+#portalBreakingBar .breaking-content:active{cursor:grabbing}
+#portalBreakingBar .breaking-content a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+#portalBreakingBar .breaking-content:focus-visible{outline:2px solid #1594ca;outline-offset:-3px}
+#portalBreakingBar .breaking-controls{display:flex;align-items:center;gap:5px;flex-shrink:0;color:#64748b;font-size:11px;font-weight:800}
+#portalBreakingBar .breaking-controls[hidden]{display:none}
+#portalBreakingBar .breaking-controls button{width:27px;height:27px;padding:0;border:1px solid #d8dee7;border-radius:6px;background:#fff;color:#142a45;font-size:21px;line-height:1;cursor:pointer}
+#portalBreakingBar .breaking-controls button:hover{background:#eef5f8}
+#portalBreakingBar .breaking-controls button:focus-visible{outline:2px solid #1594ca;outline-offset:2px}
+@keyframes breaking-pulse{50%{filter:brightness(1.17)}}
+@keyframes breaking-shine{0%,42%{transform:translateX(-120%)}75%,100%{transform:translateX(120%)}}
+@keyframes breaking-dot{70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}}
+@media(max-width:560px){#portalBreakingBar .breaking-inner{gap:6px}#portalBreakingBar .breaking-label{padding:0 10px;font-size:10px}#portalBreakingBar .breaking-content{font-size:12px}#portalBreakingBar .breaking-controls{gap:2px}#portalBreakingBar .breaking-controls button{width:23px;height:25px}#portalBreakingBar .breaking-controls span{display:none}}
+@media(prefers-reduced-motion:reduce){#portalBreakingBar .breaking-label,#portalBreakingBar .breaking-label::after,#portalBreakingBar .breaking-dot{animation:none}}
