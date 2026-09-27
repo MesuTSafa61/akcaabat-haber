@@ -41,17 +41,28 @@
     output.replaceChildren(section, weekly);
   }
   function renderPharmacy(data) {
-    const section = tag("section", "local-panel"); const heading = tag("div", "local-heading-row"); heading.append(tag("h2", "", "Bugün nöbetçi olanlar"), link("Resmî liste ↗", sourceUrls.pharmacy, true)); section.append(heading);
+    const section = tag("section", "local-panel pharmacy-panel");
+    const heading = tag("div", "pharmacy-heading");
+    const headingIcon = tag("span", "pharmacy-heading-icon", "✚"); headingIcon.setAttribute("aria-hidden", "true");
+    const headingText = tag("div"); headingText.append(tag("span", "pharmacy-eyebrow", "AKÇAABAT • BUGÜN"), tag("h2", "", "Nöbetçi eczaneler"));
+    heading.append(headingIcon, headingText); section.append(heading);
     const valid = Array.isArray(data.items) && data.items.length > 0 && (data.startsAt && data.endsAt ? new Date(data.startsAt) <= new Date() && new Date(data.endsAt) > new Date() : data.date === today());
-    if (!valid) { section.append(empty("Bugünkü nöbet listesi doğrulanamadı.", sourceUrls.pharmacy, "Eczacı Odasında kontrol et ↗")); output.replaceChildren(section); return; }
-    section.append(tag("div", "local-meta", dateLabel(data.date) + "  •  Akçaabat  •  Nöbet bitişi: " + (data.endsAt ? new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(data.endsAt)) : "resmî listede")));
+    if (!valid) { section.append(tag("p", "local-empty", "Bugünkü nöbet listesi henüz doğrulanamadı. Biraz sonra yeniden deneyin."), tag("p", "pharmacy-credit", "Veri: Trabzon Eczacı Odası")); output.replaceChildren(section); return; }
+    const until = data.endsAt ? new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(data.endsAt)) : "—";
+    const status = tag("div", "pharmacy-status");
+    status.append(tag("span", "pharmacy-status-date", dateLabel(data.date)), tag("span", "pharmacy-status-end", "Nöbet bitişi: " + until)); section.append(status);
     const list = tag("div", "pharmacy-list");
     for (const item of data.items) {
-      const card = tag("article", "pharmacy-card"); card.append(tag("small", "", "NÖBETÇİ ECZANE"), tag("h3", "", item.name)); card.append(tag("address", "", item.address || "Adres için resmî listeyi inceleyin."));
-      const actions = tag("div", "pharmacy-actions"); const phone = (item.phone || "").replace(/[^0-9+]/g, ""); if (phone.length >= 10) actions.append(link("☎ " + item.phone, "tel:" + phone));
-      if (item.address) actions.append(link("↗ Yol tarifi", "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(item.name + " " + item.address + " Akçaabat Trabzon"), true)); actions.append(link("Kaynak ↗", sourceUrls.pharmacy, true)); card.append(actions); list.append(card);
+      const card = tag("article", "pharmacy-card");
+      const cardTop = tag("div", "pharmacy-card-top"); const cardIcon = tag("span", "pharmacy-card-icon", "✚"); cardIcon.setAttribute("aria-hidden", "true");
+      const cardTitle = tag("div"); cardTitle.append(tag("small", "", "ŞU AN NÖBETÇİ"), tag("h3", "", item.name)); cardTop.append(cardIcon, cardTitle); card.append(cardTop);
+      const address = tag("address", "pharmacy-address"); address.append(tag("span", "", "⌖"), tag("span", "", item.address || "Adres bilgisi bulunamadı")); card.append(address);
+      const actions = tag("div", "pharmacy-actions"); const phone = (item.phone || "").replace(/[^0-9+]/g, "");
+      if (phone.length >= 10) actions.append(link("☎  " + item.phone, "tel:" + phone));
+      if (item.address) actions.append(link("➤  Yol tarifi", "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(item.name + " " + item.address + " Akçaabat Trabzon"), true));
+      card.append(actions); list.append(card);
     }
-    section.append(list, tag("p", "local-note", "Nöbet bilgileri değişebilir. Gitmeden önce eczaneyi telefonla arayarak teyit edin."), sourceNote("Trabzon Eczacı Odası", sourceUrls.pharmacy)); output.replaceChildren(section);
+    section.append(list, tag("p", "pharmacy-advice", "Gitmeden önce eczaneyi arayıp nöbet durumunu teyit edin."), tag("p", "pharmacy-credit", "Veri: Trabzon Eczacı Odası")); output.replaceChildren(section);
   }
   function renderObituaries(data) {
     const section = tag("section", "local-panel obituary-panel");

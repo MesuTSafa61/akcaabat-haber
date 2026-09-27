@@ -48,6 +48,8 @@ body.portal-unified{margin:0;background:var(--page);color:var(--ink);font-family
 .portal-shell-top .service-inner{justify-content:space-between;gap:12px;min-height:45px}
 .portal-shell-top .service-inner a,.portal-shell-top .service-inner a:first-child{padding:13px 4px 11px;border:0;border-bottom:2px solid #d5dfe6;font-size:12px}
 .portal-shell-top .service-inner a:hover{background:transparent;color:#bf172a;border-color:#bf172a}
+.service-pharmacy-icon{color:#119163;font-weight:900;font-size:1.2em;vertical-align:-.04em}
+.service-mosque-icon{display:inline-block;vertical-align:-.16em;object-fit:contain}
 .portal-shell-top .breaking-bar{border-top:1px solid #e3e8ee}
 @media(max-width:1100px){.portal-shell-top .portal-brand-logo{width:310px!important}.portal-shell-top .main-nav .nav-link{padding-inline:11px;font-size:12px}}
 @media(max-width:780px){

@@ -19,3 +19,26 @@
 .obituary-body{padding:20px 22px 22px;color:#43576a}.obituary-fields{display:grid;gap:11px;margin:0 0 18px}.obituary-field{display:grid;grid-template-columns:minmax(120px,180px) 1fr;gap:8px}.obituary-field dt{font-weight:800;color:#28445c}.obituary-field dd{margin:0;overflow-wrap:anywhere}
 .obituary-no-results{margin:0;padding:24px;border-radius:14px;background:#f4f8fc;color:#53677d;text-align:center}.obituary-source{border-top:1px solid #e5ecf1;padding-top:16px;font-weight:700}
 @media(max-width:560px){.obituary-summary{gap:10px;padding:14px}.obituary-mosque{width:32px;height:32px}.obituary-body{padding:16px}.obituary-field{grid-template-columns:1fr;gap:2px}.obituary-date-arrow{width:39px;height:39px}}
+
+.local-service-tile.notices .local-service-symbol{background:#eaf3f8}.local-service-tile.notices .local-service-symbol img{display:block;width:30px;height:30px}
+.obituary-hero-icon{background:#eaf4fb}.obituary-hero-icon img{display:block;width:64px;height:64px}
+.pharmacy-panel{padding:clamp(18px,3vw,32px)}
+.pharmacy-heading{display:flex;align-items:center;gap:15px;margin-bottom:19px}
+.pharmacy-heading-icon{display:grid;place-items:center;flex:none;width:54px;height:54px;border-radius:16px;background:#e5f7ef;color:#0d875c;font-size:33px;font-weight:900}
+.pharmacy-eyebrow{display:block;color:#087a57;font-size:11px;font-weight:900;letter-spacing:.14em}
+.pharmacy-heading h2{margin:4px 0 0;font-size:clamp(22px,3vw,29px)}
+.pharmacy-status{display:flex;flex-wrap:wrap;align-items:center;gap:7px 20px;padding:13px 17px;border-radius:13px;background:#ecf8f2;color:#185e49;font-size:13px;font-weight:750}
+.pharmacy-status-end{margin-left:auto}
+.pharmacy-panel .pharmacy-list{margin-top:17px;gap:14px}
+.pharmacy-panel .pharmacy-card{display:flex;flex-direction:column;min-width:0;padding:21px;border-color:#dbe7e1;background:#fff;box-shadow:0 6px 19px rgba(14,65,52,.055)}
+.pharmacy-card-top{display:flex;align-items:center;gap:13px}
+.pharmacy-card-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:12px;background:#e9f7f0;color:#0c8c5c;font-size:25px;font-weight:900}
+.pharmacy-card-top small{font-size:10px;color:#0a8258}.pharmacy-card-top h3{margin:3px 0 0;font-size:clamp(18px,2vw,22px);line-height:1.2}
+.pharmacy-panel .pharmacy-address{display:flex;gap:10px;align-items:flex-start;min-height:0;margin:19px 0 20px;color:#41566b;font-size:14px;line-height:1.5}
+.pharmacy-address span:first-child{color:#12805b;font-size:23px;line-height:1}
+.pharmacy-panel .pharmacy-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:auto}
+.pharmacy-panel .pharmacy-actions .local-button{min-width:0;min-height:46px;padding:10px 12px;border-radius:12px;background:#0c8059;font-size:13px}
+.pharmacy-panel .pharmacy-actions .local-button.secondary{border:1px solid #bcded0;background:#edf8f2;color:#126444!important}
+.pharmacy-advice{margin:20px 0 0!important;color:#53677a;font-size:13px}
+.pharmacy-credit{margin:12px 0 0!important;color:#75889a;font-size:12px}
+@media(max-width:560px){.pharmacy-panel .pharmacy-card{padding:17px}.pharmacy-status-end{margin-left:0}.pharmacy-panel .pharmacy-actions .local-button{font-size:12px}.obituary-hero-icon img{width:48px;height:48px}}
