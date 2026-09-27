@@ -5,7 +5,7 @@
         "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=78";
     const CATEGORY_PRIORITY = ["Akçaabat", "Trabzon", "Trabzonspor"];
     const DEFAULT_SIDE_CATEGORIES = ["Akçaabat", "Trabzon", "Trabzonspor", "Gündem", "Spor"];
-    const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideCategories: DEFAULT_SIDE_CATEGORIES.map(name => ({ name, pinned: [] })), activeSideCategory: "Akçaabat", sideExtras: [] };
+    const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideCategories: DEFAULT_SIDE_CATEGORIES.map(name => ({ name, pinned: [] })), activeSideCategory: "Trabzon", sideExtras: [] };
 
     function mergeNews(items) {
         const seen = new Set();
