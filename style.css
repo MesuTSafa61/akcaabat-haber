@@ -1555,18 +1555,18 @@ body{background:#edf1f4;color:#111827}
 .sidebar .sidebar-box{border-radius:15px}
 
 /* En çok okunanlar: görselsiz, kolay taranan sıralı liste. */
-.sidebar .popular-list{display:grid;gap:8px;padding:13px}
-.sidebar .popular-item{grid-template-columns:38px minmax(0,1fr);align-items:start;gap:11px;min-width:0;padding:12px;border:1px solid #e5edf3;border-radius:12px;background:#f8fafc;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
-.sidebar .popular-item:last-child{border:1px solid #e5edf3}
-.sidebar .popular-item:hover{background:#edf7fb;border-color:#b7dcea;transform:translateX(2px)}
-.sidebar .popular-item:first-child{background:#fff7f7;border-color:#f2dfe2}
-.sidebar .popular-number{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:#e3f3fa;color:#128fbe;font-size:21px;line-height:1;font-weight:900}
-.sidebar .popular-item:first-child .popular-number{background:#d61c2d;color:#fff}
+.sidebar .popular-list{display:grid;gap:0;padding:4px 17px 12px}
+.sidebar .popular-item{grid-template-columns:29px minmax(0,1fr);align-items:start;gap:12px;min-width:0;padding:13px 3px;border:0;border-bottom:1px solid #e6ecf2;border-radius:0;background:transparent;cursor:pointer;transition:background .2s}
+.sidebar .popular-item:last-child{border:0}
+.sidebar .popular-item:hover{background:#f2f8fb}
+.sidebar .popular-item:first-child{background:transparent}
+.sidebar .popular-number{display:block;width:29px;height:auto;border:0;border-radius:0;background:transparent;color:#168dbb;font-size:22px;line-height:1.1;font-weight:850;font-variant-numeric:tabular-nums}
+.sidebar .popular-item:first-child .popular-number{background:transparent;color:#c7192b}
 .sidebar .popular-copy{min-width:0}
-.sidebar .popular-item small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;letter-spacing:.08em}
-.sidebar .popular-item h3{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;margin:4px 0 0;font-size:13px;line-height:1.35;transition:color .2s}
+.sidebar .popular-item small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;letter-spacing:.07em}
+.sidebar .popular-item h3{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;margin:3px 0 0;font-size:13px;line-height:1.35;transition:color .2s}
 .sidebar .popular-item:hover h3{color:#0b79aa}
-@media(max-width:560px){.sidebar .popular-list{padding:14px}.sidebar .popular-item{grid-template-columns:40px minmax(0,1fr);gap:13px;padding:13px}.sidebar .popular-number{width:40px;height:40px}.sidebar .popular-item h3{font-size:14px}}
+@media(max-width:560px){.sidebar .popular-list{padding:5px 17px 13px}.sidebar .popular-item{grid-template-columns:30px minmax(0,1fr);gap:11px;padding:12px 2px}.sidebar .popular-number{width:30px;font-size:21px}.sidebar .popular-item h3{font-size:13px}}
 .headline-category-panel{border-radius:14px}
 .category-chip{border-radius:9px}
 

@@ -78,3 +78,66 @@ body.portal-unified{margin:0;background:var(--page);color:var(--ink);font-family
   .portal-shell-top .service-inner{min-height:44px}
   .portal-shell-top .service-inner a{font-size:10px}
 }
+
+/* Üst bilgi, piyasa ve tema kontrolü */
+.portal-shell-top .portal-top-bar .top-bar-inner{display:flex;gap:22px;min-height:40px}
+.portal-shell-top .portal-top-bar .top-date{flex:none;white-space:nowrap;gap:7px}
+.portal-shell-top .portal-top-bar .top-date time{margin-left:7px;padding-left:12px;border-left:1px solid #ffffff42;font-weight:800;color:#fff}
+.portal-shell-top .portal-top-market{display:flex;align-items:center;min-width:0;flex:1;gap:12px;justify-content:flex-end}
+.portal-shell-top .portal-top-market .market-scroll{flex:1;max-width:720px;overflow-x:auto;scrollbar-width:none}
+.portal-shell-top .portal-top-market .market-scroll::-webkit-scrollbar{display:none}
+.portal-shell-top .portal-top-market .market-list{background:transparent!important;justify-content:flex-end}
+.portal-shell-top .portal-top-market .market-item{background:transparent!important;color:#e4eff8!important;border-color:#ffffff30;padding:0 12px;font-size:11px}
+.portal-shell-top .portal-top-market .market-list em{color:#fff}
+.portal-shell-top .portal-top-market .market-weather{display:block!important;flex:none;margin:0;padding-left:12px;border-color:#ffffff30;color:#e4eff8;font-size:11px}
+.portal-shell-top .portal-theme-button{display:grid;place-items:center;width:38px;height:38px;border:1px solid #dbe3ec;border-radius:50%;background:#f4f7fa;color:#193b60;font-size:22px;cursor:pointer}
+.portal-shell-top .portal-theme-button:hover{background:#e6f0f6}
+.portal-shell-top .portal-theme-button:focus-visible{outline:2px solid #1496c4;outline-offset:2px}
+.portal-shell-top .nav-icon,.portal-shell-top .nav-extra{display:none}
+@media(max-width:780px){
+  .portal-shell-top .portal-top-bar .top-bar-inner{gap:12px}
+  .portal-shell-top .portal-top-market .market-list{justify-content:flex-start}
+  .portal-shell-top .portal-top-market .market-weather{display:none!important}
+  .portal-shell-top .main-nav.mobile-open{background:#142842;box-shadow:0 18px 32px #07142655}
+  .portal-shell-top .main-nav .nav-inner{gap:6px!important;padding:12px!important;max-height:min(70vh,620px)}
+  .portal-shell-top .main-nav .nav-link{display:flex;align-items:center;gap:9px;min-height:49px;padding:7px 10px;border:1px solid #ffffff20!important;border-radius:11px;background:#ffffff0c;color:#fff!important;line-height:1.2}
+  .portal-shell-top .main-nav .nav-link:nth-child(odd){border-right:1px solid #ffffff20!important}
+  .portal-shell-top .main-nav .nav-link.active{background:#28435f;color:#fff!important;border-color:#50708b!important}
+  .portal-shell-top .main-nav .nav-extra{display:flex}
+  .portal-shell-top .nav-icon{display:grid;place-items:center;flex:none;width:29px;height:29px;border-radius:8px;background:#ffffff18;color:#9bd4ef;font-size:16px}
+}
+@media(max-width:560px){
+  .portal-shell-top .portal-top-bar .top-bar-inner{width:100%;padding-inline:10px;gap:8px;min-height:34px}
+  .portal-shell-top .portal-top-bar .top-date{gap:3px;font-size:9px}
+  .portal-shell-top .portal-top-bar .top-date time{margin-left:3px;padding-left:6px}
+  .portal-shell-top .portal-top-market .market-item{padding:0 8px;font-size:9px}
+  .portal-shell-top .portal-theme-button{width:34px;height:34px;font-size:20px}
+  .portal-shell-top .header-actions{gap:4px}
+  .portal-shell-top .main-nav .nav-link{font-size:11px;padding:7px}
+  .portal-shell-top .nav-icon{width:26px;height:26px;font-size:14px}
+}
+
+/* Son dakika metni her 10 saniyelik haber süresinde okunarak ilerler. */
+#portalBreakingBar .breaking-content a{width:max-content;max-width:none;text-overflow:clip;animation:breaking-read 10s linear infinite}
+#portalBreakingBar .breaking-content:hover a,#portalBreakingBar .breaking-content:focus-within a{animation-play-state:paused}
+@keyframes breaking-read{0%,8%{transform:translateX(0)}88%,96%{transform:translateX(calc(-1 * var(--breaking-travel,0px)))}100%{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){#portalBreakingBar .breaking-content a{animation:none;max-width:100%;text-overflow:ellipsis}}
+
+/* Okuma teması: tüm halka açık sayfalarda ortak yüzeyler. */
+html[data-theme="dark"]{color-scheme:dark;--bg:#0c1421;--white:#152337;--ink:#ecf2f9;--muted:#a4b6c8;--line:#304258;--navy:#071426;--blue:#82c9ee}
+html[data-theme="dark"] body{background:#0c1421!important;color:#ecf2f9!important}
+html[data-theme="dark"] .portal-shell-top .portal-site-header,html[data-theme="dark"] .portal-shell-top .service-strip,html[data-theme="dark"] .portal-shell-top .breaking-bar,html[data-theme="dark"] .portal-shell-top .search-panel{background:#142338!important;color:#edf4fb!important}
+html[data-theme="dark"] .portal-shell-top .service-inner a,html[data-theme="dark"] .portal-shell-top .breaking-content a{color:#edf4fb!important}
+html[data-theme="dark"] .portal-shell-top .header-search-button{color:#eaf1f9}
+html[data-theme="dark"] .portal-shell-top .portal-theme-button{background:#2a405b;color:#ffd475;border-color:#42617c}
+html[data-theme="dark"] :is(.news-card,.sidebar-box,.headline-deck,.headline-tab,.headline-category-panel,.category-story,.category-chip,.local-panel,.popular-item,.portal-service-card,.author-card,.gallery-card,.article-card,.content-card,.quick-box,.obituary-entry,.pharmacy-card,.prayer-slot){background:#17263b!important;color:#edf4fb!important;border-color:#334962!important}
+html[data-theme="dark"] :is(.news-card,.sidebar-box,.headline-deck,.headline-category-panel,.category-story,.local-panel,.popular-item,.portal-service-card,.author-card,.obituary-entry) :is(h1,h2,h3,h4,strong,p,small,span,time){color:inherit}
+html[data-theme="dark"] :is(.news-card-meta,.category-story-body time,.local-source){color:#a8bed3!important}
+html[data-theme="dark"] :is(input,select,textarea){background:#1b2c42!important;color:#eef5fb!important;border-color:#405772!important}
+html[data-theme="dark"] .sidebar .popular-item:first-child{background:#302431!important}
+html[data-theme="dark"] .sidebar .popular-item:hover{background:#213a52!important}
+html[data-theme="dark"] .portal-shell-top .main-nav.mobile-open{background:#101e31!important}
+html[data-theme="dark"] :is(.article-card,.article-source-card,.article-share,.article-sidebar-box,.gallery-video-card,.gallery-empty,.gallery-links a,.local-empty,.obituary-summary,.pharmacy-status,.prayer-status,.headline-category-story,.quick-links a){background:#1a2b40!important;color:#edf4fb!important;border-color:#38516b!important}
+html[data-theme="dark"] :is(.article-title,.article-summary,.article-content,.article-content p,.article-content h2,.article-content h3,.gallery-card h2,.gallery-card h3,.gallery-video-card p,.local-panel h2,.pharmacy-card h3,.obituary-name,.obituary-field dt,.obituary-field dd){color:#edf4fb!important}
+html[data-theme="dark"] :is(.article-meta,.article-breadcrumb,.news-card p,.category-story-body time,.pharmacy-address,.obituary-body,.local-note){color:#b7c7d8!important}
+html[data-theme="dark"] .portal-shell-top .portal-top-market .market-item{color:#e4eff8!important}

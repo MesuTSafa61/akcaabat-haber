@@ -4,24 +4,24 @@
   if (!body || body.dataset.publicShellReady === "true") return;
   body.dataset.publicShellReady = "true";
   body.classList.add("portal-unified");
+  try { document.documentElement.dataset.theme = localStorage.getItem("akcaabat-theme") === "dark" ? "dark" : "light"; } catch (_) {}
 
   const now = new Date();
   const dateText = now.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   const shell = document.createElement("div");
   shell.className = "portal-shell-top";
   shell.innerHTML = `
-    <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span></div><div class="top-info"><span>📍 Akçaabat</span><span>•</span><span>Trabzon</span><span>•</span><span id="portalCurrentTime">--:--</span></div></div></div>
+    <div class="top-bar portal-top-bar"><div class="container top-bar-inner"><div class="top-date"><span>📅</span><span>${dateText}</span><time id="portalCurrentTime">--:--</time></div><div class="portal-top-market" aria-label="Piyasa ve hava bilgileri"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Trabzon</a></div></div></div>
     <header class="site-header portal-site-header" id="unifiedSiteHeader">
       <div class="container header-main portal-brand-row">
         <button class="mobile-menu-button" type="button" aria-label="Menüyü aç" aria-expanded="false" id="portalMobileMenuButton"><span></span><span></span><span></span></button>
         <a href="index.html" class="brand portal-header-brand" aria-label="Akçaabat Haber Ana Sayfa"><img class="portal-brand-logo" data-brand-logo src="assets/akcaabat-haber-logo-final-v2.png?v=2" alt="Akçaabat Haber — Akçaabat'ın Sesi, Karadeniz'in Gücü" width="400" height="121"></a>
-        <div class="header-actions"><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button></div>
+        <div class="header-actions"><button class="portal-theme-button" type="button" id="portalThemeButton" aria-label="Koyu temayı aç" title="Temayı değiştir">☾</button><button class="header-search-button" type="button" id="portalHeaderSearchButton" aria-label="Haber ara">⌕</button></div>
       </div>
       <nav class="main-nav" id="portalMainNav" aria-label="Ana menü"><div class="container nav-inner">
-        <a href="index.html" class="nav-link" data-page="index.html">Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat">Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon">Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor">Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem">Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor">Spor</a>
+        <a href="index.html" class="nav-link" data-page="index.html"><span class="nav-icon" aria-hidden="true">⌂</span>Ana Sayfa</a><a href="kategori.html?kategori=Akçaabat" class="nav-link" data-category="akçaabat"><span class="nav-icon" aria-hidden="true">📍</span>Akçaabat</a><a href="kategori.html?kategori=Trabzon" class="nav-link" data-category="trabzon"><span class="nav-icon" aria-hidden="true">▥</span>Trabzon</a><a href="kategori.html?kategori=Trabzonspor" class="nav-link" data-category="trabzonspor"><span class="nav-icon" aria-hidden="true">⚽</span>Trabzonspor</a><a href="kategori.html?kategori=Gündem" class="nav-link" data-category="gündem"><span class="nav-icon" aria-hidden="true">◉</span>Gündem</a><a href="kategori.html?kategori=Spor" class="nav-link" data-category="spor"><span class="nav-icon" aria-hidden="true">🏆</span>Spor</a><a href="namaz-vakitleri.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">☪</span>Namaz Vakitleri</a><a href="nobetci-eczaneler.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">✚</span>Nöbetçi Eczaneler</a><a href="vefat-edenler.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">♧</span>Vefat Duyuruları</a><a href="foto-galeri.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">▣</span>Foto Galeri</a><a href="video-galeri.html" class="nav-link nav-extra"><span class="nav-icon" aria-hidden="true">▶</span>Video Galeri</a>
       </div></nav>
     </header>
-    <section class="market-strip" aria-label="Piyasa ve hava bilgileri"><div class="container market-inner"><div class="market-scroll" aria-label="Güncel piyasa verileri"><div class="market-list" id="portalMarketList"><span class="market-item"><b>DOLAR</b> <em id="marketUsd">—</em><i class="market-trend" id="marketUsdTrend" hidden></i></span><span class="market-item"><b>EURO</b> <em id="marketEur">—</em><i class="market-trend" id="marketEurTrend" hidden></i></span><span class="market-item"><b>ALTIN</b> <em id="marketGold">—</em><i class="market-trend" id="marketGoldTrend" hidden></i></span><span class="market-item"><b>GÜMÜŞ</b> <em id="marketSilver">—</em><i class="market-trend" id="marketSilverTrend" hidden></i></span></div></div><a href="hava-durumu.html" class="market-weather" id="portalWeatherNow">☁ Hava Durumu</a></div></section>
     <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="namaz-vakitleri.html">☪ Namaz Vakitleri</a><a href="nobetci-eczaneler.html"><span class="service-pharmacy-icon" aria-hidden="true">✚</span> Nöbetçi Eczaneler</a><a href="vefat-edenler.html"><img class="service-mosque-icon" src="assets/mosque.svg" alt="" width="17" height="17"> Vefat Duyuruları</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
     <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-dot"></span>SON DAKİKA</div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><span id="portalBreakingCount" aria-live="polite"></span><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
@@ -76,6 +76,10 @@
   function updateClock() { if (clock) clock.textContent = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }); }
   updateClock();
   window.setInterval(updateClock, 30000);
+  const themeButton = document.getElementById("portalThemeButton");
+  function updateThemeButton() { const dark = document.documentElement.dataset.theme === "dark"; themeButton.textContent = dark ? "☀" : "☾"; themeButton.setAttribute("aria-label", dark ? "Açık temayı aç" : "Koyu temayı aç"); themeButton.setAttribute("aria-pressed", String(dark)); }
+  themeButton.addEventListener("click", function () { const dark = document.documentElement.dataset.theme !== "dark"; document.documentElement.dataset.theme = dark ? "dark" : "light"; try { localStorage.setItem("akcaabat-theme", dark ? "dark" : "light"); } catch (_) {} updateThemeButton(); });
+  updateThemeButton();
 
   const money = new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   function setMarket(id, value, suffix) { const element = document.getElementById(id); if (element && Number.isFinite(value) && value > 0) element.textContent = money.format(value) + (suffix || ""); }
@@ -144,11 +148,18 @@
       const count = document.getElementById("portalBreakingCount");
       let index = 0;
       let rotationTimer = null;
+      function restartScroll() {
+        link.style.animation = "none";
+        link.style.setProperty("--breaking-travel", Math.max(0, link.scrollWidth - content.clientWidth + 12) + "px");
+        void link.offsetWidth;
+        link.style.animation = "";
+      }
       function show(offset) {
         index = (index + offset + news.length) % news.length;
         link.textContent = news[index].title;
         link.href = "haber-detay.html?slug=" + encodeURIComponent(news[index].slug);
         count.textContent = (index + 1) + "/" + news.length;
+        requestAnimationFrame(restartScroll);
       }
       function restartRotation() {
         if (rotationTimer) clearInterval(rotationTimer);
@@ -158,6 +169,8 @@
       }
       function step(offset) { show(offset); restartRotation(); }
       show(0);
+      bar.style.display = "";
+      window.addEventListener("resize", restartScroll);
       controls.hidden = news.length < 2;
       if (news.length > 1) {
         document.getElementById("portalBreakingPrev").addEventListener("click", () => step(-1));
@@ -189,7 +202,6 @@
         document.addEventListener("visibilitychange", restartRotation);
         restartRotation();
       }
-      bar.style.display = "";
     } catch (_) { /* Veri yoksa boş son dakika bandı gösterilmez. */ }
   }
   async function loadAkcaabatWeather() {
