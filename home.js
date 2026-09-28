@@ -364,10 +364,10 @@
         const target = document.getElementById("categorySections");
         if (!target) return;
         target.innerHTML = CATEGORY_PRIORITY.map(function (category) {
-            const items = state.news.filter(function (item) { return categoryMatches(item, category); }).slice(0, 4);
+            const items = state.news.filter(function (item) { return categoryMatches(item, category); }).slice(0, 5);
             if (!items.length) return "";
-            const cards = items.map(function (item) {
-                return '<article class="category-story" data-url="' + escapeHtml(newsUrl(item)) + '"><div class="category-story-image"><img src="' +
+            const cards = items.map(function (item, index) {
+                return '<article class="category-story' + (index === 4 ? ' category-story-mobile-extra' : '') + '" data-url="' + escapeHtml(newsUrl(item)) + '"><div class="category-story-image"><img src="' +
                     escapeHtml(imageUrl(item)) + '" alt="' + escapeHtml(item.title) + '" loading="lazy"><span class="category-story-badge">' +
                     escapeHtml(categoryName(item).toUpperCase()) + '</span></div><div class="category-story-body"><time>' +
                     escapeHtml(publishedDate(item)) + '</time><h3>' + escapeHtml(item.title) + '</h3></div></article>';
