@@ -6180,18 +6180,206 @@
     }
   },
   "pharmacies": {
-    "date": null,
-    "updatedAt": "2026-09-27T13:48:58.981036+00:00",
+    "date": "2026-09-28",
+    "updatedAt": "2026-09-28T06:23:59.322749+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
-    "items": [],
+    "items": [
+      {
+        "name": "YAYLACIK ECZANESİ",
+        "address": "YAYLACIK MAH.DÜZKÖY CAD.KÖŞEM APT.NO:2",
+        "phone": "04622275456"
+      },
+      {
+        "name": "AYDIN ECZANESİ",
+        "address": "ORTAMAHALLE MAH. İNÖNÜ CAD. HOLİDAY TİMES NO:117/A",
+        "phone": "04622281359"
+      }
+    ],
     "startsAt": null,
     "endsAt": null,
-    "districts": {}
+    "districts": {
+      "Akçaabat": [
+        {
+          "name": "YAYLACIK ECZANESİ",
+          "address": "YAYLACIK MAH.DÜZKÖY CAD.KÖŞEM APT.NO:2",
+          "phone": "04622275456",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "AYDIN ECZANESİ",
+          "address": "ORTAMAHALLE MAH. İNÖNÜ CAD. HOLİDAY TİMES NO:117/A",
+          "phone": "04622281359",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Araklı": [
+        {
+          "name": "MERKEZ ECZANESİ",
+          "address": "TUBA KIRTASİYE KARŞISI MERKEZ MAH. ŞHT. MURAT ALTUNTAŞ CAD. NO:10A TUBA KIRTASİYE KARŞISI",
+          "phone": "04627112061",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Arsin": [
+        {
+          "name": "DERMAN ECZANESİ",
+          "address": "YEŞİLYALI MAH.İBNİ SİNA CAD.NO:6/A",
+          "phone": "04627462448",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Beşikdüzü": [
+        {
+          "name": "HAYAT ECZANESİ",
+          "address": "CUMHURIYET MAH.SABRI DILEK CAD.NO.34/A",
+          "phone": "04628714090",
+          "startsAt": "2026-09-28T17:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Çarşıbaşı": [
+        {
+          "name": "GÖKÇE ECZANESİ",
+          "address": "AVNİ AKKAN CAD.NO.70/A",
+          "phone": "04628213115",
+          "startsAt": "2026-09-28T17:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Çaykara": [
+        {
+          "name": "ÇAYKARA ECZANESİ",
+          "address": "IŞIKLI MAH.UZUN SOK.NO.17/A",
+          "phone": "04626161059",
+          "startsAt": "2026-09-28T17:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Dernekpazarı": [],
+      "Düzköy": [],
+      "Hayrat": [],
+      "Köprübaşı": [],
+      "Maçka": [
+        {
+          "name": "KOÇHAN ECZANESİ",
+          "address": "MERKEZ MAH.ATATÜRK CAD.NO:59/A",
+          "phone": "04625124065",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Of": [
+        {
+          "name": "SOLAKLI ECZANESİ",
+          "address": "SULAKLI MAHALLESİ ATATÜRK BULVARI 39/B",
+          "phone": "04627715858",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Ortahisar": [
+        {
+          "name": "SELDA ECZANESİ",
+          "address": "GAZİPAŞA MAH. ŞEHİT ONUR FİKRET DÜLGER CAD. NO:15/A UZUN SK. TUFAN PASTANESİ SOL ARALIĞI İNCİ COLOR YANI",
+          "phone": "05059136261",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "İLGE ECZANESİ",
+          "address": "ÇUKURÇAYIR MH. ÇUKURÇAYIR İPEKYOLU CAD. TEPE PARK SİTESİ C2 BLOK NO:91B ÇUKURÇAYIR MH. ÇUKURÇAYIR İPEKYOLU CAD. TEPE PARK SİTESİ C2 BLOK NO:91B",
+          "phone": "04623513351",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "ZÜMRÜT ECZANESİ",
+          "address": "KALKINMA MAH. FARABİ CAD. NO:27/A",
+          "phone": "04623255370",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "ÖZGÜR ECZANESİ",
+          "address": "İNÖNÜ MAH.DÜZEN SOK.KARAMEHMET APT. NO.13",
+          "phone": "04622242548",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Sürmene": [
+        {
+          "name": "HAYAT ECZANESİ",
+          "address": "ÇARŞI MAH. HÜKÜMET CAD. DIŞ KAPI NO:27/A",
+          "phone": "04627465860",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Şalpazarı": [
+        {
+          "name": "ŞALPAZARI ECZANESİ",
+          "address": "ATATÜRK CADDESİ NO:15/A",
+          "phone": "04628913025",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Tonya": [
+        {
+          "name": "ÇAĞLAR ECZANESİ",
+          "address": "DR.DILAVER YILDIRIM CAD.NO.11/B",
+          "phone": "04628813317",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Vakfıkebir": [
+        {
+          "name": "ZEYNEP ECZANESİ",
+          "address": "KEMALİYE MAH.GÜLBAHARHATUN CAD. NO:200/A TERMİNAL KARŞISI, VAKIFBANK YANI",
+          "phone": "04628412684",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ],
+      "Yomra": [
+        {
+          "name": "PETEK ECZANESİ",
+          "address": "KAŞÜSTÜ MAH. MURATLI CAD. NO:54/3 HASTANE YOLU ÜZERİNDE A101 YANI",
+          "phone": "04623440708",
+          "startsAt": "2026-09-28T17:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "LOKMAN ECZANESİ",
+          "address": "SANCAK MAH.TRABZON CAD.NO:176/A",
+          "phone": "04623413855",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        }
+      ]
+    }
   },
   "obituaries": {
-    "updatedAt": "2026-09-27T13:02:43.761796+00:00",
+    "updatedAt": "2026-09-28T06:24:04.550344+00:00",
     "source": "https://www.akcaabat.bel.tr/vefat-edenler.aspx",
     "items": [
+      {
+        "name": "MUSTAFA OĞLU ALİ OSMAN ÇOBAN",
+        "date": "2026-09-28",
+        "details": "ÖĞLE • AKÇAKALE ÇATALZEYTİN DEREBOYU CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "prayerTime": "ÖĞLE",
+        "mosque": "AKÇAKALE ÇATALZEYTİN DEREBOYU CAMİİ",
+        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "relative": "OSMAN ÇOBAN",
+        "latitude": "",
+        "longitude": ""
+      },
       {
         "name": "HACI UZUN EŞİ EMİNE UZUN",
         "date": "2026-09-27",
