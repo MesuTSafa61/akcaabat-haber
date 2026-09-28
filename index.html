@@ -24,6 +24,12 @@
   <link rel="stylesheet" href="galeri.css?v=2">
   <link rel="stylesheet" href="portal-shell.css?v=33">
   <link rel="stylesheet" href="yerel-hizmetler.css?v=7">
+  <style>
+    /* The unified header is inserted by portal-shell.js; never flash the legacy header. */
+    body > .top-bar, body > .market-strip, body > .site-header,
+    body > .service-strip, body > .breaking-bar, body > .search-panel,
+    body > .site-footer:not(.unified-site-footer) { display: none !important; }
+  </style>
 
 </head>
 
@@ -827,7 +833,7 @@
   <!-- =========================
        ANA SAYFA MOTORU
   ========================== -->
-  <script src="home.js?v=20260928-1"></script>
+  <script src="home.js?v=20260928-2"></script>
   <script src="home-galleries.js?v=1"></script>
   <script src="portal-shell.js?v=38"></script>
 
