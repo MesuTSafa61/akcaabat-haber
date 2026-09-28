@@ -4,49 +4,10 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v170";
+const CACHE_NAME = "akcaabat-haber-v171";
+const CACHE_PREFIX = "akcaabat-haber-v";
 
-const STATIC_FILES = [
-  "./",
-  "./index.html",
-  "./haberler.html",
-  "./haber-detay.html",
-  "./offline.html",
-  "./style.css",
-  "./script.js",
-  "./home.js",
-  "./home-galleries.js",
-  "./foto-galeri.html",
-  "./video-galeri.html",
-  "./galeri-detay.html",
-  "./galeri.css",
-  "./galeri.js",
-  "./current-news.js",
-  "./assets/news/akcaabat.svg",
-  "./assets/news/trabzon.svg",
-  "./assets/news/trabzonspor.svg",
-  "./assets/news/sebatspor.svg",
-  "./assets/akcaabat-haber-logo-final.png",
-  "./assets/akcaabat-haber-logo-final-v2.png",
-  "./assets/mosque.svg",
-  "./assets/pharmacy-heart.svg",
-  "./mac-merkezi.html",
-  "./kameralar.html",
-  "./trafik.html",
-  "./hava-durumu.html",
-  "./borsa.html",
-  "./borsa.js",
-  "./market-options.js",
-  "./namaz-vakitleri.html",
-  "./nobetci-eczaneler.html",
-  "./vefat-edenler.html",
-  "./yerel-hizmetler.css",
-  "./yerel-hizmetler.js",
-  "./yazarlar.html",
-  "./supabase-config.js",
-  "./favicon.svg",
-  "./site.webmanifest"
-];
+const STATIC_FILES = ["./offline.html"];
 
 self.addEventListener("install", event => {
   event.waitUntil(
@@ -61,7 +22,7 @@ self.addEventListener("activate", event => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key !== CACHE_NAME)
+          .filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
           .map(key => caches.delete(key))
       )
     ).then(() => self.clients.claim())
@@ -79,9 +40,17 @@ self.addEventListener("fetch", event => {
     return;
   }
 
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request, { cache: "no-store" })
+        .catch(() => caches.match(new URL("./offline.html", self.registration.scope).href))
+    );
+    return;
+  }
+
   const isFreshAsset =
-    event.request.mode === "navigate" ||
     requestUrl.pathname.endsWith("/data/yerel-hizmetler.json") ||
+    requestUrl.pathname.includes("/assets/akcaabat-haber-logo-") ||
     /\.(?:css|js)(?:\?|$)/i.test(requestUrl.pathname + requestUrl.search);
 
   const updateCache = networkResponse => {
@@ -100,14 +69,11 @@ self.addEventListener("fetch", event => {
 
   if (isFreshAsset) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: "no-store" })
         .then(updateCache)
         .catch(() =>
           caches.match(event.request).then(cachedResponse => {
             if (cachedResponse) return cachedResponse;
-            if (event.request.mode === "navigate") {
-              return caches.match(new URL("./offline.html", self.registration.scope).href);
-            }
             return new Response("İçerik şu anda kullanılamıyor.", {
               status: 503,
               headers: { "Content-Type": "text/plain; charset=utf-8" }
