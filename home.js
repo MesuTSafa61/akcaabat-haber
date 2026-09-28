@@ -412,7 +412,14 @@
         loadCategoryStrip();
         document.addEventListener("visibilitychange", restartHeadlineTimer);
         if ("serviceWorker" in navigator && window.isSecureContext) {
-            navigator.serviceWorker.register("sw.js").catch(function (error) {
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.addEventListener("controllerchange", function () {
+                    window.location.reload();
+                }, { once: true });
+            }
+            navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(function (registration) {
+                return registration.update();
+            }).catch(function (error) {
                 console.warn("Çevrimdışı destek başlatılamadı:", error);
             });
         }
