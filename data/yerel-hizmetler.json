@@ -6181,7 +6181,7 @@
   },
   "pharmacies": {
     "date": "2026-09-28",
-    "updatedAt": "2026-09-28T06:23:59.322749+00:00",
+    "updatedAt": "2026-09-28T15:19:29.691789+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
     "items": [
       {
@@ -6195,8 +6195,8 @@
         "phone": "04622281359"
       }
     ],
-    "startsAt": null,
-    "endsAt": null,
+    "startsAt": "2026-09-28T18:00:00+03:00",
+    "endsAt": "2026-09-29T08:00:00+03:00",
     "districts": {
       "Akçaabat": [
         {
@@ -6283,20 +6283,6 @@
       ],
       "Ortahisar": [
         {
-          "name": "SELDA ECZANESİ",
-          "address": "GAZİPAŞA MAH. ŞEHİT ONUR FİKRET DÜLGER CAD. NO:15/A UZUN SK. TUFAN PASTANESİ SOL ARALIĞI İNCİ COLOR YANI",
-          "phone": "05059136261",
-          "startsAt": "2026-09-28T18:00:00+03:00",
-          "endsAt": "2026-09-29T08:00:00+03:00"
-        },
-        {
-          "name": "İLGE ECZANESİ",
-          "address": "ÇUKURÇAYIR MH. ÇUKURÇAYIR İPEKYOLU CAD. TEPE PARK SİTESİ C2 BLOK NO:91B ÇUKURÇAYIR MH. ÇUKURÇAYIR İPEKYOLU CAD. TEPE PARK SİTESİ C2 BLOK NO:91B",
-          "phone": "04623513351",
-          "startsAt": "2026-09-28T18:00:00+03:00",
-          "endsAt": "2026-09-29T08:00:00+03:00"
-        },
-        {
           "name": "ZÜMRÜT ECZANESİ",
           "address": "KALKINMA MAH. FARABİ CAD. NO:27/A",
           "phone": "04623255370",
@@ -6307,6 +6293,20 @@
           "name": "ÖZGÜR ECZANESİ",
           "address": "İNÖNÜ MAH.DÜZEN SOK.KARAMEHMET APT. NO.13",
           "phone": "04622242548",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "SELDA ECZANESİ",
+          "address": "GAZİPAŞA MAH. ŞEHİT ONUR FİKRET DÜLGER CAD. NO:15/A UZUN SK. TUFAN PASTANESİ SOL ARALIĞI İNCİ COLOR YANI",
+          "phone": "05059136261",
+          "startsAt": "2026-09-28T18:00:00+03:00",
+          "endsAt": "2026-09-29T08:00:00+03:00"
+        },
+        {
+          "name": "İLGE ECZANESİ",
+          "address": "ÇUKURÇAYIR MH. ÇUKURÇAYIR İPEKYOLU CAD. TEPE PARK SİTESİ C2 BLOK NO:91B ÇUKURÇAYIR MH. ÇUKURÇAYIR İPEKYOLU CAD. TEPE PARK SİTESİ C2 BLOK NO:91B",
+          "phone": "04623513351",
           "startsAt": "2026-09-28T18:00:00+03:00",
           "endsAt": "2026-09-29T08:00:00+03:00"
         }
