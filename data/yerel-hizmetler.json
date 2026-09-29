@@ -3,17 +3,6 @@
     "source": "https://namazvakitleri.diyanet.gov.tr/tr-TR/9891/akcaabat-namaz-vakitleri",
     "days": [
       {
-        "date": "2026-09-29",
-        "times": [
-          "04:44",
-          "06:09",
-          "12:17",
-          "15:36",
-          "18:16",
-          "19:35"
-        ]
-      },
-      {
         "date": "2026-09-30",
         "times": [
           "04:45",
@@ -342,22 +331,22 @@
           "17:29",
           "18:50"
         ]
+      },
+      {
+        "date": "2026-10-30",
+        "times": [
+          "05:17",
+          "06:43",
+          "12:10",
+          "15:00",
+          "17:28",
+          "18:48"
+        ]
       }
     ],
-    "updatedAt": "2026-09-28T21:16:36.142416+00:00",
+    "updatedAt": "2026-09-29T21:16:25.992793+00:00",
     "districts": {
       "Akçaabat": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:44",
-            "06:09",
-            "12:17",
-            "15:36",
-            "18:16",
-            "19:35"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -687,20 +676,20 @@
             "17:29",
             "18:50"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:17",
+            "06:43",
+            "12:10",
+            "15:00",
+            "17:28",
+            "18:48"
+          ]
         }
       ],
       "Ortahisar": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:44",
-            "06:08",
-            "12:17",
-            "15:36",
-            "18:15",
-            "19:34"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -1030,20 +1019,20 @@
             "17:29",
             "18:49"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:17",
+            "06:42",
+            "12:10",
+            "15:00",
+            "17:28",
+            "18:48"
+          ]
         }
       ],
       "Arsin": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:43",
-            "06:07",
-            "12:16",
-            "15:35",
-            "18:14",
-            "19:33"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -1373,20 +1362,20 @@
             "17:28",
             "18:48"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:16",
+            "06:41",
+            "12:09",
+            "14:59",
+            "17:27",
+            "18:47"
+          ]
         }
       ],
       "Araklı": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:42",
-            "06:07",
-            "12:15",
-            "15:35",
-            "18:14",
-            "19:33"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -1716,20 +1705,20 @@
             "17:28",
             "18:48"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:15",
+            "06:41",
+            "12:09",
+            "14:59",
+            "17:26",
+            "18:47"
+          ]
         }
       ],
       "Çarşıbaşı": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:45",
-            "06:10",
-            "12:18",
-            "15:37",
-            "18:16",
-            "19:36"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -2059,20 +2048,20 @@
             "17:30",
             "18:50"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:18",
+            "06:44",
+            "12:11",
+            "15:01",
+            "17:29",
+            "18:49"
+          ]
         }
       ],
       "Beşikdüzü": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:46",
-            "06:10",
-            "12:19",
-            "15:38",
-            "18:17",
-            "19:36"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -2402,20 +2391,20 @@
             "17:31",
             "18:51"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:18",
+            "06:44",
+            "12:12",
+            "15:02",
+            "17:29",
+            "18:50"
+          ]
         }
       ],
       "Dernekpazarı": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:42",
-            "06:06",
-            "12:14",
-            "15:34",
-            "18:13",
-            "19:32"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -2745,20 +2734,20 @@
             "17:27",
             "18:47"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:14",
+            "06:40",
+            "12:08",
+            "14:58",
+            "17:26",
+            "18:46"
+          ]
         }
       ],
       "Çaykara": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:42",
-            "06:06",
-            "12:15",
-            "15:34",
-            "18:13",
-            "19:32"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -3088,20 +3077,20 @@
             "17:27",
             "18:47"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:14",
+            "06:40",
+            "12:08",
+            "14:58",
+            "17:26",
+            "18:46"
+          ]
         }
       ],
       "Düzköy": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:45",
-            "06:10",
-            "12:18",
-            "15:37",
-            "18:16",
-            "19:35"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -3431,20 +3420,20 @@
             "17:30",
             "18:50"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:18",
+            "06:43",
+            "12:11",
+            "15:01",
+            "17:29",
+            "18:49"
+          ]
         }
       ],
       "Köprübaşı": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:42",
-            "06:07",
-            "12:15",
-            "15:34",
-            "18:13",
-            "19:32"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -3774,20 +3763,20 @@
             "17:28",
             "18:48"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:15",
+            "06:40",
+            "12:08",
+            "14:59",
+            "17:26",
+            "18:46"
+          ]
         }
       ],
       "Hayrat": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:41",
-            "06:06",
-            "12:14",
-            "15:33",
-            "18:12",
-            "19:31"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -4117,20 +4106,20 @@
             "17:26",
             "18:46"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:14",
+            "06:39",
+            "12:07",
+            "14:58",
+            "17:25",
+            "18:45"
+          ]
         }
       ],
       "Of": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:42",
-            "06:06",
-            "12:14",
-            "15:34",
-            "18:13",
-            "19:32"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -4460,20 +4449,20 @@
             "17:27",
             "18:47"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:14",
+            "06:40",
+            "12:08",
+            "14:58",
+            "17:25",
+            "18:46"
+          ]
         }
       ],
       "Şalpazarı": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:46",
-            "06:10",
-            "12:19",
-            "15:38",
-            "18:17",
-            "19:36"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -4803,20 +4792,20 @@
             "17:31",
             "18:51"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:19",
+            "06:44",
+            "12:12",
+            "15:02",
+            "17:30",
+            "18:50"
+          ]
         }
       ],
       "Sürmene": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:42",
-            "06:07",
-            "12:15",
-            "15:34",
-            "18:13",
-            "19:32"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -5146,20 +5135,20 @@
             "17:27",
             "18:47"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:15",
+            "06:40",
+            "12:08",
+            "14:58",
+            "17:26",
+            "18:46"
+          ]
         }
       ],
       "Tonya": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:46",
-            "06:10",
-            "12:18",
-            "15:38",
-            "18:17",
-            "19:36"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -5489,20 +5478,20 @@
             "17:31",
             "18:51"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:18",
+            "06:44",
+            "12:12",
+            "15:02",
+            "17:29",
+            "18:50"
+          ]
         }
       ],
       "Vakfıkebir": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:45",
-            "06:10",
-            "12:18",
-            "15:38",
-            "18:17",
-            "19:36"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -5832,20 +5821,20 @@
             "17:30",
             "18:51"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:18",
+            "06:44",
+            "12:12",
+            "15:02",
+            "17:29",
+            "18:50"
+          ]
         }
       ],
       "Yomra": [
-        {
-          "date": "2026-09-29",
-          "times": [
-            "04:43",
-            "06:08",
-            "12:16",
-            "15:35",
-            "18:14",
-            "19:34"
-          ]
-        },
         {
           "date": "2026-09-30",
           "times": [
@@ -6175,198 +6164,32 @@
             "17:28",
             "18:49"
           ]
+        },
+        {
+          "date": "2026-10-30",
+          "times": [
+            "05:16",
+            "06:42",
+            "12:09",
+            "14:59",
+            "17:27",
+            "18:47"
+          ]
         }
       ]
     }
   },
   "pharmacies": {
-    "date": "2026-09-29",
+    "date": null,
     "updatedAt": "2026-09-29T15:19:23.448830+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
-    "items": [
-      {
-        "name": "ELİF ECZANESİ",
-        "address": "YAYLACIK MAH. AKÇAABAT CAD. NO:88/B",
-        "phone": "04622600055"
-      },
-      {
-        "name": "MERVE ECZANESİ",
-        "address": "DÜRBİNAR MAH. SİGORTA SOK. NO:5/B AKÇAABAT LİSE CADDESİ MEZARLIK CAMİ ARASI",
-        "phone": "04622287700"
-      }
-    ],
-    "startsAt": "2026-09-29T18:00:00+03:00",
-    "endsAt": "2026-09-30T08:00:00+03:00",
-    "districts": {
-      "Akçaabat": [
-        {
-          "name": "ELİF ECZANESİ",
-          "address": "YAYLACIK MAH. AKÇAABAT CAD. NO:88/B",
-          "phone": "04622600055",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        },
-        {
-          "name": "MERVE ECZANESİ",
-          "address": "DÜRBİNAR MAH. SİGORTA SOK. NO:5/B AKÇAABAT LİSE CADDESİ MEZARLIK CAMİ ARASI",
-          "phone": "04622287700",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Araklı": [
-        {
-          "name": "UZUN ECZANESİ",
-          "address": "ÖZGEN MAH.ESKİYOL KÜMEEVLER MEVKİİ NO:22/2C",
-          "phone": "04627217681",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Arsin": [
-        {
-          "name": "KÜBRA ECZANESİ",
-          "address": "CUMHURİYET MAH. ŞEHİT AST. HALİL ALBAYRAK CAD. NO:25",
-          "phone": "04627111311",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Beşikdüzü": [
-        {
-          "name": "ZEKİ ECZANESİ",
-          "address": "CUMHURİYET MAH.SABRİ DİLEK CAD.NO:32/D",
-          "phone": "04628913461",
-          "startsAt": "2026-09-29T17:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Çarşıbaşı": [
-        {
-          "name": "ÇAĞLAR ECZANESİ",
-          "address": "BURUNBAŞI MAH.ZEYTİNLİK CAD. NO:92/A",
-          "phone": "04628213122",
-          "startsAt": "2026-09-29T17:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Çaykara": [
-        {
-          "name": "DOĞA ECZANESİ",
-          "address": "IŞIKLI MAH. UZUN SOKAK NO:3G",
-          "phone": "04625025400",
-          "startsAt": "2026-09-29T17:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Dernekpazarı": [],
-      "Düzköy": [],
-      "Hayrat": [],
-      "Köprübaşı": [],
-      "Maçka": [
-        {
-          "name": "KAYA ECZANESİ",
-          "address": "FATİH MAH. ATATÜRK CAD.NO:32/A MAÇKA MAÇKA İLÇESİ FATİH MAH. ATATÜRK CAD.NO:32/A",
-          "phone": "04625124016",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Of": [
-        {
-          "name": "SAĞLIK ECZANESİ",
-          "address": "ATATÜRK BULVARI NO:23",
-          "phone": "04627717031",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Ortahisar": [
-        {
-          "name": "YENİ ÇAĞLAYAN ECZANESİ",
-          "address": "YALI MAH.KAHRAMANMARAŞ CAD.NO:204/A NUMUNE HASTANESİ YANI DOLMUŞ DURAĞI KARŞISI",
-          "phone": "04622234015",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        },
-        {
-          "name": "ÇELEBİ ECZANESİ",
-          "address": "2 NOLU ERDOĞDU MAH. SOĞUKSU CAD. NO:206/A",
-          "phone": "04622312020",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        },
-        {
-          "name": "ÜNİVERSİTE ECZANESİ",
-          "address": "KALKINMA MAH. FARABİ CAD. NO:38/B",
-          "phone": "04623252829",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        },
-        {
-          "name": "KEMERKAYA AKIN ECZANESİ",
-          "address": "KEMERKAYA MH. HALKEVİ CAD. NO:25/A MEYDAN TS CLUP ARALIĞI 50MT AŞAĞISI",
-          "phone": "04622200444",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Sürmene": [
-        {
-          "name": "CEREN ECZANESİ",
-          "address": "ORTA MAH. HASAN TAHSİN KIRALİ CAD. NO:12A",
-          "phone": "04627462129",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Şalpazarı": [
-        {
-          "name": "HAYAT ECZANESİ",
-          "address": "DEREKÖY MAH.TEPEBAŞI CAD. NO:2/A",
-          "phone": "04628913108",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Tonya": [
-        {
-          "name": "ÇİĞDEM ECZANESİ",
-          "address": "DR.DİLAVER YILDIRIM CAD.NO.13/A",
-          "phone": "04628811370",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Vakfıkebir": [
-        {
-          "name": "ŞİFA ECZANESİ",
-          "address": "ÇARŞI MAHALLESİ GAZIOSMANPASA CAD. NO:7/A ESKİ CAMİ YANI...BELEDİYE BİNASI ARKASI",
-          "phone": "04628413575",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ],
-      "Yomra": [
-        {
-          "name": "SEMİH ECZANESİ",
-          "address": "KAŞÜSTÜ MAHALLESİ VALİ RECEP YAZICIOĞLU CADDESİ NO:7/A KAŞÜSTÜ AYTEMİZ PETROL ARKASI, ANT KIRTASİYE KARŞISI",
-          "phone": "05306170093",
-          "startsAt": "2026-09-29T17:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        },
-        {
-          "name": "ŞİFA ECZANESİ",
-          "address": "TRABZON CAD.NO:53/B",
-          "phone": "04623414303",
-          "startsAt": "2026-09-29T18:00:00+03:00",
-          "endsAt": "2026-09-30T08:00:00+03:00"
-        }
-      ]
-    }
+    "items": [],
+    "startsAt": null,
+    "endsAt": null,
+    "districts": {}
   },
   "obituaries": {
-    "updatedAt": "2026-09-29T06:21:37.358802+00:00",
+    "updatedAt": "2026-09-29T21:16:33.330039+00:00",
     "source": "https://www.akcaabat.bel.tr/vefat-edenler.aspx",
     "items": [
       {
@@ -6509,39 +6332,6 @@
         "mosque": "FINDIKLI MAHALLESİ PELİTLİ CAMİİ",
         "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
         "relative": "EMRAH TOSUN",
-        "latitude": "",
-        "longitude": ""
-      },
-      {
-        "name": "MERHUM HACI ALİ OSMAN OĞLU HACI ALİ İHSAN HOTAMAN",
-        "date": "2026-09-23",
-        "details": "ÖĞLE • CEVİZLİ MAHALLESİ MERKEZ CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
-        "prayerTime": "ÖĞLE",
-        "mosque": "CEVİZLİ MAHALLESİ MERKEZ CAMİİ",
-        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
-        "relative": "İBRAHİM HOTAMAN",
-        "latitude": "",
-        "longitude": ""
-      },
-      {
-        "name": "MERHUM HÜSEYİN OĞLU SALİH ŞAHİNKAYA",
-        "date": "2026-09-23",
-        "details": "ÖĞLE • DEMİRKAPI MAHALLESİ MELAN CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
-        "prayerTime": "ÖĞLE",
-        "mosque": "DEMİRKAPI MAHALLESİ MELAN CAMİİ",
-        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
-        "relative": "HASAN ŞAHİNKAYA",
-        "latitude": "",
-        "longitude": ""
-      },
-      {
-        "name": "HALİM OĞLU SÜLEYMAN PEHLİVAN",
-        "date": "2026-09-23",
-        "details": "ÖĞLE • MERKEZ CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
-        "prayerTime": "ÖĞLE",
-        "mosque": "MERKEZ CAMİİ",
-        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
-        "relative": "GÜNGÖR PEHLİVAN",
         "latitude": "",
         "longitude": ""
       }
