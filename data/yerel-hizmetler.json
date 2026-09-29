@@ -6181,7 +6181,7 @@
   },
   "pharmacies": {
     "date": "2026-09-29",
-    "updatedAt": "2026-09-29T06:21:32.418197+00:00",
+    "updatedAt": "2026-09-29T15:19:23.448830+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
     "items": [
       {
@@ -6195,8 +6195,8 @@
         "phone": "04622287700"
       }
     ],
-    "startsAt": null,
-    "endsAt": null,
+    "startsAt": "2026-09-29T18:00:00+03:00",
+    "endsAt": "2026-09-30T08:00:00+03:00",
     "districts": {
       "Akçaabat": [
         {
