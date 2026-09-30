@@ -1646,3 +1646,10 @@ body{background:#edf1f4;color:#111827}
   .local-services .portal-section-head h2{font-size:26px;line-height:1.12;font-weight:800;letter-spacing:-.025em}
   .portal-services,.local-services{margin-top:32px}
 }
+
+
+/* Dijital Merkez ikon kutuları: Günlük Yaşam Rehberi ile aynı oval görünüm. */
+.portal-service-icon{
+  border-radius:15px;
+  overflow:hidden;
+}
