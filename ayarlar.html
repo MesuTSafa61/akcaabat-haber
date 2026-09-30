@@ -1436,12 +1436,12 @@
                     <div class="card" id="sosyal-medya">
                         <div class="card-header"><div class="card-title"><div class="card-title-icon">↗</div><div><h2>Sosyal Medya Hesapları</h2><p>Menü ve site altındaki hesap bağlantıları</p></div></div></div>
                         <div class="card-body"><div class="form-grid">
-                            <div class="form-group"><label class="form-label" for="socialFacebook">Facebook adresi</label><input class="form-control" id="socialFacebook" type="url" placeholder="https://www.facebook.com/..."></div>
-                            <div class="form-group"><label class="form-label" for="socialX">X adresi</label><input class="form-control" id="socialX" type="url" placeholder="https://x.com/..."></div>
-                            <div class="form-group"><label class="form-label" for="socialInstagram">Instagram adresi</label><input class="form-control" id="socialInstagram" type="url" placeholder="https://www.instagram.com/..."></div>
-                            <div class="form-group"><label class="form-label" for="socialYoutube">YouTube adresi</label><input class="form-control" id="socialYoutube" type="url" placeholder="https://www.youtube.com/..."></div>
-                            <div class="form-group"><label class="form-label" for="socialTikTok">TikTok adresi</label><input class="form-control" id="socialTikTok" type="url" placeholder="https://www.tiktok.com/@..."></div>
-                            <div class="form-group full"><div class="form-help">Yalnızca gerçek hesap adreslerini girin. Boş bırakılan hesaplar sitede gösterilmez.</div></div>
+                            <div class="form-group"><label class="form-label" for="socialFacebook">Facebook adresi</label><input class="form-control" id="socialFacebook" type="url" placeholder="https://www.facebook.com/..."><label><input id="socialFacebookVisible" type="checkbox"> Sitede göster</label></div>
+                            <div class="form-group"><label class="form-label" for="socialInstagram">Instagram adresi</label><input class="form-control" id="socialInstagram" type="url" placeholder="https://www.instagram.com/..."><label><input id="socialInstagramVisible" type="checkbox"> Sitede göster</label></div>
+                            <div class="form-group"><label class="form-label" for="socialX">X adresi</label><input class="form-control" id="socialX" type="url" placeholder="https://x.com/..."><label><input id="socialXVisible" type="checkbox"> Sitede göster</label></div>
+                            <div class="form-group"><label class="form-label" for="socialYoutube">YouTube adresi</label><input class="form-control" id="socialYoutube" type="url" placeholder="https://www.youtube.com/..."><label><input id="socialYoutubeVisible" type="checkbox"> Sitede göster</label></div>
+                            <div class="form-group"><label class="form-label" for="socialWhatsapp">WhatsApp adresi</label><input class="form-control" id="socialWhatsapp" type="url" placeholder="https://wa.me/90..."><label><input id="socialWhatsappVisible" type="checkbox"> Sitede göster</label></div>
+                            <div class="form-group full"><div class="form-help">Her platformu “Sitede göster” seçeneğiyle menü ve footer’dan ayrı ayrı açıp kapatabilirsiniz.</div></div>
                         </div></div>
                     </div>
 
@@ -1662,10 +1662,15 @@
         socialTitle: "",
         socialDescription: "",
         socialFacebook: "",
-        socialX: "",
+        socialFacebookVisible: true,
         socialInstagram: "",
+        socialInstagramVisible: true,
+        socialX: "",
+        socialXVisible: true,
         socialYoutube: "",
-        socialTikTok: ""
+        socialYoutubeVisible: true,
+        socialWhatsapp: "",
+        socialWhatsappVisible: true
     };
 
     const $ = function (selector) {
