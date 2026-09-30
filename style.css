@@ -1606,3 +1606,43 @@ body{background:#edf1f4;color:#111827}
   border-radius:18px;
   box-shadow:0 9px 25px rgba(7,26,51,.06);
 }
+
+
+/* Ana sayfa servis bölümleri: Dijital Merkez ve Günlük Yaşam Rehberi birebir aynı başlık hiyerarşisi. */
+.portal-services .portal-section-head,
+.local-services .portal-section-head{
+  margin:0 0 14px;
+  padding-bottom:9px;
+  border-bottom:3px solid #1594ca;
+}
+.portal-services .portal-section-head .section-kicker,
+.local-services .portal-section-head .section-kicker{
+  display:block;
+  margin:0 0 6px;
+  color:#c7192b;
+  font-size:11px;
+  line-height:1.2;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.portal-services .portal-section-head h2,
+.local-services .portal-section-head h2{
+  margin:0;
+  color:#111827;
+  font-size:26px;
+  line-height:1.12;
+  font-weight:800;
+  letter-spacing:-.025em;
+}
+.portal-services{margin-top:32px}
+.local-services{margin-top:32px}
+@media(max-width:560px){
+  .portal-services .portal-section-head,
+  .local-services .portal-section-head{margin-bottom:14px;padding-bottom:9px}
+  .portal-services .portal-section-head .section-kicker,
+  .local-services .portal-section-head .section-kicker{margin-bottom:6px;font-size:11px;letter-spacing:.12em}
+  .portal-services .portal-section-head h2,
+  .local-services .portal-section-head h2{font-size:26px;line-height:1.12;font-weight:800;letter-spacing:-.025em}
+  .portal-services,.local-services{margin-top:32px}
+}
