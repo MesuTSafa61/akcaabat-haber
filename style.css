@@ -1594,3 +1594,15 @@ body{background:#edf1f4;color:#111827}
 .category-story-body time{display:block;color:#7a8492;font-size:11px}
 .category-story-body h3{margin:6px 0 0}
 @media(max-width:560px){.category-story-badge{padding:5px 7px;font-size:9px}.category-story-body time{font-size:10px}}
+
+
+/* Dijital Merkez: Günlük Yaşam Rehberi gibi sade kart görünümü. */
+.portal-service-card,
+.portal-service-card.match-card{
+  border-top:1px solid #dfe6ee;
+  border-right:1px solid #dfe6ee;
+  border-bottom:1px solid #dfe6ee;
+  border-left:1px solid #dfe6ee;
+  border-radius:18px;
+  box-shadow:0 9px 25px rgba(7,26,51,.06);
+}
