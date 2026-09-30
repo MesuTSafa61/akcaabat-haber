@@ -92,17 +92,17 @@
     document.querySelectorAll("[data-brand-logo]").forEach(function (image) { image.src = logoUrl; });
   }
   const socialPlatforms = [
-    { key: "socialFacebook", name: "Facebook", mark: "f" },
-    { key: "socialX", name: "X", mark: "𝕏" },
-    { key: "socialInstagram", name: "Instagram", mark: "◎" },
-    { key: "socialYoutube", name: "YouTube", mark: "▶" },
-    { key: "socialTikTok", name: "TikTok", mark: "♪" }
+    { key: "socialFacebook", visibleKey: "socialFacebookVisible", name: "Facebook", icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.6 22v-9h3l.5-3.5h-3.5V7.3c0-1 .3-1.7 1.8-1.7h1.9V2.5c-.3 0-1.5-.1-2.8-.1-2.8 0-4.7 1.7-4.7 4.8v2.3H6.7V13h3.1v9h3.8z"/></svg>' },
+    { key: "socialInstagram", visibleKey: "socialInstagramVisible", name: "Instagram", icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2"/></svg>' },
+    { key: "socialX", visibleKey: "socialXVisible", name: "X", icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h4.8l4.2 5.6L17.8 3H20l-6 7.3L20.8 21H16l-4.7-6.3L6 21H3.8l6.5-8L4 3zm3.5 1.8L17 19.2h2L9.5 4.8h-2z"/></svg>' },
+    { key: "socialYoutube", visibleKey: "socialYoutubeVisible", name: "YouTube", icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 2 12a29 29 0 0 0 .4 4.8 2.8 2.8 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 22 12a29 29 0 0 0-.4-4.8z"/><path d="m10 15.5 5-3.5-5-3.5v7z" fill="white"/></svg>' },
+    { key: "socialWhatsapp", visibleKey: "socialWhatsappVisible", name: "WhatsApp", icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.7 9.7 0 0 0-8.3 14.7L2.4 22l5.4-1.3A9.8 9.8 0 1 0 12 2zm0 17.6a7.6 7.6 0 0 1-3.9-1.1l-.4-.2-3.2.8.9-3.1-.2-.4A7.7 7.7 0 1 1 12 19.6zm4.3-5.7c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-1.4-.7-2.4-1.3-3.3-3-.2-.3.2-.3.7-1 .1-.2.1-.4 0-.5l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>' }
   ];
   function applySocialLinks(settings) {
     document.querySelectorAll("[data-social-links]").forEach(function (container) {
       container.replaceChildren();
       socialPlatforms.forEach(function (platform) {
-        const value = settings && settings[platform.key];
+        if (settings && settings[platform.visibleKey] === false) return;\n        const value = settings && settings[platform.key];
         let url = null;
         try { if (value) url = new URL(value); } catch (_) {}
         if (url && url.protocol !== "https:") url = null;
@@ -111,7 +111,7 @@
         item.className = "social-link social-" + platform.name.toLowerCase() + (url ? "" : " social-disabled");
         item.setAttribute("aria-label", "Akçaabat Haber " + platform.name + (url ? " hesabı" : " hesabı henüz eklenmedi"));
         item.title = platform.name + (url ? "" : " · bağlantı yakında");
-        item.textContent = platform.mark;
+        item.innerHTML = platform.icon;
         container.appendChild(item);
       });
     });
