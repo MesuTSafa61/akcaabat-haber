@@ -289,3 +289,10 @@ html[data-theme="dark"] .portal-shell-top .service-inner a.is-active{color:#ff82
   html[data-theme="dark"] .mobile-category-list a{color:#e8f2fb!important}
   html[data-theme="dark"] .mobile-menu-heading button{background:#2b415a;color:#fff}
 }
+
+
+/* Resmi sosyal medya ikonları */
+.social-link svg{width:22px;height:22px;display:block;fill:currentColor}
+.social-link.social-instagram svg{fill:currentColor}
+.social-link.social-youtube svg{width:24px;height:24px}
+.social-link.social-whatsapp svg{width:23px;height:23px}
