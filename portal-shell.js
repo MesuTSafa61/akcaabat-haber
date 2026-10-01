@@ -102,7 +102,8 @@
     document.querySelectorAll("[data-social-links]").forEach(function (container) {
       container.replaceChildren();
       socialPlatforms.forEach(function (platform) {
-        if (settings && settings[platform.visibleKey] === false) return;\n        const value = settings && settings[platform.key];
+        if (settings && settings[platform.visibleKey] === false) return;
+        const value = settings && settings[platform.key];
         let url = null;
         try { if (value) url = new URL(value); } catch (_) {}
         if (url && url.protocol !== "https:") url = null;
