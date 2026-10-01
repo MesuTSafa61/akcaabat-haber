@@ -1,0 +1,446 @@
+(function () {
+    "use strict";
+
+    const FALLBACK_IMAGE =
+        "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1200&q=78";
+    const CATEGORY_PRIORITY = ["Akçaabat", "Trabzon", "Trabzonspor"];
+    const DEFAULT_SIDE_CATEGORIES = ["Akçaabat", "Trabzon", "Trabzonspor", "Gündem", "Spor"];
+    const CATEGORY_CHIP_ORDER = ["Akçaabat", "Trabzon", "Trabzonspor", "Spor", "Gündem", "Asayiş", "Ekonomi", "Siyaset", "Kültür & Sanat", "Yaşam", "Dünya", "Teknoloji"];
+    const CATEGORY_ICONS = { "Akçaabat": "📍", "Trabzon": "🏙️", "Trabzonspor": "🏆", "Spor": "⚽", "Gündem": "📰", "Asayiş": "🚨", "Ekonomi": "💰", "Siyaset": "🏛️", "Kültür & Sanat": "🎭", "Yaşam": "🌿", "Dünya": "🌍", "Teknoloji": "💻" };
+    const state = { news: [], headlines: [], headlineIndex: 0, timer: null, sideCategories: DEFAULT_SIDE_CATEGORIES.map(name => ({ name, pinned: [] })), activeSideCategory: "Trabzon", sideExtras: [] };
+
+    function mergeNews(items) {
+        const seen = new Set();
+        return (Array.isArray(items) ? items : [])
+            .filter(function (item) {
+                const slug = String(item && item.slug || "").toLowerCase();
+                if (!slug || slug.indexOf("demo-") === 0 || seen.has(slug)) return false;
+                seen.add(slug);
+                return true;
+            })
+            .sort(function (a, b) {
+                return new Date(b.published_at || 0) - new Date(a.published_at || 0);
+            });
+    }
+
+    function escapeHtml(value) {
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function categoryName(item) {
+        if (item && item.categories && item.categories.name) {
+            return item.categories.name;
+        }
+        return item.category || "Gündem";
+    }
+
+    function newsUrl(item) {
+        if (!item) return "haber.html";
+        if (item.slug) return "haber-detay.html?slug=" + encodeURIComponent(item.slug);
+        return "haber-detay.html?id=" + encodeURIComponent(item.id || "");
+    }
+
+    function imageUrl(item) {
+        return (item && (item.image_url || item.image)) || FALLBACK_IMAGE;
+    }
+
+    function publishedDate(item) {
+        const raw = item && (item.published_at || item.publishedAt || item.created_at);
+        const date = raw ? new Date(raw) : new Date();
+        if (Number.isNaN(date.getTime())) return "";
+        return date.toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+    }
+
+    function publishedTime(item) {
+        const raw = item && (item.published_at || item.publishedAt || item.created_at);
+        const date = raw ? new Date(raw) : null;
+        if (!date || Number.isNaN(date.getTime())) return "";
+        return date.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    function normalize(row) {
+        return {
+            id: row.id || "",
+            title: row.title || "Başlıksız haber",
+            slug: row.slug || "",
+            summary: row.summary || "",
+            image_url: row.image_url || row.image || FALLBACK_IMAGE,
+            status: row.status || "published",
+            is_breaking: row.is_breaking === true || row.breaking === true,
+            is_headline: row.is_headline === true || row.isHeadline === true,
+            headline_order: Number(row.headline_order || row.headlineOrder) || null,
+            views: Number(row.views) || 0,
+            published_at: row.published_at || row.publishedAt || row.created_at || "",
+            created_at: row.created_at || row.createdAt || "",
+            categories: row.categories || { name: row.category || "Gündem", slug: "" }
+        };
+    }
+
+    async function cloudNews() {
+        if (!window.supabase || !window.AKCAABAT_SUPABASE) return [];
+        const client = window.supabase.createClient(
+            window.AKCAABAT_SUPABASE.url,
+            window.AKCAABAT_SUPABASE.key
+        );
+        const fullSelect = "id,title,slug,summary,image_url,status,is_breaking,is_headline,headline_order,views,published_at,created_at,categories(id,name,slug)";
+        let result = await client.from("news").select(fullSelect)
+            .eq("status", "published")
+            .order("published_at", { ascending: false, nullsFirst: false })
+            .limit(120);
+
+        if (result.error && /is_headline|headline_order/i.test(result.error.message || "")) {
+            result = await client.from("news")
+                .select("id,title,slug,summary,image_url,status,is_breaking,views,published_at,created_at,categories(id,name,slug)")
+                .eq("status", "published")
+                .order("published_at", { ascending: false, nullsFirst: false })
+                .limit(120);
+        }
+        if (result.error) throw result.error;
+        const headlineResult = await client.from("news").select(fullSelect)
+            .eq("status", "published").eq("is_headline", true)
+            .order("headline_order", { ascending: true }).limit(15);
+        if (headlineResult.error) console.warn("Manşet listesi alınamadı:", headlineResult.error);
+        return mergeNews([...(result.data || []), ...(headlineResult.data || [])].map(normalize));
+    }
+
+    async function loadCategoryStrip() {
+        const target = document.getElementById("homeCategoryStrip");
+        if (!target || !window.supabase || !window.AKCAABAT_SUPABASE) return;
+        try {
+            const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+            const { data, error } = await client.from("categories").select("name,slug,is_active").eq("is_active", true).limit(100);
+            if (error) throw error;
+            if (!data || !data.length) return;
+            data.sort((a, b) => {
+                const ai = CATEGORY_CHIP_ORDER.indexOf(a.name), bi = CATEGORY_CHIP_ORDER.indexOf(b.name);
+                return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.name.localeCompare(b.name, "tr-TR");
+            });
+            target.replaceChildren(...data.filter(category => category.name && category.slug).map(category => {
+                const link = document.createElement("a");
+                link.className = "category-chip";
+                link.href = "kategori.html?slug=" + encodeURIComponent(category.slug);
+                link.textContent = (CATEGORY_ICONS[category.name] || "📰") + " " + category.name;
+                return link;
+            }));
+        } catch (error) {
+            console.warn("Kategoriler güncellenemedi, mevcut bağlantılar gösteriliyor:", error);
+        }
+    }
+
+    async function loadSideCategories() {
+        if (!window.supabase || !window.AKCAABAT_SUPABASE) return;
+        try {
+            const client = window.supabase.createClient(window.AKCAABAT_SUPABASE.url, window.AKCAABAT_SUPABASE.key);
+            const { data: setting, error } = await client.from("site_settings")
+                .select("value").eq("key", "homepage_side_categories").maybeSingle();
+            if (error) throw error;
+            const configured = setting?.value?.tabs;
+            if (Array.isArray(configured)) {
+                state.sideCategories = configured.filter(tab => tab && typeof tab.name === "string" && tab.name.trim())
+                    .slice(0, 8).map(tab => ({ name: tab.name.trim(), pinned: Array.isArray(tab.pinned) ? tab.pinned.slice(0, 4).filter(id => typeof id === "string") : [] }));
+            }
+            const ids = [...new Set(state.sideCategories.flatMap(tab => tab.pinned))].filter(id => !state.news.some(item => item.id === id));
+            if (ids.length) {
+                const { data, error: newsError } = await client.from("news")
+                    .select("id,title,slug,summary,image_url,status,is_breaking,is_headline,headline_order,views,published_at,created_at,categories(id,name,slug)")
+                    .eq("status", "published").in("id", ids);
+                if (newsError) throw newsError;
+                state.sideExtras = (data || []).map(normalize);
+            }
+            renderSideCategories();
+        } catch (error) {
+            console.warn("Manşet yanı kategoriler yüklenemedi, varsayılan sekmeler kullanılacak:", error);
+        }
+    }
+
+    function sortPriority(items) {
+        return items.slice().sort(function (a, b) {
+            const ai = CATEGORY_PRIORITY.indexOf(categoryName(a));
+            const bi = CATEGORY_PRIORITY.indexOf(categoryName(b));
+            const ar = ai === -1 ? 99 : ai;
+            const br = bi === -1 ? 99 : bi;
+            if (ar !== br) return ar - br;
+            return new Date(b.published_at || 0) - new Date(a.published_at || 0);
+        });
+    }
+
+    function openItem(item) {
+        window.location.href = newsUrl(item);
+    }
+
+    function showHeadline(nextIndex, moveNumberStrip) {
+        if (!state.headlines.length) return;
+        state.headlineIndex = (nextIndex + state.headlines.length) % state.headlines.length;
+        const item = state.headlines[state.headlineIndex];
+        const image = document.getElementById("heroImage");
+        if (image) { image.src = imageUrl(item); image.alt = item.title; }
+        const values = {
+            headlineCounter: (state.headlineIndex + 1) + "/" + state.headlines.length
+        };
+        Object.keys(values).forEach(function (id) {
+            const element = document.getElementById(id);
+            if (element) element.textContent = values[id];
+        });
+        const breaking = document.getElementById("heroBreaking");
+        if (breaking) breaking.hidden = !item.is_breaking;
+        const heroLink = document.getElementById("heroLink");
+        if (heroLink) {
+            heroLink.href = newsUrl(item);
+            heroLink.setAttribute("aria-label", "Haberi oku: " + item.title);
+        }
+        const tabs = document.querySelectorAll(".headline-tab");
+        tabs.forEach(function (tab, index) {
+            tab.classList.toggle("is-active", index === state.headlineIndex);
+            tab.setAttribute("aria-selected", index === state.headlineIndex ? "true" : "false");
+            tab.setAttribute("aria-current", index === state.headlineIndex ? "true" : "false");
+        });
+        if (moveNumberStrip && tabs[state.headlineIndex]) {
+            const track = document.getElementById("headlineTrack");
+            const active = tabs[state.headlineIndex];
+            if (track && track.scrollWidth > track.clientWidth) {
+                const left = Math.max(0, active.offsetLeft - 12);
+                if (typeof track.scrollTo === "function") track.scrollTo({ left: left, behavior: "smooth" });
+                else track.scrollLeft = left;
+            }
+        }
+    }
+
+    function restartHeadlineTimer() {
+        if (state.timer) clearInterval(state.timer);
+        if (state.headlines.length > 1 && !document.hidden) {
+            state.timer = setInterval(function () { showHeadline(state.headlineIndex + 1, false); }, 5000);
+        }
+    }
+
+    function renderHeadlines() {
+        const eligibleHeadlines = state.news.filter(function (item) {
+            return item.status === "published" && item.is_headline === true &&
+                item.headline_order >= 1 && item.headline_order <= 15;
+        });
+        const adminHeadlines = eligibleHeadlines.filter(function (item) {
+            return String(item.id || "").indexOf("curated-") !== 0;
+        });
+        state.headlines = (adminHeadlines.length ? adminHeadlines : eligibleHeadlines)
+            .sort(function (a, b) { return a.headline_order - b.headline_order; })
+            .slice(0, 15);
+
+        const hero = document.getElementById("heroSection");
+        const deck = document.querySelector(".headline-deck");
+        const track = document.getElementById("headlineTrack");
+        if (!state.headlines.length) {
+            if (hero) hero.hidden = true;
+            if (deck) deck.hidden = true;
+            return;
+        }
+        if (hero) hero.hidden = false;
+        if (deck) deck.hidden = false;
+        if (track) {
+            track.innerHTML = state.headlines.map(function (item, index) {
+                return '<button class="headline-tab" type="button" aria-current="' +
+                    (index === 0 ? "true" : "false") + '" data-index="' + index +
+                    '" aria-label="' + escapeHtml((index + 1) + '. manşet: ' + item.title) + '"></button>';
+            }).join("");
+            track.querySelectorAll(".headline-tab").forEach(function (tab) {
+                tab.addEventListener("click", function () {
+                    showHeadline(Number(tab.dataset.index), true);
+                    restartHeadlineTimer();
+                });
+            });
+        }
+        const prev = document.getElementById("headlinePrev");
+        const next = document.getElementById("headlineNext");
+        if (prev) prev.onclick = function (event) {
+            event.stopPropagation();
+            showHeadline(state.headlineIndex - 1, true);
+            restartHeadlineTimer();
+        };
+        if (next) next.onclick = function (event) {
+            event.stopPropagation();
+            showHeadline(state.headlineIndex + 1, true);
+            restartHeadlineTimer();
+        };
+        addHeadlineSwipe();
+        showHeadline(0, false);
+        restartHeadlineTimer();
+    }
+
+    function addHeadlineSwipe() {
+        const hero = document.getElementById("heroNews");
+        if (!hero || hero.dataset.swipeReady) return;
+        hero.dataset.swipeReady = "true";
+        let startX = 0;
+        hero.addEventListener("touchstart", function (event) {
+            startX = event.changedTouches[0].clientX;
+        }, { passive: true });
+        hero.addEventListener("touchend", function (event) {
+            const diff = event.changedTouches[0].clientX - startX;
+            if (Math.abs(diff) < 45) return;
+            showHeadline(state.headlineIndex + (diff < 0 ? 1 : -1), true);
+            restartHeadlineTimer();
+        }, { passive: true });
+    }
+
+    function renderBreaking() {
+        if (document.getElementById("portalBreakingBar")) return;
+        const bar = document.querySelector(".breaking-bar");
+        const target = document.getElementById("breakingContent");
+        const items = state.news.filter(function (item) { return item.is_breaking; }).slice(0, 4);
+        if (!items.length) { if (bar) bar.hidden = true; return; }
+        if (bar) bar.hidden = false;
+        if (target) target.innerHTML = items.map(function (item) {
+            return '<a href="' + escapeHtml(newsUrl(item)) + '"><time>' + escapeHtml(publishedTime(item)) +
+                '</time> ' + escapeHtml(item.title) + '</a>';
+        }).join('<span class="breaking-separator">•</span>');
+    }
+
+    function renderSideCategories() {
+        const tabs = document.getElementById("headlineCategoryTabs");
+        const target = document.getElementById("headlineCategoryList");
+        const panel = document.getElementById("headlineCategoryPanel");
+        if (!tabs || !target || !panel) return;
+        if (!state.sideCategories.length) { panel.hidden = true; return; }
+        panel.hidden = false;
+        if (!state.sideCategories.some(tab => tab.name === state.activeSideCategory)) state.activeSideCategory = state.sideCategories[0].name;
+        tabs.innerHTML = state.sideCategories.map((tab, index) => '<button type="button" role="tab" id="side-tab-' + index + '" aria-controls="headlineCategoryList" aria-selected="' + (tab.name === state.activeSideCategory) + '" tabindex="' + (tab.name === state.activeSideCategory ? 0 : -1) + '" data-side-index="' + index + '">' + escapeHtml(tab.name) + '</button>').join("");
+        tabs.querySelectorAll("button").forEach(button => button.addEventListener("click", () => {
+            state.activeSideCategory = state.sideCategories[Number(button.dataset.sideIndex)].name;
+            renderSideCategories();
+        }));
+        const active = state.sideCategories.find(tab => tab.name === state.activeSideCategory);
+        target.setAttribute("aria-labelledby", "side-tab-" + state.sideCategories.indexOf(active));
+        const candidates = state.news.concat(state.sideExtras).filter(item => item.status === "published" && categoryName(item).toLocaleLowerCase("tr-TR") === active.name.toLocaleLowerCase("tr-TR"));
+        const pinned = active.pinned.map(id => candidates.find(item => item.id === id)).filter(Boolean);
+        const ids = new Set(pinned.map(item => item.id));
+        const items = pinned.concat(candidates.filter(item => !ids.has(item.id))).slice(0, 5);
+        target.innerHTML = items.length ? items.map(item => '<a class="headline-category-story" href="' + escapeHtml(newsUrl(item)) + '"><img src="' + escapeHtml(imageUrl(item)) + '" alt="" loading="lazy"><span><strong>' + escapeHtml(item.title) + '</strong><small>' + escapeHtml(publishedTime(item)) + '</small></span></a>').join("") : '<p class="headline-category-empty">Henüz yayınlanmış haber bulunmuyor.</p>';
+    }
+
+    function cardHtml(item) {
+        return '<article class="news-card" data-url="' + escapeHtml(newsUrl(item)) + '">' +
+            '<div class="news-card-image"><img src="' + escapeHtml(imageUrl(item)) + '" alt="' +
+            escapeHtml(item.title) + '" loading="lazy" width="520" height="300"><span class="news-card-category">' +
+            escapeHtml(categoryName(item).toUpperCase()) + '</span></div><div class="news-card-body"><div class="news-card-meta">' +
+            escapeHtml(publishedDate(item)) + '</div><h3>' + escapeHtml(item.title) + '</h3><p>' +
+            escapeHtml(item.summary) + '</p></div></article>';
+    }
+
+    function renderNewsGrid() {
+        const target = document.getElementById("newsGrid");
+        if (!target) return;
+        const items = sortPriority(state.news).slice(0, 10);
+        target.innerHTML = items.length ? items.map(cardHtml).join("") : '<div class="empty-inline">Yayınlanmış haber bulunmuyor.</div>';
+        target.querySelectorAll("[data-url]").forEach(function (card) {
+            card.onclick = function () { window.location.href = card.dataset.url; };
+        });
+    }
+
+    function renderPopular() {
+        const target = document.getElementById("popularNews");
+        if (!target) return;
+        const items = state.news.filter(function (item) { return item.views > 0; })
+            .sort(function (a, b) { return b.views - a.views; }).slice(0, 5);
+        target.innerHTML = items.length ? items.map(function (item, index) {
+            return '<article class="popular-item" data-url="' + escapeHtml(newsUrl(item)) + '"><span class="popular-number">' +
+                String(index + 1) + '</span><div class="popular-copy"><small>' + escapeHtml(categoryName(item).toUpperCase()) +
+                '</small><h3>' + escapeHtml(item.title) + '</h3></div></article>';
+        }).join("") : '<div class="empty-inline">Okunma verisi oluştuğunda liste burada yayınlanır.</div>';
+        target.querySelectorAll("[data-url]").forEach(function (item) {
+            item.onclick = function () { window.location.href = item.dataset.url; };
+        });
+    }
+
+    function categoryMatches(item, category) {
+        const value = categoryName(item).toLocaleLowerCase("tr-TR");
+        if (category === "Trabzonspor") return value === "trabzonspor" || value === "spor";
+        return value === category.toLocaleLowerCase("tr-TR");
+    }
+
+    function renderCategorySections() {
+        const target = document.getElementById("categorySections");
+        if (!target) return;
+        target.innerHTML = CATEGORY_PRIORITY.map(function (category) {
+            const items = state.news.filter(function (item) { return categoryMatches(item, category); }).slice(0, 5);
+            if (!items.length) return "";
+            const cards = items.map(function (item, index) {
+                return '<article class="category-story' + (index === 4 ? ' category-story-mobile-extra' : '') + '" data-url="' + escapeHtml(newsUrl(item)) + '"><div class="category-story-image"><img src="' +
+                    escapeHtml(imageUrl(item)) + '" alt="' + escapeHtml(item.title) + '" loading="lazy"><span class="category-story-badge">' +
+                    escapeHtml(categoryName(item).toUpperCase()) + '</span></div><div class="category-story-body"><time>' +
+                    escapeHtml(publishedDate(item)) + '</time><h3>' + escapeHtml(item.title) + '</h3></div></article>';
+            }).join("");
+            return '<section class="category-news-section"><div class="category-news-head"><h2>' + escapeHtml(category) +
+                '</h2><a href="kategori.html?kategori=' + encodeURIComponent(category === "Trabzonspor" ? "Spor" : category) +
+                '">Tüm Haberler →</a></div><div class="category-news-grid">' + cards + '</div></section>';
+        }).join("");
+        target.querySelectorAll("[data-url]").forEach(function (card) {
+            card.onclick = function () { window.location.href = card.dataset.url; };
+        });
+    }
+
+    function renderAll(news) {
+        state.news = mergeNews(news).filter(function (item) { return item.status === "published"; });
+        renderHeadlines();
+        renderBreaking();
+        renderSideCategories();
+        renderNewsGrid();
+        renderPopular();
+        renderCategorySections();
+    }
+
+    function initControls() {
+        const menuButton = document.getElementById("mobileMenuButton");
+        const nav = document.getElementById("mainNav");
+        if (menuButton && nav) {
+            menuButton.onclick = function () {
+                const open = nav.classList.toggle("mobile-open");
+                menuButton.setAttribute("aria-expanded", open ? "true" : "false");
+            };
+        }
+        const searchButton = document.getElementById("headerSearchButton");
+        const searchPanel = document.getElementById("searchPanel");
+        if (searchButton && searchPanel) {
+            searchButton.onclick = function () { searchPanel.classList.toggle("search-open"); };
+        }
+    }
+
+    async function init() {
+        initControls();
+        loadCategoryStrip();
+        document.addEventListener("visibilitychange", restartHeadlineTimer);
+        if ("serviceWorker" in navigator && window.isSecureContext) {
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.addEventListener("controllerchange", function () {
+                    window.location.reload();
+                }, { once: true });
+            }
+            navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(function (registration) {
+                return registration.update();
+            }).catch(function (error) {
+                console.warn("Çevrimdışı destek başlatılamadı:", error);
+            });
+        }
+        // The published database is the only news source. Clear old server markup immediately.
+        renderAll([]);
+        const sideSelectionPromise = loadSideCategories();
+        try {
+            const fresh = await cloudNews();
+            renderAll(fresh);
+        } catch (error) {
+            console.error("Ana sayfa haberleri yüklenemedi:", error);
+            renderAll([]);
+            const grid = document.getElementById("newsGrid");
+            if (grid) grid.textContent = "Haberler şu anda yüklenemiyor. Biraz sonra yeniden deneyin.";
+        }
+        await sideSelectionPromise;
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+        init();
+    }
+})();
