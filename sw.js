@@ -4,7 +4,7 @@
  * Sürüm: 1.0.0
  */
 
-const CACHE_NAME = "akcaabat-haber-v171";
+const CACHE_NAME = "akcaabat-haber-v172";
 const CACHE_PREFIX = "akcaabat-haber-v";
 
 const STATIC_FILES = ["./offline.html"];
