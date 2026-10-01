@@ -316,14 +316,7 @@
         const candidates = state.news.concat(state.sideExtras).filter(item => item.status === "published" && categoryName(item).toLocaleLowerCase("tr-TR") === active.name.toLocaleLowerCase("tr-TR"));
         const pinned = active.pinned.map(id => candidates.find(item => item.id === id)).filter(Boolean);
         const ids = new Set(pinned.map(item => item.id));
-        let items = pinned.concat(candidates.filter(item => !ids.has(item.id))).slice(0, 5);
-        if (items.length < 5) {
-            const used = new Set(items.map(item => item.id));
-            const latest = state.news.concat(state.sideExtras)
-                .filter(item => item.status === "published" && !used.has(item.id))
-                .sort((a, b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0));
-            items = mergeNews(items.concat(latest)).slice(0, 5);
-        }
+        const items = pinned.concat(candidates.filter(item => !ids.has(item.id))).slice(0, 5);
         target.innerHTML = items.length ? items.map(item => '<a class="headline-category-story" href="' + escapeHtml(newsUrl(item)) + '"><img src="' + escapeHtml(imageUrl(item)) + '" alt="" loading="lazy"><span><strong>' + escapeHtml(item.title) + '</strong><small>' + escapeHtml(publishedTime(item)) + '</small></span></a>').join("") : '<p class="headline-category-empty">Henüz yayınlanmış haber bulunmuyor.</p>';
     }
 
