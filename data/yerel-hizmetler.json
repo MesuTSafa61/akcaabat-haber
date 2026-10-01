@@ -6180,13 +6180,190 @@
     }
   },
   "pharmacies": {
-    "date": null,
-    "updatedAt": "2026-09-30T15:21:14.506289+00:00",
+    "date": "2026-10-01",
+    "updatedAt": "2026-10-01T06:23:24.524176+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
-    "items": [],
+    "items": [
+      {
+        "name": "KOZA ECZANESİ",
+        "address": "DÜRBİNAR MAH.İNÖNÜ CAD.NO:73/A",
+        "phone": "04622284622"
+      },
+      {
+        "name": "SİNEM ECZANESİ",
+        "address": "YILDIZLI MAH.ESKİ SAMSUN YOLU CAD. ARİF ŞEN APT. NO:63/B Yıldızlı ptt yanı",
+        "phone": "04626663636"
+      }
+    ],
     "startsAt": null,
     "endsAt": null,
-    "districts": {}
+    "districts": {
+      "Akçaabat": [
+        {
+          "name": "KOZA ECZANESİ",
+          "address": "DÜRBİNAR MAH.İNÖNÜ CAD.NO:73/A",
+          "phone": "04622284622",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        },
+        {
+          "name": "SİNEM ECZANESİ",
+          "address": "YILDIZLI MAH.ESKİ SAMSUN YOLU CAD. ARİF ŞEN APT. NO:63/B Yıldızlı ptt yanı",
+          "phone": "04626663636",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Araklı": [
+        {
+          "name": "RABİA ECZANESİ",
+          "address": "ÖZGEN MAHALLESİ ESKİ YOL KÜME EVLERİ NO:38A ARAKLI DEVLET HASTANESİ YANI",
+          "phone": "04627214500",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Arsin": [
+        {
+          "name": "AHSEN ECZANESİ",
+          "address": "YALI MAH. ŞEHİT ASTEĞMEN HALİL ALBAYRAK CAD. NO:126/A Arsin ilçe devlet hastanesi sağında bordo market bitişiğinde",
+          "phone": "04627126100",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Beşikdüzü": [
+        {
+          "name": "BEŞİKDÜZÜ ECZANESİ",
+          "address": "CUMHURİYET MAH.RAİF KARADENİZ CAD. NO:6/C",
+          "phone": "04628713074",
+          "startsAt": "2026-10-01T17:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Çarşıbaşı": [
+        {
+          "name": "GÖKÇE ECZANESİ",
+          "address": "AVNİ AKKAN CAD.NO.70/A",
+          "phone": "04628213115",
+          "startsAt": "2026-10-01T17:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Çaykara": [
+        {
+          "name": "BİLGE ECZANESİ",
+          "address": "IŞIKLI MAHALLESİ DEĞİRMEN1 SOKAK NO:1B ÇAYKARA HALK EĞİTİM MERKEZİ KARŞISI,SAĞLIK ECZANESİ ÇAPRAZINDAKİ TOKİ BİNASININ ALTINDAKİ ORTA DÜKKAN",
+          "phone": "04625025545",
+          "startsAt": "2026-10-01T17:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Dernekpazarı": [],
+      "Düzköy": [],
+      "Hayrat": [],
+      "Köprübaşı": [],
+      "Maçka": [
+        {
+          "name": "MERKEZ ECZANESİ",
+          "address": "MERKEZ MAH. ATATÜRK CAD.NO:57/A",
+          "phone": "04625121107",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Of": [
+        {
+          "name": "RIZA ECZANESİ",
+          "address": "SULAKLI MAH. CUMHURİYET CAD.NO.53/A",
+          "phone": "04627714184",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Ortahisar": [
+        {
+          "name": "BAHÇECİK ECZANESİ",
+          "address": "BAHÇECİK MAH. YENİ CAMİ SOK. NO:55/A",
+          "phone": "04623217455",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        },
+        {
+          "name": "ALİBEYOĞLU ECZANESİ",
+          "address": "KALKINMA MAH.FARABİ CAD.NO:36/A",
+          "phone": "04623280050",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        },
+        {
+          "name": "YURDUM ECZANESİ",
+          "address": "KEMERKAYA MAH.ILLER SOK.MAZLUMOGLU APT.NO:8/A",
+          "phone": "04623262602",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        },
+        {
+          "name": "MERVE ECZANESİ",
+          "address": "FATİH MAH.PROF.OSMAN TURAN CAD. NO:16/B",
+          "phone": "04622240279",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Sürmene": [
+        {
+          "name": "SAĞLIK ECZANESİ",
+          "address": "ÇAMLICA MAHALLESİ LİSE YOLU CAD. NO:9",
+          "phone": "04627464810",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Şalpazarı": [
+        {
+          "name": "ŞALPAZARI ECZANESİ",
+          "address": "ATATÜRK CADDESİ NO:15/A",
+          "phone": "04628913025",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Tonya": [
+        {
+          "name": "ÇAĞLAR ECZANESİ",
+          "address": "DR.DILAVER YILDIRIM CAD.NO.11/B",
+          "phone": "04628813317",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Vakfıkebir": [
+        {
+          "name": "ÇİĞDEM ECZANESİ",
+          "address": "KEMALİYE MAH.14 ŞUBAT KURTULUŞ CAD. NO:54/B",
+          "phone": "04628416767",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ],
+      "Yomra": [
+        {
+          "name": "LOTUS ECZANESİ",
+          "address": "KAŞÜSTÜ MAH. VALİ RECEP YAZICIOĞLU CAD. NO:42D",
+          "phone": "05317787789",
+          "startsAt": "2026-10-01T17:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        },
+        {
+          "name": "ŞAHİN ECZANESİ",
+          "address": "SANCAK MAH.TRABZON CAD.NO:127 YOMRA TRABZON",
+          "phone": "04623411424",
+          "startsAt": "2026-10-01T18:00:00+03:00",
+          "endsAt": "2026-10-02T08:00:00+03:00"
+        }
+      ]
+    }
   },
   "obituaries": {
     "updatedAt": "2026-09-30T21:16:43.572110+00:00",
