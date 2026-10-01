@@ -5,7 +5,7 @@ on:
       - .github/workflows/update-local-services.yml
       - .github/scripts/update_local_services.py
   schedule:
-    - cron: '7 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 permissions:
   contents: write
