@@ -590,46 +590,9 @@
                     new Date(a.published_at || a.created_at || 0);
             });
 
-        // Kategori tamamen boşsa, sayfayı boş bırakma:
-        // Gündem kategorisindeki en son 5 yayınlanmış haberi göster.
-        if (!news.length && categoryName !== "gündem") {
-            const fallbackResult = await client
-                .from("news")
-                .select(`
-                    id,
-                    title,
-                    slug,
-                    summary,
-                    image_url,
-                    is_breaking,
-                    views,
-                    published_at,
-                    created_at,
-                    category_id,
-                    categories!inner (
-                        id,
-                        name,
-                        slug
-                    )
-                `)
-                .eq("status", "published")
-                .ilike("categories.name", "Gündem")
-                .order("published_at", { ascending: false })
-                .limit(5);
-
-            if (!fallbackResult.error) {
-                news = (fallbackResult.data || []).map(function (item) {
-                    item.categories = normalizeCategory(item);
-                    return item;
-                });
-            }
-        }
-
         categoryCount.textContent =
             news.length +
-            (categoryName !== "gündem" && news.length && databaseNews.length === 0 && curated.length === 0
-                ? " güncel Gündem haberi"
-                : " yayınlanmış haber");
+            " yayınlanmış haber";
 
         render();
     }
