@@ -6366,9 +6366,31 @@
     }
   },
   "obituaries": {
-    "updatedAt": "2026-09-30T21:16:43.572110+00:00",
+    "updatedAt": "2026-10-01T14:32:26.763841+00:00",
     "source": "https://www.akcaabat.bel.tr/vefat-edenler.aspx",
     "items": [
+      {
+        "name": "MERHUM ZEKERİYA OĞLU OSMAN ÇINAR",
+        "date": "2026-10-01",
+        "details": "İKİNDİ • RAHMAN CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "prayerTime": "İKİNDİ",
+        "mosque": "RAHMAN CAMİİ",
+        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "relative": "ESER ÇINAR",
+        "latitude": "",
+        "longitude": ""
+      },
+      {
+        "name": "İLÇE EMNİYET MÜDÜRLÜĞÜNDE GÖREVLİ POLİS MEMURU İHSAN SANCAR",
+        "date": "2026-10-01",
+        "details": "İKİNDİ • ÇAYKARA İLÇESİ ÇAMBAŞI MAHALLESİ ÇAMBAŞI CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "prayerTime": "İKİNDİ",
+        "mosque": "ÇAYKARA İLÇESİ ÇAMBAŞI MAHALLESİ ÇAMBAŞI CAMİİ",
+        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "relative": "BAYRAM SANCAR",
+        "latitude": "",
+        "longitude": ""
+      },
       {
         "name": "MERHUM HALİT OĞLU MUSTAFA KÖROĞLU",
         "date": "2026-09-30",
@@ -6383,10 +6405,10 @@
       {
         "name": "MERHUM ABDULLAH TÜRKMEN EŞİ FETHİYE TÜRKMEN",
         "date": "2026-09-29",
-        "details": "ÖĞLE • MEZARLIK CAMİİ • AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "details": "ÖĞLE • MEZARLIK CAMİİ • CAMİİ - Haritada Göster Mezarlık : AYNI YERDEKİ AİLE KABRİSTANLIĞI",
         "prayerTime": "ÖĞLE",
         "mosque": "MEZARLIK CAMİİ",
-        "cemetery": "AYNI YERDEKİ AİLE KABRİSTANLIĞI",
+        "cemetery": "CAMİİ - Haritada Göster Mezarlık : AYNI YERDEKİ AİLE KABRİSTANLIĞI",
         "relative": "KEMAL NOHUT",
         "latitude": "",
         "longitude": ""
