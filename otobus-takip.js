@@ -35,7 +35,7 @@
     document.getElementById('stopSearch').addEventListener('input',e=>{query=e.target.value;const pos=e.target.selectionStart;render();const input=document.getElementById('stopSearch');input.focus();if(pos!==null)input.setSelectionRange(pos,pos);clearTimeout(searchTimer);searchTimer=setTimeout(loadArrivals,400);});
     document.getElementById('busLiveRefresh').addEventListener('click',()=>refresh(true));
     const stop=all.find(s=>s.code===selected);
-    document.getElementById('stopArrivals').innerHTML=stop ? `<span class="transport-kicker">SEÇİLİ DURAK</span><h4>${escape(stop.name)}</h4><div id="arrivalItems">Yaklaşan araçlar kontrol ediliyor…</div><a class="local-button secondary" href="https://ulasim.trabzon.bel.tr/Web/Mobil?hatIdler=${encodeURIComponent(route.id)}&durakKod=${encodeURIComponent(stop.code)}" target="_blank" rel="noopener">Belediyede görüntüle ↗</a>` : '<p>Güzergâhtan bir durak seçin.</p>';
+    document.getElementById('stopArrivals').innerHTML=stop ? `<span class="transport-kicker">SEÇİLİ DURAK</span><h4>${escape(stop.name)}</h4><div id="arrivalItems">Yaklaşan araçlar kontrol ediliyor…</div>` : '<p>Güzergâhtan bir durak seçin.</p>';
   }
   async function loadArrivals() {
     const token=++arrivalEpoch, id=selected, routeKey=route?.id;
