@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = "https://akcaabathaber.com.tr"
 STATIC_PAGES = (
     "", "haber.html", "mac-merkezi.html", "kameralar.html", "trafik.html",
-    "hava-durumu.html", "borsa.html", "hakkimizda.html", "iletisim.html",
+    "hava-durumu.html", "otobus-saatleri.html", "ucus-bilgileri.html", "borsa.html", "hakkimizda.html", "iletisim.html",
 )
 
 
