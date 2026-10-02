@@ -6181,18 +6181,18 @@
   },
   "pharmacies": {
     "date": "2026-10-02",
-    "updatedAt": "2026-10-02T06:22:43.028394+00:00",
+    "updatedAt": "2026-10-02T13:48:44.287958+00:00",
     "source": "https://www.trabzoneczaciodasi.org.tr/nobetci-eczaneler/61",
     "items": [
-      {
-        "name": "YAĞMUR ECZANESİ",
-        "address": "NEFSİPULATHANE MAH.ATATÜRK BULVARI MO:55G HAMAM ÇİMENİ İŞ HANI, DAMLA PASTANESİ YANI",
-        "phone": "04622286752"
-      },
       {
         "name": "SENA ECZANESİ",
         "address": "YAYLACIK MAH. AKÇAABAT CAD. NO:92/C AKÇAABAT MİLLET BAHÇESİ KARŞISI",
         "phone": "05060613461"
+      },
+      {
+        "name": "YAĞMUR ECZANESİ",
+        "address": "NEFSİPULATHANE MAH.ATATÜRK BULVARI MO:55G HAMAM ÇİMENİ İŞ HANI, DAMLA PASTANESİ YANI",
+        "phone": "04622286752"
       }
     ],
     "startsAt": null,
@@ -6200,16 +6200,16 @@
     "districts": {
       "Akçaabat": [
         {
-          "name": "YAĞMUR ECZANESİ",
-          "address": "NEFSİPULATHANE MAH.ATATÜRK BULVARI MO:55G HAMAM ÇİMENİ İŞ HANI, DAMLA PASTANESİ YANI",
-          "phone": "04622286752",
+          "name": "SENA ECZANESİ",
+          "address": "YAYLACIK MAH. AKÇAABAT CAD. NO:92/C AKÇAABAT MİLLET BAHÇESİ KARŞISI",
+          "phone": "05060613461",
           "startsAt": "2026-10-02T18:00:00+03:00",
           "endsAt": "2026-10-03T08:00:00+03:00"
         },
         {
-          "name": "SENA ECZANESİ",
-          "address": "YAYLACIK MAH. AKÇAABAT CAD. NO:92/C AKÇAABAT MİLLET BAHÇESİ KARŞISI",
-          "phone": "05060613461",
+          "name": "YAĞMUR ECZANESİ",
+          "address": "NEFSİPULATHANE MAH.ATATÜRK BULVARI MO:55G HAMAM ÇİMENİ İŞ HANI, DAMLA PASTANESİ YANI",
+          "phone": "04622286752",
           "startsAt": "2026-10-02T18:00:00+03:00",
           "endsAt": "2026-10-03T08:00:00+03:00"
         }
@@ -6283,13 +6283,6 @@
       ],
       "Ortahisar": [
         {
-          "name": "ALPER ECZANESİ",
-          "address": "2 NOLU BOSTANCI MAH.KAYABAŞI SOK.NO.5/B",
-          "phone": "04623280136",
-          "startsAt": "2026-10-02T18:00:00+03:00",
-          "endsAt": "2026-10-03T08:00:00+03:00"
-        },
-        {
           "name": "ÇUKURÇAYIR ECZANESİ",
           "address": "ÇUKURÇAYIR MAHALLESİ ÇUKURÇAYIR İPEKYOLU CADDESİ TEPE PARK SİTESİ A2 BLOK NO:9CD",
           "phone": "04623513240",
@@ -6307,6 +6300,13 @@
           "name": "BAKKALOĞLU ECZANESİ",
           "address": "FATİH MAH.OCAK SOK.NO:4/A",
           "phone": "04622309569",
+          "startsAt": "2026-10-02T18:00:00+03:00",
+          "endsAt": "2026-10-03T08:00:00+03:00"
+        },
+        {
+          "name": "ALPER ECZANESİ",
+          "address": "2 NOLU BOSTANCI MAH.KAYABAŞI SOK.NO.5/B",
+          "phone": "04623280136",
           "startsAt": "2026-10-02T18:00:00+03:00",
           "endsAt": "2026-10-03T08:00:00+03:00"
         }
