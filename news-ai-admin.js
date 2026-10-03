@@ -18,7 +18,7 @@
       const selected=byId('aiDraft').value;
       byId('aiDraft').innerHTML='<option value="">Bir bot taslağı seçin</option>'+drafts.data.map(n=>`<option value="${esc(n.id)}">${esc(n.title)}</option>`).join('');
       if(drafts.data.some(n=>n.id===selected))byId('aiDraft').value=selected;
-      byId('aiJobs').innerHTML=jobs.data.length?jobs.data.map(j=>`<article class="ai-job"><div class="ai-job-text"><span class="source-badge ${j.status==='ready'?'live':'draft'}">${esc(labels[j.status]||j.status)}</span><p><small>Kaynak başlığı</small><br><strong>${esc(j.original_title)}</strong></p>${j.title_suggestion?`<p><small>Yapay zekâ başlık önerisi</small><br><strong>${esc(j.title_suggestion)}</strong></p>`:''}${j.error_message?`<p class="ai-error">${esc(j.error_message)}</p>`:''}<a href="yeni-haber.html?edit=${esc(j.news_id)}">Haberi düzenle</a>${j.status==='ready'?` <button type="button" data-ai-apply="${esc(j.id)}">Başlık ve görseli taslağa uygula</button>`:''}</div>${j.generated_image_url?`<figure><img src="${esc(j.generated_image_url)}" alt="Yapay zekâ ile üretilen temsili kapak" loading="lazy"><figcaption>Yapay zekâ ile üretilmiş temsili görsel</figcaption></figure>`:''}</article>`).join(''):'<p>Henüz üretim yok. Yeni bot haberleri otomatik sıraya alınır veya yukarıdan bir taslak seçebilirsiniz.</p>';
+      byId('aiJobs').innerHTML=jobs.data.length?jobs.data.map(j=>`<article class="ai-job"><div class="ai-job-text"><span class="source-badge ${j.status==='ready'?'live':'draft'}">${esc(labels[j.status]||j.status)}</span><p><small>Kaynak başlığı</small><br><strong>${esc(j.original_title)}</strong></p>${j.title_suggestion?`<p><small>Yapay zekâ başlık önerisi</small><br><strong>${esc(j.title_suggestion)}</strong></p>`:''}${j.error_message?`<p class="ai-error">${esc(j.error_message)}</p>`:''}<a href="yeni-haber.html?edit=${esc(j.news_id)}">Haberi düzenle</a>${j.status==='failed'?` <button type="button" data-ai-retry="${esc(j.id)}">Yeniden üret</button>`:''}${j.status==='ready'?` <button type="button" data-ai-apply="${esc(j.id)}">Başlık ve görseli taslağa uygula</button>`:''}</div>${j.generated_image_url?`<figure><img src="${esc(j.generated_image_url)}" alt="Yapay zekâ ile üretilen temsili kapak" loading="lazy"><figcaption>Yapay zekâ ile üretilmiş temsili görsel</figcaption></figure>`:''}</article>`).join(''):'<p>Henüz üretim yok. Yeni bot haberleri otomatik sıraya alınır veya yukarıdan bir taslak seçebilirsiniz.</p>';
     }catch(e){message(e.message,true);}finally{loading=false;}
   }
   async function invoke(body={}) {
@@ -41,6 +41,8 @@
   });
   byId('aiRefresh').addEventListener('click',async()=>{try{await invoke();message('Üretim sırası kontrol edildi.');await refresh();}catch(e){message(e.message,true);}});
   byId('aiJobs').addEventListener('click',async event=>{
+    const retry=event.target.closest('[data-ai-retry]');
+    if(retry){retry.disabled=true;try{await invoke({retry_id:retry.dataset.aiRetry});message('Üretim yeniden sıraya alındı.');await refresh();}catch(e){message(e.message,true);}finally{retry.disabled=false;}return;}
     const button=event.target.closest('[data-ai-apply]');if(!button)return;
     button.disabled=true;
     try{const {error}=await client.rpc('apply_news_ai_job',{p_job:button.dataset.aiApply});if(error)throw error;message('Öneri taslağa uygulandı. Haber düzenleme ekranından kontrol edip yayımlayabilirsiniz.');await refresh();}catch(e){message(e.message||'Öneri uygulanamadı.',true);}finally{button.disabled=false;}
