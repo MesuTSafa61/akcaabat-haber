@@ -555,7 +555,7 @@ Deno.serve(async (request) => {
                   updates.source_summary = item.summary;
                   if (source.allow_remote_image && item.imageUrl) updates.image_url = item.imageUrl;
                 }
-                if (settings.default_mode === "auto_publish" && source.auto_publish &&
+                if (!settings.ai_enabled && settings.default_mode === "auto_publish" && source.auto_publish &&
                   existing.status === "draft" && !!item.content) {
                   updates.status = "published";
                   updates.published_at = existing.published_at || new Date().toISOString();
@@ -584,7 +584,7 @@ Deno.serve(async (request) => {
             continue;
           }
 
-          const status = settings.default_mode === "auto_publish" && source.auto_publish
+          const status = !settings.ai_enabled && settings.default_mode === "auto_publish" && source.auto_publish
             ? "published" : "draft";
           const summary = item.summary;
           const payload = {
@@ -601,6 +601,13 @@ Deno.serve(async (request) => {
           if (newsError) {
             if (newsError.code === "23505") { totals.duplicate_count++; continue; }
             throw newsError;
+          }
+          if (settings.ai_enabled && (settings.ai_titles || settings.ai_images)) {
+            const { error: aiError } = await client.from("news_ai_jobs").insert({
+              news_id: news.id, original_title: item.title, original_summary: clean(item.summary, 1800),
+              original_image_url: payload.image_url, wants_title: settings.ai_titles, wants_image: settings.ai_images,
+            });
+            if (aiError) errors.push(source.name + ": Yapay zekâ üretimi sıraya alınamadı; haber taslakta korundu.");
           }
           const { error: itemError } = await client.from("news_bot_items").insert({
             source_id: source.id, run_id: run.id, source_guid: item.guid, source_url: item.url,
