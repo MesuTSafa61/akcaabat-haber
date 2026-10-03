@@ -11,7 +11,7 @@
     try {
       const [settings,jobs,drafts]=await Promise.all([
         client.from('news_bot_settings').select('ai_enabled,ai_titles,ai_images').eq('id',true).single(),
-        client.from('news_ai_jobs').select('id,news_id,status,original_title,title_suggestion,generated_image_url,error_message,created_at,cover_headline,cover_placement,photo_search_status,photo_candidate_url,clean_photo_url').order('created_at',{ascending:false}).limit(30),
+        client.from('news_ai_jobs').select('id,news_id,status,original_title,title_suggestion,generated_image_url,error_message,created_at,cover_headline,cover_placement,photo_search_status,photo_candidate_url,clean_photo_url,news!inner(status)').eq('news.status','draft').order('created_at',{ascending:false}).limit(30),
         client.from('news').select('id,title').eq('status','draft').eq('origin_type','automated').order('created_at',{ascending:false}).limit(30)
       ]);
       if(settings.error||jobs.error||drafts.error)throw Error('Üretim bilgileri okunamadı.');

@@ -2507,11 +2507,13 @@
         }
     }
 
-    init();
+    init().then(()=>window.dispatchEvent(new CustomEvent("news-editor-ready",{detail:{client,news:currentNews}})));
 
 })();
 </script>
 
   <script src="admin-shell.js?v=4"></script>
+<script src="news-cover-editor.js?v=1"></script>
 </body>
 </html>
+

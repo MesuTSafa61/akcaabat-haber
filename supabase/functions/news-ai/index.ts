@@ -31,6 +31,7 @@ function validateHook(hook:string,original:string) {
   if(hook.length<8 || hook.length>70 || hook.split(/\s+/).length>10 || /<|>|https?:/.test(hook))throw new Error('Kapak vurgusu 8–70 karakter ve en fazla 10 kelime olmalı.');
   if((hook.match(/\d+(?:[.,:]\d+)*/g)||[]).some(n=>!original.includes(n)))throw new Error('Kapak vurgusunda kaynakta olmayan sayı var.');
 }
+function ownPhotoURL(value:string) {const url=new URL(value);if(url.origin===Deno.env.get('SUPABASE_URL') && /^\/storage\/v1\/object\/public\/news-images\//.test(url.pathname) && !url.username && !url.password)return url;return photoURL(value);}
 const photoHosts=new Set(['resim.haber61.net','61saatcom.teimg.com']);
 function photoURL(value:string) {const url=new URL(value);if(url.protocol!=='https:' || !photoHosts.has(url.hostname) || url.username || url.password)throw new Error('Kaynak fotoğraf adresi doğrulanamadı.');return url;}
 async function discoverPhoto(client:any,job:any) {
@@ -88,12 +89,20 @@ async function imageBytes(url:URL) {
 async function sourcePhoto(job:any) {
   if(!job.clean_photo_url && !job.original_image_url)return null;
   try {
-    const url=photoURL(job.photo_search_status==='verified' && job.clean_photo_url?job.clean_photo_url:job.original_image_url);
+    const url=ownPhotoURL(job.photo_search_status==='verified' && job.clean_photo_url?job.clean_photo_url:job.original_image_url);
     return await imageBytes(url);
   }catch(_){return null;}
 }
 async function storeCover(client:any,job:any,bytes:Uint8Array,type:string,photo=false) {
-  const cover=await renderCover(bytes,type,job.cover_headline||job.title_suggestion||job.original_title,photo,{placement:job.cover_placement||'auto'});
+  if(!photo){const ext=type==='image/png'?'png':type==='image/jpeg'?'jpg':'webp';const {error}=await client.storage.from('news-ai-images').upload(job.id+'-background.'+ext,bytes,{contentType:type,upsert:true});if(error)throw new Error('Kapak zemini kaydedilemedi.');}
+  const {data:setting}=await client.from('site_settings').select('value').eq('key','news_cover').maybeSingle();
+  let logo:any=null;
+  if(setting?.value?.logo_url){
+    const url=new URL(setting.value.logo_url);
+    if(url.origin!==Deno.env.get('SUPABASE_URL') || !url.pathname.startsWith('/storage/v1/object/public/news-images/branding/'))throw new Error('Kapak logosu adresi doğrulanamadı.');
+    logo=await imageBytes(url);if(logo.type!=='image/png' || logo.bytes.length>2097152)throw new Error('Kapak logosu PNG ve en fazla 2 MB olmalı.');
+  }
+  const cover=await renderCover(bytes,type,job.cover_headline||job.title_suggestion||job.original_title,photo,{placement:job.cover_placement||'auto',logo});
   const path=job.id+'-'+Date.now()+(photo?'-photo-v2.png':'-ai-v2.png');
   const {error}=await client.storage.from('news-ai-images').upload(path,cover,{contentType:'image/png',upsert:true});
   if(error)throw new Error('Manşet kapağı kaydedilemedi.');
@@ -179,8 +188,20 @@ Deno.serve(async request=>{
   }
   if(!allowed) return reply({error:'Yetkisiz istek.'},401);
   const {data:settings}=await client.from('news_bot_settings').select('ai_enabled,ai_titles,ai_images').eq('id',true).single();
-  if(!settings?.ai_enabled) return reply({status:'disabled'});
   let body:any={};try{body=await request.json();}catch(_){ /* cron has an empty object */ }
+  if(!settings?.ai_enabled && !body.editor_news_id && !body.editor_poll && !body.preview_only) return reply({status:'disabled'});
+  if(body.editor_news_id && !isCron){
+    if(!uuid(body.editor_news_id))return reply({error:'Geçersiz haber.'},400);
+    const {data:news}=await client.from('news').select('id,title,summary,image_url').eq('id',body.editor_news_id).maybeSingle();
+    if(!news)return reply({error:'Haber bulunamadı.'},404);
+    const {data:previous}=await client.from('news_ai_jobs').select('*').eq('news_id',news.id).maybeSingle();
+    if(previous && ['queued','text_wait','image_start','image_wait'].includes(previous.status))return reply({status:'queued',job_id:previous.id});
+    let photo:string|null=null;try{photo=body.photo_url?ownPhotoURL(body.photo_url).href:null;}catch(_){return reply({error:'Kaynak fotoğrafı Haber61, 61saat veya sitenin görsel deposundan seçin.'},400);}
+    const patch={news_id:news.id,original_title:news.title,original_summary:clean(news.summary),original_image_url:news.image_url,wants_title:false,wants_image:true,status:'queued',attempts:0,text_request_id:null,image_request_id:null,title_suggestion:null,cover_headline:null,generated_image_url:null,error_message:null,leased_until:null,created_at:new Date().toISOString(),next_at:new Date().toISOString(),...(photo?{clean_photo_url:photo,photo_search_status:'verified'}:{})};
+    const {data:job,error}=await client.from('news_ai_jobs').upsert(patch,{onConflict:'news_id'}).select('id').single();
+    if(error)return reply({error:'Kapak üretimi başlatılamadı.'},500);
+    return reply({status:'queued',job_id:job.id});
+  }
   if(body.rebuild_covers || body.rebuild_id) {
     if(body.rebuild_id && !uuid(body.rebuild_id))return reply({error:'Geçersiz üretim.'},400);
     let query=client.from('news_ai_jobs').select('*').in('status',body.rebuild_id?['ready','applied']:['ready']).eq('wants_image',true);
@@ -194,20 +215,19 @@ Deno.serve(async request=>{
         const patch:any={};
         if(body.cover_headline!==undefined){const hook=clean(body.cover_headline,80);validateHook(hook,job.original_title+' '+job.original_summary);patch.cover_headline=hook;}
         if(body.cover_placement!==undefined){if(!['auto','left','right','bottom'].includes(body.cover_placement))throw new Error('Geçersiz yazı konumu.');patch.cover_placement=body.cover_placement;}
+        if(body.photo_url){patch.clean_photo_url=ownPhotoURL(body.photo_url).href;patch.photo_search_status='verified';}
         if(body.use_photo_candidate){if(!job.photo_candidate_url)throw new Error('Fotoğraf adayı bulunamadı.');patch.clean_photo_url=photoURL(job.photo_candidate_url).href;patch.photo_search_status='verified';patch.clean_photo_credit='Kaynak haber — editör tarafından doğrulanan fotoğraf';}
         if(Object.keys(patch).length){const {error}=await client.from('news_ai_jobs').update(patch).eq('id',job.id).eq('status',job.status);if(error)throw new Error('Kapak ayarları kaydedilemedi.');Object.assign(job,patch);}
         await discoverPhoto(client,job);
         let photo=await sourcePhoto(job), source=photo;
         if(!source){
-          if(/-v2\.png$/.test(job.generated_image_url))throw new Error('Bu temsili kapağın ham zemini yok. Kaynak fotoğrafı seçin veya yeniden üretin.');
-          const url=new URL(job.generated_image_url);
-          if(url.origin!==Deno.env.get('SUPABASE_URL') || !url.pathname.startsWith('/storage/v1/object/public/news-ai-images/'))throw new Error('Kapak zemini doğrulanamadı.');
-          source=await imageBytes(url);
+          for(const ext of ['png','webp','jpg']){try{source=await imageBytes(new URL(client.storage.from('news-ai-images').getPublicUrl(job.id+'-background.'+ext).data.publicUrl));break;}catch(_){}}
+          if(!source)throw new Error('Bu eski kapağın ham zemini yok. Yazısız fotoğraf seçin veya AI ile yeni kapak üretin.');
         }
         const url=await storeCover(client,job,source.bytes,source.type,!!photo);
         const {error}=await client.from('news_ai_jobs').update({generated_image_url:url,error_message:null,updated_at:new Date().toISOString()}).eq('id',job.id).eq('status',job.status);
         if(error)throw new Error('Kapak güncellenemedi.');
-        {const {error:newsError}=await client.from('news').update({image_url:url}).eq('id',job.news_id).eq('image_url',job.generated_image_url);if(newsError)throw new Error('Haber kapağı güncellenemedi.');}
+        if(!body.preview_only){const {error:newsError}=await client.from('news').update({image_url:url}).eq('id',job.news_id).eq('image_url',job.generated_image_url);if(newsError)throw new Error('Haber kapağı güncellenemedi.');}
         count++;
       }
       return reply({status:'covers_updated',jobs:count});

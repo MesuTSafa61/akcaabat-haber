@@ -1,0 +1,32 @@
+(function(){
+'use strict';
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+window.addEventListener('news-editor-ready',async event=>{
+ const {client,news}=event.detail;if(!client)return;
+ const card=document.createElement('section');card.className='card';card.innerHTML=`<h2 class="card-title">Yapay zekâ ile manşet kapağı</h2><p class="hint">Kapağı önizleyip görsel olarak seçin. Değişiklik haber kaydedildiğinde uygulanır. Yeni haber için önce taslak kaydedin.</p><div class="form-group"><label for="coverPhoto">Yazısız kaynak fotoğrafı URL (isteğe bağlı)</label><input id="coverPhoto" type="url" placeholder="Kaynak fotoğraf adresi"><div class="hint">Görsel alanından seçtiğiniz dosya da kapak zemini olarak kullanılabilir. Yeni kapak üretimi kayıtlı haber başlığını ve özetini kullanır.</div></div><button class="btn btn-primary" type="button" id="coverGenerate">AI ile yeni kapak üret</button><p id="coverStatus" role="status"></p><div id="coverResult"></div><p><a href="ayarlar.html#coverLogoSettings">Kapak logosunu değiştir</a></p>`;
+ document.getElementById('imageUrl').closest('.card').after(card);
+ let job=null,busy=false;const status=msg=>card.querySelector('#coverStatus').textContent=msg;
+ async function invoke(body){const {data}=await client.auth.getSession();if(!data.session)throw Error('Oturumunuzu yenileyin.');const response=await fetch(window.AKCAABAT_SUPABASE.url+'/functions/v1/news-ai',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+data.session.access_token},body:JSON.stringify(body),signal:AbortSignal.timeout(60000)});const result=await response.json();if(!response.ok)throw Error(result.error||'Kapak işlemi tamamlanamadı.');return result;}
+ async function refresh(){if(!news)return;const {data,error}=await client.from('news_ai_jobs').select('id,status,cover_headline,cover_placement,generated_image_url,clean_photo_url,photo_candidate_url,photo_search_status,error_message').eq('news_id',news.id).maybeSingle();if(error)throw error;job=data;if(!job)return;
+ if(['queued','text_wait','image_start','image_wait'].includes(job.status)){status('Kapak hazırlanıyor; tamamlandığında burada görünecek.');return;}
+ if(job.status==='failed'){status(job.error_message||'Üretim tamamlanamadı. Yeniden deneyebilirsiniz.');return;}
+ if(!job.generated_image_url)return;
+ status('Kapak hazır. Seçtikten sonra haberi kaydedin.');card.querySelector('#coverResult').innerHTML=`<div class="form-group"><label for="editorCoverHook">Kısa kapak vurgusu</label><input id="editorCoverHook" maxlength="70" value="${esc(job.cover_headline||'')}"></div><div class="form-group"><label for="editorCoverPlace">Yazı konumu</label><select id="editorCoverPlace">${[['auto','Fotoğrafa göre otomatik'],['left','Sol'],['right','Sağ'],['bottom','Alt']].map(([v,t])=>`<option value="${v}" ${job.cover_placement===v?'selected':''}>${t}</option>`).join('')}</select></div><button class="btn btn-primary" type="button" id="editorCoverRefresh">Yazı / logo ile kapağı yenile</button>${job.photo_search_status==='review'&&job.photo_candidate_url?`<figure><img src="${esc(job.photo_candidate_url)}" style="max-width:100%" alt="Kaynak fotoğraf adayı"><figcaption>Aynı kare ve yazısız olduğunu kontrol edin.</figcaption></figure><button class="btn btn-primary" type="button" id="editorCoverCandidate">Doğruladım, bu fotoğrafı kullan</button>`:''}<figure><img src="${esc(job.generated_image_url)}" style="width:100%;aspect-ratio:16/9;object-fit:contain" alt="Manşet kapağı önizlemesi"></figure><button class="btn btn-primary" type="button" id="editorCoverSelect">Görsel olarak seç</button>`;
+ }
+ card.querySelector('#coverGenerate').disabled=!news;
+ card.addEventListener('click',async e=>{const button=e.target.closest('button');if(!button||busy)return;
+ if(button.id==='editorCoverSelect'){document.getElementById('image').value='';const input=document.getElementById('imageUrl');input.value=job.generated_image_url;input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));status('Kapak seçildi. Haberi kaydettiğinizde uygulanacak.');return;}
+ busy=true;button.disabled=true;try{
+ if(button.id==='coverGenerate'){
+ let photo=card.querySelector('#coverPhoto').value.trim();const file=document.getElementById('image').files[0];
+ if(file){if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>5242880)throw Error('PNG, JPG veya WebP; en fazla 5 MB seçin.');const ext={"image/png":"png","image/jpeg":"jpg","image/webp":"webp"}[file.type],path='news/cover-source-'+crypto.randomUUID()+'.'+ext;const {error}=await client.storage.from('news-images').upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;photo=client.storage.from('news-images').getPublicUrl(path).data.publicUrl;card.querySelector('#coverPhoto').value=photo;}
+ await invoke({editor_news_id:news.id,photo_url:photo||undefined});status('Yeni kapak sıraya alındı.');
+ }else if(button.id==='editorCoverRefresh'||button.id==='editorCoverCandidate'){
+ await invoke({rebuild_id:job.id,preview_only:true,cover_headline:card.querySelector('#editorCoverHook').value,cover_placement:card.querySelector('#editorCoverPlace').value,photo_url:card.querySelector('#coverPhoto').value.trim()||undefined,use_photo_candidate:button.id==='editorCoverCandidate'});
+ }
+ await refresh();
+ }catch(error){status(error.message||'Kapak işlemi tamamlanamadı.');}finally{busy=false;button.disabled=false;}});
+ await refresh().catch(e=>status(e.message));
+ setInterval(async()=>{if(busy||document.hidden||!job||!['queued','text_wait','image_start','image_wait'].includes(job.status))return;try{await invoke({editor_poll:true});await refresh();}catch(e){status(e.message);}},20000);
+});
+})();
