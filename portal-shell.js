@@ -57,7 +57,7 @@
         </div>
       </div></nav><button type="button" class="mobile-menu-backdrop" id="portalMenuBackdrop" aria-label="Menüyü kapat" hidden></button>
     </header>
-    <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="namaz-vakitleri.html">☪ Namaz Vakitleri</a><a href="nobetci-eczaneler.html"><img class="service-pharmacy-icon" src="assets/pharmacy-heart.svg" alt="" width="18" height="18"> Nöbetçi Eczaneler</a><a href="otobus-saatleri.html">🚌 Otobüs Saatleri</a><a href="ucus-bilgileri.html">✈ Uçuş Bilgileri</a><a href="vefat-edenler.html"><img class="service-mosque-icon" src="assets/mosque.svg" alt="" width="17" height="17"> Vefat Duyuruları</a><a href="foto-galeri.html">📷 Foto Galeri</a><a href="video-galeri.html">▶ Video Galeri</a></div></nav>
+    <nav class="service-strip" aria-label="Hızlı servisler"><div class="container service-inner"><a href="mac-merkezi.html">⚽ Maç Merkezi</a><a href="kameralar.html">🎥 Kameralar</a><a href="trafik.html">🚗 Trafik</a><a href="hava-durumu.html">☁ Hava Durumu</a><a href="namaz-vakitleri.html">☪ Namaz Vakitleri</a><a href="nobetci-eczaneler.html"><img class="service-pharmacy-icon" src="assets/pharmacy-heart.svg" alt="" width="18" height="18"> Nöbetçi Eczaneler</a><a href="otobus-saatleri.html">🚌 Otobüs Saatleri</a><a href="ucus-bilgileri.html">✈ Uçuş Bilgileri</a><a href="vefat-edenler.html"><img class="service-mosque-icon" src="assets/mosque.svg" alt="" width="17" height="17"> Vefat Duyuruları</a><a href="foto-galeri.html" data-gallery-service="true">📷 Video ve Foto Galeri</a></div></nav>
     <section class="breaking-bar" id="portalBreakingBar" aria-label="Son dakika" style="display:none"><div class="container breaking-inner"><div class="breaking-label"><span class="breaking-clock" aria-hidden="true"><i class="breaking-clock-hour"></i><i class="breaking-clock-minute"></i></span><span class="breaking-wordmark"><span>SON</span><span>DAKİKA</span></span></div><div class="breaking-content" id="portalBreakingContent"><a id="portalBreakingLink" href="haber.html?breaking=1"></a></div><div class="breaking-controls" id="portalBreakingControls" hidden><button type="button" id="portalBreakingPrev" aria-label="Önceki son dakika haberi">‹</button><button type="button" id="portalBreakingNext" aria-label="Sonraki son dakika haberi">›</button></div></div></section>
     <section class="search-panel" id="portalSearchPanel"><div class="container"><form class="search-form" id="portalSearchForm"><input type="search" id="portalSearchInput" placeholder="Haberlerde ara..." autocomplete="off" aria-label="Haberlerde ara"><button type="submit">Ara</button></form></div></section>`;
 
@@ -341,7 +341,7 @@
 
   const path = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
   document.querySelectorAll(".portal-shell-top .service-inner a").forEach(function (link) {
-    const selected = new URL(link.href, location.href).pathname.split("/").pop().toLowerCase() === path;
+    const selected = link.dataset.galleryService === "true" ? ["foto-galeri.html", "video-galeri.html", "galeri-detay.html"].includes(path) : new URL(link.href, location.href).pathname.split("/").pop().toLowerCase() === path;
     link.classList.toggle("is-active", selected);
     if (selected) link.setAttribute("aria-current", "page");
   });
