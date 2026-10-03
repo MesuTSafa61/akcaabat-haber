@@ -61,7 +61,7 @@ async function sourcePhoto(job:any) {
 }
 async function storeCover(client:any,job:any,bytes:Uint8Array,type:string,photo=false) {
   const cover=await renderCover(bytes,type,job.title_suggestion||job.original_title,photo);
-  const path=job.id+(photo?'-photo-v2.png':'-ai-v2.png');
+  const path=job.id+'-'+Date.now()+(photo?'-photo-v2.png':'-ai-v2.png');
   const {error}=await client.storage.from('news-ai-images').upload(path,cover,{contentType:'image/png',upsert:true});
   if(error)throw new Error('Manşet kapağı kaydedilemedi.');
   return client.storage.from('news-ai-images').getPublicUrl(path).data.publicUrl;

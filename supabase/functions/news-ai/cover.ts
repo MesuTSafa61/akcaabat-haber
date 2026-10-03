@@ -49,7 +49,7 @@ export async function renderCover(bytes:Uint8Array,type:string,title:string,sour
   const {size,lines}=headlineLayout(title),spacing=size*1.17;
   const start=(675-lines.length*spacing)/2+size;
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
-  <defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#071b30" stop-opacity=".22"/><stop offset=".32" stop-color="#071b30" stop-opacity=".12"/><stop offset=".60" stop-color="#071b30" stop-opacity=".65"/><stop offset="1" stop-color="#061524" stop-opacity=".98"/></linearGradient></defs>
+  <defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#071b30" stop-opacity=".22"/><stop offset=".32" stop-color="#071b30" stop-opacity=".12"/><stop offset=".70" stop-color="#071b30" stop-opacity="1"/><stop offset="1" stop-color="#061524" stop-opacity="1"/></linearGradient></defs>
   <rect width="1200" height="675" fill="#0c2742"/>
   <image x="620" href="data:${type};base64,${base64(image)}" width="580" height="675" preserveAspectRatio="xMaxYMid slice"/>
   <rect width="1200" height="675" fill="url(#shade)"/><rect width="650" height="675" fill="#081e34"/><rect x="644" width="8" height="675" fill="#d7132d"/>
