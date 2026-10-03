@@ -1,4 +1,4 @@
-/* Capture only visible cards, at most two streams at once. Never persist camera footage. */
+/* Capture only visible cards, one stream at once. Never persist camera footage. */
 (function () {
   'use strict';
   const cache = new Map(), visible = new Set(), jobs = new Map();
@@ -23,13 +23,15 @@
   function pump() {
     if (document.hidden || document.getElementById('cameraDialog')?.open) return;
     for (const id of visible) {
-      if (jobs.size >= 2) break;
+      if (jobs.size >= 1) break;
       if (jobs.has(id) || (cache.get(id)?.next || 0) > Date.now()) continue;
+      const card = document.querySelector(`[data-preview="${id}"]`);
+      if (!card) continue;
       const frame = document.createElement('iframe');
       frame.className = 'camera-preview-worker'; frame.tabIndex = -1; frame.setAttribute('aria-hidden','true'); frame.title = 'Kamera önizlemesi hazırlanıyor';
-      frame.allow = 'autoplay'; frame.src = `kamera-oynatici.html?v=3&id=${id}&snapshot=1`;
-      const job = {frame, timer:setTimeout(()=>finish(id,null),22000)};
-      jobs.set(id,job); document.body.append(frame);
+      frame.allow = 'autoplay'; frame.src = `kamera-oynatici.html?v=4&id=${id}&snapshot=1`;
+      const job = {frame, timer:setTimeout(()=>finish(id,null),35000)};
+      jobs.set(id,job); card.prepend(frame);
     }
   }
   window.addEventListener('message', event => {
@@ -42,12 +44,14 @@
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
       const id = entry.target.dataset.preview;
-      if (entry.isIntersecting) visible.add(id); else visible.delete(id);
+      if (entry.isIntersecting) visible.add(id); else { visible.delete(id); const job = jobs.get(id); if(job){clearTimeout(job.timer);job.frame.remove();jobs.delete(id);} }
     }
     pump();
-  }, {rootMargin:'100px'});
+  }, {threshold:0.1});
   window.cameraPreviews = {observe() {
     observer.disconnect(); visible.clear();
+    for (const job of jobs.values()) {clearTimeout(job.timer);job.frame.remove();}
+    jobs.clear();
     document.querySelectorAll('[data-preview]').forEach(card=>{paint(card.dataset.preview);observer.observe(card);});
   }};
   document.addEventListener('visibilitychange', () => {

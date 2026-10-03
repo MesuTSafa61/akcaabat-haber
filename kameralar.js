@@ -44,7 +44,7 @@
     frame.title = camera.name + " canlı kamera oynatıcısı";
     frame.allow = "autoplay; fullscreen; picture-in-picture";
     frame.allowFullscreen = true;
-    frame.src = `kamera-oynatici.html?v=3&id=${camera.id}`;
+    frame.src = `kamera-oynatici.html?v=4&id=${camera.id}`;
     player.replaceChildren(frame);
     const status = document.getElementById("cameraStatus");
     status.textContent = "Yayın bağlantısı kuruluyor…";

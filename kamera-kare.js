@@ -10,7 +10,7 @@
     parent.postMessage({type:'camera-snapshot',id:params.get('id'),image}, location.origin);
   }
   function mute() {
-    document.querySelectorAll('video').forEach(video=>{video.muted=true;video.defaultMuted=true;video.playsInline=true;});
+    document.querySelectorAll('video').forEach(video=>{video.muted=true;video.defaultMuted=true;video.playsInline=true;video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');video.setAttribute('muted','');if(!video.crossOrigin) video.crossOrigin='anonymous';});
   }
   const observer = new MutationObserver(mute);
   observer.observe(document.documentElement,{childList:true,subtree:true});
@@ -26,7 +26,7 @@
         canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
         send(canvas.toDataURL('image/jpeg',0.78));
       } catch (_) { send(null); }
-    } else if (document.querySelector('.jw-state-error') || Date.now()-started > 20000) send(null);
-    else if (video?.paused) video.play().catch(()=>{});
+    } else if (document.querySelector('.jw-state-error') || Date.now()-started > 30000) send(null);
+    else if (video?.paused) Promise.resolve(video.play()).catch(error=>{if(error.name==='NotAllowedError')send(null);});
   },250);
 })();
