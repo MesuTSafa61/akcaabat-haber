@@ -7,11 +7,11 @@
   let client,initialized=false,loading=false;
   const message=(text,error=false)=>{byId('aiStatus').textContent=text;byId('aiStatus').style.color=error?'#b91c1c':'';};
   async function refresh() {
-    if(loading)return;loading=true;
+    if(loading || byId('aiJobs').contains(document.activeElement) && document.activeElement.matches('input,select'))return;loading=true;
     try {
       const [settings,jobs,drafts]=await Promise.all([
         client.from('news_bot_settings').select('ai_enabled,ai_titles,ai_images').eq('id',true).single(),
-        client.from('news_ai_jobs').select('id,news_id,status,original_title,title_suggestion,generated_image_url,error_message,created_at').order('created_at',{ascending:false}).limit(30),
+        client.from('news_ai_jobs').select('id,news_id,status,original_title,title_suggestion,generated_image_url,error_message,created_at,cover_headline,cover_placement,photo_search_status,photo_candidate_url,clean_photo_url').order('created_at',{ascending:false}).limit(30),
         client.from('news').select('id,title').eq('status','draft').eq('origin_type','automated').order('created_at',{ascending:false}).limit(30)
       ]);
       if(settings.error||jobs.error||drafts.error)throw Error('Üretim bilgileri okunamadı.');
@@ -19,7 +19,7 @@
       const selected=byId('aiDraft').value;
       byId('aiDraft').innerHTML='<option value="">Bir bot taslağı seçin</option>'+drafts.data.map(n=>`<option value="${esc(n.id)}">${esc(n.title)}</option>`).join('');
       if(drafts.data.some(n=>n.id===selected))byId('aiDraft').value=selected;
-      byId('aiJobs').innerHTML=jobs.data.length?jobs.data.map(j=>`<article class="ai-job"><div class="ai-job-text"><span class="source-badge ${j.status==='ready'?'live':'draft'}">${esc(labels[j.status]||j.status)}</span><p><small>Kaynak başlığı</small><br><strong>${esc(j.original_title)}</strong></p>${j.title_suggestion?`<p><small>Yapay zekâ başlık önerisi</small><br><strong>${esc(j.title_suggestion)}</strong></p>`:''}${j.error_message?`<p class="ai-error">${esc(j.error_message)}</p>`:''}<a href="yeni-haber.html?edit=${esc(j.news_id)}">Haberi düzenle</a>${j.status==='failed'?` <button type="button" data-ai-retry="${esc(j.id)}">Yeniden üret</button>`:''}${j.status==='ready'?` <button type="button" data-ai-apply="${esc(j.id)}">Başlık ve görseli taslağa uygula</button> <button type="button" data-ai-cover="${esc(j.id)}">Manşet kapağını yenile</button>`:''}</div>${j.generated_image_url?`<figure><img src="${esc(j.generated_image_url)}" alt="${esc(coverLabel(j))}" loading="lazy"><figcaption>${esc(coverLabel(j))}</figcaption></figure>`:''}</article>`).join(''):'<p>Henüz üretim yok. Yeni bot haberleri otomatik sıraya alınır veya yukarıdan bir taslak seçebilirsiniz.</p>';
+      byId('aiJobs').innerHTML=jobs.data.length?jobs.data.map(j=>`<article class="ai-job"><div class="ai-job-text"><span class="source-badge ${j.status==='ready'?'live':'draft'}">${esc(labels[j.status]||j.status)}</span><p><small>Kaynak başlığı</small><br><strong>${esc(j.original_title)}</strong></p>${j.title_suggestion?`<p><small>Yapay zekâ başlık önerisi</small><br><strong>${esc(j.title_suggestion)}</strong></p>`:''}${j.error_message?`<p class="ai-error">${esc(j.error_message)}</p>`:''}<a href="yeni-haber.html?edit=${esc(j.news_id)}">Haberi düzenle</a>${j.status==='failed'?` <button type="button" data-ai-retry="${esc(j.id)}">Yeniden üret</button>`:''}${j.status==='ready'?`<p><label>Kapak vurgusu <input data-cover-hook maxlength="70" value="${esc(j.cover_headline||'')}" style="width:100%"></label></p><p><label>Yazı konumu <select data-cover-placement>${[['auto','Fotoğrafa göre otomatik'],['left','Sol'],['right','Sağ'],['bottom','Alt']].map(([v,t])=>`<option value="${v}" ${j.cover_placement===v?'selected':''}>${t}</option>`).join('')}</select></label></p>${j.photo_search_status==='review'&&j.photo_candidate_url?`<figure><img src="${esc(j.photo_candidate_url)}" alt="Kaynak haberin fotoğraf adayı" loading="lazy"><figcaption>Aynı kare ve yazısız olduğunu kontrol edin.</figcaption></figure><button type="button" data-ai-photo="${esc(j.id)}">Aynı kare ve yazısız: fotoğrafı kullan</button>`:''}<p>${j.photo_search_status==='verified'?'Yazısız fotoğraf doğrulandı.':'Yazısız fotoğraf kontrolü gerekiyor.'} <a href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(j.original_title+' yazısız fotoğraf')}" target="_blank" rel="noopener">Fotoğraf ara</a></p> <button type="button" data-ai-apply="${esc(j.id)}">Başlık ve görseli taslağa uygula</button> <button type="button" data-ai-cover="${esc(j.id)}">Manşet kapağını yenile</button>`:''}</div>${j.generated_image_url?`<figure><img src="${esc(j.generated_image_url)}" alt="${esc(coverLabel(j))}" loading="lazy"><figcaption>${esc(coverLabel(j))}</figcaption></figure>`:''}</article>`).join(''):'<p>Henüz üretim yok. Yeni bot haberleri otomatik sıraya alınır veya yukarıdan bir taslak seçebilirsiniz.</p>';
     }catch(e){message(e.message,true);}finally{loading=false;}
   }
   async function invoke(body={}) {
@@ -42,8 +42,8 @@
   });
   byId('aiRefresh').addEventListener('click',async()=>{try{await invoke();message('Üretim sırası kontrol edildi.');await refresh();}catch(e){message(e.message,true);}});
   byId('aiJobs').addEventListener('click',async event=>{
-    const cover=event.target.closest('[data-ai-cover]');
-    if(cover){cover.disabled=true;try{await invoke({rebuild_id:cover.dataset.aiCover});message('1200 × 675 manşet kapağı yenilendi.');await refresh();}catch(e){message(e.message,true);}finally{cover.disabled=false;}return;}
+    const cover=event.target.closest('[data-ai-cover], [data-ai-photo]');
+    if(cover){cover.disabled=true;try{const article=cover.closest('article');await invoke({rebuild_id:cover.dataset.aiCover||cover.dataset.aiPhoto,cover_headline:article.querySelector('[data-cover-hook]').value,cover_placement:article.querySelector('[data-cover-placement]').value,use_photo_candidate:!!cover.dataset.aiPhoto});message('1200 × 675 manşet kapağı yenilendi.');await refresh();}catch(e){message(e.message,true);}finally{cover.disabled=false;}return;}
     const retry=event.target.closest('[data-ai-retry]');
     if(retry){retry.disabled=true;try{await invoke({retry_id:retry.dataset.aiRetry});message('Üretim yeniden sıraya alındı.');await refresh();}catch(e){message(e.message,true);}finally{retry.disabled=false;}return;}
     const button=event.target.closest('[data-ai-apply]');if(!button)return;

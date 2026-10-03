@@ -34,7 +34,7 @@
 
 <section id="newsAiPanel">
 <h2>Yapay zekâ ile başlık ve görsel</h2>
-<p class="source-help">Yeni bot haberleri üretim açıkken taslakta bekler. Kaynak metni korunur; üretilen başlığı ve 1200 × 675 yatay haber kapağını kontrol ederek taslağa uygulayabilirsiniz. Uygun kaynak fotoğrafı varsa kapakta kullanılır; yoksa temsili zemin üretilir. Başlık kapağa okunaklı fontla eklenir. Ücretsiz AI Horde hizmetinde bekleme süresi değişir. Yalnızca haber başlığı ve özeti paylaşılır; anonim üretim tarifleri hizmet tarafından herkese açık paylaşılabilir.</p>
+<p class="source-help">Yeni bot haberleri üretim açıkken taslakta bekler. Kaynak metni korunur; üretilen başlığı ve 1200 × 675 yatay haber kapağını kontrol ederek taslağa uygulayabilirsiniz. Uygun kaynak fotoğrafı varsa kapakta kullanılır; yoksa temsili zemin üretilir. Kapakta destek cümlesi olmadan kısa, merak uyandıran bir vurgu kullanılır. Yazı fotoğrafa göre sağa, sola veya alta yerleşir; konumunu değiştirebilirsiniz. Kaynak haberin ana fotoğrafı araştırılır; yazısız ve aynı kare olduğunu kontrol ettiğiniz adayı kapakta kullanabilirsiniz. Ücretsiz AI Horde hizmetinde bekleme süresi değişir. Yalnızca haber başlığı ve özeti paylaşılır; anonim üretim tarifleri hizmet tarafından herkese açık paylaşılabilir.</p>
 <form id="aiSettingsForm">
 <label><input type="checkbox" id="aiEnabled"> Yeni bot haberlerinde yapay zekâ üretimi açık</label>
 <label><input type="checkbox" id="aiTitles"> Başlık önerisi üret</label>
@@ -209,7 +209,7 @@
     init().catch(() => status("Haber botu açılamadı.", true));
   })();
   </script>
-  <script src="news-ai-admin.js?v=1"></script>
+  <script src="news-ai-admin.js?v=4"></script>
   <script src="admin-shell.js?v=4"></script>
 </body>
 </html>
