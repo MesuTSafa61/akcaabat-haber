@@ -183,7 +183,7 @@ Deno.serve(async request=>{
   let body:any={};try{body=await request.json();}catch(_){ /* cron has an empty object */ }
   if(body.rebuild_covers || body.rebuild_id) {
     if(body.rebuild_id && !uuid(body.rebuild_id))return reply({error:'Geçersiz üretim.'},400);
-    let query=client.from('news_ai_jobs').select('*').eq('status','ready').eq('wants_image',true);
+    let query=client.from('news_ai_jobs').select('*').in('status',body.rebuild_id?['ready','applied']:['ready']).eq('wants_image',true);
     if(body.rebuild_id)query=query.eq('id',body.rebuild_id);
     else query=query.not('generated_image_url','like','%-v2.png');
     const {data:ready,error:readError}=await query.limit(3);
@@ -195,7 +195,7 @@ Deno.serve(async request=>{
         if(body.cover_headline!==undefined){const hook=clean(body.cover_headline,80);validateHook(hook,job.original_title+' '+job.original_summary);patch.cover_headline=hook;}
         if(body.cover_placement!==undefined){if(!['auto','left','right','bottom'].includes(body.cover_placement))throw new Error('Geçersiz yazı konumu.');patch.cover_placement=body.cover_placement;}
         if(body.use_photo_candidate){if(!job.photo_candidate_url)throw new Error('Fotoğraf adayı bulunamadı.');patch.clean_photo_url=photoURL(job.photo_candidate_url).href;patch.photo_search_status='verified';patch.clean_photo_credit='Kaynak haber — editör tarafından doğrulanan fotoğraf';}
-        if(Object.keys(patch).length){const {error}=await client.from('news_ai_jobs').update(patch).eq('id',job.id).eq('status','ready');if(error)throw new Error('Kapak ayarları kaydedilemedi.');Object.assign(job,patch);}
+        if(Object.keys(patch).length){const {error}=await client.from('news_ai_jobs').update(patch).eq('id',job.id).eq('status',job.status);if(error)throw new Error('Kapak ayarları kaydedilemedi.');Object.assign(job,patch);}
         await discoverPhoto(client,job);
         let photo=await sourcePhoto(job), source=photo;
         if(!source){
@@ -205,8 +205,9 @@ Deno.serve(async request=>{
           source=await imageBytes(url);
         }
         const url=await storeCover(client,job,source.bytes,source.type,!!photo);
-        const {error}=await client.from('news_ai_jobs').update({generated_image_url:url,error_message:null,updated_at:new Date().toISOString()}).eq('id',job.id).eq('status','ready');
+        const {error}=await client.from('news_ai_jobs').update({generated_image_url:url,error_message:null,updated_at:new Date().toISOString()}).eq('id',job.id).eq('status',job.status);
         if(error)throw new Error('Kapak güncellenemedi.');
+        if(job.status==='applied'){const {error:newsError}=await client.from('news').update({image_url:url}).eq('id',job.news_id).eq('image_url',job.generated_image_url);if(newsError)throw new Error('Haber kapağı güncellenemedi.');}
         count++;
       }
       return reply({status:'covers_updated',jobs:count});

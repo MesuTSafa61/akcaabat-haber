@@ -1653,3 +1653,9 @@ body{background:#edf1f4;color:#111827}
   border-radius:15px;
   overflow:hidden;
 }
+
+
+/* Show the entire headline artwork at every viewport width. */
+.headline-main-column .hero-news{aspect-ratio:16 / 9;min-height:0}
+.headline-main-column .hero-image-wrap img{display:block;width:100%;height:100%;aspect-ratio:auto;object-fit:contain;object-position:center;transform:none}
+.headline-main-column .hero-news:hover .hero-image-wrap img{transform:none}
