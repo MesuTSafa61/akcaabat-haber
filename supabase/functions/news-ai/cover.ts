@@ -83,8 +83,8 @@ export async function renderCover(bytes:Uint8Array,type:string,title:string,sour
   <rect width="1200" height="675" fill="#0c2742"/>
   <image href="${dataUrl}" width="1200" height="675" preserveAspectRatio="xMidYMid slice"/>
   <rect width="1200" height="675" fill="url(#shade)"/>
-  <rect x="48" y="30" width="272" height="48" rx="7" fill="white"/>
-  <image x="58" y="32" width="252" height="44" href="${coverLogo}" preserveAspectRatio="xMidYMid meet"/>
+  <rect x="48" y="30" width="221" height="48" rx="7" fill="white"/>
+  <image x="53" y="32" width="211" height="44" href="${coverLogo}" preserveAspectRatio="xMidYMid meet"/>
   <rect x="${x}" y="${start-size-23}" width="76" height="7" rx="3" fill="#e11d3a"/>
   ${lines.map((line,i)=>`<text x="${x}" y="${start+i*spacing}" fill="${i===lines.length-1?'#ffdc66':'white'}" stroke="#071b30" stroke-width="1" paint-order="stroke" font-family="AH Cover" font-size="${size}" font-weight="700">${xml(line)}</text>`).join('')}
   ${sourcePhoto?'':'<rect x="948" y="24" width="216" height="30" rx="5" fill="#071b30" fill-opacity=".8"/><text x="966" y="45" fill="white" font-family="AH Cover" font-size="15">TEMSİLİ AI GÖRSELİ</text>'}

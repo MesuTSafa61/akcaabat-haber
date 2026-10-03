@@ -207,7 +207,7 @@ Deno.serve(async request=>{
         const url=await storeCover(client,job,source.bytes,source.type,!!photo);
         const {error}=await client.from('news_ai_jobs').update({generated_image_url:url,error_message:null,updated_at:new Date().toISOString()}).eq('id',job.id).eq('status',job.status);
         if(error)throw new Error('Kapak güncellenemedi.');
-        if(job.status==='applied'){const {error:newsError}=await client.from('news').update({image_url:url}).eq('id',job.news_id).eq('image_url',job.generated_image_url);if(newsError)throw new Error('Haber kapağı güncellenemedi.');}
+        {const {error:newsError}=await client.from('news').update({image_url:url}).eq('id',job.news_id).eq('image_url',job.generated_image_url);if(newsError)throw new Error('Haber kapağı güncellenemedi.');}
         count++;
       }
       return reply({status:'covers_updated',jobs:count});
