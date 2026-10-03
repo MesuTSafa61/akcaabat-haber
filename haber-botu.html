@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="admin-shell.css?v=4">
   <style>
     .source-grid{display:grid;gap:12px;margin-top:18px}.source-card{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px;border:1px solid #dbe3ee;border-radius:14px;background:#fff}.source-logo{width:104px;height:48px;object-fit:contain;border:1px solid #e5e7eb;border-radius:9px;background:#fff}.source-detail{min-width:0}.source-name{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.source-url{display:block;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#64748b;font-size:.86rem}.source-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.source-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:#eef2f7;color:#334155;font-size:.78rem;font-weight:700}.source-badge.live{background:#dcfce7;color:#166534}.source-badge.draft{background:#fef3c7;color:#92400e}.source-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.source-actions button{margin:0}.source-help{padding:12px 14px;border-radius:10px;background:#eff6ff;color:#1e3a5f}.danger-button{color:#b91c1c}@media(max-width:760px){.source-card{grid-template-columns:78px minmax(0,1fr)}.source-logo{width:74px;height:42px}.source-actions{grid-column:1/-1;justify-content:stretch}.source-actions button{flex:1}.source-url{white-space:normal;overflow-wrap:anywhere}}
-  .ai-job{display:flex;gap:20px;padding:20px;border:1px solid #dbe3ee;border-radius:14px;margin-top:16px;background:#fff}.ai-job-text{flex:1;min-width:0}.ai-job small{color:#64748b}.ai-job figure{margin:0;width:220px;flex:none}.ai-job img{width:100%;border-radius:12px;display:block}.ai-job figcaption{font-size:12px;color:#64748b;margin-top:8px}.ai-error{color:#b91c1c}@media(max-width:760px){.ai-job{flex-direction:column}.ai-job figure{width:100%;max-width:360px}}</style>
+  .ai-job{display:flex;gap:20px;padding:20px;border:1px solid #dbe3ee;border-radius:14px;margin-top:16px;background:#fff}.ai-job-text{flex:1;min-width:0}.ai-job small{color:#64748b}.ai-job figure{margin:0;width:220px;flex:none}.ai-job img{aspect-ratio:16/9;object-fit:contain;width:100%;border-radius:12px;display:block}.ai-job figcaption{font-size:12px;color:#64748b;margin-top:8px}.ai-error{color:#b91c1c}@media(max-width:760px){.ai-job{flex-direction:column}.ai-job figure{width:100%;max-width:360px}}</style>
 </head>
 <body>
   <main>
@@ -34,11 +34,11 @@
 
 <section id="newsAiPanel">
 <h2>Yapay zekâ ile başlık ve görsel</h2>
-<p class="source-help">Yeni bot haberleri üretim açıkken taslakta bekler. Kaynak metni korunur; üretilen başlığı ve temsili görseli kontrol ederek taslağa uygulayabilirsiniz. Ücretsiz AI Horde hizmetinde bekleme süresi değişir. Yalnızca haber başlığı ve özeti paylaşılır; anonim üretim tarifleri hizmet tarafından herkese açık paylaşılabilir.</p>
+<p class="source-help">Yeni bot haberleri üretim açıkken taslakta bekler. Kaynak metni korunur; üretilen başlığı ve 1200 × 675 yatay haber kapağını kontrol ederek taslağa uygulayabilirsiniz. Uygun kaynak fotoğrafı varsa kapakta kullanılır; yoksa temsili zemin üretilir. Başlık kapağa okunaklı fontla eklenir. Ücretsiz AI Horde hizmetinde bekleme süresi değişir. Yalnızca haber başlığı ve özeti paylaşılır; anonim üretim tarifleri hizmet tarafından herkese açık paylaşılabilir.</p>
 <form id="aiSettingsForm">
 <label><input type="checkbox" id="aiEnabled"> Yeni bot haberlerinde yapay zekâ üretimi açık</label>
 <label><input type="checkbox" id="aiTitles"> Başlık önerisi üret</label>
-<label><input type="checkbox" id="aiImages"> Temsili kapak görseli üret</label>
+<label><input type="checkbox" id="aiImages"> Yazılı, yatay manşet kapağı hazırla</label>
 <button type="submit">Üretim ayarlarını kaydet</button>
 </form>
 <p id="aiStatus" role="status">Üretim paneli yükleniyor…</p>
@@ -209,7 +209,7 @@
     init().catch(() => status("Haber botu açılamadı.", true));
   })();
   </script>
-  <script src="news-ai-admin.js?v=2"></script>
+  <script src="news-ai-admin.js?v=1"></script>
   <script src="admin-shell.js?v=4"></script>
 </body>
 </html>

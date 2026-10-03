@@ -2,7 +2,8 @@
   'use strict';
   const byId=id=>document.getElementById(id);
   const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const labels={queued:'Sırada',text_wait:'Başlık üretiliyor',image_start:'Görsel sırasına hazırlanıyor',image_wait:'Görsel üretiliyor',ready:'Editör kontrolüne hazır',applied:'Taslağa uygulandı',failed:'Üretim tamamlanamadı'};
+  const labels={queued:'Sırada',text_wait:'Başlık üretiliyor',image_start:'Görsel sırasına hazırlanıyor',image_wait:'Görsel sırasında bekliyor / hazırlanıyor',ready:'Editör kontrolüne hazır',applied:'Taslağa uygulandı',failed:'Üretim tamamlanamadı'};
+  const coverLabel=j=>j.generated_image_url?.includes('-photo-v2.png')?'Kaynak fotoğrafı ve yapay zekâ başlığıyla hazırlanan 1200 × 675 kapak':'Yapay zekâ ile üretilmiş temsili görsel';
   let client,initialized=false,loading=false;
   const message=(text,error=false)=>{byId('aiStatus').textContent=text;byId('aiStatus').style.color=error?'#b91c1c':'';};
   async function refresh() {
@@ -18,7 +19,7 @@
       const selected=byId('aiDraft').value;
       byId('aiDraft').innerHTML='<option value="">Bir bot taslağı seçin</option>'+drafts.data.map(n=>`<option value="${esc(n.id)}">${esc(n.title)}</option>`).join('');
       if(drafts.data.some(n=>n.id===selected))byId('aiDraft').value=selected;
-      byId('aiJobs').innerHTML=jobs.data.length?jobs.data.map(j=>`<article class="ai-job"><div class="ai-job-text"><span class="source-badge ${j.status==='ready'?'live':'draft'}">${esc(labels[j.status]||j.status)}</span><p><small>Kaynak başlığı</small><br><strong>${esc(j.original_title)}</strong></p>${j.title_suggestion?`<p><small>Yapay zekâ başlık önerisi</small><br><strong>${esc(j.title_suggestion)}</strong></p>`:''}${j.error_message?`<p class="ai-error">${esc(j.error_message)}</p>`:''}<a href="yeni-haber.html?edit=${esc(j.news_id)}">Haberi düzenle</a>${j.status==='failed'?` <button type="button" data-ai-retry="${esc(j.id)}">Yeniden üret</button>`:''}${j.status==='ready'?` <button type="button" data-ai-apply="${esc(j.id)}">Başlık ve görseli taslağa uygula</button>`:''}</div>${j.generated_image_url?`<figure><img src="${esc(j.generated_image_url)}" alt="Yapay zekâ ile üretilen temsili kapak" loading="lazy"><figcaption>Yapay zekâ ile üretilmiş temsili görsel</figcaption></figure>`:''}</article>`).join(''):'<p>Henüz üretim yok. Yeni bot haberleri otomatik sıraya alınır veya yukarıdan bir taslak seçebilirsiniz.</p>';
+      byId('aiJobs').innerHTML=jobs.data.length?jobs.data.map(j=>`<article class="ai-job"><div class="ai-job-text"><span class="source-badge ${j.status==='ready'?'live':'draft'}">${esc(labels[j.status]||j.status)}</span><p><small>Kaynak başlığı</small><br><strong>${esc(j.original_title)}</strong></p>${j.title_suggestion?`<p><small>Yapay zekâ başlık önerisi</small><br><strong>${esc(j.title_suggestion)}</strong></p>`:''}${j.error_message?`<p class="ai-error">${esc(j.error_message)}</p>`:''}<a href="yeni-haber.html?edit=${esc(j.news_id)}">Haberi düzenle</a>${j.status==='failed'?` <button type="button" data-ai-retry="${esc(j.id)}">Yeniden üret</button>`:''}${j.status==='ready'?` <button type="button" data-ai-apply="${esc(j.id)}">Başlık ve görseli taslağa uygula</button> <button type="button" data-ai-cover="${esc(j.id)}">Manşet kapağını yenile</button>`:''}</div>${j.generated_image_url?`<figure><img src="${esc(j.generated_image_url)}" alt="${esc(coverLabel(j))}" loading="lazy"><figcaption>${esc(coverLabel(j))}</figcaption></figure>`:''}</article>`).join(''):'<p>Henüz üretim yok. Yeni bot haberleri otomatik sıraya alınır veya yukarıdan bir taslak seçebilirsiniz.</p>';
     }catch(e){message(e.message,true);}finally{loading=false;}
   }
   async function invoke(body={}) {
@@ -41,6 +42,8 @@
   });
   byId('aiRefresh').addEventListener('click',async()=>{try{await invoke();message('Üretim sırası kontrol edildi.');await refresh();}catch(e){message(e.message,true);}});
   byId('aiJobs').addEventListener('click',async event=>{
+    const cover=event.target.closest('[data-ai-cover]');
+    if(cover){cover.disabled=true;try{await invoke({rebuild_id:cover.dataset.aiCover});message('1200 × 675 manşet kapağı yenilendi.');await refresh();}catch(e){message(e.message,true);}finally{cover.disabled=false;}return;}
     const retry=event.target.closest('[data-ai-retry]');
     if(retry){retry.disabled=true;try{await invoke({retry_id:retry.dataset.aiRetry});message('Üretim yeniden sıraya alındı.');await refresh();}catch(e){message(e.message,true);}finally{retry.disabled=false;}return;}
     const button=event.target.closest('[data-ai-apply]');if(!button)return;
