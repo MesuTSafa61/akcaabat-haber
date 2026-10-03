@@ -10,14 +10,16 @@
     if (item.image) { img.src = item.image; img.hidden = false; }
     card.dataset.error = String(!!item.error);
     const time = item.captured ? new Date(item.captured).toLocaleTimeString('tr-TR', {timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit'}) : '';
-    caption.textContent = item.image ? `Son görüntü ${time}${item.error ? ' · Yenilenemedi' : ''}` : 'Önizleme alınamadı · Yayını açmak için dokunun';
+    caption.textContent = item.image ? `Son görüntü ${time}${item.error ? ' · Yenilenemedi' : ''}` : 'Görüntü bekleniyor · Yeniden deneniyor';
   }
   function finish(id, image) {
     const job = jobs.get(id);
     if (!job) return;
     clearTimeout(job.timer); job.frame.remove(); jobs.delete(id);
     const previous = cache.get(id) || {};
-    cache.set(id, {image:image || previous.image, captured:image ? Date.now() : previous.captured, error:!image, next:Date.now()+interval});
+    const failures = image ? 0 : (previous.failures || 0) + 1;
+    const retryDelay = image ? interval : Math.min(interval, 10000 * Math.pow(2, failures - 1));
+    cache.set(id, {image:image || previous.image, captured:image ? Date.now() : previous.captured, error:!image, failures, next:Date.now()+retryDelay});
     paint(id); pump();
   }
   function pump() {
