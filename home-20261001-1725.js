@@ -356,7 +356,6 @@
 
     function categoryMatches(item, category) {
         const value = categoryName(item).toLocaleLowerCase("tr-TR");
-        if (category === "Trabzonspor") return value === "trabzonspor" || value === "spor";
         return value === category.toLocaleLowerCase("tr-TR");
     }
 
@@ -373,7 +372,7 @@
                     escapeHtml(publishedDate(item)) + '</time><h3>' + escapeHtml(item.title) + '</h3></div></article>';
             }).join("");
             return '<section class="category-news-section"><div class="category-news-head"><h2>' + escapeHtml(category) +
-                '</h2><a href="kategori.html?kategori=' + encodeURIComponent(category === "Trabzonspor" ? "Spor" : category) +
+                '</h2><a href="kategori.html?kategori=' + encodeURIComponent(category) +
                 '">Tüm Haberler →</a></div><div class="category-news-grid">' + cards + '</div></section>';
         }).join("");
         target.querySelectorAll("[data-url]").forEach(function (card) {
