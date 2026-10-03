@@ -9,7 +9,7 @@ const hordeHeaders = {'Content-Type':'application/json',apikey:'0000000000','Cli
 
 async function horde(path: string, body?: unknown) {
   const response = await fetch(api+path,{method:body?'POST':'GET',headers:hordeHeaders,body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(12000)});
-  if(!response.ok) throw new Error('Üretim servisi HTTP '+response.status);
+  if(!response.ok) throw Object.assign(new Error('Üretim servisi HTTP '+response.status),{httpStatus:response.status,hordePath:path});
   return response.json();
 }
 
@@ -61,12 +61,15 @@ async function discoverPhoto(client:any,job:any) {
   await client.from('news_ai_jobs').update(patch).eq('id',job.id);Object.assign(job,patch);
 }
 
+export function rankTextModels(list:any[]) {
+  const available=list.filter((m:any)=>m.count>0 && /qwen|llama|gemma|mistral|deepseek/i.test(m.name) && /heretic|instruct|(?:^|[/_-])it(?:[/_-]|$)|gemma-4|Qwen\/Qwen/i.test(m.name) && !/debug|roleplay|\bRP\b|Gemmasutra|(?:0\.6|0\.8|1\.7|1|2|235|72)b(?:$|[-_/.])/i.test(m.name));
+  available.sort((a:any,b:any)=>(a.queued||0)/(a.count||1)-(b.queued||0)/(b.count||1));
+  return available.slice(0,3).map((m:any)=>m.name);
+}
 async function chooseTextModels() {
-  const list=await horde('/status/models?type=text');
-  const models=list.filter((m:any)=>m.count>0 && /qwen/i.test(m.name) && /heretic|instruct|Qwen\/Qwen/i.test(m.name) && !/(?:0\.8|1\.7|235|72)b/i.test(m.name));
-  models.sort((a:any,b:any)=>(a.queued||0)/(a.count||1)-(b.queued||0)/(b.count||1));
-  if(!models.length) throw new Error('Türkçe başlık modeli şu anda çevrimiçi değil.');
-  return models.slice(0,3).map((m:any)=>m.name);
+  const models=rankTextModels(await horde('/status/models?type=text'));
+  if(!models.length)throw Object.assign(new Error('Başlık modelleri geçici olarak çevrimdışı; otomatik yeniden denenecek.'),{temporaryUnavailable:true});
+  return models;
 }
 
 async function chooseImageModels() {
@@ -167,6 +170,13 @@ async function processJob(client:any, job:any) {
       await save({status:'ready',generated_image_url:publicUrl,error_message:null});
     }
   } catch(error) {
+    const failure=error as any;
+    if(failure.httpStatus===404 && ['text_wait','image_wait'].includes(job.status)){
+      await save({status:job.status==='text_wait'?'queued':'image_start',text_request_id:job.status==='text_wait'?null:job.text_request_id,image_request_id:job.status==='image_wait'?null:job.image_request_id,error_message:null,next_at:new Date().toISOString()});return;
+    }
+    if(failure.temporaryUnavailable || [429,502,503,504].includes(failure.httpStatus)){
+      await save({error_message:'Üretim servisi geçici olarak meşgul; otomatik yeniden denenecek.',next_at:new Date(Date.now()+180000).toISOString()});return;
+    }
     const attempts=job.attempts+1;
     await save({attempts,status:attempts>=3?'failed':job.status==='text_wait'?'queued':job.status,text_request_id:job.status==='text_wait'?null:job.text_request_id,error_message:clean(error instanceof Error?error.message:'Üretim hatası',240),next_at:new Date(Date.now()+180000).toISOString()});
   }
