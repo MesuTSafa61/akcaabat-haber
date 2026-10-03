@@ -33,6 +33,14 @@ async function chooseTextModels() {
   return models.slice(0,3).map((m:any)=>m.name);
 }
 
+async function chooseImageModels() {
+  const list=await horde('/status/models?type=image');
+  const allowed=new Set(['Lyriel','Midjourney PaintArt','Inkpunk Diffusion','Deliberate 3.0','Deliberate','Dreamshaper','stable_diffusion']);
+  const models=list.filter((m:any)=>m.count>0 && allowed.has(m.name));
+  models.sort((a:any,b:any)=>(a.queued||0)/(a.count||1)-(b.queued||0)/(b.count||1));
+  return models.slice(0,3).map((m:any)=>m.name);
+}
+
 async function processJob(client:any, job:any) {
   const save=async (patch:any)=>{
     const {error}=await client.from('news_ai_jobs').update({next_at:new Date(Date.now()+45000).toISOString(),...patch,leased_until:null,updated_at:new Date().toISOString()}).eq('id',job.id);
@@ -60,7 +68,7 @@ async function processJob(client:any, job:any) {
     }
     if(job.status==='image_start') {
       const prompt=job.image_prompt+', symbolic editorial illustration, professional newspaper cover art, no text, no logos, no identifiable real people ### text, letters, watermark, logo, graphic injury, gore, nudity';
-      const result=await horde('/generate/async',{prompt,params:{width:512,height:512,steps:20,cfg_scale:7,sampler_name:'k_euler',n:1},nsfw:false,censor_nsfw:true,trusted_workers:true,slow_workers:true,r2:true,shared:true});
+      const result=await horde('/generate/async',{prompt,models:await chooseImageModels(),params:{width:512,height:512,steps:20,cfg_scale:7,sampler_name:'k_euler',n:1},nsfw:false,censor_nsfw:true,trusted_workers:true,slow_workers:true,r2:true,shared:true});
       if(!uuid(result.id)) throw new Error('Görsel üretim isteği oluşturulamadı.');
       await save({status:'image_wait',image_request_id:result.id});
       return;
@@ -72,7 +80,7 @@ async function processJob(client:any, job:any) {
       const result=await horde('/generate/status/'+job.image_request_id), generation=result.generations?.[0];
       if(!generation?.img || generation.censored) throw new Error('Görsel üretimi uygun sonuç vermedi.');
       const imageUrl=new URL(generation.img);
-      if(imageUrl.protocol!=='https:' || !/(^|\.)(r2\.dev|aihorde\.net)$/.test(imageUrl.hostname)) throw new Error('Görsel sunucusu doğrulanamadı.');
+      if(imageUrl.protocol!=='https:' || !(/(^|\.)(r2\.dev|aihorde\.net)$/.test(imageUrl.hostname) || (imageUrl.hostname==='a223539ccf6caa2d76459c9727d276e6.r2.cloudflarestorage.com' && /^\/stable-horde\/[0-9a-f-]+\.webp$/.test(imageUrl.pathname)))) throw new Error('Görsel sunucusu doğrulanamadı.');
       const response=await fetch(imageUrl,{redirect:'error',signal:AbortSignal.timeout(12000)});
       const type=response.headers.get('content-type')?.split(';')[0] || '';
       if(!response.ok || !['image/webp','image/png','image/jpeg'].includes(type)) throw new Error('Üretilen görsel alınamadı.');
