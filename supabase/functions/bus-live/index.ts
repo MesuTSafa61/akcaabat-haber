@@ -30,10 +30,21 @@ async function cached(key: string, ttl: number, fn: () => Promise<unknown>) {
 }
 
 function tidy(value: unknown) { return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, 180); }
+function transportTime(value) {
+  const text = String(value || '').trim();
+  const match = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/.exec(text);
+  if (match) {
+    const [, day, month, year, hour, minute, second] = match;
+    return Date.parse(`${year}-${month}-${day}T${hour}:${minute}:${second}+03:00`);
+  }
+  // Zoned ISO dates are unambiguous; never interpret unzoned dates in the viewer's timezone.
+  return /(?:Z|[+-]\d{2}:\d{2})$/i.test(text) ? Date.parse(text) : NaN;
+}
 function coordinates(raw: unknown) {
   if (!Array.isArray(raw) || raw.length < 2) return null;
   const x = Number(raw[0]), y = Number(raw[1]);
   if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+  if (Math.abs(x) <= 180 && Math.abs(y) <= 90) return {lat:y, lon:x};
   const lon = x / 20037508.34 * 180;
   const lat = Math.atan(Math.exp(y / 6378137)) * 360 / Math.PI - 90;
   return {lat, lon};
@@ -70,8 +81,8 @@ Deno.serve(async req => {
         const raw = await fetchJSON('/Web/KonumGetir', new URLSearchParams({'hatIdler[]':route}));
         if (raw.SonucDurum !== true || !Array.isArray(raw.SonucData)) return {available:false, vehicles:[], updatedAt:new Date().toISOString()};
         const vehicles = raw.SonucData.filter((v: any) => String(v.HatId) === route).map((v: any) => ({
-          plate:tidy(v.PlakaKod), passedStop:String(v.GecilenDurakId || ''), direction:Number(v.Yon),
-          timestamp:tidy(v.Tarih || v.OncekiGecilenDurakTarih || v.EklemeTarih),
+          plate:tidy(v.PlakaKod), passedStop:String(v.GecilenDurakId || ''), direction:Number.isFinite(Number(v.Yon)) ? Number(v.Yon) : null, directionCode:tidy(v.HatYon),
+          timestamp:(() => {const time = transportTime(v.Tarih || v.EklemeTarih || v.OncekiGecilenDurakTarih);return Number.isFinite(time) ? new Date(time).toISOString() : '';})(),
           ...coordinates([v.KonumX,v.KonumY]),
         }));
         return {available:true, vehicles, updatedAt:new Date().toISOString()};

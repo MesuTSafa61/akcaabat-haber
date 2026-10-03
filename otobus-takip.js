@@ -13,8 +13,18 @@
     if (!response.ok) throw new Error('Source unavailable');
     return response.json();
   }
+  function transportTime(value) {
+  const text = String(value || '').trim();
+  const match = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/.exec(text);
+  if (match) {
+    const [, day, month, year, hour, minute, second] = match;
+    return Date.parse(`${year}-${month}-${day}T${hour}:${minute}:${second}+03:00`);
+  }
+  // Zoned ISO dates are unambiguous; never interpret unzoned dates in the viewer's timezone.
+  return /(?:Z|[+-]\d{2}:\d{2})$/i.test(text) ? Date.parse(text) : NaN;
+}
   function fresh(v) {
-    const ms = Date.parse(v.timestamp);
+    const ms = transportTime(v.timestamp);
     return Number.isFinite(ms) && Date.now()-ms < 120000 && ms < Date.now()+60000;
   }
   function render() {
@@ -26,9 +36,9 @@
     if (!all.some(s=>s.code===selected)) selected = all[0]?.code || '';
     const filtered = all.filter(s=>s.name.toLocaleLowerCase('tr-TR').includes(query.toLocaleLowerCase('tr-TR')));
     const current = vehicles.filter(fresh);
-    root.innerHTML = `<div class="bus-live-status ${available ? 'ready' : 'unavailable'}"><span aria-hidden="true">●</span><div><strong>${available ? (current.length ? `${current.length} araç konumu alındı` : 'Güncel araç konumu bildirilmedi') : 'Anlık araç konumu şu anda alınamıyor'}</strong><small>${updated ? 'Son kontrol: '+new Date(updated).toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',second:'2-digit'}) : 'Belediye verileri kontrol ediliyor…'}</small></div><button type="button" id="busLiveRefresh">↻</button></div><div class="transport-segments bus-direction-switch" role="group" aria-label="Durak yönü">${directions.map(d=>`<button type="button" data-stop-direction="${d}" aria-pressed="${d===direction}">${escape(stops.find(s=>s.direction===d)?.directionName || 'Kalkış '+d)}</button>`).join('')}</div><label class="transport-search-label" for="stopSearch">Durak adı ara</label><input class="flight-search" type="search" id="stopSearch" placeholder="Örn. Söğütlü, Trabzon Üniversitesi" value="${escape(query)}"><div class="stop-layout"><div><div class="stop-list-title"><strong>DURAK SEÇ</strong><span>${all.length} durak</span></div><ol class="stop-timeline">${filtered.map(s=>{
-      const buses = current.filter(v=>v.passedStop===s.id);
-      return `<li class="${s.code===selected?'selected':''}"><button type="button" data-stop="${escape(s.code)}" aria-pressed="${s.code===selected}"><span class="stop-dot" aria-hidden="true"></span><span><strong>${escape(s.name)}</strong><small>Durak kodu: ${escape(s.code)}</small>${buses.map(b=>`<span class="stop-bus">🚌 ${escape(b.plate)} · Son geçilen durak</span>`).join('')}</span><span class="stop-order">${s.order}</span></button></li>`;
+    root.innerHTML = `<div class="bus-live-status ${available && current.length ? 'ready' : 'unavailable'}"><span aria-hidden="true">●</span><div><strong>${available ? (current.length ? `${current.length} araç konumu alındı` : 'Bu hat için güncel araç verisi bekleniyor') : 'Anlık araç konumu şu anda alınamıyor'}</strong><small>${updated ? 'Son kontrol: '+new Date(updated).toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',second:'2-digit'}) : 'Belediye verileri kontrol ediliyor…'}</small></div><button type="button" id="busLiveRefresh" aria-label="Araç konumlarını yenile">↻</button></div>${current.length ? `<div class="bus-vehicle-summary">${current.map(v=>{const stop=stops.find(s=>String(s.id)===String(v.passedStop));return `<div class="arrival-card"><strong>🚌 ${escape(v.plate)}</strong><p>${stop ? 'Son geçilen durak: '+escape(stop.name) : 'Araç konumu alındı; durak eşleşmesi bekleniyor.'}</p><small>Konum zamanı: ${escape(new Date(transportTime(v.timestamp)).toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',second:'2-digit'}))}</small></div>`;}).join('')}</div>` : ''}<div class="transport-segments bus-direction-switch" role="group" aria-label="Durak yönü">${directions.map(d=>`<button type="button" data-stop-direction="${d}" aria-pressed="${d===direction}">${escape(stops.find(s=>s.direction===d)?.directionName || 'Kalkış '+d)}</button>`).join('')}</div><label class="transport-search-label" for="stopSearch">Durak adı ara</label><input class="flight-search" type="search" id="stopSearch" placeholder="Örn. Söğütlü, Trabzon Üniversitesi" value="${escape(query)}"><div class="stop-layout"><div><div class="stop-list-title"><strong>DURAK SEÇ</strong><span>${all.length} durak</span></div><ol class="stop-timeline">${filtered.map(s=>{
+      const buses = current.filter(v=>String(v.passedStop)===String(s.id));
+      return `<li class="${s.code===selected?'selected':''}"><button type="button" data-stop="${escape(s.code)}" aria-pressed="${s.code===selected}"><span class="stop-dot" aria-hidden="true"></span><span><strong>${escape(s.name)}</strong><small>Durak kodu: ${escape(s.code)}</small>${buses.map(b=>`<span class="stop-bus">🚌 ${escape(b.plate)} · Son geçilen durak · ${escape(new Date(transportTime(b.timestamp)).toLocaleTimeString('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',second:'2-digit'}))}</span>`).join('')}</span><span class="stop-order">${s.order}</span></button></li>`;
     }).join('') || `<li class="transport-empty">${stopsError ? 'Durak listesi şu anda alınamıyor.' : 'Bu seçim için durak bulunamadı.'}</li>`}</ol></div><aside class="stop-arrivals" id="stopArrivals" aria-live="polite"></aside></div><p class="local-note">Durak listesi güzergâhı gösterir. Araç konumu yalnızca belediyeden güncel kayıt geldiğinde işaretlenir.</p>`;
     root.querySelectorAll('[data-stop-direction]').forEach(b=>b.addEventListener('click',()=>{direction=Number(b.dataset.stopDirection);render();loadArrivals();}));
     root.querySelectorAll('[data-stop]').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.stop;render();loadArrivals();}));
