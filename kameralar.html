@@ -22,12 +22,12 @@
       <input type="search" id="cameraSearch" placeholder="Kamera veya konum ara" aria-label="Kamera veya konum ara">
     </div>
     <div id="cameraSections" aria-live="polite"></div>
-    <dialog id="cameraDialog" class="camera-dialog" aria-labelledby="cameraDialogTitle"><div class="camera-dialog-head"><h2 id="cameraDialogTitle">Canlı kamera</h2><button type="button" id="cameraClose" aria-label="Kapat">×</button></div><div id="cameraPlayer" class="camera-player" role="status">Yayın yükleniyor…</div><div class="camera-dialog-foot"><p id="cameraStatus" role="status"></p>Yayın açılmazsa <a id="cameraOfficial" href="https://www.trabzon.bel.tr/Web/SehirKameralari" target="_blank" rel="noopener noreferrer">belediye sayfasında izleyin ↗</a></div></dialog>
+    <dialog id="cameraDialog" class="camera-dialog" aria-labelledby="cameraDialogTitle"><div class="camera-dialog-head"><h2 id="cameraDialogTitle">Canlı kamera</h2><button type="button" id="cameraClose" aria-label="Kapat">×</button></div><div id="cameraPlayer" class="camera-player" role="status">Yayın yükleniyor…</div><div class="camera-dialog-foot"><p id="cameraStatus" role="status"></p><button type="button" id="cameraRetry" class="camera-play">Yeniden dene</button> Yayın açılmazsa <a id="cameraOfficial" href="https://www.trabzon.bel.tr/Web/SehirKameralari" target="_blank" rel="noopener noreferrer">belediye sayfasında izleyin ↗</a></div></dialog>
     <p class="camera-source">Kaynaklar: <a href="https://www.akcaabat.bel.tr/sehir-kameralari.aspx" target="_blank" rel="noopener noreferrer">Akçaabat Belediyesi</a> · <a href="https://www.trabzon.bel.tr/Web/SehirKameralari" target="_blank" rel="noopener noreferrer">Trabzon Büyükşehir Belediyesi</a>. Kamera yayınlarının erişilebilirliği belediyeler tarafından belirlenir.</p>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase-config.js" defer></script>
-  <script src="kameralar.js?v=20261003-1" defer></script>
+  <script src="kameralar.js?v=20261003-2" defer></script>
   <script src="portal-shell.js?v=39" defer></script>
 </body>
 </html>
