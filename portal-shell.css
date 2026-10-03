@@ -296,3 +296,13 @@ html[data-theme="dark"] .portal-shell-top .service-inner a.is-active{color:#ff82
 .social-link.social-instagram svg{fill:currentColor}
 .social-link.social-youtube svg{width:24px;height:24px}
 .social-link.social-whatsapp svg{width:23px;height:23px}
+
+/* Brand marks stay legible in the drawer and footer, including unconfigured links. */
+.social-links .social-link svg{width:22px;height:22px;flex:none;fill:currentColor}
+.social-links .social-facebook{color:#1877f2!important}
+.social-links .social-instagram{color:#e4405f!important}
+.social-links .social-youtube{color:#ff3030!important}
+.social-links .social-whatsapp{color:#25d366!important}
+.mobile-menu-social .social-links .social-x{color:#111827!important}
+.unified-site-footer .social-links .social-x,html[data-theme="dark"] .mobile-menu-social .social-links .social-x{color:#fff!important}
+.social-links .social-link.social-disabled{opacity:.85}
